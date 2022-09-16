@@ -1,0 +1,468 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="江霁月的私人小屋" href="http://example.com/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="江霁月的私人小屋" href="http://example.com/atom.xml" />
+<link rel="alternate" type="application/json" title="江霁月的私人小屋" href="http://example.com/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+
+<link rel="canonical" href="http://example.com/category/c1e57771066d.html">
+
+
+
+  <title>
+使用 Grafana 创建可视化面板 - 安全运维 |
+江霁月的私人小屋</title>
+<meta name="generator" content="Hexo 5.4.2"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">使用 Grafana 创建可视化面板
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="创建时间：2021-10-29 18:47:43">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">发表于</span>
+    <time itemprop="dateCreated datePublished" datetime="2021-10-29T18:47:43+08:00">2021-10-29</time>
+  </span>
+  <span class="item" title="本文字数">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">本文字数</span>
+    <span>3.3k</span>
+    <span class="text">字</span>
+  </span>
+  <span class="item" title="阅读时长">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">阅读时长</span>
+    <span>3 分钟</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="切换导航栏">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">江霁月的私人小屋</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipewr8iypj20zk0m8b29.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipeudstjqj20zk0m8k3r.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipew28b65j20zk0m8hdt.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclh5u05ej20zk0m87df.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclxfdlttj20zk0m8npd.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipet4bz0yj20zk0m8e81.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">首页</a></span><i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/SOC/" itemprop="item" rel="index" title="分类于 安全运维"><span itemprop="name">安全运维</span></a>
+<meta itemprop="position" content="1" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN">
+  <link itemprop="mainEntityOfPage" href="http://example.com/category/c1e57771066d.html">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/avatar.jpg">
+    <meta itemprop="name" content="江霁月">
+    <meta itemprop="description" content=", 专注分享一些关于安全运维和编程语言的知识·本博主爱安全,爱折腾,爱代码">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="江霁月的私人小屋">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <h2 id="引言"><a class="markdownIt-Anchor" href="#引言">#</a> 引言</h2>
+<p>Grafana 本身是非常轻量级的，不会占用大量资源，此外 Grafana 需要一个数据库来存储其配置数据，比如用户、数据源和仪表盘等，目前 Grafana 支持 SQLite、MySQL、PostgreSQL 3 种数据库，默认使用的是 SQLite，该数据库文件会存储在 Grafana 的安装位置，所以需要对 Grafana 的安装目录进行持久化。</p>
+<h2 id="安装grafana"><a class="markdownIt-Anchor" href="#安装grafana">#</a> 安装 Grafana</h2>
+<p>要安装 Grafana 的方式有很多，我们这里使用的是 CentOS 系统，可以在 Grafana 官方下载页面筛选合适的版本 <span class="exturl" data-url="aHR0cHM6Ly9ncmFmYW5hLmNvbS9ncmFmYW5hL2Rvd25sb2FkJTVDP2VkaXRpb249b3NzJTVDJmFtcDtwbGF0Zm9ybT1saW51eA==">https://grafana.com/grafana/download\?edition=oss\&amp;platform=linux</span> 根据自己的需求来进行安装，比如我们这里直接使用 rpm 包进行安装：</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">wget</span> https://dl.grafana.com/oss/release/grafana-8.2.1-1.x86_64.rpm  </pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">sudo</span> yum <span class="token function">install</span> grafana-8.2.1-1.x86_64.rpm</pre></td></tr></table></figure><p>安装完成后我们就可以使用 systemd 来管理 Grafana：</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">sudo</span> systemctl daemon-reload  </pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">sudo</span> systemctl <span class="token builtin class-name">enable</span> grafana-server  </pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token function">sudo</span> systemctl start grafana-server  </pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token function">sudo</span> systemctl status grafana-server</pre></td></tr></table></figure><p>默认的启动配置环境变量位于  <code>/etc/sysconfig/grafana-server</code>  文件中：</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">cat</span> /etc/sysconfig/grafana-server  </pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token assign-left variable">GRAFANA_USER</span><span class="token operator">=</span>grafana  </pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token assign-left variable">GRAFANA_GROUP</span><span class="token operator">=</span>grafana  </pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token assign-left variable">GRAFANA_HOME</span><span class="token operator">=</span>/usr/share/grafana  </pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token assign-left variable">LOG_DIR</span><span class="token operator">=</span>/var/log/grafana  </pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token assign-left variable">DATA_DIR</span><span class="token operator">=</span>/var/lib/grafana  </pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token assign-left variable">MAX_OPEN_FILES</span><span class="token operator">=</span><span class="token number">10000</span>  </pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token assign-left variable">CONF_DIR</span><span class="token operator">=</span>/etc/grafana  </pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token assign-left variable">CONF_FILE</span><span class="token operator">=</span>/etc/grafana/grafana.ini  </pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token assign-left variable">RESTART_ON_UPGRADE</span><span class="token operator">=</span>true</pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token assign-left variable">PLUGINS_DIR</span><span class="token operator">=</span>/var/lib/grafana/plugins  </pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token assign-left variable">PROVISIONING_CFG_DIR</span><span class="token operator">=</span>/etc/grafana/provisioning  </pre></td></tr><tr><td data-num="14"></td><td><pre><span class="token comment"># Only used on systemd systems  </span></pre></td></tr><tr><td data-num="15"></td><td><pre><span class="token assign-left variable">PID_FILE_DIR</span><span class="token operator">=</span>/var/run/grafana</pre></td></tr></table></figure><p>从上面文件中可以找到 Grafana 的各种数据配置路径，比如数据目录、日志目录、插件目录等等，正常启动完成后 Grafana 会监听在 3000 端口上，所以我们可以在浏览器中打开 Grafana 的 WebUI。<br>
+<img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/10/z9BgVMEm7YuAwBpX3gLnfiaSL2icw3kgwpYAxBvO85FalLDDFWtBAKia7QuJxzq33096vnbQKLGzFK3UJBjWFQgSw.jpg" alt=""><br>
+默认的用户名和密码为  <code>admin</code> ，也可以在配置文件  <code>/etc/grafana/grafana.ini</code>  中配置  <code>admin_user</code>  和  <code>admin_password</code>  两个参数来进行覆盖。<br>
+<img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/10/z9BgVMEm7YuAwBpX3gLnfiaSL2icw3kgwpFpYqWe6W3PNECsQyjfEm5DGtdJN4kNv7UurribRMAnWH2WUwoJtLN9w.png" alt=""><br>
+当然如果我们想要部署一个高可用版本的 Grafana 的话，那么使用 SQLite 数据库就不行了，需要切换到 MySQL 或者 PostgreSQL，我们可以在 Grafana 配置的  <code>[database]</code>  部分找到数据库的相关配置，Grafana 会将所有长期数据保存在数据库中，然后部署多个 Grafana 实例使用同一个数据库即可实现高可用。<br>
+<img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/10/z9BgVMEm7YuAwBpX3gLnfiaSL2icw3kgwpsT57906JDcsn9CibibtQByNuQbHZS0hztS3aaCpXclaGZbn3IKyewdzw.png" alt=""></p>
+<h2 id="创建面板"><a class="markdownIt-Anchor" href="#创建面板">#</a> 创建面板</h2>
+<p>面板（Panel）是 Grafana 中基本可视化构建块，每个面板都有一个特定于面板中选择数据源的查询编辑器，每个面板都有各种各样的样式和格式选项，面板可以在仪表板上拖放和重新排列，它们也可以调整大小，所以要在 Grafana 上创建可视化的图表，面板是我们必须要掌握的知识点。</p>
+<h2 id="数据源"><a class="markdownIt-Anchor" href="#数据源">#</a> 数据源</h2>
+<p>在创建面板之前我们需要指定我们的面板数据来源，也就是数据源，Grafana 支持多种数据源，我们这里当然使用 Prometheus 作为数据源来进行说明。在 Grafana 左侧工具栏选择  <code>Configuration</code> ，点击到下面的  <code>Data sources</code> ，打开添加数据源的页面：<br>
+<img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/10/z9BgVMEm7YuAwBpX3gLnfiaSL2icw3kgwpgpG7fibqibpLMbG7L7CB6icUC4d5ica245Lx3vprpZRia4rrNQvTkSRic1zA.png" alt=""><br>
+点击页面中的  <code>Add data source</code>  按钮开始添加数据源：<br>
+<img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/10/z9BgVMEm7YuAwBpX3gLnfiaSL2icw3kgwpws4DqoMvD1nEsXBGGd6rUH5adYeCzFeTW3v6LsOED6XUA7GrU9DnWw.png" alt=""><br>
+选择第一项 Prometheus 数据源进行配置：<br>
+<img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/10/z9BgVMEm7YuAwBpX3gLnfiaSL2icw3kgwpKgiba0W7KeMYdkuEgelzRRGibYQufVX0SpFicr5Vl1iclOLq6hNjJlcibHw.png" alt=""><br>
+在 HTTP 项中配置 URL 地址为  <code>http://localhost:9090</code> ，其实就是 Prometheus 的地址，由于我们这里 Grafana 和 Prometheus 都在同一个节点上，所以用 localhost 即可访问，当然用 IP 也可以，Access 选择默认的  <code>Server</code>  代理方式，这样就相当于 Grafana 程序去访问 Prometheus 而不是在浏览器端去访问，如果 Prometheus 配置有认证，则还需要在下发配置  <code>Auth</code>  信息，配置完成后，拉到最下方点击  <code>Save &amp; test</code> ，提示添加成功即表面数据源添加成功了。然后在数据源列表中就会出现我们刚刚添加的 Prometheus 这个数据源了：<br>
+<img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/10/z9BgVMEm7YuAwBpX3gLnfiaSL2icw3kgwpKicrdkX8LHTOib8CQh9A05JMKtAFzAibfuRPZrcskbicwGAEfJjDnINecA.png" alt=""><br>
+如果想要添加其他支持的数据源则也可用同样的方式进行添加。</p>
+<h2 id="添加面板"><a class="markdownIt-Anchor" href="#添加面板">#</a> 添加面板</h2>
+<p>面板是属于某一个 Dashboard 的，所以我们需要先创建一个 Dashboard，在侧边栏点击  <code>+</code>  切换到  <code>Dashboard</code>  下面开始创建 Dashboard：<br>
+<img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/10/z9BgVMEm7YuAwBpX3gLnfiaSL2icw3kgwpmqmOeR8V3lmcJIJ2UyE2xECkRsY5CsmRyCSVZbLWd9X8DmMgoRG8og.png" alt=""><br>
+在默认创建的新的 Dashboard 中就有一个空的面板，点击  <code>Add an empty panel</code>  即可开始添加面板：<br>
+<img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/10/z9BgVMEm7YuAwBpX3gLnfiaSL2icw3kgwpYmDDd8zia1eogB1iczFDszKJv03h9BhcwQuS5Ku4j3wMaFLsbAB9azHQ.png" alt=""><br>
+进入面板编辑器后即可添加面板了，中间位置是查询语句的显示结果，下方是用于配置查询语句的地方，左侧可以选择面板显示的类型，面板元信息，比如标题、描述信息等。<br>
+<img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/10/z9BgVMEm7YuAwBpX3gLnfiaSL2icw3kgwpxuRAlkzQDibuF4lQCDUiciaN4A2dkdhTBSCPYmDiaT4icIibBMk1GAhuFA3A.png" alt=""><br>
+比如我们现在就要来查询节点的 CPU 使用率，前面在  <code>node_exporter</code>  章节中已经学习了该监控数据的查询语句为  <code>(1 \- sum(rate(node_cpu_seconds_total&#123;mode=&quot;idle&quot;&#125;[5m])) by (instance) / sum(rate(node_cpu_seconds_total[5m])) by (instance) ) * 100</code> ，只需要将该语句填充到查询的 PromQL 语句中即可在上面显示出监控的结果：<br>
+<img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/10/z9BgVMEm7YuAwBpX3gLnfiaSL2icw3kgwpuaaXLF1VBSGELd15oUIOvP2RibiaatXbErscesBsUFkKUlYicO0DTZYEQ.png" alt=""><br>
+点击右上角的  <code>Apply</code>  按钮即可创建成功一个 Panel 面板。<br>
+<img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/10/z9BgVMEm7YuAwBpX3gLnfiaSL2icw3kgwpSy9PAknc6n8Qu2rujskcKJeRiaqhiaMm229CTt9PKpCTws9pv953iancg.png" alt=""><br>
+用同样的方式我们可以创建一个用于查询节点内存使用率的面板：<br>
+<img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/10/z9BgVMEm7YuAwBpX3gLnfiaSL2icw3kgwpG3QiaPgASlk9e4Uov4ygEBxr5CLLLeRV5kv0kSKF2QuwOD0TPfGy6EQ.png" alt=""><br>
+创建完成后的面板我们也可以拖动他们的排列位置：<br>
+<img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/10/z9BgVMEm7YuAwBpX3gLnfiaSL2icw3kgwp05cSM51YXSKZWNuXiauOaMIk0I13abLAkZgvaX35tdjULYbULQPllpQ.png" alt=""><br>
+如果还想重新编辑面板，可以点击标题，在弹出来的下拉框中选择  <code>Edit</code>  编辑即可：<br>
+<img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/10/z9BgVMEm7YuAwBpX3gLnfiaSL2icw3kgwpy9ViaFLkGI91vjkqdMz9FwHEH433icLs2hwHqzsmbrh8ljSAWjznTREQ.png" alt=""></p>
+<h2 id="添加参数"><a class="markdownIt-Anchor" href="#添加参数">#</a> 添加参数</h2>
+<p>现在我们在一个 Dashboard 中添加了两个 Panel，我们可以很明显看到会直接将所有的节点信息展示在同一个面板中，但是如果有非常多的节点的话数据量就非常大了，这种情况下我们最好的方式是将节点当成参数，可以让用户自己去选择要查看哪一个节点的监控信息，要实现这个功能，我们就需要去添加一个以节点为参数的变量来去查询监控数据。<br>
+点击 Dashboard 页面右上方的  <code>Dashboard settings</code>  按钮，进入配置页面：<br>
+<img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/10/z9BgVMEm7YuAwBpX3gLnfiaSL2icw3kgwpH1ELShtHD4ZMBkhnADhSmDTXbVRPHexI5OplgjflsiaeuzJLcuM7T6Q.png" alt=""><br>
+在该  <code>Settings</code>  页面可以来对整个 Dashboard 进行配置，比如名称、标签、变量等：<br>
+<img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/10/z9BgVMEm7YuAwBpX3gLnfiaSL2icw3kgwpIOp7RsVlianibuxxu51sG59nJpwQiaY8rJONaXVMZJIYicqmITLpfJJmYw.png" alt=""><br>
+这里我们点击左边的  <code>Variables</code>  添加一个变量，变量支持更具交互性和动态性的仪表板，我们可以在它们的位置使用变量，而不是在指标查询中硬编码，变量显示为 Dashboard 顶部的下拉列表，这些下拉列表可以轻松更改仪表板中显示的数据。<br>
+<img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/10/z9BgVMEm7YuAwBpX3gLnfiaSL2icw3kgwpKvv4S4lNslQ6MWw2Z5Uf2rYMh6DRXBvmZwRM59hwTfgmYZpq3zAdgA.png" alt=""><br>
+为了能够选择节点数据，这里我们定义了一个名为  <code>instance</code>  的变量名，但是定义的这个变量值从哪个地方获取呢？<br>
+<img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/10/z9BgVMEm7YuAwBpX3gLnfiaSL2icw3kgwpF0v2eiboBfmHlLptxlricibictU6DjZFTiaJAmb0AVd823MibO0n2OJWKZFw.png" alt=""><br>
+监控节点的相关指标是来源于名为  <code>node-exporter</code>  的任务，我们可以通过查询  <code>up</code>  来获取所有的监控实例：<br>
+<img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/10/z9BgVMEm7YuAwBpX3gLnfiaSL2icw3kgwpy2VfD7CYmExt0V7a8mEdZjVy4Zzm4CnnRL1h2ClKgHRHSKNicicoseDA.png" alt=""><br>
+要想获取到  <code>instance</code>  标签中的值，我们这里可以使用一个正则表达式  <code>.*instance=&quot;(.*?)&quot;.*</code>  来获取实例数据，这样就成功定义了一个变量，回到 Dashboard 页面就可以看到多了一个 <code>选择节点</code> 的下拉框：<br>
+<img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/10/z9BgVMEm7YuAwBpX3gLnfiaSL2icw3kgwpWjOUrub2YEBvIlywxQc787ibltwicl1Bp9xD9fjqGI3zmo5ibClIUjz4Q.png" alt=""><br>
+但是这个时候的面板并不会随着我们下拉框的选择而变化，我们需要将  <code>instance</code>  这个变量传入查询语句中，比如重新修改 <code>CPU使用率</code> 的查询语句：<br>
+<img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/10/z9BgVMEm7YuAwBpX3gLnfiaSL2icw3kgwp7zwTz2aecgvzKSlzkpFySqHGNOn6uVjnhBB64RKMvjtPdj9Lic5ibryw.png" alt=""><br>
+用同样的方式给内存使用率添加根据节点过滤的参数：<br>
+<img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/10/z9BgVMEm7YuAwBpX3gLnfiaSL2icw3kgwpl2qzbbhdfE36JzXbFVmuYnKEBXp11Cb5ja7riaaYnRZFscZn9yicEHUg.png" alt=""><br>
+回到 Dashboard 页面就可以根据我们的下拉框来选择需要监控的节点数据了，定义参数的时候如果选择了可以选择所有，同样可以查看所有节点的数据：<br>
+<img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/10/z9BgVMEm7YuAwBpX3gLnfiaSL2icw3kgwpeSDiaPUtCbevSGAUjJqLgCU2ycAGzFkccoauQIY6lDicYzcZicPUcXzlg.png" alt=""></p>
+
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">更新于</span>
+    <time title="修改时间：2022-08-31 14:35:32" itemprop="dateModified" datetime="2022-08-31T14:35:32+08:00">2022-08-31</time>
+  </span>
+</div>
+
+      
+<div class="reward">
+  <button><i class="ic i-heartbeat"></i> 赞赏</button>
+  <p>请我喝[茶]~(￣▽￣)~*</p>
+  <div id="qr">
+  </div>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>本文作者： </strong>江霁月 <i class="ic i-at"><em>@</em></i>江霁月的私人小屋
+  </li>
+  <li class="link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/category/c1e57771066d.html" title="使用 Grafana 创建可视化面板">http://example.com/category/c1e57771066d.html</a>
+  </li>
+  <li class="license">
+    <strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/category/24378ae0f757.html" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipex2cdtbj20zk0m8x6p.jpg" title="第三章Word 2010">
+  <span class="type">上一篇</span>
+  <span class="category"><i class="ic i-flag"></i> 计算机文化基础</span>
+  <h3>第三章Word 2010</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/category/4346c49a994c.html" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giciub8ja1j20zk0m81ky.jpg" title="第四章Excel 2010">
+  <span class="type">下一篇</span>
+  <span class="category"><i class="ic i-flag"></i> 计算机文化基础</span>
+  <h3>第四章Excel 2010</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="文章目录">
+          <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text"> 引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85grafana"><span class="toc-number">2.</span> <span class="toc-text"> 安装 Grafana</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E9%9D%A2%E6%9D%BF"><span class="toc-number">3.</span> <span class="toc-text"> 创建面板</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%BA%90"><span class="toc-number">4.</span> <span class="toc-text"> 数据源</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E9%9D%A2%E6%9D%BF"><span class="toc-number">5.</span> <span class="toc-text"> 添加面板</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E5%8F%82%E6%95%B0"><span class="toc-number">6.</span> <span class="toc-text"> 添加参数</span></a></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="系列文章">
+        <ul>
+          <li><a href="/category/c6d35287e59b.html" rel="bookmark" title="zabbix5.2安装教程">zabbix5.2安装教程</a></li><li><a href="/category/ab18ab7128a4.html" rel="bookmark" title="Linux-firewalld的基本操作">Linux-firewalld的基本操作</a></li><li><a href="/category/d6f317918d52.html" rel="bookmark" title="Linux-编译安装memcached扩展">Linux-编译安装memcached扩展</a></li><li><a href="/category/c4e85479f6ff.html" rel="bookmark" title="Linux-安装Lnmp">Linux-安装Lnmp</a></li><li><a href="/category/79bf3c2d498a.html" rel="bookmark" title="Linux-Mysql主主架构">Linux-Mysql主主架构</a></li><li><a href="/category/ecda3fb76685.html" rel="bookmark" title="Linux-Opcache参数配置优化 加速网站访问">Linux-Opcache参数配置优化 加速网站访问</a></li><li><a href="/category/dd602a6b35ac.html" rel="bookmark" title="Linux-利用acme为阿里云dns域名颁发泛域名证书">Linux-利用acme为阿里云dns域名颁发泛域名证书</a></li><li><a href="/category/ab8b660fc8ae.html" rel="bookmark" title="一.漫谈Nginx网关">一.漫谈Nginx网关</a></li><li><a href="/category/2d9a2ff9eff9.html" rel="bookmark" title="Zabbix-Grafana图形展示软件">Zabbix-Grafana图形展示软件</a></li><li><a href="/category/14fb0cb5989f.html" rel="bookmark" title="二.Nginx相关知识">二.Nginx相关知识</a></li><li><a href="/category/2dcd61781139.html" rel="bookmark" title="三.Nginx配置文件详解">三.Nginx配置文件详解</a></li><li><a href="/category/2e72a923fa65.html" rel="bookmark" title="从零搭建日志采集报警系统(ELK+FileBeat)">从零搭建日志采集报警系统(ELK+FileBeat)</a></li><li><a href="/category/7b084077da53.html" rel="bookmark" title="ELK收集nginx日志并展示来源IP地图">ELK收集nginx日志并展示来源IP地图</a></li><li><a href="/category/007554234c41.html" rel="bookmark" title="Linux-Mysql基本操作">Linux-Mysql基本操作</a></li><li><a href="/category/0447b4c5647f.html" rel="bookmark" title="Linux从入门到放弃-常用命令">Linux从入门到放弃-常用命令</a></li><li><a href="/category/8495ff9caf6a.html" rel="bookmark" title="Linux从入门到放弃-磁盘管理">Linux从入门到放弃-磁盘管理</a></li><li><a href="/category/c119bd60cc53.html" rel="bookmark" title="Linux-MySQL开启慢查询日志">Linux-MySQL开启慢查询日志</a></li><li><a href="/category/8acc85d10262.html" rel="bookmark" title="Linux-定时备份网站数据文件到阿里云盘">Linux-定时备份网站数据文件到阿里云盘</a></li><li><a href="/category/46cb37709f23.html" rel="bookmark" title="四.OpenResty中使用mysql">四.OpenResty中使用mysql</a></li><li><a href="/category/23cb1236ee1d.html" rel="bookmark" title="五.openresty执行流程">五.openresty执行流程</a></li><li class="active"><a href="/category/c1e57771066d.html" rel="bookmark" title="使用 Grafana 创建可视化面板">使用 Grafana 创建可视化面板</a></li><li><a href="/category/dc4b4724dfe7.html" rel="bookmark" title="Centos升级Python3.x版本踩过的坑">Centos升级Python3.x版本踩过的坑</a></li><li><a href="/category/10af10f41e58.html" rel="bookmark" title="Windows常用命令">Windows常用命令</a></li><li><a href="/category/1970703bb420.html" rel="bookmark" title="Security-编译安装openresty2.14+Modsecurity以支持TLSv1.3">Security-编译安装openresty2.14+Modsecurity以支持TLSv1.3</a></li><li><a href="/category/17faee78d2f1.html" rel="bookmark" title="基于awstats的apache日志分析">基于awstats的apache日志分析</a></li><li><a href="/category/664761ec1ed2.html" rel="bookmark" title="Docker安装LAMP">Docker安装LAMP</a></li><li><a href="/category/2517a85f9134.html" rel="bookmark" title="安全加固之Linux软件包封装脚本分析">安全加固之Linux软件包封装脚本分析</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="站点概览">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="江霁月"
+      data-src="/images/avatar.jpg">
+  <p class="name" itemprop="name">江霁月</p>
+  <div class="description" itemprop="description">专注分享一些关于安全运维和编程语言的知识·本博主爱安全,爱折腾,爱代码</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">55</span>
+        <span class="name">文章</span>
+      </a>
+    </div>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">17</span>
+        <span class="name">分类</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">30</span>
+        <span class="name">标签</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL0ppYW5nSmlZdWU=" title="https:&#x2F;&#x2F;github.com&#x2F;JiangJiYue"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS9qYW5naml5dWU=" title="https:&#x2F;&#x2F;twitter.com&#x2F;jangjiyue"><i class="ic i-twitter"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>首页</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a>
+  </li>
+
+  </ul>
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/category/24378ae0f757.html" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/category/4346c49a994c.html" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2010 – 
+    <span itemprop="copyrightYear">2022</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">江霁月 @ 江霁月的私人小屋</span>
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+    <span title="站点总字数">235k 字</span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:34</span>
+  </div>
+  <div class="powered-by">
+    基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: 'category/c1e57771066d.html',
+    favicon: {
+      show: "（●´3｀●）やれやれだぜ",
+      hide: "(´Д｀)大変だ！"
+    },
+    search : {
+      placeholder: "文章搜索",
+      empty: "关于 「 ${query} 」，什么也没搜到",
+      stats: "${time} ms 内找到 ${hits} 条结果"
+    },
+    valine: true,fancybox: true,
+    copyright: '复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://cdn.polyfill.io/v2/polyfill.js"></script>
+
+<script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>

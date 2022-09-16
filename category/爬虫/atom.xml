@@ -1,0 +1,943 @@
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>http://example.com</id>
+    <title>江霁月的私人小屋 • Posts by &#34;爬虫&#34; category</title>
+    <link href="http://example.com" />
+    <updated>2022-08-23T12:37:54.000Z</updated>
+    <category term="Docker" />
+    <category term="linux" />
+    <category term="mysql" />
+    <category term="Centos" />
+    <category term="优化" />
+    <category term="缓存" />
+    <category term="反爬" />
+    <category term="爬虫" />
+    <category term="服务器" />
+    <category term="ELK" />
+    <category term="安全管理" />
+    <category term="数据可视化" />
+    <category term="监控" />
+    <category term="运维" />
+    <category term="Zabbix" />
+    <category term="Kali" />
+    <category term="信息安全" />
+    <category term="数据库" />
+    <category term="nginx" />
+    <category term="PHP" />
+    <category term="openresty" />
+    <category term="网关" />
+    <category term="PHP框架" />
+    <category term="python" />
+    <category term="Security" />
+    <category term="信息收集" />
+    <category term="SSL" />
+    <category term="安全加固" />
+    <category term="Linux" />
+    <category term="waf" />
+    <entry>
+        <id>http://example.com/category/8f71a0bfc873.html</id>
+        <title>cnvd反反爬方案</title>
+        <link rel="alternate" href="http://example.com/category/8f71a0bfc873.html"/>
+        <content type="html">&lt;h2 id=&#34;puppeteer-extra&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#puppeteer-extra&#34;&gt;#&lt;/a&gt; puppeteer-extra&lt;/h2&gt;
+&lt;p&gt;即使给我们的 selenium 设置 User-Agent 也不会获取到 cnvd 的数据&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2022/08/3149c6248a203045-1024x93.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2022/08/81981192bb203054-1024x780.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;那么这时候就要用到一个反爬策略&lt;strong&gt; puppeteer-extra&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;这个脚本提供了一种快速的方法来提取从&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRodWIuY29tL2JlcnN0ZW5kL3B1cHBldGVlci1leHRyYS90cmVlL21hc3Rlci9wYWNrYWdlcy9wdXBwZXRlZXItZXh0cmEtcGx1Z2luLXN0ZWFsdGg=&#34;&gt; puppeteer-extra-stealth&lt;/span&gt; 到（缩小的）JavaScript 的最新隐身规避。生成的 JS 文件可用于纯&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9jaHJvbWVkZXZ0b29scy5naXRodWIuaW8vZGV2dG9vbHMtcHJvdG9jb2wvdG90Lw==&#34;&gt; CDP&lt;/span&gt; 实现或在您的开发工具中测试规避。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;安装 nodejs &amp;amp;&amp;amp; npm&lt;/li&gt;
+&lt;li&gt;运行 &lt;code&gt;npx extract-stealth-evasions&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;运行完成后会在你执行命令的文件夹下面生成一个 &lt;code&gt;stealth.min.js&lt;/code&gt;  文件。然后打开此文件点击注释中的 GitHub 链接&lt;/li&gt;
+&lt;li&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2022/08/4900f2522e203112.png&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
+&lt;li&gt;下载 GitHub 中的 &lt;code&gt;index.js&lt;/code&gt;  文件 &amp;amp;&amp;amp; &lt;code&gt;package.json&lt;/code&gt;  文件&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;修改 &lt;code&gt;package.json&lt;/code&gt;  中的内容
+&lt;ol&gt;
+&lt;li&gt;将 &lt;code&gt;puppeteer&lt;/code&gt;  改成 &lt;code&gt;puppeteer-core&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2022/08/2331acd24c203133.png&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;修改 &lt;code&gt;index.js&lt;/code&gt;  中的内容
+&lt;ol&gt;
+&lt;li&gt;给 &lt;code&gt;.launch()&lt;/code&gt;  函数增加一个参数 &lt;code&gt;executablePath&lt;/code&gt; , 指向你电脑上的 &lt;code&gt;Chrome&lt;/code&gt;  浏览器&lt;strong&gt;切记：路径不要使用 \\, 要使用 /, 否则会报错未转义字符&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2022/08/5815791eb7203147.png&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;保存文件，执行 &lt;code&gt;yarn install&lt;/code&gt;  安装依赖包&lt;/li&gt;
+&lt;li&gt;执行 &lt;code&gt;node index.js&lt;/code&gt; 1 秒钟以后就会生成 &lt;code&gt;stealth.min.js&lt;/code&gt;  了
+&lt;ul&gt;
+&lt;li&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2022/08/018254d39f203204.png&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;python-selenium&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#python-selenium&#34;&gt;#&lt;/a&gt; Python-selenium&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;&#39;&#39;&#39;
+Author: 江霁月
+Date: 2022-08-23 18:35:58
+LastEditors: 江霁月
+LastEditTime: 2022-08-23 20:21:34
+Description: cnvd反爬
+&#39;&#39;&#39;
+
+from selenium.webdriver import Chrome
+from selenium.webdriver.chrome.options import Options
+opt = Options()
+opt.add_argument(
+    &#39;user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36&#39;)
+
+
+web = Chrome()
+
+with open(&amp;quot;C:\\Users\\48967\\Desktop\\test\\stealth.min.js&amp;quot;) as f:
+    js = f.read()
+
+web.execute_cdp_cmd(&amp;quot;Page.addScriptToEvaluateOnNewDocument&amp;quot;, &amp;#123;
+    &amp;quot;source&amp;quot;: js
+&amp;#125;)
+opt.add_argument(&amp;quot;--disable-blink-features=AutomationControlled&amp;quot;)
+
+
+web.get(&#39;https://www.cnvd.org.cn/flaw/list&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2022/08/2eb89d3923203217-1024x549.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+</content>
+        <category term="反爬" />
+        <category term="爬虫" />
+        <updated>2022-08-23T12:37:54.000Z</updated>
+    </entry>
+    <entry>
+        <id>http://example.com/category/41e52e5ccf36.html</id>
+        <title>Python爬取中关村手机排行榜并对其可视化</title>
+        <link rel="alternate" href="http://example.com/category/41e52e5ccf36.html"/>
+        <content type="html">&lt;h2 id=&#34;导入模块&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#导入模块&#34;&gt;#&lt;/a&gt; 导入模块&lt;/h2&gt;
+&lt;figure class=&#34;highlight python&#34;&gt;&lt;figcaption data-lang=&#34;python&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;import&lt;/span&gt; requests &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;import&lt;/span&gt; re &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;import&lt;/span&gt; numpy &lt;span class=&#34;token keyword&#34;&gt;as&lt;/span&gt; np &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;import&lt;/span&gt; matplotlib &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;import&lt;/span&gt; matplotlib&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;pyplot &lt;span class=&#34;token keyword&#34;&gt;as&lt;/span&gt; plt &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;from&lt;/span&gt; lxml &lt;span class=&#34;token keyword&#34;&gt;import&lt;/span&gt; html &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;etree &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; html&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;etree&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h2 id=&#34;网站分析&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#网站分析&#34;&gt;#&lt;/a&gt; 网站分析&lt;/h2&gt;
+&lt;p&gt;中关村并没有用动态数据加载这里就直接爬取好了&lt;/p&gt;
+&lt;figure class=&#34;highlight python&#34;&gt;&lt;figcaption data-lang=&#34;python&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;get_articles_list&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;:&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    title_list &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    price_list &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    headers &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;        &lt;span class=&#34;token string&#34;&gt;&#39;User-Agent&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36&#39;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    url &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39;http://top.zol.com.cn/compositor/57/cell_phone.html&#39;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    page &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; requests&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;get&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;url&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; headers&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;headers&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;text&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    page_text &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; etree&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;HTML&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;page&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    li_list &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; page_text&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;xpath&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;11&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;        &lt;span class=&#34;token string&#34;&gt;&#39;//div[@class=&#34;rank-list&#34;]/div&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;#分析出包含手机名称以及价格的子 div&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;12&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    &lt;span class=&#34;token keyword&#34;&gt;for&lt;/span&gt; li &lt;span class=&#34;token keyword&#34;&gt;in&lt;/span&gt; li_list&lt;span class=&#34;token punctuation&#34;&gt;:&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;13&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;        title &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; li&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;xpath&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;./div[3]/div[1]/a/text()&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;#分析出手机名称&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;14&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;        price &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; li&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;xpath&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;./div[4]/div/text()&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;#手机价格&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;15&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;        &lt;span class=&#34;token keyword&#34;&gt;for&lt;/span&gt; t&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; p &lt;span class=&#34;token keyword&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;token builtin&#34;&gt;zip&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;title&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; price&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;#循环遍历出手机价格的字符串&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;16&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;            t &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; re&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;sub&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;r&#34;[\uFF08-\uFF09].*[\uFF08-\uFF09]&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#34;&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; t&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;#利用正则表达式将手机名称中全角括号包括括号中的内容去掉&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;17&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;            &lt;span class=&#34;token keyword&#34;&gt;if&lt;/span&gt; p &lt;span class=&#34;token operator&#34;&gt;!=&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39;概念产品&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;#如果手机价格不等于概念产品就将其添加到 list 中&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;18&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;                title_list&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;append&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;t&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;19&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;                p &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; p&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token builtin&#34;&gt;len&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;p&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;#截取去掉原本带着的￥符号&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;20&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;                price_list&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;append&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token builtin&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;p&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;21&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;            &lt;span class=&#34;token keyword&#34;&gt;else&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;#等于概念产品就将价格改为 99999 方便后期做柱状图&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;22&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;                p &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;99999999&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;23&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;                title_list&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;append&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;t&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;24&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;                price_list&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;append&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;p&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;25&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    &lt;span class=&#34;token keyword&#34;&gt;return&lt;/span&gt; title_list&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; price_list&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h2 id=&#34;利用matplotlib将数据生成柱状图&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#利用matplotlib将数据生成柱状图&#34;&gt;#&lt;/a&gt; 利用 matplotlib 将数据生成柱状图&lt;/h2&gt;
+&lt;figure class=&#34;highlight python&#34;&gt;&lt;figcaption data-lang=&#34;python&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;if&lt;/span&gt; __name__ &lt;span class=&#34;token operator&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#34;__main__&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;:&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    title_list&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; price_list &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; get_articles_list&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    &lt;span class=&#34;token comment&#34;&gt;# 设置 matplotlib 正常显示中文和负号&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    matplotlib&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;rcParams&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;font.sans-serif&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;SimHei&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;   &lt;span class=&#34;token comment&#34;&gt;# 用黑体显示中文&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    matplotlib&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;rcParams&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;axes.unicode_minus&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token boolean&#34;&gt;False&lt;/span&gt;     &lt;span class=&#34;token comment&#34;&gt;# 正常显示负号&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    get_articles_list&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;#运行 get_articles_list 函数&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    plt&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;ylabel&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#39;价格&#39;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;#y 轴标题&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    plt&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;xlabel&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;品牌&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;#x 轴标题&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    x &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; np&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;array&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;title_list&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;8&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;#选取前 8 个对其可视化&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    y &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; np&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;array&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;price_list&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;8&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;#选取前 8 个对其可视化&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;11&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    plt&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;bar&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;x&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; y&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;#设置 x,y 轴&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;12&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    plt&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;show&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;#显示图形&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h2 id=&#34;效果图&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#效果图&#34;&gt;#&lt;/a&gt; 效果图&lt;/h2&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://img-blog.csdnimg.cn/20201217203443450.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxNzE0OTUx,size_16,color_FFFFFF,t_70&#34; alt=&#34;在这里插入图片描述&#34;&gt; &lt;img data-src=&#34;https://img-blog.csdnimg.cn/20201217203552694.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxNzE0OTUx,size_16,color_FFFFFF,t_70&#34; alt=&#34;在这里插入图片描述&#34;&gt;&lt;/p&gt;
+</content>
+        <category term="爬虫" />
+        <category term="python" />
+        <updated>2021-09-03T07:16:12.000Z</updated>
+    </entry>
+    <entry>
+        <id>http://example.com/category/7a9f07da6b25.html</id>
+        <title>Python-Scrapy的基本使用</title>
+        <link rel="alternate" href="http://example.com/category/7a9f07da6b25.html"/>
+        <content type="html">&lt;h2 id=&#34;scrapy的基本使用&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#scrapy的基本使用&#34;&gt;#&lt;/a&gt; scrapy 的基本使用&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;创建一个工程  &lt;code&gt;scrapy startproject filename&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;必须在 &lt;code&gt;spiders&lt;/code&gt;  这个目录下创建一个爬虫文件
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;cd proName&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;scrapy genspider spiderName www.xxx.com&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;执行工程: &lt;code&gt;scrapy crawl spiderName&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;settingspy&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#settingspy&#34;&gt;#&lt;/a&gt; &lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovL3NldHRpbmdzLnB5&#34;&gt;settings.py&lt;/span&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;不遵从 &lt;code&gt;rebots&lt;/code&gt;  协议&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ROBOTSTXT_OBEY = False&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;进行 &lt;code&gt;UA&lt;/code&gt;  伪装&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;USER_AGENT = &#39;UA&#39;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;进行日志等级设定
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;LOG_LEVEL = &#39;ERROR&#39;&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;scrapy解析&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#scrapy解析&#34;&gt;#&lt;/a&gt; scrapy 解析&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;def parse(self, response):
+    # 解析:作者的名称+段子的内容
+    div_list = response.xpath(&#39;//div[@class=&amp;quot;col1 old-style-col1&amp;quot;]/div&#39;)
+    for div in div_list:
+        # xpath返回的是列表, 但是列表元素一定是Selector类型的对象想要取得内容可以直接.extract()
+        # .extract可以将Selector对象中的data参数存储的字符串提取出来
+        # 只要能保证返回的列表里只有一个内容就可以使用.extract_first否则还是使用[下标]取出
+        # .extract_first将列表中的第0个取出
+        author = div.xpath(&#39;./div[1]/a[2]/h2/text()&#39;).extract_first()
+        # 列表调用了.extract之后, 则表示将列表中每一个Selector对象中的data对应的字符串提取了出来
+        content = div.xpath(&#39;./a[1]/div/span//text()&#39;).extract()
+        content = &#39;&#39;.join(content)  # 将列表转换为字符串
+        print(author, content)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;scrapy持久化存储&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#scrapy持久化存储&#34;&gt;#&lt;/a&gt; scrapy 持久化存储&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;基于终端指令:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;要求：只可以将 &lt;code&gt;parse&lt;/code&gt;  方法的返回值存储到本地的文本文件中&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;scrapy crawl qiubai -o ./qiubai.csv&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;注意：持久化存储对应的文本文件类型只可以为: &lt;code&gt;&#39;json&#39;,&#39;jsonlines&#39;,&#39;jl&#39;,&#39;csv&#39;,&#39;xml&#39;,&#39;marshal&#39;,&#39;pickle&#39;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;好处：简洁高效便捷&lt;/li&gt;
+&lt;li&gt;缺点：局限性较强 (数据值可以存储到指定后缀名文件中)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;基于管道&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;编码流程:&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;数据解析&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#qiubai.py 文件名
+
+import scrapy from qiubaiPro.items import QiubaiproItem#导入item类
+class QiubaiSpider(scrapy.Spider):
+    name = &#39;qiubai&#39;
+    # allowed_domains = [&#39;www.xxx.com&#39;]
+    start_urls = [&#39;https://www.qiushibaike.com/text/&#39;]
+
+    def parse(self, response):
+        # 解析:作者的名称+段子的内容
+        div_list = response.xpath(&#39;//div[@class=&amp;quot;col1 old-style-col1&amp;quot;]/div&#39;)
+        for div in div_list:
+            # xpath返回的是列表, 但是列表元素一定是Selector类型的对象想要取得内容可以直接.extract()
+            # .extract可以将Selector对象中的data参数存储的字符串提取出来
+            # 只要能保证返回的列表里只有一个内容就可以使用.extract_first否则还是使用[下标]取出
+            # .extract_first将列表中的第0个取出
+          # 匿名用户和正常用户的用户名不在同一个div中所以使用管道符分割,来写2个xpath表达式
+        author = div.xpath(&#39;./div[1]/a[2]/h2/text()  ./div[1]/span[2]/h2/text()&#39;).extract_first()
+            # 列表调用了.extract之后, 则表示将列表中每一个Selector对象中的data对应的字符串提取了出来
+            content = div.xpath(&#39;./a[1]/div/span//text()&#39;).extract()
+            content = &#39;&#39;.join(content)  # 将列表转换为字符串
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;在 &lt;code&gt;item&lt;/code&gt;  类中定义相关的属性&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#items.py 文件名
+
+# Define here the models for your scraped items
+#
+# See documentation in:
+# https://docs.scrapy.org/en/latest/topics/items.html
+
+import scrapy
+
+
+class QiubaiproItem(scrapy.Item):
+    # define the fields for your item here like:
+    author = scrapy.Field()#定义author属性
+    content = scrapy.Field()#定义content属性
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;将解析的数据封装存储到 &lt;code&gt;item&lt;/code&gt;  类型的对象中&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#qiubai.py 文件名
+item = QiubaiproItem()#实例化对象
+item[&#39;author&#39;] = author#将author存储到item对象中
+item[&#39;content&#39;] = content#将content存储到item对象中
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;将 &lt;code&gt;item&lt;/code&gt;  类型的对象提交给管道进行持久化存储的操作&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 将item提交给了管道
+yield item
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;在管道类的 &lt;code&gt;process_item&lt;/code&gt;  中要将其接收到的 &lt;code&gt;item&lt;/code&gt;  对象中存储的数据进行持久化存储操作&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#pipelines.py 文件名
+
+# Define your item pipelines here
+#
+# Don&#39;t forget to add your pipeline to the ITEM_PIPELINES setting
+# See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
+
+
+# useful for handling different item types with a single interface
+from itemadapter import ItemAdapter
+
+
+class QiubaiproPipeline:
+    # 专门用来处理item类型对象
+    # 该方法可以接收爬虫文件提交过来的item对象
+    # 该方法每接收到一个item就会被调用一次
+    fp = None
+    # 重写父类的一个方法:该方法只在开始爬虫的时候被调用一次
+
+    def open_spider(self, spider):
+        print(&#39;打开文件&#39;)
+        self.fp = open(&#39;./qiubai.txt&#39;, &#39;w&#39;, encoding=&#39;utf-8&#39;)
+        pass
+
+    def process_item(self, item, spider):
+        author = item[&#39;author&#39;]
+        content = item[&#39;content&#39;]
+        self.fp.write(author+&#39;:&#39;+content+&#39;\n&#39;)
+        return item
+
+    def close_spider(self, spider):
+        print(&#39;关闭文件&#39;)
+        self.fp.close()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;在配置文件中开启管道好处:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#setting.py 文件名
+#将以下内容取消注释,300代表优先级,数字越小优先级越高,一个键值对应一个管道类
+ITEM_PIPELINES = &amp;#123;
+    &#39;qiubaiPro.pipelines.QiubaiproPipeline&#39;: 300,
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;优点:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;通用性强&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;缺点:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;操作繁琐&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;测试题&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;将爬取到的数据一份存储到本地一份存储到数据库，如何实现？&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;#settings.py 文件名
+
+ITEM_PIPELINES = &amp;#123;
+    &#39;qiubaiPro.pipelines.QiubaiproPipeline&#39;: 300,
+    &#39;qiubaiPro.pipelines.mysqlPileLine&#39;: 301,
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;#pipelines.py 文件名
+
+# Define your item pipelines here
+#
+# Don&#39;t forget to add your pipeline to the ITEM_PIPELINES setting
+# See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
+
+
+# useful for handling different item types with a single interface
+from itemadapter import ItemAdapter
+import pymysql
+
+
+class QiubaiproPipeline:
+    # 专门用来处理item类型对象
+    # 该方法可以接收爬虫文件提交过来的item对象
+    # 该方法每接收到一个item就会被调用一次
+    fp = None
+    # 重写父类的一个方法:该方法只在开始爬虫的时候被调用一次
+
+    def open_spider(self, spider):
+        print(&#39;打开文件&#39;)
+        self.fp = open(&#39;./qiubai.txt&#39;, &#39;w&#39;, encoding=&#39;utf-8&#39;)
+        pass
+
+    def process_item(self, item, spider):
+        author = item[&#39;author&#39;]
+        content = item[&#39;content&#39;]
+        self.fp.write(author+&#39;:&#39;+content+&#39;\n&#39;)
+        return item  # return item就会传递给下一个即将被执行的管道类
+
+    def close_spider(self, spider):
+        print(&#39;关闭文件&#39;)
+        self.fp.close()
+        # 管道文件中一个管道类对应将一组数据存储到一个平台或者载体中
+
+
+        class mysqlPileLine:
+            conn = None
+            cursor = None
+
+            def open_spider(self, spider):
+                print(&#39;正在连接数据库&#39;)
+                self.conn = pymysql.Connect(
+                    host=&#39;127.0.0.1&#39;, port=3306, user=&#39;root&#39;, password=&#39;123456789&#39;, db=&#39;qiubai&#39;, charset=&amp;quot;utf8&amp;quot;)
+
+                def process_item(self, item, spider):
+                    print(&#39;正在写入数据&#39;)
+                    self.cursor = self.conn.cursor()
+                    try:
+                        self.cursor.execute(&#39;insert into qiubai values(&amp;quot;%s&amp;quot;,&amp;quot;%s&amp;quot;)&#39; %
+                                            (item[&amp;quot;author&amp;quot;], item[&amp;quot;content&amp;quot;]))
+                        self.conn.commit()
+                        except Exception as e:
+                            print(e)
+                            self.conn.rollback
+                            return item
+
+                        def close_spider(self, spider):
+                            print(&#39;正在关闭连接&#39;)
+                            self.cursor.close()
+                            self.conn.close()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;爬虫文件提交的 &lt;code&gt;item&lt;/code&gt;  类型的对象最终会提交给哪一个管道类？
+&lt;ul&gt;
+&lt;li&gt;爬虫文件提交的 &lt;code&gt;item&lt;/code&gt;  只会给管道文件中第一个被执行的管道类接收&lt;/li&gt;
+&lt;li&gt;第一个管道类中的 &lt;code&gt;process_item&lt;/code&gt;  中的 &lt;code&gt;return item&lt;/code&gt;  表示将 &lt;code&gt;item&lt;/code&gt;  传递给下一个即将被执行的管道类&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;基于spider的全站数据爬取&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#基于spider的全站数据爬取&#34;&gt;#&lt;/a&gt; 基于 Spider 的全站数据爬取&lt;/h3&gt;
+&lt;h4 id=&#34;什么是全站数据爬取&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#什么是全站数据爬取&#34;&gt;#&lt;/a&gt; 什么是全站数据爬取&lt;/h4&gt;
+&lt;p&gt;就是将网站中某板块下的全部页码对应的页面数据爬取下来&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;- 需求:爬取校花网中的照片的名称
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;实现方式:
+&lt;ul&gt;
+&lt;li&gt;自行手动进行请求发送 (推荐)&lt;/li&gt;
+&lt;li&gt;将所有页面的 &lt;code&gt;url&lt;/code&gt;  添加到 &lt;code&gt;start_urls&lt;/code&gt;  列表中 (不推荐，如果页码有上万个呢？)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;#xiaohua.py
+
+import scrapy
+
+
+class XiaohuaSpider(scrapy.Spider):
+    name = &#39;xiaohua&#39;
+    # allowed_domains = [&#39;www.xxx.com&#39;]
+    start_urls = [&#39;http://www.521609.com/tuku/index.html&#39;]
+    # 生成一个通用的url模板(不可变)
+    url = &#39;http://www.521609.com/tuku/index_%d.html&#39;
+    page_num = 2
+
+    def parse(self, response):
+        li_list = response.xpath(&#39;//ul[@class=&amp;quot;pbl &amp;quot;]/li&#39;)
+        for li in li_list:
+            img_name = li.xpath(&#39;./a/p/text()&#39;).extract_first()
+            print(img_name)
+        if self.page_num &amp;lt;= 51:
+            print(self.page_num)
+            new_url = format(self.url % self.page_num)
+            # 手动请求发送:callbak回调函数是专门用于数据解析
+            self.page_num += 1
+            yield scrapy.Request(url=new_url, callback=self.parse)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;请求传参&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#请求传参&#34;&gt;#&lt;/a&gt; 请求传参&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;使用场景：如果爬取的解析数据不在同一张页面中.(深度爬取)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;图片数据爬取之imagespipeline&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#图片数据爬取之imagespipeline&#34;&gt;#&lt;/a&gt; 图片数据爬取之 ImagesPipeline&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;基于 &lt;code&gt;scrapy&lt;/code&gt;  爬取字符串类型的数据和爬取图片类型的数据区别？&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;字符串：只需要 &lt;code&gt;xpath&lt;/code&gt;  进行解析且提交管道进行持久化存储&lt;/li&gt;
+&lt;li&gt;图片: &lt;code&gt;xpath&lt;/code&gt;  解析出图片的 &lt;code&gt;src&lt;/code&gt;  属性值。单独对图片地址发起请求获取图片二进制类型的数据&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;ImagesPipeline&lt;/code&gt; :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;只需要将 &lt;code&gt;img&lt;/code&gt;  的 &lt;code&gt;src&lt;/code&gt;  的属性值进行解析，将属性值封装到 &lt;code&gt;item&lt;/code&gt;  并提交给管道，管道就会对图片的 &lt;code&gt;src&lt;/code&gt;  进行请求发送获取图片的二进制类型的数据，且还会帮我们进行持久化存储&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;需求：爬取站长素材中的高清图片&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;使用流程:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;数据解析 (地址的地址)&lt;/li&gt;
+&lt;li&gt;将存储文件地址的 &lt;code&gt;item&lt;/code&gt;  提交到指定的管道类&lt;/li&gt;
+&lt;li&gt;在管道文件中定制一个基于 &lt;code&gt;ImagesPipeLine&lt;/code&gt;  的一个管道类&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;#pipelines.py
+
+# Define your item pipelines here
+#
+# Don&#39;t forget to add your pipeline to the ITEM_PIPELINES setting
+# See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
+
+
+# useful for handling different item types with a single interface
+from itemadapter import ItemAdapter
+from scrapy.pipelines.images import ImagesPipeline
+import scrapy
+# class ZhanzhangproPipeline:
+#     def process_item(self, item, spider):
+#         return item
+
+
+class imgsPileLine(ImagesPipeline):
+    # 就是可以根据图片地址进行图片数据的请求
+    def get_media_requests(self, item, info):
+        yield scrapy.Request(item[&#39;src&#39;])
+    # 指定图片存储的路径
+
+    def file_path(self, request, response=None, info=None):
+        imgName = request.url.split(&#39;/&#39;)[-1]
+        return imgName
+
+    def item_completed(self, results, item, info):
+        return item  # 返回给下一个即将被执行的管道类
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;修改 &lt;code&gt;serrings.py&lt;/code&gt;  配置文件&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;#serrings.py
+#指定图片存储的目录
+IMAGES_STORE = &#39;./imgs&#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;指定开启的管道类：定制的管道类&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;serrings.py
+
+ITEM_PIPELINES = &amp;#123;
+    &#39;zhanzhangPro.pipelines.imgsPileLine&#39;: 300,
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;中间件&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#中间件&#34;&gt;#&lt;/a&gt; 中间件&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;下载中间件&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;位置：引擎和下载器之间&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;作用：批量拦截到整个工程中所有的请求和响应&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;拦截请求&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;UA&lt;/code&gt;  伪装&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;代理 &lt;code&gt;IP&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;拦截响应:&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;篡改响应数据，响应对象&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;设置 &lt;code&gt;UA&lt;/code&gt;  伪装以及代理 &lt;code&gt;IP&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#middlewares.py
+
+# Define here the models for your spider middleware
+#
+# See documentation in:
+# https://docs.scrapy.org/en/latest/topics/spider-middleware.html
+
+from scrapy import signals
+
+# useful for handling different item types with a single interface
+from itemadapter import is_item, ItemAdapter
+import random
+
+
+class QiubaiproDownloaderMiddleware:
+    user_agent_list = [
+        &amp;quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 &amp;quot;
+        &amp;quot;(KHTML, like Gecko) Chrome/22.0.1207.1 Safari/537.1&amp;quot;,
+        &amp;quot;Mozilla/5.0 (X11; CrOS i686 2268.111.0) AppleWebKit/536.11 &amp;quot;
+        &amp;quot;(KHTML, like Gecko) Chrome/20.0.1132.57 Safari/536.11&amp;quot;,
+        &amp;quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.6 &amp;quot;
+        &amp;quot;(KHTML, like Gecko) Chrome/20.0.1092.0 Safari/536.6&amp;quot;,
+        &amp;quot;Mozilla/5.0 (Windows NT 6.2) AppleWebKit/536.6 &amp;quot;
+        &amp;quot;(KHTML, like Gecko) Chrome/20.0.1090.0 Safari/536.6&amp;quot;,
+        &amp;quot;Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.1 &amp;quot;
+        &amp;quot;(KHTML, like Gecko) Chrome/19.77.34.5 Safari/537.1&amp;quot;,
+        &amp;quot;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/536.5 &amp;quot;
+        &amp;quot;(KHTML, like Gecko) Chrome/19.0.1084.9 Safari/536.5&amp;quot;,
+        &amp;quot;Mozilla/5.0 (Windows NT 6.0) AppleWebKit/536.5 &amp;quot;
+        &amp;quot;(KHTML, like Gecko) Chrome/19.0.1084.36 Safari/536.5&amp;quot;,
+        &amp;quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.3 &amp;quot;
+        &amp;quot;(KHTML, like Gecko) Chrome/19.0.1063.0 Safari/536.3&amp;quot;,
+        &amp;quot;Mozilla/5.0 (Windows NT 5.1) AppleWebKit/536.3 &amp;quot;
+        &amp;quot;(KHTML, like Gecko) Chrome/19.0.1063.0 Safari/536.3&amp;quot;,
+        &amp;quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_0) AppleWebKit/536.3 &amp;quot;
+        &amp;quot;(KHTML, like Gecko) Chrome/19.0.1063.0 Safari/536.3&amp;quot;,
+        &amp;quot;Mozilla/5.0 (Windows NT 6.2) AppleWebKit/536.3 &amp;quot;
+        &amp;quot;(KHTML, like Gecko) Chrome/19.0.1062.0 Safari/536.3&amp;quot;,
+        &amp;quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.3 &amp;quot;
+        &amp;quot;(KHTML, like Gecko) Chrome/19.0.1062.0 Safari/536.3&amp;quot;,
+        &amp;quot;Mozilla/5.0 (Windows NT 6.2) AppleWebKit/536.3 &amp;quot;
+        &amp;quot;(KHTML, like Gecko) Chrome/19.0.1061.1 Safari/536.3&amp;quot;,
+        &amp;quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.3 &amp;quot;
+        &amp;quot;(KHTML, like Gecko) Chrome/19.0.1061.1 Safari/536.3&amp;quot;,
+        &amp;quot;Mozilla/5.0 (Windows NT 6.1) AppleWebKit/536.3 &amp;quot;
+        &amp;quot;(KHTML, like Gecko) Chrome/19.0.1061.1 Safari/536.3&amp;quot;,
+        &amp;quot;Mozilla/5.0 (Windows NT 6.2) AppleWebKit/536.3 &amp;quot;
+        &amp;quot;(KHTML, like Gecko) Chrome/19.0.1061.0 Safari/536.3&amp;quot;,
+        &amp;quot;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.24 &amp;quot;
+        &amp;quot;(KHTML, like Gecko) Chrome/19.0.1055.1 Safari/535.24&amp;quot;,
+        &amp;quot;Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/535.24 &amp;quot;
+        &amp;quot;(KHTML, like Gecko) Chrome/19.0.1055.1 Safari/535.24&amp;quot;
+    ]
+    # 可被选用的代理IP
+    PROXY_http = [
+        &#39;153.180.102.104:80&#39;,
+        &#39;195.208.131.189:56055&#39;,
+    ]
+    PROXY_https = [
+        &#39;120.83.49.90:9000&#39;,
+        &#39;95.189.112.214:35508&#39;,
+    ]
+
+    # 拦截请求
+    def process_request(self, request, spider):
+        # UA伪装
+        request.headers[&#39;User-Agent&#39;] = random.choice(self.user_agent_list)
+        return None
+
+    # 拦截所有的响应
+    def process_response(self, request, response, spider):
+        # Called with the response returned from the downloader.
+
+        # Must either;
+        # - return a Response object
+        # - return a Request object
+        # - or raise IgnoreRequest
+        return response
+
+    # 拦截发生异常的请求
+    def process_exception(self, request, exception, spider):
+        # 发生请求异常后设置代理
+        # 对拦截到请求的url进行判断（协议头到底是http还是https）
+        # request.url返回值：http://www.xxx.com
+        if request.url.split(&#39;:&#39;)[0] == &#39;https&#39;:  # 请求的协议头
+            ip = random.choice(self.PROXY_https)
+            request.meta[&#39;proxy&#39;] = &#39;https://&#39;+ip
+        else:
+            ip = random.choice(self.PROXY_http)
+            request.meta[&#39;proxy&#39;] = &#39;http://&#39; + ip
+        return request  # 将修正之后的请求对象进行重新的请求发送
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;在 &lt;code&gt;settings.py&lt;/code&gt;  中开启下载中间件&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;DOWNLOADER_MIDDLEWARES = &amp;#123;
+   &#39;qiubaiPro.middlewares.QiubaiproDownloaderMiddleware&#39;: 543,
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;需求：爬取网易新闻中的新闻数据 (标题和内容)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;通过网易新闻的首页解析出五大板块对应的详情页 &lt;code&gt;URL&lt;/code&gt;  (没有动态加载)&lt;/li&gt;
+&lt;li&gt;每一个板块对应的新闻标题都是动态加载出来的 (动态加载)&lt;/li&gt;
+&lt;li&gt;通过解析出每一条新闻详情页的 &lt;code&gt;url&lt;/code&gt;  获取详情页的页面源码，解析出新闻内容&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;#settings.py
+#基本操作
+USER_AGENT = &#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36&#39;
+# Obey robots.txt rules
+ROBOTSTXT_OBEY = False
+LOG_LEVEL = &#39;ERROR&#39;
+#开启中间件拦截
+DOWNLOADER_MIDDLEWARES = &amp;#123;
+    &#39;wangyiPro.middlewares.WangyiproDownloaderMiddleware&#39;: 543,
+&amp;#125;
+#开启管道
+ITEM_PIPELINES = &amp;#123;
+    &#39;wangyiPro.pipelines.WangyiproPipeline&#39;: 300,
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#wangyi.py
+
+import scrapy
+from selenium import webdriver
+from wangyiPro.items import WangyiproItem
+
+
+class WangyiSpider(scrapy.Spider):
+    name = &#39;wangyi&#39;
+    # allowed_domains = [&#39;https://news.163.com/&#39;]
+    start_urls = [&#39;https://news.163.com/&#39;]
+    models_urls = []  # 存储五个板块对应详情页的url
+    # 解析五大板块对应详情页的url
+
+    # 实例化一个浏览器对象
+    def __init__(self):
+        # 后面是你的浏览器驱动位置，记得前面加r&#39;&#39;,&#39;r&#39;是防止字符转义的
+        self.bro = webdriver.Chrome(
+            executable_path=r&#39;D:\Learning world\personal project\personal project\Python\爬虫\scrapy\wangyiPro\wangyiPro\chromedriver.exe&#39;)
+
+    def parse(self, response):
+        li_list = response.xpath(&#39;//div[@class=&amp;quot;ns_area list&amp;quot;]/ul/li&#39;)
+        alist = [3, 4, 6, 7, 8]
+        for index in alist:
+            model_url = li_list[index].xpath(&#39;./a/@href&#39;).extract_first()
+            self.models_urls.append(model_url)
+
+        # 依次对每一个板块对应的页面进行请求
+        for url in self.models_urls:  # 对每一个板块的url进行请求发送
+            yield scrapy.Request(url=url, callback=self.parse_model)
+
+    # 每一个板块对应的新闻标题相关的内容都是动态加载
+    def parse_model(self, response):  # 解析每一个板块页面中对应新闻的标题和新闻详情页的url
+        div_list = response.xpath(&#39;//div[@class=&amp;quot;ndi_main&amp;quot;]/div&#39;)
+        for div in div_list:
+            title = div.xpath(&#39;./div/div[1]/h3/a/text()&#39;).extract_first()
+            new_detail_url = div.xpath(
+                &#39;./div/div[1]/h3/a/@href&#39;).extract_first()
+            item = WangyiproItem()
+            item[&#39;title&#39;] = title
+            # 对新闻详情页的url发起请求
+            yield scrapy.Request(url=new_detail_url, callback=self.parse_detail, meta=&amp;#123;&#39;item&#39;: item&amp;#125;)
+
+    def parse_detail(self, response):
+        content = response.xpath(
+            &#39;//div[@class=&amp;quot;post_body&amp;quot;]/p/text()&#39;).extract()
+        content = &#39;&#39;.join(content)
+        item = response.meta[&#39;item&#39;]
+        item[&#39;content&#39;] = content
+        yield item
+
+    def closed(self, spider):
+        self.bro.quit()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;#middlewares.py
+
+
+# Define here the models for your spider middleware
+#
+# See documentation in:
+# https://docs.scrapy.org/en/latest/topics/spider-middleware.html
+
+from scrapy import signals
+
+# useful for handling different item types with a single interface
+from itemadapter import is_item, ItemAdapter
+from scrapy.http import HtmlResponse
+from time import sleep
+
+
+class WangyiproDownloaderMiddleware:
+    def process_request(self, request, spider):
+        # Called for each request that goes through the downloader
+        # middleware.
+
+        # Must either:
+        # - return None: continue processing this request
+        # - or return a Response object
+        # - or return a Request object
+        # - or raise IgnoreRequest: process_exception() methods of
+        #   installed downloader middleware will be called
+        return None
+
+    # 通过该方法拦截五大板块对应的响应对象,进行篡改
+    def process_response(self, request, response, spider):  # spider表示的是爬虫对象
+        bro = spider.bro  # 获取了在爬虫类中定义的浏览器对象
+        # 挑选出指定的响应对象进行篡改
+        # 通过url指定request
+        # 通过request指定response
+        if request.url in spider.models_urls:
+            bro.get(request.url)  # 五个板块对应的url进行请求
+            sleep(2)
+            page_text = bro.page_source  # 包含了动态加载的新闻数据
+            # response  # 五大板块对应的响应对象
+            # 针对定位到的response进行篡改
+            # 实例化新的相应对象,符合需求:包含动态加载出的新闻数据,替代原来不满足需求的响应对象
+            # 如何获取动态加载出的新闻数据呢?
+            # 基于selenium便捷的获取动态加载数据
+            new_response = HtmlResponse(
+                url=request.url, body=page_text, encoding=&#39;utf-8&#39;, request=request)
+            return new_response
+        else:
+            # response  # 其他请求对应的响应对象
+            return response
+
+    def process_exception(self, request, exception, spider):
+        # Called when a download handler or a process_request()
+        # (from other downloader middleware) raises an exception.
+
+        # Must either:
+        # - return None: continue processing this exception
+        # - return a Response object: stops process_exception() chain
+        # - return a Request object: stops process_exception() chain
+        pass
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;#items.py
+
+import scrapy
+
+
+class WangyiproItem(scrapy.Item):
+    # define the fields for your item here like:
+    title = scrapy.Field()
+    content = scrapy.Field()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;#pipelines.py
+
+
+# Define your item pipelines here
+#
+# Don&#39;t forget to add your pipeline to the ITEM_PIPELINES setting
+# See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
+
+
+# useful for handling different item types with a single interface
+from itemadapter import ItemAdapter
+
+
+class WangyiproPipeline:
+    def process_item(self, item, spider):
+        print(item)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;crawlspider类&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#crawlspider类&#34;&gt;#&lt;/a&gt; CrawlSpider 类&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;CrawlSpider类:Spider&lt;/code&gt;  的一个子类&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;全站数据爬取的方式
+&lt;ul&gt;
+&lt;li&gt;基于 &lt;code&gt;Spider&lt;/code&gt;  手动请求&lt;/li&gt;
+&lt;li&gt;基于 &lt;code&gt;CrawlSpider&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;CrawlSpider&lt;/code&gt;  的使用:
+&lt;ul&gt;
+&lt;li&gt;创建一个工程&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cd xxx&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;创建爬虫文件 (与之前不一样，基于 &lt;code&gt;CrawlSpider&lt;/code&gt;  子类)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;scrapy genspider -t crawl name www.xxx.com&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;LinkExtractor&lt;/code&gt;  (链接提取器):
+&lt;ul&gt;
+&lt;li&gt;作用：根据指定规则 ( &lt;code&gt;allow=&amp;quot;正则&amp;quot;&lt;/code&gt; ) 进行指定链接的提取&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Rule&lt;/code&gt;  (规则解析器)
+&lt;ul&gt;
+&lt;li&gt;作用：将链接提取器提取到的链接进行指定规则 ( &lt;code&gt;callback&lt;/code&gt;  的解析操作)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;分布式爬虫&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#分布式爬虫&#34;&gt;#&lt;/a&gt; 分布式爬虫&lt;/h2&gt;
+&lt;h3 id=&#34;分布式爬虫的概念&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#分布式爬虫的概念&#34;&gt;#&lt;/a&gt; 分布式爬虫的概念&lt;/h3&gt;
+&lt;p&gt;我们需要搭建一个分布式的集群，让其对一组资源进行分布联合爬取&lt;/p&gt;
+&lt;h3 id=&#34;作用&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#作用&#34;&gt;#&lt;/a&gt; 作用&lt;/h3&gt;
+&lt;p&gt;提升爬取数据的效率&lt;/p&gt;
+&lt;h3 id=&#34;如何实现分布式&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#如何实现分布式&#34;&gt;#&lt;/a&gt; 如何实现分布式&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;安装 &lt;code&gt;scrapy-redis&lt;/code&gt;  的组件&lt;/li&gt;
+&lt;li&gt;原生的 &lt;code&gt;scrapy&lt;/code&gt;  是不可以实现分布式爬虫的，必须要让 &lt;code&gt;scrapy&lt;/code&gt;  结合着 &lt;code&gt;scrapy-redis&lt;/code&gt;  组件一起实现分布式爬虫&lt;/li&gt;
+&lt;li&gt;为什么原生的 &lt;code&gt;scrapy&lt;/code&gt;  不可以实现分布式？
+&lt;ul&gt;
+&lt;li&gt;调度器不可以被分布式集群共享&lt;/li&gt;
+&lt;li&gt;管道不可以被分布式集群共享&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;scrapy-redis&lt;/code&gt;  组件作用
+&lt;ul&gt;
+&lt;li&gt;可以给原生的 &lt;code&gt;scrapy&lt;/code&gt;  框架提供可以被共享的管道和调度器&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;实现流程
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;创建一个工程&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;创建一个基于 &lt;code&gt;CrawlSpider&lt;/code&gt;  的爬虫文件&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;修改当前的爬虫文件&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;导包&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;from scrapy_redis.spiders import RedisCrawlSpider&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;将 &lt;code&gt;start_urls&lt;/code&gt;  和 &lt;code&gt;allowed_domains&lt;/code&gt;  进行注释&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;添加一个新属性：与之代替的是 &lt;code&gt;redis_key=&#39;sun&#39;&lt;/code&gt;  可以被共享的调度器队列的名称&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;编写数据解析相关的操作&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;将当前爬虫类的父类修改成 &lt;code&gt;RedisCrawlSpider&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;修改配置文件 &lt;code&gt;settings.py&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;指定使用可以被共享的管道&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;ITEM_PIPELINES = &amp;#123;
+    &#39;scrapy_redis.pipelines.RedisPipeline&#39;:400
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;指定调度器&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;#增加了一个去重容器类的配置,作用使用Redis的set集合来存储请求的指纹数据,从而实现请求去重的持久化
+DUPEFILTER_CLASS = &amp;quot;scrapy_redis.dupefilter.RFPDupeFilter&amp;quot;
+#使用scrapy-redis组件自己的调度器
+SCHEDULER=&amp;quot;scrapy_redis.scheduler.Scheduler&amp;quot;
+#配置调度器是否要持久化,也就是当爬虫结束了,要不要清空Redis中请求队列和去重指纹的set.True=保留，False=清空
+SCHEDULER_PERSIST=TRUE
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;指定 &lt;code&gt;redis&lt;/code&gt;  服务器&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;#setting.py
+
+REDIS_HOST = &#39;redis服务器的ip地址&#39;
+REDIS_PORT = 6379
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;redis&lt;/code&gt;  相关操作配置&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;配置 `redis` 的配置文件&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;linux/mac:redis.conf&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;windows:redis.windows.conf&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;打开配置文件修改
+&lt;ul&gt;
+&lt;li&gt;将 &lt;code&gt;bind 127.0.0.1&lt;/code&gt;  进行删除&lt;/li&gt;
+&lt;li&gt;关闭保护模式: &lt;code&gt;protected_mode yes&lt;/code&gt;  改为 &lt;code&gt;no&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;结合着配置文件开启 &lt;code&gt;redis&lt;/code&gt;  服务
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;redis-server&lt;/code&gt;  配置文件&lt;/li&gt;
+&lt;li&gt;启动客户端&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;redis-cli&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;执行工程&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;scrapy runspider xxx.py&lt;/code&gt;  (爬虫源文件名称)&lt;/li&gt;
+&lt;li&gt;向调度器的队列中放入一个起始的 &lt;code&gt;url&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;调度器的队列在 redis 的客户端中
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;lpush sun(爬虫文件中的redis_key) www.xxx.com(起始的url)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+        <category term="爬虫" />
+        <category term="python" />
+        <updated>2021-05-24T06:57:08.000Z</updated>
+    </entry>
+</feed>

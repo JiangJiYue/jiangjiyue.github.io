@@ -1,0 +1,241 @@
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>http://example.com</id>
+    <title>江霁月的私人小屋 • Posts by &#34;zabbix&#34; tag</title>
+    <link href="http://example.com" />
+    <updated>2021-09-14T10:08:48.000Z</updated>
+    <category term="Docker" />
+    <category term="linux" />
+    <category term="mysql" />
+    <category term="Centos" />
+    <category term="优化" />
+    <category term="缓存" />
+    <category term="反爬" />
+    <category term="爬虫" />
+    <category term="服务器" />
+    <category term="ELK" />
+    <category term="安全管理" />
+    <category term="数据可视化" />
+    <category term="监控" />
+    <category term="运维" />
+    <category term="Zabbix" />
+    <category term="Kali" />
+    <category term="信息安全" />
+    <category term="数据库" />
+    <category term="nginx" />
+    <category term="PHP" />
+    <category term="openresty" />
+    <category term="网关" />
+    <category term="PHP框架" />
+    <category term="python" />
+    <category term="Security" />
+    <category term="信息收集" />
+    <category term="SSL" />
+    <category term="安全加固" />
+    <category term="Linux" />
+    <category term="waf" />
+    <entry>
+        <id>http://example.com/category/2d9a2ff9eff9.html</id>
+        <title>Zabbix-Grafana图形展示软件</title>
+        <link rel="alternate" href="http://example.com/category/2d9a2ff9eff9.html"/>
+        <content type="html">&lt;h2 id=&#34;下载grafana-rpm包&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#下载grafana-rpm包&#34;&gt;#&lt;/a&gt; 下载 grafana rpm 包&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;# 下载Rpm包
+wget https://dl.grafana.com/oss/release/grafana-7.4.0-1.x86_64.rpm
+# 安装grafana
+sudo yum install -y grafana-7.4.0-1.x86_64.rpm
+# Grafana安装zabbix插件
+grafana-cli plugins install alexanderzobnin-zabbix-app
+# 安装饼状图
+grafana-cli plugins install grafana-piechart-panel
+# 开机自启
+systemctl enable grafana-server
+# 启动
+systemctl start grafana-server
+地址:ip:3000
+# Grafana Zabbix插件配置数据源
+URL:http://localhost/api_jsonrpc.php
+&lt;/code&gt;&lt;/pre&gt;
+</content>
+        <category term="Centos" />
+        <category term="安全管理" />
+        <category term="数据可视化" />
+        <category term="监控" />
+        <category term="运维" />
+        <category term="Zabbix" />
+        <updated>2021-09-14T10:08:48.000Z</updated>
+    </entry>
+    <entry>
+        <id>http://example.com/category/c6d35287e59b.html</id>
+        <title>zabbix5.2安装教程</title>
+        <link rel="alternate" href="http://example.com/category/c6d35287e59b.html"/>
+        <content type="html">&lt;h2 id=&#34;视频教程&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#视频教程&#34;&gt;#&lt;/a&gt; 视频教程&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuYmlsaWJpbGkuY29tL3ZpZGVvL0JWMVZONDExUjd1WA==&#34;&gt;Zabbix+Grafana 视频讲解&lt;/span&gt;&lt;/p&gt;
+&lt;h2 id=&#34;准备工作&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#准备工作&#34;&gt;#&lt;/a&gt; 准备工作&lt;/h2&gt;
+&lt;h3 id=&#34;工作目录opt&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#工作目录opt&#34;&gt;#&lt;/a&gt; 工作目录 /opt&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;cd /opt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;关闭防火墙&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#关闭防火墙&#34;&gt;#&lt;/a&gt; 关闭防火墙&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;# 关闭防火墙
+systemctl stop firewalld.service
+# 禁止开机自启
+systemctl disable firewalld.service
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;关闭selinux&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#关闭selinux&#34;&gt;#&lt;/a&gt; 关闭 selinux&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;# 打开selinux的配置文件
+vim /etc/selinux/config
+# 将第7行的enforcing改为disabled
+SELINUX=disabled
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;yum清华源&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#yum清华源&#34;&gt;#&lt;/a&gt; Yum 清华源&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;sudo sed -e &#39;s^mirrorlist=#mirrorlist=g&#39; \
+         -e &#39;s^#baseurl=http://mirror.centos.orgbaseurl=https://mirrors.tuna.tsinghua.edu.cng&#39; \
+         -i.bak \
+         /etc/yum.repos.d/CentOS-*.repo
+# 生成缓存
+sudo yum makecache
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;下载依赖环境&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#下载依赖环境&#34;&gt;#&lt;/a&gt; 下载依赖环境&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;yum install deltarpm -y
+yum -y install gcc gcc-c++ unixODBC-devel httpd mysql-devel libcurl libcurl-devel libevent libevent-devel fping curl-devel libxml2  libxml2-devel snmpd net-snmp-devel net-snmp
+yum install -y pcre-devel  java-devel openssl-devel libxslt* perl-ExtUtils-Embed at gcc-c++ python subversion gperf make rpm-build git curl bzip2-devel libcurl-devel gd gd-devel t1lib t1lib-devel libmcrypt libmcrypt-devel libtidy libtidy-devel GeoIP-devel libatomic_ops-devel zlib-devel unzip libstdc++* net-snmp net-snmp* gmp gmp-devel openldap openldap-devel libpcap-devel glib2-devel GeoIP-devel libxml2-devel redis vim wget git htop iftop libtool make automake mlocate openssl-devel pam-devel unzip gcc screen openssl openssl-devel iptables-services bash-completion* pcre-devel openssl-devel libxslt* perl-ExtUtils-Embed at gcc-c++ python subversion gperf make rpm-build git curl bzip2-devel libcurl-devel gd gd-devel t1lib t1lib-devel libmcrypt libmcrypt-devel libtidy libtidy-devel GeoIP-devel libatomic_ops-devel zlib-devel unzip libstdc++* net-snmp net-snmp* gmp gmp-devel openldap openldap-devel net-tools libevent-devel net-snmp-devel mysql-devel libxslt-devel libssh2-devel jdk-8u191-linux-x64.rpm unixODBC-devel httpd  libcurl  libevent  fping curl-devel libxml2  snmpd net-snmp-devel net-snmp
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;准备lnmp&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#准备lnmp&#34;&gt;#&lt;/a&gt; 准备 LNMP&lt;/h2&gt;
+&lt;p&gt;参考文章:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93b3JkcHJlc3MtMTI1ODg5NDcyOC5jb3MuYXAtYmVpamluZy5teXFjbG91ZC5jb20vYXJjaGl2ZXMvMjQ0&#34;&gt;Centos 安装 Lnmp&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93b3JkcHJlc3MtMTI1ODg5NDcyOC5jb3MuYXAtYmVpamluZy5teXFjbG91ZC5jb20vYXJjaGl2ZXMvMjYx&#34;&gt;Grafana 图形展示软件&lt;/span&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;安装zabbix&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#安装zabbix&#34;&gt;#&lt;/a&gt; 安装 Zabbix&lt;/h2&gt;
+&lt;h3 id=&#34;下载zabbix-server&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#下载zabbix-server&#34;&gt;#&lt;/a&gt; 下载 zabbix-server&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;# 进入到opt目录
+cd /opt
+# 下载二进制包
+wget https://cdn.zabbix.com/zabbix/sources/stable/5.2/zabbix-5.2.1.tar.gz
+# 解压
+tar -zxvf zabbix-5.2.1.tar.gz
+# 进入到zabbix目录
+cd zabbix-5.2.1
+# 编译安装
+./configure --prefix=/usr/local/zabbix/zabbix-server --enable-server --enable-agent --with-mysql --with-net-snmp --with-libcurl --with-libxml2 --with-unixodbc --enable-java &amp;amp;&amp;amp; make &amp;amp;&amp;amp; make install
+# 参数说明
+--prefix              #编译安装路径
+--enable-server       #启动server端
+--enable-agent        #启动agent端
+--with-mysql          #编译连接mysql相关依赖包
+--with-net-snmp       #启动snmp相关，用于snmp监控设备
+--with-libcurl        #启动curl相关
+--with-libxml2        #启动xml相关
+--with-unixodbc       #启动odbc相关用于监控数据库
+--enable-java         #启动java-agent 用于监控java类
+
+# 设置环境变量
+vim /etc/profile
+
+export PATH=$PATH:/usr/local/zabbix/zabbix-server/sbin/:/usr/local/zabbix/zabbix-server/bin/
+
+source /etc/profile
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;创建zabbix数据库&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#创建zabbix数据库&#34;&gt;#&lt;/a&gt; 创建 zabbix 数据库&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;# mariadb
+# 创建用户
+CREATE USER &#39;用户名&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;密码&#39;;
+
+# 创建数据库zabbix
+CREATE DATABASE `数据库名` CHARACTER SET utf8 COLLATE utf8_bin;
+
+# 赋予权限
+grant all privileges on 数据库名.*to 用户名@&#39;localhost&#39; identified by &#39;密码&#39;;
+
+# 刷新权限
+flush privileges;
+
+# 设置编码
+set names utf8;
+
+# 创建完导入zabbix 初始化数据
+
+mysql -uroot -p密码 zabbix &amp;lt; /opt/zabbix-5.2.1/database/mysql/schema.sql # 表结构
+mysql -uroot -p密码 zabbix &amp;lt; /opt/zabbix-5.2.1/database/mysql/images.sql # 图片相关数据
+mysql -uroot -p密码 zabbix &amp;lt; /opt/zabbix-5.2.1/database/mysql/data.sql   # 模版相关数据
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;centos准备&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#centos准备&#34;&gt;#&lt;/a&gt; Centos 准备&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;# 创建用户
+useradd zabbix
+passwd  zabbix
+# 赋予权限
+chown -R zabbix:zabbix /usr/local/zabbix/zabbix-server/
+
+# 修改zabbix-server的配置文件
+vi /usr/local/zabbix/zabbix-server/etc/zabbix_server.conf
+
+# 找到对应的属性修改
+#数据库地址
+DBHost=localhost
+#数据库名
+DBName=zabbix
+#数据库用户名
+DBUser=zabbix
+#数据库密码
+DBPassword=root
+#数据库端口
+DBPort=3306
+Timeout=30
+AlertScriptsPath=/usr/local/zabbix/zabbix-server/share/zabbix/alertscripts
+ExternalScripts=/usr/local/zabbix/zabbix-server/share/zabbix/externalscripts
+
+# 检查端口
+ps auxfgrep zabbix_server
+netstat -tulnpgrep zabbix
+
+# 清空html下的文件并剪切
+rm -rf /usr/local/nginx/nginx/html/*
+cp -a /opt/zabbix-5.2.1/ui/* /usr/local/nginx/nginx/html/
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;# php.ini调整
+vim /etc/opt/remi/php74/php.ini
+
+post_max_size = 16M
+max_execution_time = 300
+max_input_time = 300
+date.timezone = Asia/Shanghai
+
+#启动相关项目
+systemctl restart php74-php-fpm.service
+zabbix_server
+
+##Zabbix默认用户名密码
+Admin
+zabbix
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;zabbix客户端安装&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#zabbix客户端安装&#34;&gt;#&lt;/a&gt; zabbix 客户端安装&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;# 创建用户
+useradd zabbix
+# 下载Zabbix_agent安装包
+wget https://nchc.dl.sourceforge.net/project/zabbix/ZABBIX%20Latest%20Stable/4.4.7/zabbix-4.4.7.tar.gz
+# 解压
+tar -zxvf zabbix-3.4.15.tar.gz
+# 进入目录
+cd zabbix-3.4.15/
+编译zabbix agent
+./configure --prefix=/usr/local/zabbix_agent --enable-agent
+# 安装
+make &amp;amp;&amp;amp; make install
+# 修改配置文件
+vim /usr/local/zabbix_agent/etc/zabbix_agentd.conf
+
+Server=服务端ip地址或域名
+ServerActive=服务端ip地址或域名
+Hostname=客户端主机名
+HostMetadata=自动注册的关键字
+
+# 启动
+/usr/local/zabbix_agent/sbin/zabbix_agentd
+&lt;/code&gt;&lt;/pre&gt;
+</content>
+        <category term="Centos" />
+        <category term="监控" />
+        <category term="运维" />
+        <category term="Zabbix" />
+        <updated>2021-06-01T00:57:23.000Z</updated>
+    </entry>
+</feed>

@@ -1,0 +1,471 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="江霁月的私人小屋" href="http://example.com/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="江霁月的私人小屋" href="http://example.com/atom.xml" />
+<link rel="alternate" type="application/json" title="江霁月的私人小屋" href="http://example.com/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="nginx,waf" />
+
+
+<link rel="canonical" href="http://example.com/category/1970703bb420.html">
+
+
+
+  <title>
+Security-编译安装openresty2.14+Modsecurity以支持TLSv1.3 - 安全加固 - 安全运维 |
+江霁月的私人小屋</title>
+<meta name="generator" content="Hexo 5.4.2"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">Security-编译安装openresty2.14+Modsecurity以支持TLSv1.3
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="创建时间：2022-08-31 15:11:59">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">发表于</span>
+    <time itemprop="dateCreated datePublished" datetime="2022-08-31T15:11:59+08:00">2022-08-31</time>
+  </span>
+  <span class="item" title="本文字数">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">本文字数</span>
+    <span>13k</span>
+    <span class="text">字</span>
+  </span>
+  <span class="item" title="阅读时长">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">阅读时长</span>
+    <span>12 分钟</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="切换导航栏">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">江霁月的私人小屋</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipevuctzzj20zk0m84qp.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclgrvbd6j20zk0m8qv5.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipevo9j1jj20zk0m8e81.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipexoj0moj20zk0m8kgu.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gicmnywqgpj20zk0m8dwx.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipexw3o58j20zk0m8e81.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">首页</a></span><i class="ic i-angle-right"></i>
+<span  itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/SOC/" itemprop="item" rel="index" title="分类于 安全运维"><span itemprop="name">安全运维</span></a>
+<meta itemprop="position" content="1" /></span>
+<i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/SOC/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/" itemprop="item" rel="index" title="分类于 安全加固"><span itemprop="name">安全加固</span></a>
+<meta itemprop="position" content="2" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN">
+  <link itemprop="mainEntityOfPage" href="http://example.com/category/1970703bb420.html">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/avatar.jpg">
+    <meta itemprop="name" content="江霁月">
+    <meta itemprop="description" content=", 专注分享一些关于安全运维和编程语言的知识·本博主爱安全,爱折腾,爱代码">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="江霁月的私人小屋">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <h2 id="0x01-前言"><a class="markdownIt-Anchor" href="#0x01-前言">#</a> 0x01 前言</h2>
+<p>最近利用 awvs 以及 Wpscan 对网站进行了漏洞扫描，扫出来一堆漏洞，然后就对服务器进行了一次大升级，才有了这篇文章</p>
+<h2 id="0x02-准备"><a class="markdownIt-Anchor" href="#0x02-准备">#</a> 0x02 准备</h2>
+<p>因为我应用环境的需要，所以我需要下载以下源码： lua-nginx-module：用于支持 lua 模块 nginx-ct：启用证书透明度 ModSecurity：用于编译 ModSecurity ModSecurity-nginx：用于连接 ModSecurity 与 nignx 首先建立临时文件夹并下载相关文件：</p>
+<h3 id="安装依赖"><a class="markdownIt-Anchor" href="#安装依赖">#</a> 安装依赖</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>yum <span class="token function">install</span> <span class="token parameter variable">-y</span> libxml2 libxslt-devel gperftools pcre-devel libuuid-devel libxslt* libblkid-devel libudev-devel fuse-devel libedit-devel perl-ExtUtils-Embed at gcc-c++ python subversion gperf <span class="token function">make</span> rpm-build <span class="token function">git</span> <span class="token function">curl</span> bzip2-devel libcurl-devel gd gd-devel t1lib t1lib-devel libmcrypt libmcrypt-devel libtidy libtidy-devel GeoIP-devel libatomic_ops-devel zlib-devel <span class="token function">unzip</span> libstdc++* net-snmp net-snmp* gmp gmp-devel openldap openldap-devel libpcap-devel glib2-devel GeoIP-devel libxml2-devel redis <span class="token function">vim</span> <span class="token function">wget</span> <span class="token function">git</span> <span class="token function">htop</span> iftop libtool <span class="token function">make</span> automake mlocate pam-devel <span class="token function">unzip</span> gcc <span class="token function">screen</span> iptables-services bash-completion* pcre-devel libxslt* perl-ExtUtils-Embed at python subversion gperf <span class="token function">make</span> rpm-build <span class="token function">git</span> <span class="token function">curl</span> bzip2-devel libcurl-devel gd t1lib t1lib-devel libmcrypt libmcrypt-devel libtidy libtidy-devel GeoIP-devel zlib-devel <span class="token function">unzip</span> libstdc++* net-snmp net-snmp* gmp gmp-devel openldap openldap-devel net-tools luajit</pre></td></tr></table></figure><h3 id="新建文件夹"><a class="markdownIt-Anchor" href="#新建文件夹">#</a> 新建文件夹</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@web-dev ~<span class="token punctuation">]</span> <span class="token function">mkdir</span> /opt/nginx</pre></td></tr></table></figure><h3 id="进入文件夹"><a class="markdownIt-Anchor" href="#进入文件夹">#</a> 进入文件夹</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@web-dev ~<span class="token punctuation">]</span> <span class="token builtin class-name">cd</span> /opt/nginx/</pre></td></tr></table></figure><h3 id="下载-ngx_http_headers_module"><a class="markdownIt-Anchor" href="#下载-ngx_http_headers_module">#</a> 下载 ngx_http_headers_module</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@web-dev nginx<span class="token punctuation">]</span> <span class="token function">git</span> clone https://github.com/openresty/headers-more-nginx-module.git</pre></td></tr></table></figure><h3 id="下载-lua-nginx-module"><a class="markdownIt-Anchor" href="#下载-lua-nginx-module">#</a> 下载 lua-nginx-module</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@web-dev nginx<span class="token punctuation">]</span> <span class="token function">git</span> clone https://github.com/openresty/lua-nginx-module.git</pre></td></tr></table></figure><figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># 下载 nginx-ct </span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token punctuation">[</span>root@web-dev nginx<span class="token punctuation">]</span> <span class="token function">git</span> clone https://github.com/grahamedgecombe/nginx-ct.git</pre></td></tr></table></figure><h3 id="下载-openssl"><a class="markdownIt-Anchor" href="#下载-openssl">#</a> 下载 Openssl</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@web-dev nginx<span class="token punctuation">]</span> <span class="token function">wget</span> https://www.openssl.org/source/openssl-1.1.1q.tar.gz</pre></td></tr></table></figure><h3 id="下载-modsecurity"><a class="markdownIt-Anchor" href="#下载-modsecurity">#</a> 下载 ModSecurity</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@web-dev nginx<span class="token punctuation">]</span> <span class="token function">git</span> clone <span class="token parameter variable">--depth</span> <span class="token number">1</span> <span class="token parameter variable">-b</span> v3/master --single-branch https://github.com/SpiderLabs/ModSecurity </pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token comment">#下载 ModSecurity-nginx </span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">[</span>root@web-dev nginx<span class="token punctuation">]</span> <span class="token function">git</span> clone <span class="token parameter variable">--depth</span> <span class="token number">1</span> https://github.com/SpiderLabs/ModSecurity-nginx.git</pre></td></tr></table></figure><h3 id="下载-nginx"><a class="markdownIt-Anchor" href="#下载-nginx">#</a> 下载 Nginx</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@web-dev nginx<span class="token punctuation">]</span> <span class="token function">wget</span> https://openresty.org/download/openresty-1.21.4.1.tar.gz </pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token comment">#下载 OWASP ModSecurity CRS </span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">[</span>root@web-dev nginx<span class="token punctuation">]</span> <span class="token function">git</span> clone https://github.com/SpiderLabs/owasp-modsecurity-crs.git</pre></td></tr></table></figure><h3 id="最后解压被压缩的软件"><a class="markdownIt-Anchor" href="#最后解压被压缩的软件">#</a> 最后解压被压缩的软件：</h3>
+<h4 id="解压并删除nginx压缩包"><a class="markdownIt-Anchor" href="#解压并删除nginx压缩包">#</a> 解压并删除 nginx 压缩包</h4>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@web-dev nginx<span class="token punctuation">]</span> <span class="token function">tar</span> <span class="token parameter variable">-zxvf</span> openresty-1.21.4.1.tar.gz <span class="token operator">&amp;&amp;</span> <span class="token function">rm</span> <span class="token parameter variable">-f</span> openresty-1.21.4.1.tar.gz</pre></td></tr></table></figure><h4 id="解压openssl压缩包"><a class="markdownIt-Anchor" href="#解压openssl压缩包">#</a> 解压 openssl 压缩包</h4>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@web-dev nginx<span class="token punctuation">]</span> <span class="token function">tar</span> <span class="token parameter variable">-zxvf</span> OpenSSL_1_1_1q.tar.gz <span class="token operator">&amp;&amp;</span> <span class="token function">rm</span> <span class="token parameter variable">-f</span> OpenSSL_1_1_1q.tar.gz</pre></td></tr></table></figure><p>最终，该目录下会有这些文件夹：</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@iztsvh228msdkjz nginx<span class="token punctuation">]</span><span class="token comment"># ll </span></pre></td></tr><tr><td data-num="2"></td><td><pre>total <span class="token number">32</span> </pre></td></tr><tr><td data-num="3"></td><td><pre>drwxr-xr-x <span class="token number">6</span> root root <span class="token number">4096</span> Sep <span class="token number">26</span> <span class="token number">14</span>:09 headers-more-nginx-module </pre></td></tr><tr><td data-num="4"></td><td><pre>drwxr-xr-x <span class="token number">11</span> root root <span class="token number">4096</span> Sep <span class="token number">26</span> <span class="token number">14</span>:20 lua-nginx-module </pre></td></tr><tr><td data-num="5"></td><td><pre>drwxr-xr-x <span class="token number">13</span> root root <span class="token number">4096</span> Sep <span class="token number">26</span> <span class="token number">14</span>:45 ModSecurity </pre></td></tr><tr><td data-num="6"></td><td><pre>drwxr-xr-x <span class="token number">6</span> root root <span class="token number">4096</span> Sep <span class="token number">26</span> <span class="token number">14</span>:45 ModSecurity-nginx </pre></td></tr><tr><td data-num="7"></td><td><pre>drwxr-xr-x <span class="token number">8</span> wordpress wordpress <span class="token number">4096</span> Apr <span class="token number">21</span> <span class="token number">22</span>:09 openresty-1.21.4.1</pre></td></tr><tr><td data-num="8"></td><td><pre>drwxr-xr-x <span class="token number">3</span> root root <span class="token number">4096</span> Sep <span class="token number">26</span> <span class="token number">14</span>:22 nginx-ct </pre></td></tr><tr><td data-num="9"></td><td><pre>drwxrwxr-x <span class="token number">18</span> root root <span class="token number">4096</span> May <span class="token number">28</span> <span class="token number">2019</span> openssl-OpenSSL_1_1_1c </pre></td></tr><tr><td data-num="10"></td><td><pre>drwxr-xr-x <span class="token number">8</span> root root <span class="token number">4096</span> Sep <span class="token number">26</span> <span class="token number">14</span>:53 owasp-modsecurity-crs</pre></td></tr></table></figure><h2 id="0x03-编译安装"><a class="markdownIt-Anchor" href="#0x03-编译安装">#</a> 0x03 编译安装</h2>
+<h3 id="0x031-配置安装openssl"><a class="markdownIt-Anchor" href="#0x031-配置安装openssl">#</a> 0x03.1 配置安装 openssl</h3>
+<h4 id="配置"><a class="markdownIt-Anchor" href="#配置">#</a> 配置</h4>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token builtin class-name">cd</span> openssl-OpenSSL_1_1_1q</pre></td></tr><tr><td data-num="2"></td><td><pre>./config <span class="token parameter variable">--prefix</span><span class="token operator">=</span>/usr</pre></td></tr></table></figure><h4 id="编译安装"><a class="markdownIt-Anchor" href="#编译安装">#</a> 编译 &amp;&amp; 安装</h4>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">make</span> <span class="token operator">&amp;&amp;</span> <span class="token function">make</span> <span class="token function">install</span> </pre></td></tr><tr><td data-num="2"></td><td><pre>ldconfig</pre></td></tr></table></figure><h4 id="查看安装版本"><a class="markdownIt-Anchor" href="#查看安装版本">#</a> 查看安装版本</h4>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>openssl version</pre></td></tr></table></figure><h3 id="0x032-modsecurity-lib"><a class="markdownIt-Anchor" href="#0x032-modsecurity-lib">#</a> 0x03.2 Modsecurity Lib</h3>
+<p>先编译 Modsecurity Lib，进入 ModSecurity 源码文件夹并运行以下命令：</p>
+<h4 id="进入文件夹-2"><a class="markdownIt-Anchor" href="#进入文件夹-2">#</a> 进入文件夹</h4>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@modsecurity openssl-OpenSSL_1_1_1c<span class="token punctuation">]</span> <span class="token builtin class-name">cd</span> /opt/nginx/ModSecurity</pre></td></tr></table></figure><h4 id="初始化submodule"><a class="markdownIt-Anchor" href="#初始化submodule">#</a> 初始化 submodule</h4>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@modsecurity ModSecurity<span class="token punctuation">]</span> <span class="token function">git</span> submodule init </pre></td></tr><tr><td data-num="2"></td><td><pre>Submodule <span class="token string">'bindings/python'</span> <span class="token punctuation">(</span>https://github.com/SpiderLabs/ModSecurity-Python-bindings.git<span class="token punctuation">)</span> registered <span class="token keyword">for</span> path <span class="token string">'bindings/python'</span> </pre></td></tr><tr><td data-num="3"></td><td><pre>Submodule <span class="token string">'others/libinjection'</span> <span class="token punctuation">(</span>https://github.com/client9/libinjection.git<span class="token punctuation">)</span> registered <span class="token keyword">for</span> path <span class="token string">'others/libinjection'</span> </pre></td></tr><tr><td data-num="4"></td><td><pre>Submodule <span class="token string">'test/test-cases/secrules-language-tests'</span> <span class="token punctuation">(</span>https://github.com/SpiderLabs/secrules-language-tests<span class="token punctuation">)</span> registered <span class="token keyword">for</span> path <span class="token string">'test/test-cases/secrules-language-tests'</span></pre></td></tr></table></figure><h4 id="更新submodule"><a class="markdownIt-Anchor" href="#更新submodule">#</a> 更新 submodule</h4>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@modsecurity ModSecurity<span class="token punctuation">]</span> <span class="token function">git</span> submodule update </pre></td></tr><tr><td data-num="2"></td><td><pre>Cloning into <span class="token string">'bindings/python'</span><span class="token punctuation">..</span>.</pre></td></tr><tr><td data-num="3"></td><td><pre>remote: Counting objects: <span class="token number">38</span>, done.</pre></td></tr><tr><td data-num="4"></td><td><pre>remote: Total <span class="token number">38</span> <span class="token punctuation">(</span>delta <span class="token number">0</span><span class="token punctuation">)</span>, reused <span class="token number">0</span> <span class="token punctuation">(</span>delta <span class="token number">0</span><span class="token punctuation">)</span>, pack-reused <span class="token number">38</span></pre></td></tr><tr><td data-num="5"></td><td><pre>Unpacking objects: <span class="token number">100</span>% <span class="token punctuation">(</span><span class="token number">38</span>/38<span class="token punctuation">)</span>, done.</pre></td></tr><tr><td data-num="6"></td><td><pre>Submodule path <span class="token string">'bindings/python'</span><span class="token builtin class-name">:</span> checked out <span class="token string">'bc625d5bb0bac6a64bcce8dc9902208612399348'</span></pre></td></tr><tr><td data-num="7"></td><td><pre>Cloning into <span class="token string">'others/libinjection'</span><span class="token punctuation">..</span>.</pre></td></tr><tr><td data-num="8"></td><td><pre>remote: Counting objects: <span class="token number">9937</span>, done.</pre></td></tr><tr><td data-num="9"></td><td><pre>remote: Total <span class="token number">9937</span> <span class="token punctuation">(</span>delta <span class="token number">0</span><span class="token punctuation">)</span>, reused <span class="token number">0</span> <span class="token punctuation">(</span>delta <span class="token number">0</span><span class="token punctuation">)</span>, pack-reused <span class="token number">9937</span></pre></td></tr><tr><td data-num="10"></td><td><pre>Receiving objects: <span class="token number">100</span>% <span class="token punctuation">(</span><span class="token number">9937</span>/9937<span class="token punctuation">)</span>, <span class="token number">5.45</span> MiB  <span class="token number">1.24</span> MiB/s, done.</pre></td></tr><tr><td data-num="11"></td><td><pre>Resolving deltas: <span class="token number">100</span>% <span class="token punctuation">(</span><span class="token number">6083</span>/6083<span class="token punctuation">)</span>, done.</pre></td></tr><tr><td data-num="12"></td><td><pre>Submodule path <span class="token string">'others/libinjection'</span><span class="token builtin class-name">:</span> checked out <span class="token string">'bf234eb2f385b969c4f803b35fda53cffdd93922'</span></pre></td></tr><tr><td data-num="13"></td><td><pre>Cloning into <span class="token string">'test/test-cases/secrules-language-tests'</span><span class="token punctuation">..</span>.</pre></td></tr><tr><td data-num="14"></td><td><pre>remote: Counting objects: <span class="token number">232</span>, done.</pre></td></tr><tr><td data-num="15"></td><td><pre>remote: Total <span class="token number">232</span> <span class="token punctuation">(</span>delta <span class="token number">0</span><span class="token punctuation">)</span>, reused <span class="token number">0</span> <span class="token punctuation">(</span>delta <span class="token number">0</span><span class="token punctuation">)</span>, pack-reused <span class="token number">232</span></pre></td></tr><tr><td data-num="16"></td><td><pre>Receiving objects: <span class="token number">100</span>% <span class="token punctuation">(</span><span class="token number">232</span>/232<span class="token punctuation">)</span>, <span class="token number">89.18</span> KiB  <span class="token number">85.00</span> KiB/s, done.</pre></td></tr><tr><td data-num="17"></td><td><pre>Resolving deltas: <span class="token number">100</span>% <span class="token punctuation">(</span><span class="token number">131</span>/131<span class="token punctuation">)</span>, done.</pre></td></tr><tr><td data-num="18"></td><td><pre>Submodule path <span class="token string">'test/test-cases/secrules-language-tests'</span><span class="token builtin class-name">:</span> checked out <span class="token string">'e6b03e46046ce9ce6dcfc0e6ad0820194e21db35'</span></pre></td></tr></table></figure><p>完成后，在根目录下会有一个 build.sh 的可执行文件：</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@eef51b ModSecurity<span class="token punctuation">]</span> ll <span class="token parameter variable">-h</span></pre></td></tr><tr><td data-num="2"></td><td><pre>total 172K</pre></td></tr><tr><td data-num="3"></td><td><pre>-rw-r--r--  <span class="token number">1</span> root root  <span class="token number">202</span> Sep <span class="token number">23</span> <span class="token number">18</span>:53 AUTHORS</pre></td></tr><tr><td data-num="4"></td><td><pre>drwxr-xr-x  <span class="token number">3</span> root root   <span class="token number">20</span> Sep <span class="token number">23</span> <span class="token number">18</span>:53 bindings</pre></td></tr><tr><td data-num="5"></td><td><pre>drwxr-xr-x  <span class="token number">2</span> root root  <span class="token number">275</span> Sep <span class="token number">23</span> <span class="token number">18</span>:53 build</pre></td></tr><tr><td data-num="6"></td><td><pre>-rwxr-xr-x  <span class="token number">1</span> root root  <span class="token number">273</span> Sep <span class="token number">23</span> <span class="token number">18</span>:53 build.sh</pre></td></tr><tr><td data-num="7"></td><td><pre>-rw-r--r--  <span class="token number">1</span> root root  18K Sep <span class="token number">23</span> <span class="token number">18</span>:53 CHANGES</pre></td></tr><tr><td data-num="8"></td><td><pre>-rw-r--r--  <span class="token number">1</span> root root  17K Sep <span class="token number">23</span> <span class="token number">18</span>:53 configure.ac</pre></td></tr><tr><td data-num="9"></td><td><pre>drwxr-xr-x  <span class="token number">2</span> root root   <span class="token number">85</span> Sep <span class="token number">23</span> <span class="token number">18</span>:53 doc</pre></td></tr><tr><td data-num="10"></td><td><pre>drwxr-xr-x  <span class="token number">7</span> root root  <span class="token number">176</span> Sep <span class="token number">23</span> <span class="token number">18</span>:53 examples</pre></td></tr><tr><td data-num="11"></td><td><pre>drwxr-xr-x  <span class="token number">3</span> root root   <span class="token number">25</span> Sep <span class="token number">23</span> <span class="token number">18</span>:53 headers</pre></td></tr><tr><td data-num="12"></td><td><pre>-rw-r--r--  <span class="token number">1</span> root root  12K Sep <span class="token number">23</span> <span class="token number">18</span>:53 LICENSE</pre></td></tr><tr><td data-num="13"></td><td><pre>-rw-r--r--  <span class="token number">1</span> root root  18K Sep <span class="token number">23</span> <span class="token number">18</span>:53 Makefile.am</pre></td></tr><tr><td data-num="14"></td><td><pre>-rw-r--r--  <span class="token number">1</span> root root  10K Sep <span class="token number">23</span> <span class="token number">18</span>:53 modsecurity.conf-recommended</pre></td></tr><tr><td data-num="15"></td><td><pre>-rw-r--r--  <span class="token number">1</span> root root  <span class="token number">377</span> Sep <span class="token number">23</span> <span class="token number">18</span>:53 modsecurity.pc.in</pre></td></tr><tr><td data-num="16"></td><td><pre>drwxr-xr-x  <span class="token number">4</span> root root   <span class="token number">78</span> Sep <span class="token number">23</span> <span class="token number">18</span>:53 others</pre></td></tr><tr><td data-num="17"></td><td><pre>-rw-r--r--  <span class="token number">1</span> root root  13K Sep <span class="token number">23</span> <span class="token number">18</span>:53 README.md</pre></td></tr><tr><td data-num="18"></td><td><pre>drwxr-xr-x <span class="token number">12</span> root root <span class="token number">4</span>.0K Sep <span class="token number">23</span> <span class="token number">18</span>:53 src</pre></td></tr><tr><td data-num="19"></td><td><pre>drwxr-xr-x  <span class="token number">9</span> root root <span class="token number">4</span>.0K Sep <span class="token number">23</span> <span class="token number">18</span>:53 <span class="token builtin class-name">test</span></pre></td></tr><tr><td data-num="20"></td><td><pre>drwxr-xr-x  <span class="token number">3</span> root root   <span class="token number">44</span> Sep <span class="token number">23</span> <span class="token number">18</span>:53 tools</pre></td></tr><tr><td data-num="21"></td><td><pre>-rw-r--r--  <span class="token number">1</span> root root  52K Sep <span class="token number">23</span> <span class="token number">18</span>:53 unicode.mapping</pre></td></tr></table></figure><p>运行 <code>build.sh</code></p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@modsecurity ModSecurity<span class="token punctuation">]</span> ./build.sh</pre></td></tr><tr><td data-num="2"></td><td><pre>libtoolize: putting auxiliary files <span class="token keyword">in</span> <span class="token variable"><span class="token variable">`</span>.'.</pre></td></tr><tr><td data-num="3"></td><td><pre>libtoolize: copying <span class="token function">file</span> <span class="token variable">`</span></span>./ltmain.sh<span class="token string">'</pre></td></tr><tr><td data-num="4"></td><td><pre>libtoolize: putting macros in AC_CONFIG_MACRO_DIR, `build'</span><span class="token builtin class-name">.</span></pre></td></tr><tr><td data-num="5"></td><td><pre>libtoolize: copying <span class="token function">file</span> <span class="token variable"><span class="token variable">`</span>build/libtool.m4'</pre></td></tr><tr><td data-num="6"></td><td><pre>libtoolize: copying <span class="token function">file</span> <span class="token variable">`</span></span>build/ltoptions.m4<span class="token string">'</pre></td></tr><tr><td data-num="7"></td><td><pre>libtoolize: copying file `build/ltsugar.m4'</span></pre></td></tr><tr><td data-num="8"></td><td><pre>libtoolize: copying <span class="token function">file</span> <span class="token variable"><span class="token variable">`</span>build/ltversion.m4'</pre></td></tr><tr><td data-num="9"></td><td><pre>libtoolize: copying <span class="token function">file</span> <span class="token variable">`</span></span>build/lt~obsolete.m4<span class="token string">'</pre></td></tr><tr><td data-num="10"></td><td><pre>fatal: No names found, cannot describe anything.</pre></td></tr><tr><td data-num="11"></td><td><pre>fatal: No names found, cannot describe anything.</pre></td></tr><tr><td data-num="12"></td><td><pre>fatal: No names found, cannot describe anything.</pre></td></tr><tr><td data-num="13"></td><td><pre>fatal: No names found, cannot describe anything.</pre></td></tr><tr><td data-num="14"></td><td><pre>fatal: No names found, cannot describe anything.</pre></td></tr><tr><td data-num="15"></td><td><pre>fatal: No names found, cannot describe anything.</pre></td></tr><tr><td data-num="16"></td><td><pre>fatal: No names found, cannot describe anything.</pre></td></tr><tr><td data-num="17"></td><td><pre>fatal: No names found, cannot describe anything.</pre></td></tr><tr><td data-num="18"></td><td><pre>fatal: No names found, cannot describe anything.</pre></td></tr><tr><td data-num="19"></td><td><pre>fatal: No names found, cannot describe anything.</pre></td></tr><tr><td data-num="20"></td><td><pre>fatal: No names found, cannot describe anything.</pre></td></tr><tr><td data-num="21"></td><td><pre>fatal: No names found, cannot describe anything.</pre></td></tr><tr><td data-num="22"></td><td><pre>configure.ac:44: installing '</span>./ar-lib<span class="token string">'</pre></td></tr><tr><td data-num="23"></td><td><pre>configure.ac:119: installing '</span>./config.guess<span class="token string">'</pre></td></tr><tr><td data-num="24"></td><td><pre>configure.ac:119: installing '</span>./config.sub<span class="token string">'</pre></td></tr><tr><td data-num="25"></td><td><pre>configure.ac:39: installing '</span>./install-sh<span class="token string">'</pre></td></tr><tr><td data-num="26"></td><td><pre>configure.ac:39: installing '</span>./missing<span class="token string">'</pre></td></tr><tr><td data-num="27"></td><td><pre>parallel-tests: installing '</span>./test-driver<span class="token string">'</pre></td></tr><tr><td data-num="28"></td><td><pre>examples/multiprocess_c/Makefile.am: installing '</span>./depcomp<span class="token string">'</pre></td></tr><tr><td data-num="29"></td><td><pre>configure.ac: installing '</span>./ylwrap'</pre></td></tr><tr><td data-num="30"></td><td><pre>fatal: No names found, cannot describe anything.</pre></td></tr><tr><td data-num="31"></td><td><pre>fatal: No names found, cannot describe anything.</pre></td></tr></table></figure><p>在 build 的过程中会出现以下错误，忽略即可：</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>fatal: No names found, cannot describe anything.</pre></td></tr></table></figure><p>然后是 configure、编译和安装：</p>
+<h4 id="编译安装三部曲"><a class="markdownIt-Anchor" href="#编译安装三部曲">#</a> 编译安装三部曲</h4>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>./configure <span class="token operator">&amp;&amp;</span> <span class="token function">make</span> <span class="token operator">&amp;&amp;</span> <span class="token function">make</span> <span class="token function">install</span></pre></td></tr></table></figure><p>完成 ModSecurity 的编译安装后就可以准备 nignx 的编译参数了：</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>./configure <span class="token parameter variable">--prefix</span><span class="token operator">=</span>/usr/local/nginx/nginx --with-cc-opt<span class="token operator">=</span>-O2 --with-ld-opt<span class="token operator">=</span><span class="token string">'-Wl,-rpath,/usr/local/nginx/luajit/lib -Wl,-E'</span> --sbin-path<span class="token operator">=</span>/usr/sbin/nginx --conf-path<span class="token operator">=</span>/usr/local/nginx/nginx.conf --pid-path<span class="token operator">=</span>/var/run/nginx.pid --error-log-path<span class="token operator">=</span>/var/log/nginx/error.log --http-log-path<span class="token operator">=</span>/var/log/nginx/access.log --lock-path<span class="token operator">=</span>/var/lock/nginx.lock --with-http_gunzip_module --with-pcre --with-pcre-jit --with-http_perl_module --with-http_realip_module --with-http_secure_link_module --with-http_slice_module --with-http_ssl_module --with-http_stub_status_module --with-http_sub_module --with-http_v2_module --with-http_addition_module --with-http_xslt_module --with-http_image_filter_module --with-http_geoip_module --with-http_dav_module --with-http_flv_module --with-http_mp4_module --with-http_gzip_static_module --with-http_auth_request_module --with-http_random_index_module --with-select_module --with-poll_module --with-file-aio --with-http_degradation_module --with-libatomic --http-client-body-temp-path<span class="token operator">=</span>/var/tmp/nginx/client_body --http-proxy-temp-path<span class="token operator">=</span>/var/tmp/nginx/proxy --http-fastcgi-temp-path<span class="token operator">=</span>/var/tmp/nginx/fastcgi --http-uwsgi-temp-path<span class="token operator">=</span>/var/tmp/nginx/uwsgi --http-scgi-temp-path<span class="token operator">=</span>/var/tmp/nginx/scgi --add-dynamic-module<span class="token operator">=</span>/opt/nginx/ModSecurity-nginx --with-stream --with-stream_ssl_module --with-stream_ssl_preread_module --add-dynamic-module<span class="token operator">=</span>/opt/nginx/headers-more-nginx-module</pre></td></tr></table></figure><h3 id="0x033-nginx编译安装"><a class="markdownIt-Anchor" href="#0x033-nginx编译安装">#</a> 0x03.3 Nginx 编译 &amp; 安装</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token builtin class-name">cd</span> /opt/nginx/openresty-1.21.4.1/</pre></td></tr></table></figure><h4 id="configure"><a class="markdownIt-Anchor" href="#configure">#</a> configure</h4>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>./configure <span class="token parameter variable">--prefix</span><span class="token operator">=</span>/usr/local/nginx/nginx --with-cc-opt<span class="token operator">=</span>-O2 --with-ld-opt<span class="token operator">=</span><span class="token string">'-Wl,-rpath,/usr/local/nginx/luajit/lib -Wl,-E'</span> --sbin-path<span class="token operator">=</span>/usr/sbin/nginx --conf-path<span class="token operator">=</span>/usr/local/nginx/nginx.conf --pid-path<span class="token operator">=</span>/var/run/nginx.pid --error-log-path<span class="token operator">=</span>/var/log/nginx/error.log --http-log-path<span class="token operator">=</span>/var/log/nginx/access.log --lock-path<span class="token operator">=</span>/var/lock/nginx.lock --with-http_gunzip_module --with-pcre --with-pcre-jit --with-http_perl_module --with-http_realip_module --with-http_secure_link_module --with-http_slice_module --with-http_ssl_module --with-http_stub_status_module --with-http_sub_module --with-http_v2_module --with-http_addition_module --with-http_xslt_module --with-http_image_filter_module --with-http_geoip_module --with-http_dav_module --with-http_flv_module --with-http_mp4_module --with-http_gzip_static_module --with-http_auth_request_module --with-http_random_index_module --with-select_module --with-poll_module --with-file-aio --with-http_degradation_module --with-libatomic --http-client-body-temp-path<span class="token operator">=</span>/var/tmp/nginx/client_body --http-proxy-temp-path<span class="token operator">=</span>/var/tmp/nginx/proxy --http-fastcgi-temp-path<span class="token operator">=</span>/var/tmp/nginx/fastcgi --http-uwsgi-temp-path<span class="token operator">=</span>/var/tmp/nginx/uwsgi --http-scgi-temp-path<span class="token operator">=</span>/var/tmp/nginx/scgi --add-dynamic-module<span class="token operator">=</span>/opt/nginx/ModSecurity-nginx --with-stream --with-stream_ssl_module --with-stream_ssl_preread_module --add-dynamic-module<span class="token operator">=</span>/opt/nginx/headers-more-nginx-module</pre></td></tr></table></figure><h4 id="编译"><a class="markdownIt-Anchor" href="#编译">#</a> 编译</h4>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@web-dev nginx-1.13.10<span class="token punctuation">]</span> <span class="token function">make</span></pre></td></tr></table></figure><h4 id="安装"><a class="markdownIt-Anchor" href="#安装">#</a> 安装</h4>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@web-dev nginx-1.13.10<span class="token punctuation">]</span> <span class="token function">make</span> <span class="token function">install</span></pre></td></tr></table></figure><p>创建目录</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">mkdir</span> <span class="token parameter variable">-p</span> /var/tmp/nginx/client_body</pre></td></tr></table></figure><p>最后查看 nginx 版本与检查编译参数：</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@localhost nginx-1.18.0<span class="token punctuation">]</span><span class="token comment"># nginx -V</span></pre></td></tr><tr><td data-num="2"></td><td><pre>nginx version: nginx/1.18.0</pre></td></tr><tr><td data-num="3"></td><td><pre>built by gcc <span class="token number">4.8</span>.5 <span class="token number">20150623</span> <span class="token punctuation">(</span>Red Hat <span class="token number">4.8</span>.5-44<span class="token punctuation">)</span> <span class="token punctuation">(</span>GCC<span class="token punctuation">)</span> </pre></td></tr><tr><td data-num="4"></td><td><pre>built with OpenSSL <span class="token number">1.1</span>.1c  <span class="token number">28</span> May <span class="token number">2019</span></pre></td></tr><tr><td data-num="5"></td><td><pre>TLS SNI support enabled</pre></td></tr><tr><td data-num="6"></td><td><pre>configure arguments: <span class="token parameter variable">--prefix</span><span class="token operator">=</span>/usr/local/nginx/nginx --with-cc-opt<span class="token operator">=</span>-O2 --with-ld-opt<span class="token operator">=</span><span class="token string">'-Wl,-rpath,/usr/local/nginx/luajit/lib -Wl,-E'</span> --sbin-path<span class="token operator">=</span>/usr/sbin/nginx --conf-path<span class="token operator">=</span>/usr/local/nginx/nginx.conf --pid-path<span class="token operator">=</span>/var/run/nginx.pid --error-log-path<span class="token operator">=</span>/var/log/nginx/error.log --http-log-path<span class="token operator">=</span>/var/log/nginx/access.log --lock-path<span class="token operator">=</span>/var/lock/nginx.lock --with-http_gunzip_module --with-pcre --with-pcre-jit --with-http_perl_module --with-http_realip_module --with-http_secure_link_module --with-http_slice_module --with-http_ssl_module --with-http_stub_status_module --with-http_sub_module --with-http_v2_module --with-http_addition_module --with-http_xslt_module --with-http_image_filter_module --with-http_geoip_module --with-http_dav_module --with-http_flv_module --with-http_mp4_module --with-http_gzip_static_module --with-http_auth_request_module --with-http_random_index_module --with-select_module --with-poll_module --with-file-aio --with-http_degradation_module --with-libatomic --http-client-body-temp-path<span class="token operator">=</span>/var/tmp/nginx/client_body --http-proxy-temp-path<span class="token operator">=</span>/var/tmp/nginx/proxy --http-fastcgi-temp-path<span class="token operator">=</span>/var/tmp/nginx/fastcgi --http-uwsgi-temp-path<span class="token operator">=</span>/var/tmp/nginx/uwsgi --http-scgi-temp-path<span class="token operator">=</span>/var/tmp/nginx/scgi --add-dynamic-module<span class="token operator">=</span>/opt/nginx/ModSecurity-nginx --with-stream --with-stream_ssl_module --with-stream_ssl_preread_module --add-module<span class="token operator">=</span>/opt/nginx/headers-more-nginx-module</pre></td></tr></table></figure><h3 id="0x034-nginx与modsecurity配置"><a class="markdownIt-Anchor" href="#0x034-nginx与modsecurity配置">#</a> 0x03.4 Nginx 与 modsecurity 配置</h3>
+<p>modsecurity 灵活性很高，你可以将 ModSecurityEnabled 这个指令放置在 server 或 location 块，以此控制 modsecurity 的启用与否。以下使用 nginx 默认的配置文件 nginx.conf 进行修改，首先在文件顶部添加以下内容：</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>load_module /usr/local/nginx/nginx/nginx/modules/ngx_http_modsecurity_module.so<span class="token punctuation">;</span></pre></td></tr></table></figure><p>让 nginx 加载动态模块，这样才能识别下方 ModSecurity 的配置内容。然后将以下两行内容放置在 location 块中：</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>modsecurity on<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>modsecurity_rules_file /usr/local/nginx/modsecurity/modsec_includes.conf<span class="token punctuation">;</span></pre></td></tr></table></figure><p>到这里 nginx 配置文件的修改就完成了。</p>
+<h3 id="0x035-modsecurity配置文件准备"><a class="markdownIt-Anchor" href="#0x035-modsecurity配置文件准备">#</a> 0x03.5 Modsecurity 配置文件准备</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@iztsvh228msdkjz nginx<span class="token punctuation">]</span> <span class="token function">mkdir</span> /usr/local/nginx/modsecurity</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">cp</span> /opt/nginx/ModSecurity/modsecurity.conf-recommended /usr/local/nginx/modsecurity/modsecurity.conf</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token function">cp</span> /opt/nginx/owasp-modsecurity-crs/crs-setup.conf.example /usr/local/nginx/modsecurity/crs-setup.conf</pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token function">cp</span> <span class="token parameter variable">-r</span> /opt/nginx/owasp-modsecurity-crs/rules/ /usr/local/nginx/modsecurity/</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token function">cp</span> /opt/nginx/ModSecurity/unicode.mapping /usr/local/nginx/modsecurity/unicode.mapping</pre></td></tr></table></figure><p>然后在 <code>/usr/local/nginx/modsecurity</code>  目录下新建一个名为 modsec_includes.conf 的文件并填入 owasp modsecurity crs 配置文件与 modsecurity.conf 的路径：</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>include /usr/local/nginx/modsecurity/modsecurity.conf</pre></td></tr><tr><td data-num="2"></td><td><pre>include /usr/local/nginx/modsecurity/crs-setup.conf</pre></td></tr><tr><td data-num="3"></td><td><pre>include /usr/local/nginx/modsecurity/rules/*.conf</pre></td></tr></table></figure><p>最终该目录下有这些文件</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@eef51b modsecurity<span class="token punctuation">]</span> ll</pre></td></tr><tr><td data-num="2"></td><td><pre>total <span class="token number">108</span></pre></td></tr><tr><td data-num="3"></td><td><pre>-rw-r--r-- <span class="token number">1</span> root root <span class="token number">32931</span> Sep <span class="token number">24</span> <span class="token number">19</span>:31 crs-setup.conf</pre></td></tr><tr><td data-num="4"></td><td><pre>-rw-r--r-- <span class="token number">1</span> root root   <span class="token number">156</span> Sep <span class="token number">24</span> <span class="token number">19</span>:23 modsec_includes.conf</pre></td></tr><tr><td data-num="5"></td><td><pre>-rw-r--r-- <span class="token number">1</span> root root <span class="token number">10199</span> Sep <span class="token number">24</span> <span class="token number">19</span>:30 modsecurity.conf</pre></td></tr><tr><td data-num="6"></td><td><pre>drwxr-xr-x <span class="token number">2</span> root root  <span class="token number">4096</span> Sep <span class="token number">24</span> <span class="token number">19</span>:21 rules</pre></td></tr><tr><td data-num="7"></td><td><pre>-rw-r--r-- <span class="token number">1</span> root root <span class="token number">53146</span> Sep <span class="token number">24</span> <span class="token number">19</span>:32 unicode.mapping</pre></td></tr></table></figure><h3 id="0x036-modsecurity实施拦截动作"><a class="markdownIt-Anchor" href="#0x036-modsecurity实施拦截动作">#</a> 0x03.6 Modsecurity 实施拦截动作</h3>
+<p>编辑</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">vim</span> /usr/local/nginx/modsecurity/modsecurity.conf</pre></td></tr></table></figure><h4 id="修改secruleengine"><a class="markdownIt-Anchor" href="#修改secruleengine">#</a> 修改 SecRuleEngine</h4>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>SecRuleEngine On</pre></td></tr></table></figure><h4 id="打开crs-setupconf"><a class="markdownIt-Anchor" href="#打开crs-setupconf">#</a> 打开 crs-setup.conf</h4>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">vim</span> /usr/local/nginx/modsecurity/crs-setup.conf</pre></td></tr></table></figure><h4 id="注释以下内容"><a class="markdownIt-Anchor" href="#注释以下内容">#</a> 注释以下内容</h4>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>SecDefaultAction <span class="token string">"phase:1,log,auditlog,pass"</span></pre></td></tr><tr><td data-num="2"></td><td><pre>SecDefaultAction <span class="token string">"phase:2,log,auditlog,pass"</span></pre></td></tr></table></figure><h3 id="取消以下内容的注释"><a class="markdownIt-Anchor" href="#取消以下内容的注释">#</a> 取消以下内容的注释</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>SecDefaultAction <span class="token string">"phase:1,log,auditlog,deny,status:403"</span></pre></td></tr><tr><td data-num="2"></td><td><pre>SecDefaultAction <span class="token string">"phase:2,log,auditlog,deny,status:403"</span></pre></td></tr></table></figure><h3 id="modsecurity日志文件"><a class="markdownIt-Anchor" href="#modsecurity日志文件">#</a> Modsecurity 日志文件</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">vim</span> /var/log/modsec_audit.log</pre></td></tr></table></figure><h3 id="0x037-nginx配置文件修改"><a class="markdownIt-Anchor" href="#0x037-nginx配置文件修改">#</a> 0x03.7 Nginx 配置文件修改</h3>
+<figure class="highlight nginx"><figcaption data-lang="nginx"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token directive"><span class="token keyword">load_module</span> /usr/local/nginx/nginx/modules/ngx_http_modsecurity_module.so</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token directive"><span class="token keyword">http</span></span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token directive"><span class="token keyword">server</span></span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        <span class="token directive"><span class="token keyword">listen</span> <span class="token number">80</span></span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>        <span class="token directive"><span class="token keyword">server_name</span> localhost</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        <span class="token directive"><span class="token keyword">rewrite</span> ^(.*)$ https://<span class="token variable">$host</span><span class="token variable">$1</span> permanent</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>        <span class="token directive"><span class="token keyword">location</span> /</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>            <span class="token comment">#启用 modsecurity</span></pre></td></tr><tr><td data-num="9"></td><td><pre>            <span class="token directive"><span class="token keyword">modsecurity</span> <span class="token boolean">on</span></span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>            <span class="token directive"><span class="token keyword">modsecurity_rules_file</span> /usr/local/nginx/modsecurity/modsec_includes.conf</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="11"></td><td><pre>            <span class="token directive"><span class="token keyword">root</span> html</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="12"></td><td><pre>            <span class="token directive"><span class="token keyword">index</span> index.html index.htm</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="13"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="14"></td><td><pre>        <span class="token directive"><span class="token keyword">error_page</span> <span class="token number">500</span> <span class="token number">502</span> <span class="token number">503</span> <span class="token number">504</span> /50x.html</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="15"></td><td><pre>        <span class="token directive"><span class="token keyword">location</span> = /50x.html</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="16"></td><td><pre>            <span class="token directive"><span class="token keyword">root</span> html</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="17"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="18"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="19"></td><td><pre>    <span class="token directive"><span class="token keyword">server</span></span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="20"></td><td><pre>        <span class="token directive"><span class="token keyword">listen</span> <span class="token number">443</span> ssl</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="21"></td><td><pre>        <span class="token directive"><span class="token keyword">server_name</span> localhost</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="22"></td><td><pre>        <span class="token directive"><span class="token keyword">location</span> /</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="23"></td><td><pre>            <span class="token directive"><span class="token keyword">modsecurity</span> <span class="token boolean">on</span></span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="24"></td><td><pre>            <span class="token directive"><span class="token keyword">modsecurity_rules_file</span> /usr/local/nginx/modsecurity/modsec_includes.conf</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="25"></td><td><pre>            <span class="token directive"><span class="token keyword">root</span> /home/wwwroot/wordpress-1258894728.cos.ap-beijing.myqcloud.com</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="26"></td><td><pre>            <span class="token directive"><span class="token keyword">index</span> index.html index.htm index.php</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="27"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="28"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="29"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p><mark>可以看到本站已经启用了 WAF</mark></p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209060938454.png" alt="image-20220906093809215"></p>
+
+      <div class="tags">
+          <a href="/tags/nginx/" rel="tag"><i class="ic i-tag"></i> nginx</a>
+          <a href="/tags/waf/" rel="tag"><i class="ic i-tag"></i> waf</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">更新于</span>
+    <time title="修改时间：2022-09-14 13:29:40" itemprop="dateModified" datetime="2022-09-14T13:29:40+08:00">2022-09-14</time>
+  </span>
+</div>
+
+      
+<div class="reward">
+  <button><i class="ic i-heartbeat"></i> 赞赏</button>
+  <p>请我喝[茶]~(￣▽￣)~*</p>
+  <div id="qr">
+  </div>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>本文作者： </strong>江霁月 <i class="ic i-at"><em>@</em></i>江霁月的私人小屋
+  </li>
+  <li class="link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/category/1970703bb420.html" title="Security-编译安装openresty2.14+Modsecurity以支持TLSv1.3">http://example.com/category/1970703bb420.html</a>
+  </li>
+  <li class="license">
+    <strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/category/16e5780ab4d0.html" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gicljgocqbj20zk0m8e81.jpg" title="Dvwa-Xss存储型">
+  <span class="type">上一篇</span>
+  <span class="category"><i class="ic i-flag"></i> 渗透学习路线</span>
+  <h3>Dvwa-Xss存储型</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/category/17faee78d2f1.html" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giclj61ylzj20zk0m8b29.jpg" title="基于awstats的apache日志分析">
+  <span class="type">下一篇</span>
+  <span class="category"><i class="ic i-flag"></i> 安全运维</span>
+  <h3>基于awstats的apache日志分析</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="文章目录">
+          <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text"> 0x01 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-%E5%87%86%E5%A4%87"><span class="toc-number">2.</span> <span class="toc-text"> 0x02 准备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96"><span class="toc-number">2.1.</span> <span class="toc-text"> 安装依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="toc-number">2.2.</span> <span class="toc-text"> 新建文件夹</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E5%85%A5%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="toc-number">2.3.</span> <span class="toc-text"> 进入文件夹</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD-ngx_http_headers_module"><span class="toc-number">2.4.</span> <span class="toc-text"> 下载 ngx_http_headers_module</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD-lua-nginx-module"><span class="toc-number">2.5.</span> <span class="toc-text"> 下载 lua-nginx-module</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD-openssl"><span class="toc-number">2.6.</span> <span class="toc-text"> 下载 Openssl</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD-modsecurity"><span class="toc-number">2.7.</span> <span class="toc-text"> 下载 ModSecurity</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD-nginx"><span class="toc-number">2.8.</span> <span class="toc-text"> 下载 Nginx</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%90%8E%E8%A7%A3%E5%8E%8B%E8%A2%AB%E5%8E%8B%E7%BC%A9%E7%9A%84%E8%BD%AF%E4%BB%B6"><span class="toc-number">2.9.</span> <span class="toc-text"> 最后解压被压缩的软件：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E5%8E%8B%E5%B9%B6%E5%88%A0%E9%99%A4nginx%E5%8E%8B%E7%BC%A9%E5%8C%85"><span class="toc-number">2.9.1.</span> <span class="toc-text"> 解压并删除 nginx 压缩包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E5%8E%8Bopenssl%E5%8E%8B%E7%BC%A9%E5%8C%85"><span class="toc-number">2.9.2.</span> <span class="toc-text"> 解压 openssl 压缩包</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85"><span class="toc-number">3.</span> <span class="toc-text"> 0x03 编译安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#0x031-%E9%85%8D%E7%BD%AE%E5%AE%89%E8%A3%85openssl"><span class="toc-number">3.1.</span> <span class="toc-text"> 0x03.1 配置安装 openssl</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE"><span class="toc-number">3.1.1.</span> <span class="toc-text"> 配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85"><span class="toc-number">3.1.2.</span> <span class="toc-text"> 编译 &amp;&amp; 安装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E5%AE%89%E8%A3%85%E7%89%88%E6%9C%AC"><span class="toc-number">3.1.3.</span> <span class="toc-text"> 查看安装版本</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x032-modsecurity-lib"><span class="toc-number">3.2.</span> <span class="toc-text"> 0x03.2 Modsecurity Lib</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9B%E5%85%A5%E6%96%87%E4%BB%B6%E5%A4%B9-2"><span class="toc-number">3.2.1.</span> <span class="toc-text"> 进入文件夹</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96submodule"><span class="toc-number">3.2.2.</span> <span class="toc-text"> 初始化 submodule</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0submodule"><span class="toc-number">3.2.3.</span> <span class="toc-text"> 更新 submodule</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85%E4%B8%89%E9%83%A8%E6%9B%B2"><span class="toc-number">3.2.4.</span> <span class="toc-text"> 编译安装三部曲</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x033-nginx%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85"><span class="toc-number">3.3.</span> <span class="toc-text"> 0x03.3 Nginx 编译 &amp; 安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#configure"><span class="toc-number">3.3.1.</span> <span class="toc-text"> configure</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%96%E8%AF%91"><span class="toc-number">3.3.2.</span> <span class="toc-text"> 编译</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">3.3.3.</span> <span class="toc-text"> 安装</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x034-nginx%E4%B8%8Emodsecurity%E9%85%8D%E7%BD%AE"><span class="toc-number">3.4.</span> <span class="toc-text"> 0x03.4 Nginx 与 modsecurity 配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x035-modsecurity%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%87%86%E5%A4%87"><span class="toc-number">3.5.</span> <span class="toc-text"> 0x03.5 Modsecurity 配置文件准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x036-modsecurity%E5%AE%9E%E6%96%BD%E6%8B%A6%E6%88%AA%E5%8A%A8%E4%BD%9C"><span class="toc-number">3.6.</span> <span class="toc-text"> 0x03.6 Modsecurity 实施拦截动作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9secruleengine"><span class="toc-number">3.6.1.</span> <span class="toc-text"> 修改 SecRuleEngine</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%93%E5%BC%80crs-setupconf"><span class="toc-number">3.6.2.</span> <span class="toc-text"> 打开 crs-setup.conf</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B3%A8%E9%87%8A%E4%BB%A5%E4%B8%8B%E5%86%85%E5%AE%B9"><span class="toc-number">3.6.3.</span> <span class="toc-text"> 注释以下内容</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%96%E6%B6%88%E4%BB%A5%E4%B8%8B%E5%86%85%E5%AE%B9%E7%9A%84%E6%B3%A8%E9%87%8A"><span class="toc-number">3.7.</span> <span class="toc-text"> 取消以下内容的注释</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#modsecurity%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6"><span class="toc-number">3.8.</span> <span class="toc-text"> Modsecurity 日志文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x037-nginx%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%BF%AE%E6%94%B9"><span class="toc-number">3.9.</span> <span class="toc-text"> 0x03.7 Nginx 配置文件修改</span></a></li></ol></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="系列文章">
+        <ul>
+          <li class="active"><a href="/category/1970703bb420.html" rel="bookmark" title="Security-编译安装openresty2.14+Modsecurity以支持TLSv1.3">Security-编译安装openresty2.14+Modsecurity以支持TLSv1.3</a></li><li><a href="/category/2517a85f9134.html" rel="bookmark" title="安全加固之Linux软件包封装脚本分析">安全加固之Linux软件包封装脚本分析</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="站点概览">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="江霁月"
+      data-src="/images/avatar.jpg">
+  <p class="name" itemprop="name">江霁月</p>
+  <div class="description" itemprop="description">专注分享一些关于安全运维和编程语言的知识·本博主爱安全,爱折腾,爱代码</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">55</span>
+        <span class="name">文章</span>
+      </a>
+    </div>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">17</span>
+        <span class="name">分类</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">30</span>
+        <span class="name">标签</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL0ppYW5nSmlZdWU=" title="https:&#x2F;&#x2F;github.com&#x2F;JiangJiYue"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS9qYW5naml5dWU=" title="https:&#x2F;&#x2F;twitter.com&#x2F;jangjiyue"><i class="ic i-twitter"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>首页</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a>
+  </li>
+
+  </ul>
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/category/16e5780ab4d0.html" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/category/17faee78d2f1.html" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2010 – 
+    <span itemprop="copyrightYear">2022</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">江霁月 @ 江霁月的私人小屋</span>
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+    <span title="站点总字数">235k 字</span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:34</span>
+  </div>
+  <div class="powered-by">
+    基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: 'category/1970703bb420.html',
+    favicon: {
+      show: "（●´3｀●）やれやれだぜ",
+      hide: "(´Д｀)大変だ！"
+    },
+    search : {
+      placeholder: "文章搜索",
+      empty: "关于 「 ${query} 」，什么也没搜到",
+      stats: "${time} ms 内找到 ${hits} 条结果"
+    },
+    valine: true,fancybox: true,
+    copyright: '复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://cdn.polyfill.io/v2/polyfill.js"></script>
+
+<script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>

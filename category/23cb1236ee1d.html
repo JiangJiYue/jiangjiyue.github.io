@@ -1,0 +1,524 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="江霁月的私人小屋" href="http://example.com/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="江霁月的私人小屋" href="http://example.com/atom.xml" />
+<link rel="alternate" type="application/json" title="江霁月的私人小屋" href="http://example.com/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="运维,nginx,openresty,网关" />
+
+
+<link rel="canonical" href="http://example.com/category/23cb1236ee1d.html">
+
+
+
+  <title>
+五.openresty执行流程 - 微服务Api网关框架 - 安全运维 |
+江霁月的私人小屋</title>
+<meta name="generator" content="Hexo 5.4.2"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">五.openresty执行流程
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="创建时间：2021-09-28 20:53:00">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">发表于</span>
+    <time itemprop="dateCreated datePublished" datetime="2021-09-28T20:53:00+08:00">2021-09-28</time>
+  </span>
+  <span class="item" title="本文字数">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">本文字数</span>
+    <span>2.8k</span>
+    <span class="text">字</span>
+  </span>
+  <span class="item" title="阅读时长">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">阅读时长</span>
+    <span>3 分钟</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="切换导航栏">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">江霁月的私人小屋</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipex2cdtbj20zk0m8x6p.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipevo9j1jj20zk0m8e81.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclhtuo6nj20zk0m8ttm.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclga70tsj20zk0m84mr.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclx29mstj20zk0m8hdt.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giph4fomxoj20zk0m8axp.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">首页</a></span><i class="ic i-angle-right"></i>
+<span  itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/SOC/" itemprop="item" rel="index" title="分类于 安全运维"><span itemprop="name">安全运维</span></a>
+<meta itemprop="position" content="1" /></span>
+<i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/SOC/openresty/" itemprop="item" rel="index" title="分类于 微服务Api网关框架"><span itemprop="name">微服务Api网关框架</span></a>
+<meta itemprop="position" content="2" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN">
+  <link itemprop="mainEntityOfPage" href="http://example.com/category/23cb1236ee1d.html">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/avatar.jpg">
+    <meta itemprop="name" content="江霁月">
+    <meta itemprop="description" content=", 专注分享一些关于安全运维和编程语言的知识·本博主爱安全,爱折腾,爱代码">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="江霁月的私人小屋">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <h2 id="nginx处理阶段"><a class="markdownIt-Anchor" href="#nginx处理阶段">#</a> Nginx 处理阶段</h2>
+<p>Nginx 处理请求的过程一共划分为 11 个阶段，按照执行顺序依次是</p>
+<ul>
+<li>post-read (读取请求内容阶段)</li>
+</ul>
+<p><code>NGX_HTTP_POST_READ_PHASE:nginx读取并解析完请求头之后就立即开始运行:例如模块ngx_realip就在post-read阶段注册了处理程序,它的功能是迫使Nginx认为当前请求的来源地址是指定的某一个请求头的值</code></p>
+<ul>
+<li>server-rewrite (server 请求地址重写阶段)</li>
+</ul>
+<p><code>NGX_HTTP_SERVER_REWRITE_PHASE:当ngx_rewrite模块的set配置指令直接写在server配置块中时,基本上都是运行在server-rewrite阶段</code></p>
+<ul>
+<li>find-config (配置查找阶段)</li>
+</ul>
+<p><code>NGX_HTTP_FIND_CONFIG_PHASE:这个阶段并不支持Nginx模块注册处理程序,而是由Nginx核心来完成当前请求与location配置块之间的配对工作.</code></p>
+<ul>
+<li>rewrite (location 请求地址重写阶段)</li>
+</ul>
+<p><code>NGX_HTTP_REWRITE_PHASE:当ngx_rewrite指令用于location中,就是再这个阶段运行的;另外ngx_set_misc(设置md5、encode_base64等)模块的指令,还有ngx_lua模块的set_by_lua指令和rewrite_by_lua指令也在此阶段.</code></p>
+<ul>
+<li>post-rewrite (请求地址重写提交阶段)</li>
+</ul>
+<p><code>NGX_HTTP_POST_REWRITE_PHASE:当nginx完成rewrite阶段所要求的内部跳转动作,如果rewrite阶段有这个要求的话;</code></p>
+<ul>
+<li>preaccess (访问权限检查准备阶段)</li>
+</ul>
+<p><code>NGX_HTTP_PREACCESS_PHASE:ngx_limit_req和ngx_limit_zone在这个阶段运行,ngx_limit_req可以控制请求的访问频率,ngx_limit_zone可以控制访问的并发度;</code></p>
+<ul>
+<li>access (访问权限检查阶段)</li>
+</ul>
+<p><code>NGX_HTTP_ACCESS_PHASE:标准模块ngx_access、第三方模块ngx_auth_request以及第三方模块ngx_lua的access_by_lua 指令就运行在这个阶段.配置指令多是执行访问控制相关的任务,如检查用户的访问权限,检查用户的来源IP是否合法;</code></p>
+<ul>
+<li>post-access (访向权限检查提交阶段)</li>
+</ul>
+<p><code>NGX_HTTP_POST_ACCESS_PHASE:主要用于配合access阶段实现标准ngx_http_core模块提供的配置指令satisfy的功能.satisfy all(与关系),satisfy any(或关系)</code></p>
+<ul>
+<li>try-files (配置项 try_files 处理阶段)</li>
+</ul>
+<p><code>NGX_HTTP_TRY_FILES_PHASE:专门用于实现标准配置指令try_files的功能,如果前N-1个参数所对应的文件系统对象都不存在,try-files阶段就会立即发起&quot;内部跳转&quot;到最后一个参数(即第N个参数)所指定的URI.</code></p>
+<ul>
+<li>content (内容产生阶段)</li>
+</ul>
+<p><code>NGX_HTTP_CONTENT_PHASE:是所有请求处理阶段中最为重要的阶段,因为这个阶段的指令通常是用来生成HTTP响应内容并输出HTTP响应的使命;</code></p>
+<ul>
+<li>log (日志模块处理阶段)</li>
+</ul>
+<p><code>NGX_HTTP_LOG_PHASE:记录日志</code></p>
+<p>注意：Nginx 的 Conf 中的指令的书写顺序和执行顺序是两码事，不支持 Nginx 模块注册处理程序的阶段: <code>find-config post-rewrite post-access</code>  (主要用于 Nginx 本身完成一些自己的逻辑), 常用的有 <code>rewite阶段 access阶段 content阶段</code></p>
+<h2 id="nginx下lua处理阶段与使用范围"><a class="markdownIt-Anchor" href="#nginx下lua处理阶段与使用范围">#</a> Nginx 下 Lua 处理阶段与使用范围</h2>
+<p><code>OpenResty</code>  处理请求大致分为四个阶段</p>
+<ol>
+<li>初始化阶段</li>
+<li>重写与访问阶段</li>
+<li>内容生成阶段</li>
+<li>日志记录阶段</li>
+</ol>
+<p><a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/lua-nginx-module-arch.webp"><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/lua-nginx-module-arch-300x271.webp" alt="" title="lua-nginx-module-arch"></a></p>
+<p>注意：生产环境中要加入 <code>lua_code_cache on</code>  到 <code>http指令中</code> 中. <code>lua_code_cache</code> : 开启或关闭 <code>Lua</code>  代码缓存</p>
+<p>阶段的存在，应该是 <code>OpenResty</code>  不同于其他多数 <code>Web Server</code>  编程的最明显特征了。由于 nginx 把一个会话分成了很多阶段，这样第三方模块就可以根据自己行为挂载到不同阶段进行处理达到目的。 指令可以在 <code>http server server if location location if</code>  几个范围进行配置:</p>
+<p>指令</p>
+<p>处理阶段</p>
+<p>使用范围</p>
+<p>解释</p>
+<p><code>init_by_lua</code></p>
+<p><code>init_by_lua_file</code></p>
+<p><code>loading-config</code></p>
+<p><code>http</code></p>
+<p><code>Nginx Master</code>  进程加载配置时执行；通常用于初始化全局配置 / 预加载 <code>Lua</code>  模块</p>
+<p><code>init_worker_by_lua</code></p>
+<p><code>init_worker_by_lua_file</code></p>
+<p><code>starting-worker</code></p>
+<p><code>http</code></p>
+<p>每个 <code>Nginx worker</code>  进程启动时调用的计时器，如果 <code>Master</code>  进程不允许则只会在 <code>init_by_lua</code>  之后调用；通常用于定时拉取配置 / 数据，或者后端服务的健康检查</p>
+<p><code>set_by_lua</code></p>
+<p><code>set_by_lua_file</code></p>
+<p><code>rewrite</code></p>
+<p><code>server,server if,location,location if</code></p>
+<p>设置 <code>nginx</code>  变量，可以实现复杂的赋值逻辑；此处是阻塞的， <code>Lua</code>  代码要做到非常快；</p>
+<p><code>rewrite_by_lua</code></p>
+<p><code>rewrite_by_lua_file</code></p>
+<p><code>rewrite tail</code></p>
+<p><code>http,server,location, location if</code></p>
+<p>可以实现复杂的转发 / 重定向逻辑；</p>
+<p><code>access_by_lua</code></p>
+<p><code>access_by_lua_file</code></p>
+<p><code>access tail</code></p>
+<p><code>http,server,location,location if</code></p>
+<p>实现访问控制</p>
+<p><code>content_by_lua</code></p>
+<p><code>content_by_lua_file</code></p>
+<p><code>content</code></p>
+<p><code>location,location if</code></p>
+<p><code>header_filter_by_lua</code></p>
+<p><code>header_filter_by_lua_file</code></p>
+<p><code>output-header-filter</code></p>
+<p><code>http,server,location,location if</code></p>
+<p>响应 HTTP 过滤处理 (例如添加头部信息), 设置 <code>Header</code>  和 <code>Cookie</code></p>
+<p><code>body_filter_by_lua</code></p>
+<p><code>body_filter_by_lua_file</code></p>
+<p><code>output-body-filter</code></p>
+<p><code>http,server,location,location if</code></p>
+<p><code>Body</code>  过滤处理 (完成应答内容统一成大写) 对响应数据进行过滤，比如：截断，替换</p>
+<p><code>log_by_lua</code></p>
+<p><code>log_by_lua_file</code></p>
+<p><code>log</code></p>
+<p><code>http,server,location,location if</code></p>
+<p>响应完成后本地异步完成日志记录 (日志可以记录在本地，还可以同步到其他机器) 阶段处理，比如记录访问量 / 统计平均响应时间</p>
+
+      <div class="tags">
+          <a href="/tags/%E8%BF%90%E7%BB%B4/" rel="tag"><i class="ic i-tag"></i> 运维</a>
+          <a href="/tags/nginx/" rel="tag"><i class="ic i-tag"></i> nginx</a>
+          <a href="/tags/openresty/" rel="tag"><i class="ic i-tag"></i> openresty</a>
+          <a href="/tags/%E7%BD%91%E5%85%B3/" rel="tag"><i class="ic i-tag"></i> 网关</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">更新于</span>
+    <time title="修改时间：2022-08-31 14:35:33" itemprop="dateModified" datetime="2022-08-31T14:35:33+08:00">2022-08-31</time>
+  </span>
+</div>
+
+      
+<div class="reward">
+  <button><i class="ic i-heartbeat"></i> 赞赏</button>
+  <p>请我喝[茶]~(￣▽￣)~*</p>
+  <div id="qr">
+  </div>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>本文作者： </strong>江霁月 <i class="ic i-at"><em>@</em></i>江霁月的私人小屋
+  </li>
+  <li class="link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/category/23cb1236ee1d.html" title="五.openresty执行流程">http://example.com/category/23cb1236ee1d.html</a>
+  </li>
+  <li class="license">
+    <strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/category/46cb37709f23.html" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giclh5u05ej20zk0m87df.jpg" title="四.OpenResty中使用mysql">
+  <span class="type">上一篇</span>
+  <span class="category"><i class="ic i-flag"></i> 微服务Api网关框架</span>
+  <h3>四.OpenResty中使用mysql</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/category/1140b6039977.html" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipeudstjqj20zk0m8k3r.jpg" title="第一章计算机基础知识">
+  <span class="type">下一篇</span>
+  <span class="category"><i class="ic i-flag"></i> 计算机文化基础</span>
+  <h3>第一章计算机基础知识</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="文章目录">
+          <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#nginx%E5%A4%84%E7%90%86%E9%98%B6%E6%AE%B5"><span class="toc-number">1.</span> <span class="toc-text"> Nginx 处理阶段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nginx%E4%B8%8Blua%E5%A4%84%E7%90%86%E9%98%B6%E6%AE%B5%E4%B8%8E%E4%BD%BF%E7%94%A8%E8%8C%83%E5%9B%B4"><span class="toc-number">2.</span> <span class="toc-text"> Nginx 下 Lua 处理阶段与使用范围</span></a></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="系列文章">
+        <ul>
+          <li><a href="/category/ab8b660fc8ae.html" rel="bookmark" title="一.漫谈Nginx网关">一.漫谈Nginx网关</a></li><li><a href="/category/14fb0cb5989f.html" rel="bookmark" title="二.Nginx相关知识">二.Nginx相关知识</a></li><li><a href="/category/2dcd61781139.html" rel="bookmark" title="三.Nginx配置文件详解">三.Nginx配置文件详解</a></li><li><a href="/category/46cb37709f23.html" rel="bookmark" title="四.OpenResty中使用mysql">四.OpenResty中使用mysql</a></li><li class="active"><a href="/category/23cb1236ee1d.html" rel="bookmark" title="五.openresty执行流程">五.openresty执行流程</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="站点概览">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="江霁月"
+      data-src="/images/avatar.jpg">
+  <p class="name" itemprop="name">江霁月</p>
+  <div class="description" itemprop="description">专注分享一些关于安全运维和编程语言的知识·本博主爱安全,爱折腾,爱代码</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">55</span>
+        <span class="name">文章</span>
+      </a>
+    </div>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">17</span>
+        <span class="name">分类</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">30</span>
+        <span class="name">标签</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL0ppYW5nSmlZdWU=" title="https:&#x2F;&#x2F;github.com&#x2F;JiangJiYue"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS9qYW5naml5dWU=" title="https:&#x2F;&#x2F;twitter.com&#x2F;jangjiyue"><i class="ic i-twitter"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>首页</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a>
+  </li>
+
+  </ul>
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/category/46cb37709f23.html" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/category/1140b6039977.html" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2010 – 
+    <span itemprop="copyrightYear">2022</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">江霁月 @ 江霁月的私人小屋</span>
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+    <span title="站点总字数">235k 字</span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:34</span>
+  </div>
+  <div class="powered-by">
+    基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: 'category/23cb1236ee1d.html',
+    favicon: {
+      show: "（●´3｀●）やれやれだぜ",
+      hide: "(´Д｀)大変だ！"
+    },
+    search : {
+      placeholder: "文章搜索",
+      empty: "关于 「 ${query} 」，什么也没搜到",
+      stats: "${time} ms 内找到 ${hits} 条结果"
+    },
+    valine: true,fancybox: true,
+    copyright: '复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://cdn.polyfill.io/v2/polyfill.js"></script>
+
+<script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>

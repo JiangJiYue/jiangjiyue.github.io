@@ -1,0 +1,476 @@
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>http://example.com</id>
+    <title>江霁月的私人小屋 • Posts by &#34;elk&#34; tag</title>
+    <link href="http://example.com" />
+    <updated>2021-09-19T03:50:41.000Z</updated>
+    <category term="Docker" />
+    <category term="linux" />
+    <category term="mysql" />
+    <category term="Centos" />
+    <category term="优化" />
+    <category term="缓存" />
+    <category term="反爬" />
+    <category term="爬虫" />
+    <category term="服务器" />
+    <category term="ELK" />
+    <category term="安全管理" />
+    <category term="数据可视化" />
+    <category term="监控" />
+    <category term="运维" />
+    <category term="Zabbix" />
+    <category term="Kali" />
+    <category term="信息安全" />
+    <category term="数据库" />
+    <category term="nginx" />
+    <category term="PHP" />
+    <category term="openresty" />
+    <category term="网关" />
+    <category term="PHP框架" />
+    <category term="python" />
+    <category term="Security" />
+    <category term="信息收集" />
+    <category term="SSL" />
+    <category term="安全加固" />
+    <category term="Linux" />
+    <category term="waf" />
+    <entry>
+        <id>http://example.com/category/7b084077da53.html</id>
+        <title>ELK收集nginx日志并展示来源IP地图</title>
+        <link rel="alternate" href="http://example.com/category/7b084077da53.html"/>
+        <content type="html">&lt;h2 id=&#34;修改nginx配置文件&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#修改nginx配置文件&#34;&gt;#&lt;/a&gt; 修改 Nginx 配置文件&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;# 修改日志模式
+ # json 为规则名字 escape=json 设置日志文件格式为json
+ log_format json escape=json &#39;&amp;#123;&amp;quot;@timestamp&amp;quot;:&amp;quot;$time_iso8601&amp;quot;,&#39;
+                             &#39;&amp;quot;domain&amp;quot;:&amp;quot;$host&amp;quot;,&#39;
+                             &#39;&amp;quot;host&amp;quot;:&amp;quot;$server_addr&amp;quot;,&#39;
+                             &#39;&amp;quot;clientip&amp;quot;:&amp;quot;$remote_addr&amp;quot;,&#39;
+                             &#39;&amp;quot;remote_user&amp;quot;:&amp;quot;$remote_user&amp;quot;,&#39;
+                             &#39;&amp;quot;request&amp;quot;:&amp;quot;$request&amp;quot;,&#39;
+                             &#39;&amp;quot;request_method&amp;quot;:&amp;quot;$request_method&amp;quot;,&#39;
+                             &#39;&amp;quot;uri&amp;quot;:&amp;quot;$uri&amp;quot;,&#39;
+                             &#39;&amp;quot;request_time&amp;quot;:&amp;quot;$request_time&amp;quot;,&#39;
+                             &#39;&amp;quot;status&amp;quot;:&amp;quot;$status&amp;quot;,&#39;
+                             &#39;&amp;quot;http_referrer&amp;quot;:&amp;quot;$http_referer&amp;quot;,&#39;
+                             &#39;&amp;quot;body_bytes_sent&amp;quot;:&amp;quot;$body_bytes_sent&amp;quot;,&#39;
+                             &#39;&amp;quot;xff&amp;quot;:&amp;quot;$http_x_forwarded_for&amp;quot;,&#39;
+                             &#39;&amp;quot;http_user_agent&amp;quot;:&amp;quot;$http_user_agent&amp;quot;,&#39;
+                             &#39;&amp;quot;upstream_addr&amp;quot;:&amp;quot;$upstream_addr&amp;quot;,&#39;
+                             &#39;&amp;quot;upstream_response_time&amp;quot;:&amp;quot;$upstream_response_time&amp;quot;&amp;#125;&#39;;
+ # 将上方的规则名称写到最后
+ access_log /var/log/nginx/access.log json;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;添加高德地图&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#添加高德地图&#34;&gt;#&lt;/a&gt; 添加高德地图&lt;/h2&gt;
+&lt;p&gt;1. 编辑 kibana 配置文件 kibana.yml，最后面添加&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 默认情况下kibana使用&amp;quot;Elastic Maps Service&amp;quot;显示地图模块,要使用其他服务提供商的模块可以通过修改&amp;quot;map.tilemap.url&amp;quot;实现,下面是修改为高德地图
+ map.tilemap.url: &#39;http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&amp;amp;size=1&amp;amp;scale=1&amp;amp;style=7&amp;amp;x=&amp;#123;x&amp;#125;&amp;amp;y=&amp;#123;y&amp;#125;&amp;amp;z=&amp;#123;z&amp;#125;&#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;配置logstash&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#配置logstash&#34;&gt;#&lt;/a&gt; 配置 logstash&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRodWIuY29tL3RleG5pa3J1L0dlb0xpdGUyLURhdGFiYXNl&#34;&gt;Github:GeoLite2-Database&lt;/span&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 进入工作目录
+cd /opt
+# 下载GeoLite2数据库
+wget https://raw.githubusercontent.com/texnikru/GeoLite2-Database/master/GeoLite2-City.mmdb.gz
+# 解压文件
+gunzip GeoLite2-City.mmdb.gz
+# 将GeoLite2移动到logstash目录下
+mv GeoLite2-City.mmdb /usr/local/elk/logstash/config/
+# 修改logstash配置文件
+vim /usr/local/elk/logstash/default.conf
+​
+# 监听5044端口作为输入
+input &amp;#123;
+ beats &amp;#123;
+   port =&amp;gt; &amp;quot;5044&amp;quot;
+ &amp;#125;
+&amp;#125;
+# 数据过滤
+filter &amp;#123;
+ json &amp;#123;
+   source =&amp;gt; &amp;quot;message&amp;quot;
+    remove_field =&amp;gt; [ &amp;quot;message&amp;quot; ]
+   #删除重复的message收集。
+ &amp;#125;
+ mutate &amp;#123;
+     split =&amp;gt; &amp;#123; &amp;quot;request&amp;quot; =&amp;gt; &amp;quot; &amp;quot; &amp;#125;
+ &amp;#125;
+ mutate &amp;#123;
+   add_field =&amp;gt; &amp;#123;
+  &amp;quot;httpversion&amp;quot; =&amp;gt; &amp;quot;%&amp;#123;[request][2]&amp;#125;&amp;quot;
+   &amp;#125;
+ &amp;#125;
+ mutate &amp;#123;                           #这里应该是选取xff，这里没有可以删掉，
+     split =&amp;gt; &amp;#123; &amp;quot;xff&amp;quot; =&amp;gt; &amp;quot;,&amp;quot; &amp;#125;
+ &amp;#125;
+ mutate &amp;#123;
+   add_field =&amp;gt; &amp;#123;
+        &amp;quot;realip&amp;quot; =&amp;gt; &amp;quot;%&amp;#123;[xff][0]&amp;#125;&amp;quot;
+   &amp;#125;
+ &amp;#125;
+ geoip &amp;#123;
+    source =&amp;gt; &amp;quot;clientip&amp;quot;
+    target =&amp;gt; &amp;quot;geoip&amp;quot;
+    #填写自己的GeoLite2数据库目录
+     database =&amp;gt; &amp;quot;/usr/local/elk/logstash/config/GeoLite2-City.mmdb&amp;quot;
+    #获取经纬度
+    add_field =&amp;gt; [&amp;quot;[geoip][coordinates]&amp;quot;,&amp;quot;%&amp;#123;[geoip][longitude]&amp;#125;&amp;quot;]
+    add_field =&amp;gt; [&amp;quot;[geoip][coordinates]&amp;quot;,&amp;quot;%&amp;#123;[geoip][latitude]&amp;#125;&amp;quot;]
+ &amp;#125;
+ mutate &amp;#123;
+   convert =&amp;gt; [ &amp;quot;[geoip][coordinates]&amp;quot;, &amp;quot;float&amp;quot; ]
+ &amp;#125;​
+&amp;#125;
+# 这是ElasticSerach服务的监听端口
+output &amp;#123;
+ elasticsearch &amp;#123;
+   hosts =&amp;gt; [&amp;quot;192.168.10.129:9200&amp;quot;]
+   index =&amp;gt;  &amp;quot;nginx-%&amp;#123;+YYYY.MM.dd&amp;#125;&amp;quot;
+   #根据项目名称动态创建索引
+ &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;geoip&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#geoip&#34;&gt;#&lt;/a&gt; geoip&lt;/h2&gt;
+&lt;p&gt;geoip 是 object 类型，它有几个子字段，含义如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;geoip.city_name：城市&lt;/li&gt;
+&lt;li&gt;geoip.continent_name：大陆名称&lt;/li&gt;
+&lt;li&gt;geoip.country_iso_code：国家编码&lt;/li&gt;
+&lt;li&gt;geoip.location：经纬度坐标，必须是：geo_point 类型&lt;/li&gt;
+&lt;li&gt;geoip.region_iso_code：地域编码&lt;/li&gt;
+&lt;li&gt;geoip.region_name：地域名称&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;扩展程序是谷歌的&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9jaHJvbWUuZ29vZ2xlLmNvbS93ZWJzdG9yZS9kZXRhaWwvZWxhc3RpY3NlYXJjaC1oZWFkL2ZmbWtpZWpqbWVjb2xwZmxvb2Zwam9sb2dvYmxrZWdtP3V0bV9zb3VyY2U9Y2hyb21lLW50cC1pY29u&#34;&gt; ElasticSearch Head&lt;/span&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 创建一个名为geoip的模板
+http://192.168.10.129:9200/_template/geoip/
+
+# index_patterns:索引名称
+#  ignore_malformed 如果true，格式错误的地理位置被忽略。如果false（默认），格式错误的地理位置引发异常并拒绝整个文档
+此字段需要配置成true，以防地理格式错误导致文档被拒绝
+
+&amp;#123;
+  &amp;quot;index_patterns&amp;quot;: [
+    &amp;quot;nginx*&amp;quot;
+  ],
+  &amp;quot;order&amp;quot;: 10,
+  &amp;quot;mappings&amp;quot;: &amp;#123;
+    &amp;quot;properties&amp;quot;: &amp;#123;
+      &amp;quot;clientip&amp;quot;: &amp;#123;
+        &amp;quot;type&amp;quot;: &amp;quot;ip&amp;quot;
+      &amp;#125;,
+      &amp;quot;geoip&amp;quot;: &amp;#123;
+        &amp;quot;dynamic&amp;quot;: true,
+        &amp;quot;type&amp;quot;: &amp;quot;object&amp;quot;,
+        &amp;quot;properties&amp;quot;: &amp;#123;
+          &amp;quot;location&amp;quot;: &amp;#123;
+            &amp;quot;type&amp;quot;: &amp;quot;geo_point&amp;quot;,
+            &amp;quot;ignore_malformed&amp;quot;: &amp;quot;true&amp;quot;
+          &amp;#125;,
+          &amp;quot;coordinates&amp;quot;: &amp;#123;
+            &amp;quot;type&amp;quot;: &amp;quot;geo_point&amp;quot;,
+            &amp;quot;ignore_malformed&amp;quot;: &amp;quot;true&amp;quot;
+          &amp;#125;,
+          &amp;quot;ip&amp;quot;: &amp;#123;
+            &amp;quot;type&amp;quot;: &amp;quot;ip&amp;quot;
+          &amp;#125;
+        &amp;#125;
+      &amp;#125;
+    &amp;#125;
+  &amp;#125;,
+  &amp;quot;aliases&amp;quot;: &amp;#123;
+    &amp;quot;nginx&amp;quot;: &amp;#123;&amp;#125;
+  &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;以下就代表模板创建成功&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/geoiptype&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/geoiptype..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;kibana加载地图&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#kibana加载地图&#34;&gt;#&lt;/a&gt; Kibana 加载地图&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana1-2&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana1.-1.webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana2-2&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana2.-1.webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana3-2&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana3.-1.webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana4-2&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana4.-1.webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana5-2&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana5.-1.webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana6-2&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana6.-1.webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana7-2&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana7.-1.webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana8&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana8..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana9&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana9..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+</content>
+        <category term="服务器" />
+        <category term="ELK" />
+        <category term="安全管理" />
+        <category term="数据可视化" />
+        <category term="监控" />
+        <category term="运维" />
+        <updated>2021-09-19T03:50:41.000Z</updated>
+    </entry>
+    <entry>
+        <id>http://example.com/category/2e72a923fa65.html</id>
+        <title>从零搭建日志采集报警系统(ELK+FileBeat)</title>
+        <link rel="alternate" href="http://example.com/category/2e72a923fa65.html"/>
+        <content type="html">&lt;h2 id=&#34;系统选型&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#系统选型&#34;&gt;#&lt;/a&gt; 系统选型&lt;/h2&gt;
+&lt;p&gt;Elastic 公司有一套免费开源的日志采集系统（ELK），所以我选择拿来即用。 日志流：  &lt;code&gt;日志文件&lt;/code&gt; → &lt;code&gt;FileBeat&lt;/code&gt; → &lt;code&gt;Logstash&lt;/code&gt; → &lt;code&gt;ElasticSearch&lt;/code&gt; → &lt;code&gt;Kibana&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/archives/465/mindmap&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/MindMap..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;filebeat&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#filebeat&#34;&gt;#&lt;/a&gt; Filebeat&lt;/h3&gt;
+&lt;p&gt;Filebeat 是一款轻量级日志采集器，可用于转发和汇总日志与文件。Filebeat 内置有多种模块（Nginx、MySQL、Redis、Elasticsearch、Logstash 等），可针对常见格式的日志大大简化收集、解析和可视化过程，只需一条命令即可。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/archives/465/filebeat&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/filebeat..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;logstash&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#logstash&#34;&gt;#&lt;/a&gt; Logstash&lt;/h3&gt;
+&lt;p&gt;Logstash 是一个分布式日志收集框架，开发语言是 JRuby，经常与 ElasticSearch，Kibana 配合使用组成著名的 ELK 技术栈，所谓 ELK 就是 ElasticSearch、Logstash、Kibana 这三个组件。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/archives/465/logstash&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/Logstash..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;elasticsearch&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#elasticsearch&#34;&gt;#&lt;/a&gt; ElasticSearch&lt;/h3&gt;
+&lt;p&gt;Elasticsearch 是一个分布式、可扩展、实时的搜索与数据分析引擎。它提供了一个分布式多用户能力的全文搜索引擎，基于 RESTful web 接口。&lt;/p&gt;
+&lt;h3 id=&#34;kibana&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#kibana&#34;&gt;#&lt;/a&gt; Kibana&lt;/h3&gt;
+&lt;p&gt;Kibana 是一个免费且开放的用户界面，能够让您对 Elasticsearch 数据进行可视化。您可以进行各种操作，从跟踪查询负载，到理解请求如何流经您的整个应用，都能轻松完成。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/archives/465/kibanamap&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/KibanaMap..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;系统准备&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#系统准备&#34;&gt;#&lt;/a&gt; 系统准备&lt;/h2&gt;
+&lt;h3 id=&#34;系统设置&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#系统设置&#34;&gt;#&lt;/a&gt; 系统设置&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;# 关闭防火墙（如果因为其他原因不能关闭防火墙，也请不要禁止80端口）：
+systemctl stop firewalld.service
+# 禁止防火墙自动启动:
+systemctl disable firewalld.service
+# 修改操作系统参数
+vi /etc/sysctl.conf
+vm.max_map_count=262144
+
+# 加载sysctl配置，执行命令:
+sysctl -p
+
+vim /etc/security/limits.conf
+# 在文件最后加入
+* soft nofile 65536
+* hard nofile 131072
+* soft nproc 2048
+* hard nproc 4096
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;jdk安装&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#jdk安装&#34;&gt;#&lt;/a&gt; jdk 安装&lt;/h3&gt;
+&lt;p&gt;下载地址 **&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cub3BlbmxvZ2ljLmNvbS9vcGVuamRrLWRvd25sb2Fkcw==&#34;&gt;https://www.openlogic.com/openjdk-downloads&lt;/span&gt;**&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 进入opt目录
+cd /opt
+# 下载JDK,推荐11系列
+wget https://builds.openlogic.com/downloadJDK/openlogic-openjdk/11.0.8%2B10/openlogic-openjdk-11.0.8%2B10-linux-x64.tar.gz
+# 解压
+tar -zxvf openlogic-openjdk-11.0.8+10-linux-x64.tar.gz
+# 修改文件夹名
+mv openlogic-openjdk-11.0.8+10-linux-x64// jdk/
+# 定义环境变量
+sed -i.ori  &#39;$a export JAVA_HOME=/opt/jdk\nexport PATH=$JAVA_HOME/bin:$JAVA_HOME/jre/bin:$PATH\nexport CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib:$JAVA_HOME/lib/tools.jar&#39; /etc/profile
+# 加载环境变量配置信息
+source /etc/profile
+# 确认检查jdk版本信息
+java -version
+
+openjdk version &amp;quot;11.0.8&amp;quot; 2020-07-14
+OpenJDK Runtime Environment OpenLogic-OpenJDK (build 11.0.8+0-adhoc.centos.jdk11u)
+OpenJDK 64-Bit Server VM OpenLogic-OpenJDK (build 11.0.8+0-adhoc.centos.jdk11u, mixed mode)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;elasticsearch部署&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#elasticsearch部署&#34;&gt;#&lt;/a&gt; Elasticsearch 部署&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;# 进入opt目录
+cd /opt
+# 把tar包下载到opt目录下
+wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.14.1-linux-x86_64.tar.gz
+# 解压tar包
+tar -zxvf elasticsearch-7.14.1-linux-x86_64.tar.gz
+# 拷贝文件目录到/usr/local
+cp -r elasticsearch-7.14.1/ /usr/local/elasticsearch
+# 建立软连接
+ln -s /usr/local/elasticsearch/ elasticsearch
+# 修改配置文件
+vim /usr/local/elasticsearch/config/elasticsearch.yml
+
+# 以下取消注释
+# 集群名称，单机版使用默认即可
+cluster.name: my-application
+# 节点名称，单机版使用默认即可
+node.name: node-1
+# 数据存放的路径
+path.data: /usr/local/elasticsearch/data/
+# 应用日志存放的路径
+path.logs: /usr/local/elasticsearch/logs/
+# 服务绑定的IP地址
+network.host: 0.0.0.0
+# 服务监听的端口
+http.port: 9200
+#初始主节点
+cluster.initial_master_nodes: [&amp;quot;node-1&amp;quot;]
+
+# 跨域配置
+http.cors.enabled: true
+http.cors.allow-origin: &amp;quot;*&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;es 不能以 root 用户身份运行，所以要创建新的用户组和用户名称&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 创建用户组
+groupadd elsearch
+# 创建用户
+useradd elsearch -g elsearch -p elasticsearch
+
+# 把es要用到的路径都设置成的文件组权限设置成新的用户组和用户
+chown -R elsearch:elsearch /usr/local/elasticsearch
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;启动 es&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 切换到es用户
+su elsearch
+# 以后台服务运行
+/usr/local/elasticsearch/bin/elasticsearch -d 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;查看启动日志可执行命令 &lt;code&gt;tail -f /usr/local/elasticsearch/logs/my-application.log&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/elsearch_logs&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/elsearch_logs..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;通过 &lt;code&gt;ss -lntup&lt;/code&gt;  查看端口号已经启动&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/elsearch_port&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/elsearch_port..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;执行 &lt;code&gt;curl&lt;/code&gt;  命令检查服务是否正常响应: &lt;code&gt;curl 127.0.0.1:9200&lt;/code&gt; , 收到响应如下：&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/elsearch&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/elsearch..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;至此，ElasticSerach 服务启动成功&lt;/p&gt;
+&lt;h2 id=&#34;kibana部署&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#kibana部署&#34;&gt;#&lt;/a&gt; Kibana 部署&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;# 进入opt目录
+cd /opt
+# 把tar包下载到opt目录下
+wget https://artifacts.elastic.co/downloads/kibana/kibana-7.14.1-linux-x86_64.tar.gz
+# 解压
+tar -zxvf kibana-7.14.1-linux-x86_64.tar.gz
+# 拷贝文件目录到/usr/local
+cp -r kibana-7.14.1-linux-x86_64 /usr/local/kibana
+# 建立软连接
+ln -s /usr/local/kibana/ kibana
+#打开Kibana的配置文件
+vim /usr/local/kibana/config/kibana.yml
+
+# 服务端口
+server.port: 5601
+# 服务器主机IP地址
+server.host: &amp;quot;主机的IP地址&amp;quot;
+# es索引服务器地址与上一步配置es时的地址相同
+elasticsearch.hosts: [&amp;quot;http://xxx.xxx.xxx.xxx:9200&amp;quot;]
+i18n.locale: &amp;quot;zh-CN&amp;quot;
+
+# 按esc输入以下内容保存并退出
+:wq
+# 这样其他电脑就能用浏览器访问Kibana服务了
+
+# 不能以root用户运行
+# 把es要用到的路径都设置成的文件组权限设置成新的用户组和用户
+chown -R elsearch:elsearch /usr/local/kibana
+
+# 切换到es用户
+su elsearch
+# 先前台运行看有没有报错
+/usr/local/kibana/bin/kibana
+
+# # 让服务在后台运行
+nohup /usr/local/kibana/bin/kibana &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;查看启动日志: &lt;code&gt;tail -f /home/elsearch/nohup.out&lt;/code&gt;  以下信息表示启动成功:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana_log&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana_log..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;在浏览器访问 http:// 主机 IP:5601; 看到如下页面&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;filebeat部署日志机&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#filebeat部署日志机&#34;&gt;#&lt;/a&gt; Filebeat 部署 (日志机)&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;# 进入opt目录
+cd /opt
+# 把tar包下载到opt目录下
+wget https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.14.1-linux-x86_64.tar.gz
+tar -zxvf filebeat-7.14.1-linux-x86_64.tar.gz
+cp -r filebeat-7.14.1-linux-x86_64 /usr/local/elk/filebeat
+
+# 修改配置文件
+vim /usr/local/elk/filebeat/filebeat.yml
+
+# 配置输入插件，注意是yml格式
+filebeat.inputs:
+# 数据来源是log日志文件
+- type: log
+  enabled: true
+# 日志文件路径
+  paths:
+    - /usr/local/nginx/nginx/logs/access*.log
+
+# 解释内容格式为json的日志
+#  json.keys_under_root: true
+#  json.add_error_key: true
+#  json.message_key: log
+#  json.overwrite_keys: true
+# 额外的标识字段，可以于区分是来自于哪个应用
+  fields:
+    log_type: logbackjson
+
+# 配置多个log数据源
+# - type: log
+
+  # Change to true to enable this input configuration.
+#  enabled: true
+
+  # Paths that should be crawled and fetched. Glob based paths.
+#  paths:
+#    - /var/log/xhg/gateway/*.log
+#
+#  json.keys_under_root: true
+#  json.add_error_key: true
+#  json.message_key: log
+#  json.overwrite_keys: true
+
+#  fields:
+#    log_type: gateway
+
+# 当输出插件中要使用自定义索引名称的时候配置这个
+# setup.template.name: &amp;quot;cobee&amp;quot;
+# setup.template.pattern: &amp;quot;cobee-*&amp;quot;
+# 关闭ES配置
+# 配置数据输出目标地
+# output.elasticsearch:
+  # Array of hosts to connect to.
+  # hosts: [&amp;quot;172.18.219.11:9200&amp;quot;]
+  # index: &amp;quot;xhg-ms-%&amp;#123;+yyyy.MM.dd&amp;#125;&amp;quot;
+# 其它配置项保持默认即可
+
+output.logstash:
+  # The Logstash hosts
+  hosts: [&amp;quot;localhost:5044&amp;quot;]
+
+# 按esc输入以下内容保存并退出
+:wq
+
+# 后台运行filebeat，filebeat是一个轻量级的数据采集引擎，不需要安装jdk，不像logstash那么笨重
+
+nohup /usr/local/elk/filebeat/filebeat -e -c /usr/local/elk/filebeat/filebeat.yml -d &amp;quot;Publish&amp;quot; &amp;amp; &amp;gt; nohup.out
+
+#停止filebeat：
+ps -ef grep filebeat 
+kill -9 pid
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;h2 id=&#34;logstash部署日志机&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#logstash部署日志机&#34;&gt;#&lt;/a&gt; logstash 部署 (日志机)&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;wget https://artifacts.elastic.co/downloads/logstash/logstash-7.14.1-linux-x86_64.tar.gz
+tar -zxvf logstash-7.14.1-linux-x86_64.tar.gz
+mkdir /usr/local/elk
+cp -r logstash-7.14.1 /usr/local/elk/logstash
+# 在目录/usr/local/elk/logstash下创建文件
+vim /usr/local/elk/logstash/default.conf
+# 内容如下:
+# 监听5044端口作为输入
+input &amp;#123;
+    beats &amp;#123;
+        port =&amp;gt; &amp;quot;5044&amp;quot;
+    &amp;#125;
+&amp;#125;
+# 数据过滤
+filter &amp;#123;
+    grok &amp;#123;
+        match =&amp;gt; &amp;#123; &amp;quot;message&amp;quot; =&amp;gt; &amp;quot;%&amp;#123;COMBINEDAPACHELOG&amp;#125;&amp;quot; &amp;#125;
+    &amp;#125;
+    geoip &amp;#123;
+        source =&amp;gt; &amp;quot;clientip&amp;quot;
+    &amp;#125;
+&amp;#125;
+# 这是ElasticSerach服务的监听端口
+output &amp;#123;
+    elasticsearch &amp;#123;
+        hosts =&amp;gt; [&amp;quot;192.168.10.129:9200&amp;quot;]
+        index =&amp;gt;  &amp;quot;%&amp;#123;appname&amp;#125;-%&amp;#123;+YYYY.MM.dd&amp;#125;&amp;quot; #根据项目名称动态创建索引
+    &amp;#125;
+&amp;#125;
+
+
+# 启动logstash
+nohup /usr/local/elk/logstash/bin/logstash -f /usr/local/elk/logstash/default.conf --config.reload.automatic &amp;amp;
+tail -f /usr/local/elk/logstash/logs/logstash-plain.log
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/logstash_logs&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/logstash_logs..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;kibana配置&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#kibana配置&#34;&gt;#&lt;/a&gt; Kibana 配置&lt;/h2&gt;
+&lt;p&gt;Chrome 扩展程序下载 ElasticSearch Head, 查看 ElasticSearch 是否有数据&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/elsearchhttp&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/elsearchHttp..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; 配置 Kibana &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana1&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana1..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana2&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana2..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana3&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana3..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana4&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana4..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana5&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana5..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana6&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana6..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana7&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana7..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+</content>
+        <category term="ELK" />
+        <category term="安全管理" />
+        <category term="数据可视化" />
+        <category term="监控" />
+        <category term="运维" />
+        <updated>2021-09-17T10:26:31.000Z</updated>
+    </entry>
+</feed>

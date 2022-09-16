@@ -1,0 +1,524 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="江霁月的私人小屋" href="http://example.com/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="江霁月的私人小屋" href="http://example.com/atom.xml" />
+<link rel="alternate" type="application/json" title="江霁月的私人小屋" href="http://example.com/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="linux,服务器,运维" />
+
+
+<link rel="canonical" href="http://example.com/category/8495ff9caf6a.html">
+
+
+
+  <title>
+Linux从入门到放弃-磁盘管理 - Linux - 安全运维 |
+江霁月的私人小屋</title>
+<meta name="generator" content="Hexo 5.4.2"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">Linux从入门到放弃-磁盘管理
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="创建时间：2021-09-23 13:24:00">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">发表于</span>
+    <time itemprop="dateCreated datePublished" datetime="2021-09-23T13:24:00+08:00">2021-09-23</time>
+  </span>
+  <span class="item" title="本文字数">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">本文字数</span>
+    <span>8.8k</span>
+    <span class="text">字</span>
+  </span>
+  <span class="item" title="阅读时长">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">阅读时长</span>
+    <span>8 分钟</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="切换导航栏">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">江霁月的私人小屋</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giciub8ja1j20zk0m81ky.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipetfk5zwj20zk0m8e81.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gicmnywqgpj20zk0m8dwx.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gicis081o9j20zk0m8dmr.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipeybxm1pj20zk0m8niv.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclwuom7cj20zk0m8dvn.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">首页</a></span><i class="ic i-angle-right"></i>
+<span  itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/SOC/" itemprop="item" rel="index" title="分类于 安全运维"><span itemprop="name">安全运维</span></a>
+<meta itemprop="position" content="1" /></span>
+<i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/SOC/Linux/" itemprop="item" rel="index" title="分类于 Linux"><span itemprop="name">Linux</span></a>
+<meta itemprop="position" content="2" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN">
+  <link itemprop="mainEntityOfPage" href="http://example.com/category/8495ff9caf6a.html">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/avatar.jpg">
+    <meta itemprop="name" content="江霁月">
+    <meta itemprop="description" content=", 专注分享一些关于安全运维和编程语言的知识·本博主爱安全,爱折腾,爱代码">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="江霁月的私人小屋">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <h2 id="文件系统配置文件"><a class="markdownIt-Anchor" href="#文件系统配置文件">#</a> 文件系统配置文件</h2>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>/etc/filesystems:系统指定的测试挂载文件系统类型</pre></td></tr><tr><td data-num="2"></td><td><pre> /proc/filesystems:Linux 系统已经加载的文件系统类型</pre></td></tr><tr><td data-num="3"></td><td><pre> /lib/modules/2.6.18-274.el5/kernel/fs/ 文件系统类型的驱动所在目录</pre></td></tr><tr><td data-num="4"></td><td><pre> /etc/fstab</pre></td></tr><tr><td data-num="5"></td><td><pre> /etc/mtab</pre></td></tr></table></figure><h2 id="linux-文件类型的颜色"><a class="markdownIt-Anchor" href="#linux-文件类型的颜色">#</a> linux 文件类型的颜色</h2>
+<h3 id="linux文件颜色的含义"><a class="markdownIt-Anchor" href="#linux文件颜色的含义">#</a> linux 文件颜色的含义:</h3>
+<ul>
+<li>蓝色代表目录</li>
+<li>绿色代表可执行文件</li>
+<li>红色表示压缩文件</li>
+<li>浅蓝色表示链接文件</li>
+<li>灰色表示其他文件</li>
+<li>红色闪烁表示链接的文件有问题了</li>
+<li>黄色表示设备文件</li>
+<li>蓝色文件 ---------- 目录</li>
+<li>白色文件 ---------- 一般性文件，如文本文件，配置文件，源码文件等</li>
+<li>浅蓝色文件 ---------- 链接文件，主要是使用 ln 命令建立的文件</li>
+<li>绿色文件 ---------- 可执行文件，可执行的程序</li>
+<li>红色文件 ----------- 压缩文件或者包文件</li>
+</ul>
+<h3 id="linux-下用字符表示的文件类型"><a class="markdownIt-Anchor" href="#linux-下用字符表示的文件类型">#</a> Linux 下用字符表示的文件类型</h3>
+<ul>
+<li>-: 普通文件</li>
+<li>d: 目录文件</li>
+<li>l: 链接文件</li>
+<li>b: 块设备文件</li>
+<li>c: 字符设备文件</li>
+<li>p: 管道文件</li>
+</ul>
+<h2 id="文件系统操作命令"><a class="markdownIt-Anchor" href="#文件系统操作命令">#</a> 文件系统操作命令</h2>
+<h3 id="df列出文件系统的整体磁盘使用情况"><a class="markdownIt-Anchor" href="#df列出文件系统的整体磁盘使用情况">#</a> df: 列出文件系统的整体磁盘使用情况</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@localhost ~<span class="token punctuation">]</span> <span class="token function">df</span> <span class="token parameter variable">-h</span></pre></td></tr><tr><td data-num="2"></td><td><pre> 文件系统                   容量   已用 可用 已用% 挂载点</pre></td></tr><tr><td data-num="3"></td><td><pre> devtmpfs                 898M     <span class="token number">0</span> 898M   <span class="token number">0</span>%   /dev</pre></td></tr><tr><td data-num="4"></td><td><pre> tmpfs                   910M     <span class="token number">0</span> 910M   <span class="token number">0</span>%   /dev/shm</pre></td></tr><tr><td data-num="5"></td><td><pre> tmpfs                   910M  <span class="token number">9</span>.6M 901M   <span class="token number">2</span>%   /run</pre></td></tr><tr><td data-num="6"></td><td><pre> tmpfs                   910M     <span class="token number">0</span> 910M   <span class="token number">0</span>%   /sys/fs/cgroup</pre></td></tr><tr><td data-num="7"></td><td><pre> /dev/mapper/centos-root   37G  <span class="token number">6</span>.3G   31G  <span class="token number">18</span>%   /</pre></td></tr><tr><td data-num="8"></td><td><pre> /dev/sda1               1014M 151M 864M  <span class="token number">15</span>%   /boot</pre></td></tr><tr><td data-num="9"></td><td><pre> tmpfs                   182M     <span class="token number">0</span> 182M   <span class="token number">0</span>%   /run/user/0</pre></td></tr><tr><td data-num="10"></td><td><pre> ​</pre></td></tr><tr><td data-num="11"></td><td><pre> <span class="token punctuation">[</span>root@localhost ~<span class="token punctuation">]</span> <span class="token function">df</span> <span class="token parameter variable">-i</span></pre></td></tr><tr><td data-num="12"></td><td><pre> 文件系统                   Inodes <span class="token punctuation">(</span>I<span class="token punctuation">)</span>已用 <span class="token punctuation">(</span>I<span class="token punctuation">)</span>可用 <span class="token punctuation">(</span>I<span class="token punctuation">)</span>已用% 挂载点</pre></td></tr><tr><td data-num="13"></td><td><pre> devtmpfs                   <span class="token number">229863</span>     <span class="token number">391</span>    <span class="token number">229472</span>     <span class="token number">1</span>%   /dev</pre></td></tr><tr><td data-num="14"></td><td><pre> tmpfs                      <span class="token number">232879</span>       <span class="token number">1</span>    <span class="token number">232878</span>     <span class="token number">1</span>%   /dev/shm</pre></td></tr><tr><td data-num="15"></td><td><pre> tmpfs                      <span class="token number">232879</span>     <span class="token number">733</span>    <span class="token number">232146</span>     <span class="token number">1</span>%   /run</pre></td></tr><tr><td data-num="16"></td><td><pre> tmpfs                      <span class="token number">232879</span>     <span class="token number">16</span>     <span class="token number">232863</span>     <span class="token number">1</span>%   /sys/fs/cgroup</pre></td></tr><tr><td data-num="17"></td><td><pre> /dev/mapper/centos-root    <span class="token number">19394560</span>  <span class="token number">149676</span> <span class="token number">19244884</span>    <span class="token number">1</span>%   /</pre></td></tr><tr><td data-num="18"></td><td><pre> /dev/sda1                  <span class="token number">524288</span>      <span class="token number">327</span>   <span class="token number">523961</span>     <span class="token number">1</span>% /boot</pre></td></tr><tr><td data-num="19"></td><td><pre> tmpfs                      <span class="token number">232879</span>       <span class="token number">1</span>    <span class="token number">232878</span>     <span class="token number">1</span>% /run/user/0</pre></td></tr></table></figure><h3 id="du列出目录所占空间"><a class="markdownIt-Anchor" href="#du列出目录所占空间">#</a> du: 列出目录所占空间</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">du</span> <span class="token parameter variable">-sh</span>    <span class="token comment"># 显示当前目录大小</span></pre></td></tr><tr><td data-num="2"></td><td><pre> <span class="token function">du</span> –sh /  <span class="token comment"># 显示 / 目录下的所有目录大小</span></pre></td></tr></table></figure><h3 id="ln连接文件快捷方式"><a class="markdownIt-Anchor" href="#ln连接文件快捷方式">#</a> ln: 连接文件 (快捷方式)</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">ln</span> –sf 源文件 目标文件</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token comment"># 不加任何参数就进行连接，就是 hard link, 加上 - s 就是 Symbolic link,hard link 不支持目录和跨文件系统</span></pre></td></tr></table></figure><h3 id="fdisk"><a class="markdownIt-Anchor" href="#fdisk">#</a> Fdisk</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># Fdisk 不支持大于 2T 的磁盘</span></pre></td></tr><tr><td data-num="2"></td><td><pre> <span class="token comment"># Fdisk –l 显示系统中的所有分区内容</span></pre></td></tr><tr><td data-num="3"></td><td><pre> <span class="token punctuation">[</span>root@localhost ~<span class="token punctuation">]</span> <span class="token function">fdisk</span> <span class="token parameter variable">-l</span></pre></td></tr><tr><td data-num="4"></td><td><pre> Disk /dev/sda: <span class="token number">42.9</span> GB, <span class="token number">42949672960</span> bytes, <span class="token number">83886080</span> sectors</pre></td></tr><tr><td data-num="5"></td><td><pre> Units <span class="token operator">=</span> sectors of <span class="token number">1</span> * <span class="token number">512</span> <span class="token operator">=</span> <span class="token number">512</span> bytes</pre></td></tr><tr><td data-num="6"></td><td><pre> Sector size<span class="token punctuation">(</span>logical/physical<span class="token punctuation">)</span>: <span class="token number">512</span> bytes / <span class="token number">512</span> bytes</pre></td></tr><tr><td data-num="7"></td><td><pre> I/O size<span class="token punctuation">(</span>minimum/optimal<span class="token punctuation">)</span>: <span class="token number">512</span> bytes / <span class="token number">512</span> bytes</pre></td></tr><tr><td data-num="8"></td><td><pre> Disk label type: dos</pre></td></tr><tr><td data-num="9"></td><td><pre> Disk identifier: 0x000b9d69</pre></td></tr><tr><td data-num="10"></td><td><pre> ​</pre></td></tr><tr><td data-num="11"></td><td><pre> Device   Boot     Start         End     Blocks   Id System</pre></td></tr><tr><td data-num="12"></td><td><pre> /dev/sda1   *        <span class="token number">2048</span>     <span class="token number">2099199</span>     <span class="token number">1048576</span>   <span class="token number">83</span> Linux</pre></td></tr><tr><td data-num="13"></td><td><pre> /dev/sda2         <span class="token number">2099200</span>    <span class="token number">83886079</span>    <span class="token number">40893440</span>   8e Linux LVM</pre></td></tr><tr><td data-num="14"></td><td><pre> ​</pre></td></tr><tr><td data-num="15"></td><td><pre> Disk /dev/mapper/centos-root: <span class="token number">39.7</span> GB, <span class="token number">39720058880</span> bytes, <span class="token number">77578240</span> sectors</pre></td></tr><tr><td data-num="16"></td><td><pre> Units <span class="token operator">=</span> sectors of <span class="token number">1</span> * <span class="token number">512</span> <span class="token operator">=</span> <span class="token number">512</span> bytes</pre></td></tr><tr><td data-num="17"></td><td><pre> Sector size<span class="token punctuation">(</span>logical/physical<span class="token punctuation">)</span>: <span class="token number">512</span> bytes / <span class="token number">512</span> bytes</pre></td></tr><tr><td data-num="18"></td><td><pre> I/O size<span class="token punctuation">(</span>minimum/optimal<span class="token punctuation">)</span>: <span class="token number">512</span> bytes / <span class="token number">512</span> bytes</pre></td></tr><tr><td data-num="19"></td><td><pre> ​</pre></td></tr><tr><td data-num="20"></td><td><pre> ​</pre></td></tr><tr><td data-num="21"></td><td><pre> Disk /dev/mapper/centos-swap: <span class="token number">2147</span> MB, <span class="token number">2147483648</span> bytes, <span class="token number">4194304</span> sectors</pre></td></tr><tr><td data-num="22"></td><td><pre> Units <span class="token operator">=</span> sectors of <span class="token number">1</span> * <span class="token number">512</span> <span class="token operator">=</span> <span class="token number">512</span> bytes</pre></td></tr><tr><td data-num="23"></td><td><pre> Sector size<span class="token punctuation">(</span>logical/physical<span class="token punctuation">)</span>: <span class="token number">512</span> bytes / <span class="token number">512</span> bytes</pre></td></tr><tr><td data-num="24"></td><td><pre> I/O size<span class="token punctuation">(</span>minimum/optimal<span class="token punctuation">)</span>: <span class="token number">512</span> bytes / <span class="token number">512</span> bytes</pre></td></tr></table></figure><h3 id="parted2t以上磁盘分区工具"><a class="markdownIt-Anchor" href="#parted2t以上磁盘分区工具">#</a> Parted:2T 以上磁盘分区工具</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># 支持大于 2T 的磁盘，2T 以下的最好还是用 Fdisk 来分区.</span></pre></td></tr><tr><td data-num="2"></td><td><pre> <span class="token punctuation">[</span>root@localhost aixi<span class="token punctuation">]</span> <span class="token function">parted</span> /dev/hda print</pre></td></tr><tr><td data-num="3"></td><td><pre> Model: VMware Virtual IDE Hard Drive<span class="token punctuation">(</span>ide<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="4"></td><td><pre> Disk /dev/hda: 2147MB</pre></td></tr><tr><td data-num="5"></td><td><pre> Sector size<span class="token punctuation">(</span>logical/physical<span class="token punctuation">)</span>: 512B/512B</pre></td></tr><tr><td data-num="6"></td><td><pre> Partition Table: msdos</pre></td></tr><tr><td data-num="7"></td><td><pre> Number Start End Size Type File system 标志</pre></td></tr><tr><td data-num="8"></td><td><pre> <span class="token number">1</span> <span class="token number">32</span>.3kB 101MB 101MB 主分区 ext3  </pre></td></tr><tr><td data-num="9"></td><td><pre> <span class="token number">2</span> 101MB 357MB 256MB 主分区 linux-swap</pre></td></tr><tr><td data-num="10"></td><td><pre> ​</pre></td></tr><tr><td data-num="11"></td><td><pre> <span class="token function">parted</span> /dev/hda <span class="token function">rm</span> <span class="token number">2</span> <span class="token comment"># 删除第 2 个分区</span></pre></td></tr><tr><td data-num="12"></td><td><pre> <span class="token function">parted</span> /dev/hda mkpart primary ext3 120MB 200MB</pre></td></tr><tr><td data-num="13"></td><td><pre> <span class="token comment"># 创建分区，primary 代表主分区，还可以是 extended 扩展分区，logical 逻辑分区；ext3 代表分区类型，120MB 是开始位置，最好是接上一分区的结束位 置，200M 是结束位置</span></pre></td></tr></table></figure><h3 id="partprobe-更新分区表磁盘"><a class="markdownIt-Anchor" href="#partprobe-更新分区表磁盘">#</a> partprobe : 更新分区表 / 磁盘</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># 用于重读分区表，当出现删除文件后，出现仍然占用空间。可以 partprobe 在不重启的情况下重读分区</span></pre></td></tr><tr><td data-num="2"></td><td><pre>partprobe</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token comment"># 这个命令执行完毕之后不会输出任何返回信息，你可以使用 mke2fs 命令在新的分区上创建文件系统.</span></pre></td></tr></table></figure><h3 id="mkfs磁盘格式化"><a class="markdownIt-Anchor" href="#mkfs磁盘格式化">#</a> Mkfs: 磁盘格式化</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># mkfs –t 文件系统格式 设备文件名（盘符）</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token punctuation">[</span>root@localhost ~<span class="token punctuation">]</span> <span class="token function">mkfs</span> <span class="token parameter variable">-t</span> ext3 /dev/hda1</pre></td></tr></table></figure><h3 id="e2label设置磁盘卷标"><a class="markdownIt-Anchor" href="#e2label设置磁盘卷标">#</a> e2label: 设置磁盘卷标</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># e2label 设备名称 新 label 名称，可以用 dumpe2fs 查看卷标</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token punctuation">[</span>root@localhost ~<span class="token punctuation">]</span> e2label /dev/hda1 aixi</pre></td></tr></table></figure><h3 id="mount挂载磁盘"><a class="markdownIt-Anchor" href="#mount挂载磁盘">#</a> Mount: 挂载磁盘</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">#命令格式:</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">mount</span> <span class="token punctuation">[</span>-t vfstype<span class="token punctuation">]</span> <span class="token punctuation">[</span>-o options<span class="token punctuation">]</span> device <span class="token function">dir</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token function">mount</span> –o remount,rw,auto / <span class="token comment"># 重新挂载</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token function">mount</span> –n –o remount,rw / <span class="token comment"># 重新挂载根目录，设置为可读写</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token comment"># 其中:</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token comment"># 1.-t vfstype 指定文件系统的类型，通常不必指定.mount 会自动选择正确的类型。常用类型有：光盘或光盘镜像:iso9660</span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token comment"># DOS fat16 文件系统:msdos</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token comment"># Windows 9x fat32 文件系统:vfat</span></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token comment"># Windows NT ntfs 文件系统:ntfs</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token comment"># Mount Windows 文件网络共享:smbfs UNIX (LINUX) 文件网络共享:nfs</span></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token comment"># 2.-o options 主要用来描述设备或档案的挂接方式。常用的参数有:</span></pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token comment"># loop: 用来把一个文件当成硬盘分区挂接上系统</span></pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token comment"># ro: 采用只读方式挂接设备</span></pre></td></tr><tr><td data-num="14"></td><td><pre><span class="token comment"># rw: 采用读写方式挂接设备</span></pre></td></tr><tr><td data-num="15"></td><td><pre><span class="token comment"># iocharset: 指定访问文件系统所用字符集</span></pre></td></tr><tr><td data-num="16"></td><td><pre><span class="token comment"># 3.device 要挂接 (mount) 的设备.</span></pre></td></tr><tr><td data-num="17"></td><td><pre><span class="token comment"># 4.dir 设备在系统上的挂接点 (mount point).</span></pre></td></tr></table></figure><h4 id="挂载光盘镜像文件"><a class="markdownIt-Anchor" href="#挂载光盘镜像文件">#</a> 挂载光盘镜像文件</h4>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># 1. 从光盘制作光盘镜像文件。将光盘放入光驱，执行下面的命令.</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">cp</span> /dev/cdrom /home/sunky/mydisk.iso</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token function">dd</span> <span class="token assign-left variable">if</span><span class="token operator">=</span>/dev/cdrom <span class="token assign-left variable">of</span><span class="token operator">=</span>/home/sunky/mydisk.iso</pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token comment"># 注：执行上面的任何一条命令都可将当前光驱里的光盘制作成光盘镜像文件 /home/sunky/mydisk.iso</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token comment"># 2. 将文件和目录制作成光盘镜像文件，执行下面的命令.</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token function">mkisofs</span> <span class="token parameter variable">-r</span> <span class="token parameter variable">-J</span> <span class="token parameter variable">-V</span> mydisk <span class="token parameter variable">-o</span> /home/sunky/mydisk.iso /home/sunky/ mydir</pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token comment"># 注：这条命令将 /home/sunky/mydir 目录下所有的目录和文件制作成光盘镜像文件 /home/sunky/mydisk.iso, 光盘卷标为:mydisk</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token comment"># 3. 光盘镜像文件的挂接 (mount)</span></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token function">mkdir</span> /mnt/vcdrom</pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token comment"># 注：建立一个目录用来作挂接点 (mount point)</span></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token function">mount</span> <span class="token parameter variable">-o</span> loop <span class="token parameter variable">-t</span> iso9660 /home/sunky/mydisk.iso /mnt/vcdrom</pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token comment"># 注：使用 /mnt/vcdrom 就可以访问盘镜像文件 mydisk.iso 里的所有文件了.</span></pre></td></tr></table></figure><h4 id="挂载移动硬盘"><a class="markdownIt-Anchor" href="#挂载移动硬盘">#</a> 挂载移动硬盘</h4>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># 对 linux 系统而言，USB 接口的移动硬盘是当作 SCSI 设备对待的。插入移动硬盘之前，应先用 fdisk –l 或 more /proc/partitions 查看系统的硬盘和硬盘分区情况.</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token punctuation">[</span>root@localhost ~<span class="token punctuation">]</span> <span class="token function">fdisk</span> <span class="token parameter variable">-l</span></pre></td></tr><tr><td data-num="3"></td><td><pre>Disk /dev/sda: <span class="token number">73</span> dot <span class="token number">4</span> GB, <span class="token number">73407820800</span> bytes</pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token number">255</span> heads, <span class="token number">63</span> sectors/track, <span class="token number">8924</span> cylinders</pre></td></tr><tr><td data-num="5"></td><td><pre>Units <span class="token operator">=</span> cylinders of <span class="token number">16065</span> * <span class="token number">512</span> <span class="token operator">=</span> <span class="token number">8225280</span> bytes</pre></td></tr><tr><td data-num="6"></td><td><pre>Device Boot Start End Blocks Id System</pre></td></tr><tr><td data-num="7"></td><td><pre>/dev/sda1 <span class="token number">1</span> <span class="token number">4</span> <span class="token number">32098</span>+ de Dell Utility</pre></td></tr><tr><td data-num="8"></td><td><pre>/dev/sda2 * <span class="token number">5</span> <span class="token number">2554</span> <span class="token number">20482875</span> <span class="token number">7</span> HPFS/NTFS</pre></td></tr><tr><td data-num="9"></td><td><pre>/dev/sda3 <span class="token number">2555</span> <span class="token number">7904</span> <span class="token number">42973875</span> <span class="token number">83</span> Linux</pre></td></tr><tr><td data-num="10"></td><td><pre>/dev/sda4 <span class="token number">7905</span> <span class="token number">8924</span> <span class="token number">8193150</span> f Win95 Ext<span class="token string">'d(LBA)</pre></td></tr><tr><td data-num="11"></td><td><pre>/dev/sda5 7905 8924 8193118+ 82 Linux swap</pre></td></tr><tr><td data-num="12"></td><td><pre># 在这里可以清楚地看到系统有一块SCSI硬盘/dev/sda和它的四个磁盘分区/dev/sda1 -- /dev/sda4,/dev/sda5是分区/dev/sda4 的逻辑分区.接好移动硬盘后,再用fdisk –l或more /proc/partitions查看系统的硬盘和硬盘分区情况</pre></td></tr><tr><td data-num="13"></td><td><pre>[root@localhost ~] fdisk -l</pre></td></tr><tr><td data-num="14"></td><td><pre>Disk /dev/sda: 73 dot 4 GB, 73407820800 bytes</pre></td></tr><tr><td data-num="15"></td><td><pre>255 heads, 63 sectors/track, 8924 cylinders</pre></td></tr><tr><td data-num="16"></td><td><pre>Units = cylinders of 16065 * 512 = 8225280 bytes</pre></td></tr><tr><td data-num="17"></td><td><pre>Device Boot Start End Blocks Id System</pre></td></tr><tr><td data-num="18"></td><td><pre>/dev/sda1 1 4 32098+ de Dell Utility</pre></td></tr><tr><td data-num="19"></td><td><pre>/dev/sda2 * 5 2554 20482875 7 HPFS/NTFS</pre></td></tr><tr><td data-num="20"></td><td><pre>/dev/sda3 2555 7904 42973875 83 Linux</pre></td></tr><tr><td data-num="21"></td><td><pre>/dev/sda4 7905 8924 8193150 f Win95 Ext'</span>d<span class="token punctuation">(</span>LBA<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="22"></td><td><pre>/dev/sda5 <span class="token number">7905</span> <span class="token number">8924</span> <span class="token number">8193118</span>+ <span class="token number">82</span> Linux swap Disk</pre></td></tr><tr><td data-num="23"></td><td><pre>/dev/sdc: <span class="token number">40.0</span> GB, <span class="token number">40007761920</span> bytes</pre></td></tr><tr><td data-num="24"></td><td><pre><span class="token number">255</span> heads, <span class="token number">63</span> sectors/track, <span class="token number">4864</span> cylinders</pre></td></tr><tr><td data-num="25"></td><td><pre>Units <span class="token operator">=</span> cylinders of <span class="token number">16065</span> * <span class="token number">512</span> <span class="token operator">=</span> <span class="token number">8225280</span> bytes</pre></td></tr><tr><td data-num="26"></td><td><pre>Device Boot Start End Blocks Id System</pre></td></tr><tr><td data-num="27"></td><td><pre>/dev/sdc1 <span class="token number">1</span> <span class="token number">510</span> <span class="token number">4096543</span>+ <span class="token number">7</span> HPFS/NTFS</pre></td></tr><tr><td data-num="28"></td><td><pre>/dev/sdc2 <span class="token number">511</span> <span class="token number">4864</span> <span class="token number">34973505</span> f Win95 Ext'd<span class="token punctuation">(</span>LBA<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="29"></td><td><pre>/dev/sdc5 <span class="token number">511</span> <span class="token number">4864</span> <span class="token number">34973473</span>+ b Win95 FAT32</pre></td></tr><tr><td data-num="30"></td><td><pre><span class="token comment"># 大家应该可以发现多了一个 SCSI 硬盘 /dev/sdc 和它的两个磁盘分区 /dev/sdc1?./dev/sdc2, 其中 /dev/sdc5 是 /dev/sdc2 分区的逻辑分区。我们可以使用下面的命令挂接 /dev/sdc1 和 /dev/sdc5.</span></pre></td></tr><tr><td data-num="31"></td><td><pre><span class="token function">mkdir</span> <span class="token parameter variable">-p</span> /mnt/usbhd1</pre></td></tr><tr><td data-num="32"></td><td><pre><span class="token function">mkdir</span> <span class="token parameter variable">-p</span> /mnt/usbhd2</pre></td></tr><tr><td data-num="33"></td><td><pre><span class="token comment"># 注：建立目录用来作挂接点 (mount point)</span></pre></td></tr><tr><td data-num="34"></td><td><pre><span class="token function">mount</span> <span class="token parameter variable">-t</span> ntfs /dev/sdc1 /mnt/usbhd1</pre></td></tr><tr><td data-num="35"></td><td><pre><span class="token function">mount</span> <span class="token parameter variable">-t</span> vfat /dev/sdc5 /mnt/usbhd2</pre></td></tr><tr><td data-num="36"></td><td><pre><span class="token comment"># 注：对 ntfs 格式的磁盘分区应使用 - t ntfs 参数，对 fat32 格式的磁盘分区应使用 - t vfat 参数。若汉字文件名显示为乱码或不显示，可以使用下面的命令格式.</span></pre></td></tr><tr><td data-num="37"></td><td><pre><span class="token function">mount</span> <span class="token parameter variable">-t</span> ntfs <span class="token parameter variable">-o</span> <span class="token assign-left variable">iocharset</span><span class="token operator">=</span>cp936 /dev/sdc1 /mnt/usbhd1</pre></td></tr><tr><td data-num="38"></td><td><pre><span class="token function">mount</span> <span class="token parameter variable">-t</span> vfat <span class="token parameter variable">-o</span> <span class="token assign-left variable">iocharset</span><span class="token operator">=</span>cp936 /dev/sdc5 /mnt/usbhd2</pre></td></tr><tr><td data-num="39"></td><td><pre><span class="token comment"># linux 系统下使用 fdisk 分区命令和 mkfs 文件系统创建命令可以将移动硬盘的分区制作成 linux 系统所特有的 ext2.ext3 格式。这样，在 linux 下使用就更方便了。使用下面的命令直接挂接即可.</span></pre></td></tr><tr><td data-num="40"></td><td><pre><span class="token function">mount</span> /dev/sdc1 /mnt/usbhd1</pre></td></tr></table></figure><h4 id="挂载u盘"><a class="markdownIt-Anchor" href="#挂载u盘">#</a> 挂载 U 盘</h4>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># 和 USB 接口的移动硬盘一样对 linux 系统而言 U 盘也是当作 SCSI 设备对待的。使用方法和移动硬盘完全一样。插入 U 盘之前，应先用 fdisk –l 或 more /proc/partitions 查看系统的硬盘和硬盘分区情况.</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token punctuation">[</span>root@localhost ~<span class="token punctuation">]</span> <span class="token function">fdisk</span> <span class="token parameter variable">-l</span></pre></td></tr><tr><td data-num="3"></td><td><pre>Disk /dev/sda: <span class="token number">73</span> dot <span class="token number">4</span> GB, <span class="token number">73407820800</span> bytes</pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token number">255</span> heads, <span class="token number">63</span> sectors/track, <span class="token number">8924</span> cylinders</pre></td></tr><tr><td data-num="5"></td><td><pre>Units <span class="token operator">=</span> cylinders of <span class="token number">16065</span> * <span class="token number">512</span> <span class="token operator">=</span> <span class="token number">8225280</span> bytes</pre></td></tr><tr><td data-num="6"></td><td><pre>Device Boot Start End Blocks Id System</pre></td></tr><tr><td data-num="7"></td><td><pre>/dev/sda1 <span class="token number">1</span> <span class="token number">4</span> <span class="token number">32098</span>+ de Dell Utility</pre></td></tr><tr><td data-num="8"></td><td><pre>/dev/sda2 * <span class="token number">5</span> <span class="token number">2554</span> <span class="token number">20482875</span> <span class="token number">7</span> HPFS/NTFS</pre></td></tr><tr><td data-num="9"></td><td><pre>/dev/sda3 <span class="token number">2555</span> <span class="token number">7904</span> <span class="token number">42973875</span> <span class="token number">83</span> Linux</pre></td></tr><tr><td data-num="10"></td><td><pre>/dev/sda4 <span class="token number">7905</span> <span class="token number">8924</span> <span class="token number">8193150</span> f Win95 Ext<span class="token string">'d(LBA)</pre></td></tr><tr><td data-num="11"></td><td><pre>/dev/sda5 7905 8924 8193118+ 82 Linux swap</pre></td></tr><tr><td data-num="12"></td><td><pre># 插入U盘后,再用fdisk –l或more /proc/partitions查看系统的硬盘和硬盘分区情况.</pre></td></tr><tr><td data-num="13"></td><td><pre>[root@localhost ~] fdisk -l</pre></td></tr><tr><td data-num="14"></td><td><pre>Disk /dev/sda: 73 dot 4 GB, 73407820800 bytes</pre></td></tr><tr><td data-num="15"></td><td><pre>255 heads, 63 sectors/track, 8924 cylinders</pre></td></tr><tr><td data-num="16"></td><td><pre>Units = cylinders of 16065 * 512 = 8225280 bytes</pre></td></tr><tr><td data-num="17"></td><td><pre>Device Boot Start End Blocks Id System</pre></td></tr><tr><td data-num="18"></td><td><pre>/dev/sda1 1 4 32098+ de Dell Utility</pre></td></tr><tr><td data-num="19"></td><td><pre>/dev/sda2 * 5 2554 20482875 7 HPFS/NTFS</pre></td></tr><tr><td data-num="20"></td><td><pre>/dev/sda3 2555 7904 42973875 83 Linux</pre></td></tr><tr><td data-num="21"></td><td><pre>/dev/sda4 7905 8924 8193150 f Win95 Ext'</span>d<span class="token punctuation">(</span>LBA<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="22"></td><td><pre>/dev/sda5 <span class="token number">7905</span> <span class="token number">8924</span> <span class="token number">8193118</span>+ <span class="token number">82</span> Linux swap Disk</pre></td></tr><tr><td data-num="23"></td><td><pre>/dev/sdd: <span class="token number">131</span> MB, <span class="token number">131072000</span> bytes</pre></td></tr><tr><td data-num="24"></td><td><pre><span class="token number">9</span> heads, <span class="token number">32</span> sectors/track, <span class="token number">888</span> cylinders</pre></td></tr><tr><td data-num="25"></td><td><pre>Units <span class="token operator">=</span> cylinders of <span class="token number">288</span> * <span class="token number">512</span> <span class="token operator">=</span> <span class="token number">147456</span> bytes</pre></td></tr><tr><td data-num="26"></td><td><pre>Device Boot Start End Blocks Id System</pre></td></tr><tr><td data-num="27"></td><td><pre>/dev/sdd1 * <span class="token number">1</span> <span class="token number">889</span> <span class="token number">127983</span>+ b Win95 FAT32</pre></td></tr><tr><td data-num="28"></td><td><pre>Partition <span class="token number">1</span> has different physical/logical endings:</pre></td></tr><tr><td data-num="29"></td><td><pre><span class="token assign-left variable">phys</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">1000</span>, <span class="token number">8</span>, <span class="token number">32</span><span class="token punctuation">)</span> <span class="token assign-left variable">logical</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">888</span>, <span class="token number">7</span>, <span class="token number">31</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="30"></td><td><pre><span class="token comment"># 系统多了一个 SCSI 硬盘 /dev/sdd 和一个磁盘分区 /dev/sdd1,/dev/sdd1 就是我们要挂接的 U 盘.</span></pre></td></tr><tr><td data-num="31"></td><td><pre><span class="token function">mkdir</span> <span class="token parameter variable">-p</span> /mnt/usb</pre></td></tr><tr><td data-num="32"></td><td><pre><span class="token comment"># 注：建立一个目录用来作挂接点 (mount point)</span></pre></td></tr><tr><td data-num="33"></td><td><pre><span class="token function">mount</span> <span class="token parameter variable">-t</span> vfat /dev/sdd1 /mnt/usb</pre></td></tr><tr><td data-num="34"></td><td><pre><span class="token comment"># 注：现在可以通过 /mnt/usb 来访问 U 盘了，若汉字文件名显示为乱码或不显示，可以使用下面的命令.</span></pre></td></tr><tr><td data-num="35"></td><td><pre><span class="token function">mount</span> <span class="token parameter variable">-t</span> vfat <span class="token parameter variable">-o</span> <span class="token assign-left variable">iocharset</span><span class="token operator">=</span>cp936 /dev/sdd1 /mnt/usb</pre></td></tr></table></figure><h4 id="挂载windows文件共享"><a class="markdownIt-Anchor" href="#挂载windows文件共享">#</a> 挂载 Windows 文件共享</h4>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>Windows网络共享的核心是SMB/CIFS,在linux下要挂接<span class="token punctuation">(</span>mount<span class="token punctuation">)</span>windows的磁盘共享,就必须安装和使用samba软件包.</pre></td></tr><tr><td data-num="2"></td><td><pre>现在流行的linux发行版绝大多数已经包含了samba软件包,如果安装linux系统时未安装samba请首先安装samba.</pre></td></tr><tr><td data-num="3"></td><td><pre>当然也可以到 www.samba.org网站下载最新版本.当windows系统共享设置好以后,就可以在linux客户端挂接<span class="token punctuation">(</span>mount<span class="token punctuation">)</span>了.</pre></td></tr></table></figure><p></p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># 具体操作如下:</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">mkdir</span> –p /mnt/samba</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token comment"># 注：建立一个目录用来作挂接点 (mount point)</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token function">mount</span> <span class="token parameter variable">-t</span> smbfs <span class="token parameter variable">-o</span> <span class="token assign-left variable">username</span><span class="token operator">=</span>用户名,password<span class="token operator">=</span>密码 //IP地址/磁盘共享文件夹 /mnt/samba <span class="token comment">#本地文件夹</span></pre></td></tr></table></figure><h4 id="挂载unix系统nfs文件共享"><a class="markdownIt-Anchor" href="#挂载unix系统nfs文件共享">#</a> 挂载 UNIX 系统 NFS 文件共享</h4>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>类似于windows 的网络共享,UNIX<span class="token punctuation">(</span>Linux<span class="token punctuation">)</span>系统也有自己的网络共享,那就是NFS<span class="token punctuation">(</span>网络文件系统<span class="token punctuation">)</span>,</pre></td></tr><tr><td data-num="2"></td><td><pre>在linux客户端挂接<span class="token punctuation">(</span>mount<span class="token punctuation">)</span>NFS磁盘共享之前,必须先配置好NFS服务端.</pre></td></tr></table></figure><ol>
+<li>
+<p>Solaris 系统 NFS 服务端配置方法如下:</p>
+<ol>
+<li>修改  <code>/etc/dfs/dfstab</code> , 增加共享目录
+<ul>
+<li><code>share -F nfs -o rw /export/home/sunky</code></li>
+</ul>
+</li>
+<li>启动 <code>nfs</code>  服务
+<ul>
+<li><code>/etc/init.d/nfs.server start</code></li>
+</ul>
+</li>
+<li><code>NFS</code>  服务启动以后，也可以使用下面的命令增加新的共享
+<ul>
+<li><code>share /export/home/sunky1</code></li>
+<li><code>share /export/home/sunky2</code></li>
+<li><code># 注:/export/home/sunky 和/export/home/sunky1 是准备共享的目录</code></li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p>linux 系统 NFS 服务端配置方法如下:</p>
+<ul>
+<li>修改 /etc/exports, 增加共享目录
+<ul>
+<li>
+<p><code>/export/home/sunky 10.140.133.23(rw)</code></p>
+</li>
+<li>
+<p><code>/export/home/sunky1 *(rw)</code></p>
+</li>
+<li>
+<p><code>/export/home/sunky2 linux-client(rw)</code></p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># 注:/export/home/ 目录下的 sunky.sunky1.sunky2 是准备共享的目录，10.140.133.23.*. linux-client 是被允许挂接此共享 linux 客户机的 IP 地址或主机名。如果要使用主机名 linux-client 必须在服务端主机 /etc/hosts 文件里增加 linux-client 主机 ip 定义。格式如下:</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token number">10.140</span>.133.23 linux-client</pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>启动与停止 NFS 服务</p>
+<ul>
+<li>
+<p><code>/etc/rc.d/init.d/portmap start</code>  在 REDHAT 中 PORTMAP 是默认启动的</p>
+</li>
+<li>
+<p><code>/etc/rc.d/init.d/nfs start</code>  启动 NFS 服务</p>
+</li>
+<li>
+<p><code>/etc/rc.d/init.d/nfs stop</code>  停止 NFS 服务</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># 注：若修改 /etc/export 文件增加新的共享，应先停止 NFS 服务，再启动 NFS 服务方能使新增加的共享 起作用。使用命令 exportfs -rv 也可以达到同样的效果.</span></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li>
+<p><code>linux</code>  客户端挂载 <code>(mount)</code>  其他 <code>linux</code>  系统或 <code>UNIX</code>  系统的 <code>NFS</code>  共享</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">mkdir</span> –p /mnt/nfs</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token comment"># 注：建立一个目录用来作挂接点 (mount point)</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token function">mount</span> <span class="token parameter variable">-t</span> nfs <span class="token parameter variable">-o</span> rw 主机IP地址/主机名:为服务端共享的目录 本地目录</pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token function">mount</span> <span class="token parameter variable">-t</span> nfs <span class="token parameter variable">-o</span> rw <span class="token number">10.10</span>.10.1:/opt /opt/nfs</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token comment"># 如此就可以在 linux 客户端通过 /opt/nfs 来访问其它 linux 系统或 UNIX 系统以 NFS 方式共享出来的文件了.</span></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="umount将文件设备卸载"><a class="markdownIt-Anchor" href="#umount将文件设备卸载">#</a> umount: 将文件设备卸载</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@localhost ~<span class="token punctuation">]</span> <span class="token function">umount</span> /dev/hda1 <span class="token comment"># 用设备文件名来卸载</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token punctuation">[</span>root@localhost ~<span class="token punctuation">]</span> <span class="token function">umount</span> /aixi <span class="token comment"># 用挂载点来卸载</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">[</span>root@localhost ~<span class="token punctuation">]</span> umount: /aixi: device is busy <span class="token comment"># 如果提示设备忙，不急可以使用如下命令卸载</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token punctuation">[</span>root@localhost ~<span class="token punctuation">]</span> <span class="token function">umount</span> <span class="token parameter variable">-l</span> /mnt/hda1 <span class="token comment"># 选项–l 并不是马上 umount, 而是在该目录空闲后再 umount.</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token comment"># 如果比较急，可用如下命令:</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token punctuation">[</span>root@localhost ~<span class="token punctuation">]</span> <span class="token function">umount</span> <span class="token parameter variable">-f</span> /mnt/hda1 <span class="token comment"># -f 代表强制卸载</span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token comment"># 如果还不行，可使用</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token function">fuser</span> <span class="token parameter variable">-m</span> –v /dev/hda1 <span class="token comment"># 来查询是哪些程序在占用，结束这些程序进程即可卸载</span></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token punctuation">[</span>root@localhost ~<span class="token punctuation">]</span> <span class="token function">sync</span> <span class="token operator">&amp;&amp;</span> <span class="token function">fuser</span> <span class="token parameter variable">-m</span> /dev/hda1 –k <span class="token comment"># 使用这条命令后一定可以卸载</span></pre></td></tr></table></figure><h2 id="交换分区"><a class="markdownIt-Anchor" href="#交换分区">#</a> 交换分区</h2>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>交换分区最大容量为 64G,最多只能建 <span class="token number">32</span> 个</pre></td></tr></table></figure><h3 id="创建交换分区"><a class="markdownIt-Anchor" href="#创建交换分区">#</a> 创建交换分区</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">fdisk</span> /dev/hda---<span class="token operator">></span>n---<span class="token operator">></span>+容量---<span class="token operator">></span>p---<span class="token operator">></span>t<span class="token punctuation">(</span>修改系统ID<span class="token punctuation">)</span>---<span class="token operator">></span>分区号---<span class="token operator">></span><span class="token number">82</span>---<span class="token operator">></span>p---<span class="token operator">></span>w</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">mkswap</span> /dev/hda2 <span class="token comment"># （以上划分的分区号） 构建 swap 格式</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token function">swapon</span> /dev/hda2 <span class="token comment"># 加载即完成增加 swap</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token function">swapon</span> –s <span class="token comment"># 显示目前使用的 Swap 设备</span></pre></td></tr></table></figure><h3 id="创建交换文件"><a class="markdownIt-Anchor" href="#创建交换文件">#</a> 创建交换文件</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">dd</span> <span class="token assign-left variable">if</span><span class="token operator">=</span>/dev/hda1 <span class="token assign-left variable">of</span><span class="token operator">=</span>/aixi/swap <span class="token assign-left variable">bs</span><span class="token operator">=</span>1M <span class="token assign-left variable">count</span><span class="token operator">=</span><span class="token number">64</span> <span class="token comment"># 创建大文件</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">mkswap</span> /aixi/swap</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token function">swapon</span> /aixi/swap <span class="token comment"># 完成</span></pre></td></tr></table></figure><p></p>
+<h3 id="取消交换分区或者交换文件"><a class="markdownIt-Anchor" href="#取消交换分区或者交换文件">#</a> 取消交换分区或者交换文件</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">swapon</span> –s <span class="token comment"># 显示目前使用的 Swap 设备</span></pre></td></tr><tr><td data-num="2"></td><td><pre>swapoff /aixi/swap</pre></td></tr><tr><td data-num="3"></td><td><pre>swapoff /dev/hda2</pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token function">free</span> –m <span class="token comment"># 查看</span></pre></td></tr></table></figure>
+      <div class="tags">
+          <a href="/tags/linux/" rel="tag"><i class="ic i-tag"></i> linux</a>
+          <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag"><i class="ic i-tag"></i> 服务器</a>
+          <a href="/tags/%E8%BF%90%E7%BB%B4/" rel="tag"><i class="ic i-tag"></i> 运维</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">更新于</span>
+    <time title="修改时间：2022-08-31 16:01:38" itemprop="dateModified" datetime="2022-08-31T16:01:38+08:00">2022-08-31</time>
+  </span>
+</div>
+
+      
+<div class="reward">
+  <button><i class="ic i-heartbeat"></i> 赞赏</button>
+  <p>请我喝[茶]~(￣▽￣)~*</p>
+  <div id="qr">
+  </div>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>本文作者： </strong>江霁月 <i class="ic i-at"><em>@</em></i>江霁月的私人小屋
+  </li>
+  <li class="link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/category/8495ff9caf6a.html" title="Linux从入门到放弃-磁盘管理">http://example.com/category/8495ff9caf6a.html</a>
+  </li>
+  <li class="license">
+    <strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/category/0447b4c5647f.html" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipetfk5zwj20zk0m8e81.jpg" title="Linux从入门到放弃-常用命令">
+  <span class="type">上一篇</span>
+  <span class="category"><i class="ic i-flag"></i> Linux</span>
+  <h3>Linux从入门到放弃-常用命令</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/category/c119bd60cc53.html" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giclflwv2aj20zk0m84qp.jpg" title="Linux-MySQL开启慢查询日志">
+  <span class="type">下一篇</span>
+  <span class="category"><i class="ic i-flag"></i> 数据库</span>
+  <h3>Linux-MySQL开启慢查询日志</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="文章目录">
+          <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">1.</span> <span class="toc-text"> 文件系统配置文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#linux-%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B%E7%9A%84%E9%A2%9C%E8%89%B2"><span class="toc-number">2.</span> <span class="toc-text"> linux 文件类型的颜色</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#linux%E6%96%87%E4%BB%B6%E9%A2%9C%E8%89%B2%E7%9A%84%E5%90%AB%E4%B9%89"><span class="toc-number">2.1.</span> <span class="toc-text"> linux 文件颜色的含义:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#linux-%E4%B8%8B%E7%94%A8%E5%AD%97%E7%AC%A6%E8%A1%A8%E7%A4%BA%E7%9A%84%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.2.</span> <span class="toc-text"> Linux 下用字符表示的文件类型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4"><span class="toc-number">3.</span> <span class="toc-text"> 文件系统操作命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#df%E5%88%97%E5%87%BA%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%95%B4%E4%BD%93%E7%A3%81%E7%9B%98%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5"><span class="toc-number">3.1.</span> <span class="toc-text"> df: 列出文件系统的整体磁盘使用情况</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#du%E5%88%97%E5%87%BA%E7%9B%AE%E5%BD%95%E6%89%80%E5%8D%A0%E7%A9%BA%E9%97%B4"><span class="toc-number">3.2.</span> <span class="toc-text"> du: 列出目录所占空间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ln%E8%BF%9E%E6%8E%A5%E6%96%87%E4%BB%B6%E5%BF%AB%E6%8D%B7%E6%96%B9%E5%BC%8F"><span class="toc-number">3.3.</span> <span class="toc-text"> ln: 连接文件 (快捷方式)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fdisk"><span class="toc-number">3.4.</span> <span class="toc-text"> Fdisk</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#parted2t%E4%BB%A5%E4%B8%8A%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E5%B7%A5%E5%85%B7"><span class="toc-number">3.5.</span> <span class="toc-text"> Parted:2T 以上磁盘分区工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#partprobe-%E6%9B%B4%E6%96%B0%E5%88%86%E5%8C%BA%E8%A1%A8%E7%A3%81%E7%9B%98"><span class="toc-number">3.6.</span> <span class="toc-text"> partprobe : 更新分区表 &#x2F; 磁盘</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mkfs%E7%A3%81%E7%9B%98%E6%A0%BC%E5%BC%8F%E5%8C%96"><span class="toc-number">3.7.</span> <span class="toc-text"> Mkfs: 磁盘格式化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#e2label%E8%AE%BE%E7%BD%AE%E7%A3%81%E7%9B%98%E5%8D%B7%E6%A0%87"><span class="toc-number">3.8.</span> <span class="toc-text"> e2label: 设置磁盘卷标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mount%E6%8C%82%E8%BD%BD%E7%A3%81%E7%9B%98"><span class="toc-number">3.9.</span> <span class="toc-text"> Mount: 挂载磁盘</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%82%E8%BD%BD%E5%85%89%E7%9B%98%E9%95%9C%E5%83%8F%E6%96%87%E4%BB%B6"><span class="toc-number">3.9.1.</span> <span class="toc-text"> 挂载光盘镜像文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%82%E8%BD%BD%E7%A7%BB%E5%8A%A8%E7%A1%AC%E7%9B%98"><span class="toc-number">3.9.2.</span> <span class="toc-text"> 挂载移动硬盘</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%82%E8%BD%BDu%E7%9B%98"><span class="toc-number">3.9.3.</span> <span class="toc-text"> 挂载 U 盘</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%82%E8%BD%BDwindows%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB"><span class="toc-number">3.9.4.</span> <span class="toc-text"> 挂载 Windows 文件共享</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%82%E8%BD%BDunix%E7%B3%BB%E7%BB%9Fnfs%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB"><span class="toc-number">3.9.5.</span> <span class="toc-text"> 挂载 UNIX 系统 NFS 文件共享</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#umount%E5%B0%86%E6%96%87%E4%BB%B6%E8%AE%BE%E5%A4%87%E5%8D%B8%E8%BD%BD"><span class="toc-number">3.10.</span> <span class="toc-text"> umount: 将文件设备卸载</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%A4%E6%8D%A2%E5%88%86%E5%8C%BA"><span class="toc-number">4.</span> <span class="toc-text"> 交换分区</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E4%BA%A4%E6%8D%A2%E5%88%86%E5%8C%BA"><span class="toc-number">4.1.</span> <span class="toc-text"> 创建交换分区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E4%BA%A4%E6%8D%A2%E6%96%87%E4%BB%B6"><span class="toc-number">4.2.</span> <span class="toc-text"> 创建交换文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%96%E6%B6%88%E4%BA%A4%E6%8D%A2%E5%88%86%E5%8C%BA%E6%88%96%E8%80%85%E4%BA%A4%E6%8D%A2%E6%96%87%E4%BB%B6"><span class="toc-number">4.3.</span> <span class="toc-text"> 取消交换分区或者交换文件</span></a></li></ol></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="系列文章">
+        <ul>
+          <li><a href="/category/ab18ab7128a4.html" rel="bookmark" title="Linux-firewalld的基本操作">Linux-firewalld的基本操作</a></li><li><a href="/category/d6f317918d52.html" rel="bookmark" title="Linux-编译安装memcached扩展">Linux-编译安装memcached扩展</a></li><li><a href="/category/c4e85479f6ff.html" rel="bookmark" title="Linux-安装Lnmp">Linux-安装Lnmp</a></li><li><a href="/category/0447b4c5647f.html" rel="bookmark" title="Linux从入门到放弃-常用命令">Linux从入门到放弃-常用命令</a></li><li class="active"><a href="/category/8495ff9caf6a.html" rel="bookmark" title="Linux从入门到放弃-磁盘管理">Linux从入门到放弃-磁盘管理</a></li><li><a href="/category/8acc85d10262.html" rel="bookmark" title="Linux-定时备份网站数据文件到阿里云盘">Linux-定时备份网站数据文件到阿里云盘</a></li><li><a href="/category/dc4b4724dfe7.html" rel="bookmark" title="Centos升级Python3.x版本踩过的坑">Centos升级Python3.x版本踩过的坑</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="站点概览">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="江霁月"
+      data-src="/images/avatar.jpg">
+  <p class="name" itemprop="name">江霁月</p>
+  <div class="description" itemprop="description">专注分享一些关于安全运维和编程语言的知识·本博主爱安全,爱折腾,爱代码</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">55</span>
+        <span class="name">文章</span>
+      </a>
+    </div>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">17</span>
+        <span class="name">分类</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">30</span>
+        <span class="name">标签</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL0ppYW5nSmlZdWU=" title="https:&#x2F;&#x2F;github.com&#x2F;JiangJiYue"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS9qYW5naml5dWU=" title="https:&#x2F;&#x2F;twitter.com&#x2F;jangjiyue"><i class="ic i-twitter"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>首页</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a>
+  </li>
+
+  </ul>
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/category/0447b4c5647f.html" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/category/c119bd60cc53.html" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2010 – 
+    <span itemprop="copyrightYear">2022</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">江霁月 @ 江霁月的私人小屋</span>
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+    <span title="站点总字数">235k 字</span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:34</span>
+  </div>
+  <div class="powered-by">
+    基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: 'category/8495ff9caf6a.html',
+    favicon: {
+      show: "（●´3｀●）やれやれだぜ",
+      hide: "(´Д｀)大変だ！"
+    },
+    search : {
+      placeholder: "文章搜索",
+      empty: "关于 「 ${query} 」，什么也没搜到",
+      stats: "${time} ms 内找到 ${hits} 条结果"
+    },
+    valine: true,fancybox: true,
+    copyright: '复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://cdn.polyfill.io/v2/polyfill.js"></script>
+
+<script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,214 @@
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>http://example.com</id>
+    <title>江霁月的私人小屋 • Posts by &#34;php&#34; tag</title>
+    <link href="http://example.com" />
+    <updated>2021-09-09T02:40:27.000Z</updated>
+    <category term="Docker" />
+    <category term="linux" />
+    <category term="mysql" />
+    <category term="Centos" />
+    <category term="优化" />
+    <category term="缓存" />
+    <category term="反爬" />
+    <category term="爬虫" />
+    <category term="服务器" />
+    <category term="ELK" />
+    <category term="安全管理" />
+    <category term="数据可视化" />
+    <category term="监控" />
+    <category term="运维" />
+    <category term="Zabbix" />
+    <category term="Kali" />
+    <category term="信息安全" />
+    <category term="数据库" />
+    <category term="nginx" />
+    <category term="PHP" />
+    <category term="openresty" />
+    <category term="网关" />
+    <category term="PHP框架" />
+    <category term="python" />
+    <category term="Security" />
+    <category term="信息收集" />
+    <category term="SSL" />
+    <category term="安全加固" />
+    <category term="Linux" />
+    <category term="waf" />
+    <entry>
+        <id>http://example.com/category/ecda3fb76685.html</id>
+        <title>Linux-Opcache参数配置优化 加速网站访问</title>
+        <link rel="alternate" href="http://example.com/category/ecda3fb76685.html"/>
+        <content type="html">&lt;p&gt;如果想要网站响应速度快，肯定少不了进行网站优化，比如开启各种缓存，像&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93b3JkcHJlc3MtMTI1ODg5NDcyOC5jb3MuYXAtYmVpamluZy5teXFjbG91ZC5jb20vYXJjaGl2ZXMvNzU=&#34;&gt; Memcached&lt;/span&gt; 缓存，Opcache 缓存等等。这里记录一下 Opcache 设置教程。&lt;/p&gt;
+&lt;h2 id=&#34;什么是opcache呢&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#什么是opcache呢&#34;&gt;#&lt;/a&gt; 什么是 Opcache 呢？&lt;/h2&gt;
+&lt;p&gt;Opcache 的前生是  &lt;code&gt;Optimizer+&lt;/code&gt;  ，它是 PHP 的官方公司 Zend 开发的一款闭源但可以免费使用的 PHP 优化加速组件。 Optimizer+ 将 PHP 代码预编译生成的脚本文件  &lt;code&gt;Opcode&lt;/code&gt;  缓存在共享内存中供以后反复使用，从而避免了从磁盘读取代码再次编译的时间消耗。同时，它还应用了一些代码优化模式，使得代码执行更快。从而加速 PHP 的执行。 PHP 的正常执行流程如下 &lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/20210909100618.png&#34; alt=&#34;&#34;&gt; request 请求（nginx,apache,cli 等）–&amp;gt;Zend 引擎读取.php 文件–&amp;gt; 扫描其词典和表达式 --&amp;gt; 解析文件–&amp;gt; 创建要执行的计算机代码 (称为 Opcode)–&amp;gt; 最后执行 Opcode–&amp;gt; response 返回 每一次请求 PHP 脚本都会执行一遍以上步骤，如果 PHP 源代码没有变化，那么 Opcode 也不会变化，显然没有必要每次都重新生成 Opcode，结合在 Web 中无所不在的缓存机制，我们可以把 Opcode 缓存下来，以后直接访问缓存的 Opcode 岂不是更快，启用 Opcode 缓存之后的流程图如下所示： &lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/QQ%E6%88%AA%E5%9B%BE20210909100706.png&#34; alt=&#34;&#34;&gt; Opcode cache 的目地是避免重复编译，减少 CPU 和内存开销。&lt;/p&gt;
+&lt;h2 id=&#34;下面介绍opcache的安装&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#下面介绍opcache的安装&#34;&gt;#&lt;/a&gt; 下面介绍 Opcache 的安装&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;1、找到opcache的扩展，我的是php7.4
+yum list php74*
+2、安装扩展
+yum install php74-php-opcache.x86_64 -y
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;php配置文件&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#php配置文件&#34;&gt;#&lt;/a&gt; PHP 配置文件&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;[root@centos opt]# find / -name php.ini #查找php.ini文件位置 
+/etc/opt/remi/php74/php.ini
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;编辑配置文件，找到 &lt;code&gt;[opcache]&lt;/code&gt;  加入&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;opcache.enable=1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;此参数的值为 1 代表开启 Opcache，值为 0 代表关闭 Opcache，默认值为 1。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;opcache.memory_consumption=512
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;此参数的值代表 Opcache 占用内存的大小，单位是 MB，默认值为 64。建议根据服务器内存情况来设置&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;opcache.interned_strings_buffer=64
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;此参数的值的单位是 MB，默认值为 8，建议根据服务器内存大小，设置一个大于 64 的值即可。 PHP 使用了一种叫做字符串驻留（string interning）的技术来改善性能。例如，如果你在代码中使用了 1000 次字符串 foobar，Zend 引擎在第一次使用这个字符串时会分配一个不可变的内存区域来存储这个字符串，之后的 999 次都会直接引用这个内存区域，而不需要重复创建。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;opcache.max_accelerated_files=3000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Zend 引擎在第一次执行某 PHP 文件后，会将该文件的 OPcode 存储在哈希表中，之后的请求直接从哈希表中找到相应文件的 OPcode，从而达到性能优化，而此配置选项决定了可以存储的 PHP 文件数量上限。 Zend 引擎对此配置参数的真实取值是在质数集合 {223, 463, 983, 1979, 3907, 7963, 16229, 32531, 65407, 130987} 中找到的第一个大于等于参数值的质数，例如设置此参数的值为 222，则真实取值为 223。 那么如何知道我们应用中的 PHP 文件数量呢？进入应用目录，一般这里指的是进入我们 WordPress 的站点根目录，使用如下命令即可查看应用中的 PHP 文件数量：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[root@VM-8-7-centos wordpress-1258894728.cos.ap-beijing.myqcloud.com]# cd /root/jiangjiyue/wordpress-1258894728.cos.ap-beijing.myqcloud.com/ 
+[root@VM-8-7-centos wordpress-1258894728.cos.ap-beijing.myqcloud.com]# find . -type f -print  grep php  wc -l 
+1292
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;PHP 文件数量为 1292，所以我将该参数的值设置为 3000。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;opcache.validate_timestamps=0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;如果此参数的值设置为 1，那么 Zend 引擎在收到请求时，会每隔一段时间检测一次被请求的 PHP 文件是否已更新。如果文件已更新，就会重新对该文件进行语法分析、编译等步骤，生成新的 Opcode。 检测的周期是根据另一个参数  &lt;code&gt;opcache.revalidate_freq&lt;/code&gt;  而定的，每次检测都是一次 stat 系统调用，众所周知，系统调用会消耗一些 CPU 时间，并且 stat 系统调用会进行磁盘 I/O，更加浪费性能。 不仅如此，假设你对服务器中的 PHP 文件进行了一次大量的更新，更新的过程中部分旧的文件会因为未过期而依然生效，和部分已生效的新文件混合在一起产生作用，必然会产生不确定因素，带来很多麻烦，&lt;strong&gt;所以建议将此参数的值设置为 0&lt;/strong&gt; 。 不过需要注意的是，设置为 0 后，无论你怎么更新文件，Zend 引擎都会使用已缓存的 Opcode，除非重启 php-fpm 或使用  &lt;code&gt;opcache_reset()&lt;/code&gt;  方法清空缓存，当然下面我也会提供 Opcache-gui (通过 Web 界面管理，可以重置缓存)&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;opcache.save_comments=1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;如果禁用，脚本文件中的注释内容将不会被包含到操作码缓存文件， 这样可以有效减小优化后的文件体积。 禁用此配置指令可能会导致一些依赖注释或注解的 应用或框架无法正常工作， 比如： Doctrine， Zend Framework 2 以及 PHPUnit. 所以这里启用&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;opcache.file_update_protection=0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;当 Zend 引擎执行某 PHP 文件时，如果该文件的 Modify 时间戳 距当前时间的差值小于此参数的值，则该文件不会被缓存，此参数值的单位为秒，默认为 2。 此参数的目的是为了防止文件还未修改完成就被 Opcache 缓存了，从而产生错误。而实际生产环境中，我们将  &lt;code&gt;opcache.validate_timestamps&lt;/code&gt;  设置为 0，文件只要被访问一次，就会被永久缓存，除非重启 php-fpm 才会刷新缓存，所以此参数没什么用，还浪费性能，建议设置为 0。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;opcache.huge_code_pages=1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;众所周知，Linux 系统默认内存是以 4KB 进行分页的，而虚拟地址和内存地址是需要转换的，转换过程需要进行查表，CPU 为了加速查表会内建 TLB（Translation Lookaside Buffer），而 TLB 的大小是有限的，分页越小，表里的条目也就越多，TLB 的 Cache Miss 也就越高。 所以我们如果启用大内存页，就能间接降低 TLB 的 Cache Miss，而 Opcache 也能使用 Hugepage 来缓存 Opcodes，从而达到性能优化的目的。 此参数值为 1 即可开启以上功能，默认值为 0。 设置完后还没正式开启，需要系统开启 Hugepage 功能，使用如下命令可以查看当前系统 Hugepage 的信息：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[root@centos wordpress-1258894728.cos.ap-beijing.myqcloud.com]# cat /proc/meminfo  grep Huge AnonHugePages: 133120 kB 
+HugePages_Total: 0 
+HugePages_Free: 0 
+HugePages_Rsvd: 0 
+HugePages_Surp: 0 
+Hugepagesize: 2048 kB
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;可以看到 HugePages_Total 等参数的值为 0，也就是未开启 HugePages 功能。&lt;/p&gt;
+&lt;p&gt;运行如下命令即可开启 HugePages，其中 128 代表 HugePages 的大小，单位是 MB：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sysctl vm.nr_hugepages=128
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;建议根据服务器内存情况进行分配 HugePages，例如服务器是 2G，设置为 128，可以自行参考进行设置&lt;/p&gt;
+&lt;h2 id=&#34;最终配置&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#最终配置&#34;&gt;#&lt;/a&gt; 最终配置&lt;/h2&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/20210909103033.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;opcache-gui&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#opcache-gui&#34;&gt;#&lt;/a&gt; Opcache-gui&lt;/h2&gt;
+&lt;p&gt;这里使用的 gui 界面是 amnuts 分享的&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRodWIuY29tL2FtbnV0cy9vcGNhY2hlLWd1aQ==&#34;&gt; opcache-gui&lt;/span&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 进入opt目录
+cd /opt
+# 安装git
+yum install -y git
+# 克隆项目到本地
+wget https://github.com/amnuts/opcache-gui.git
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;然后将项目中的 index.php 移到您的 Web 服务器可以加载的位置。然后将浏览器指向该位置，例如 &lt;code&gt;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/Opcache-gui-zn.php&lt;/code&gt;  [c-alert type=“warning”] 一定要重启 PHP-FPM 服务 [/c-alert] 如图: &lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/opcache-English.png&#34; alt=&#34;&#34;&gt; 我将此文件进行了大概的汉化 [c-downbtn type=“github” url=“&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL0ppYW5nSmlZdWUveXVud2VpL21haW4vT3BjYWNoZS1ndWktem4ucGhw&#34;&gt;https://raw.githubusercontent.com/JiangJiYue/yunwei/main/Opcache-gui-zn.php&lt;/span&gt;”] Opcache 汉化下载 [/c-downbtn] &lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/cache-ZN.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+</content>
+        <category term="linux" />
+        <category term="优化" />
+        <category term="缓存" />
+        <category term="运维" />
+        <category term="PHP" />
+        <updated>2021-09-09T02:40:27.000Z</updated>
+    </entry>
+    <entry>
+        <id>http://example.com/category/c4e85479f6ff.html</id>
+        <title>Linux-安装Lnmp</title>
+        <link rel="alternate" href="http://example.com/category/c4e85479f6ff.html"/>
+        <content type="html">&lt;h2 id=&#34;安装php&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#安装php&#34;&gt;#&lt;/a&gt; 安装 PHP&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;#安装epel源
+yum install epel-release
+#安装webtatic-releaseRPM包
+yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+#卸载旧版本PHP
+yum -y remove php*
+#安装PHP
+yum -y install php74 php74-php-common php74-php-devel php74-php-pecl-memcached php74-php-pecl-memcache php74-php-pecl-redis5 php74-php-embedded php74-php-opcache php74-php-xml php74-php-bcmath php74-php-gd php74-php-pdo php74-php-mbstring php74-php-cli php74-php-fpm php74-php-mysqlnd
+#设为开机自启 
+systemctl enable php74-php-fpm.service
+#启动Php-fpm 
+systemctl start php74-php-fpm.service
+#查看启动状态,红色启动失败绿色启动成功 
+systemctl status php74-php-fpm.service
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;安装mariadb&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#安装mariadb&#34;&gt;#&lt;/a&gt; 安装 Mariadb&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;#Yum安装Mariadb
+yum install mariadb mariadb-server -y
+#启动Mariadb
+systemctl start mariadb
+#设为开机自启
+systemctl enable mariadb
+#Mariadb初始化
+mysql_secure_installation
+#删除匿名用户?
+Remove anonymous users? [Y/n] y
+#禁止root远程登录
+Disallow root login remotely? [Y/n] n
+#删除测试数据库并访问它?
+Remove test database and access to it? [Y/n] y
+#现在重新加载特权表?
+Reload privilege tables now? [Y/n] y
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;安装openresty&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#安装openresty&#34;&gt;#&lt;/a&gt; 安装 Openresty&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;#进入opt目录
+cd /opt
+#下载Openresty二进制文件
+wget https://openresty.org/download/openresty-1.15.8.2.tar.gz
+#解压压缩包
+tar zxvf openresty-1.15.8.2.tar.gz
+#进入到openresty-1.15.8.2/目录
+cd openresty-1.15.8.2/
+#准备编译参数
+./configure --prefix=/usr/local/nginx --sbin-path=/usr/sbin/nginx --conf-path=/usr/local/nginx/nginx.conf --pid-path=/var/run/nginx.pid --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --lock-path=/var/lock/nginx.lock --with-luajit --with-http_gunzip_module --with-pcre --with-pcre-jit --with-http_perl_module --with-ld-opt=&amp;quot;-Wl,-E&amp;quot; --with-http_realip_module --with-http_secure_link_module --with-http_slice_module --with-http_ssl_module --with-http_stub_status_module --with-http_sub_module --with-http_v2_module --with-http_addition_module --with-http_xslt_module --with-http_image_filter_module --with-http_geoip_module --with-http_dav_module --with-http_flv_module --with-http_mp4_module --with-http_gzip_static_module --with-http_auth_request_module --with-http_random_index_module --with-select_module --with-poll_module --with-file-aio --with-http_degradation_module --with-libatomic --http-client-body-temp-path=/var/tmp/nginx/client_body --http-proxy-temp-path=/var/tmp/nginx/proxy --http-fastcgi-temp-path=/var/tmp/nginx/fastcgi --http-uwsgi-temp-path=/var/tmp/nginx/uwsgi --http-scgi-temp-path=/var/tmp/nginx/scgi
+#编译&amp;amp;安装
+make&amp;amp;&amp;amp;make install
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;准备工作&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#准备工作&#34;&gt;#&lt;/a&gt; 准备工作&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;#编辑nginx.conf配置文件
+vim /usr/local/nginx/nginx.conf
+
+#nginx.conf配置项
+ location / &amp;#123;
+
+            root   html;
+
+            index  index.html index.htm index.php;
+
+        &amp;#125;
+
+ location ~ \.php$ &amp;#123;
+
+            root           html;
+
+            fastcgi_pass   127.0.0.1:9000;
+
+            fastcgi_index  index.php;
+
+            fastcgi_param  SCRIPT_FILENAME  $document_root/$fastcgi_script_name;
+
+            include        fastcgi_params;
+
+        &amp;#125;
+
+#创建目录
+mkdir -p /var/tmp/nginx/client_body
+mkdir -p /usr/local/nginx/nginx/logs/
+
+#检查nginx配置文件是否正确
+nginx -t
+
+#启动nginx
+nginx
+&lt;/code&gt;&lt;/pre&gt;
+</content>
+        <category term="linux" />
+        <category term="mysql" />
+        <category term="Centos" />
+        <category term="运维" />
+        <category term="nginx" />
+        <category term="PHP" />
+        <updated>2021-09-06T04:34:15.000Z</updated>
+    </entry>
+</feed>

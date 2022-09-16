@@ -1,0 +1,758 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+    <channel>
+        <title>江霁月的私人小屋 • Posts by &#34;数据可视化&#34; tag</title>
+        <link>http://example.com</link>
+        <description>专注分享一些关于安全运维和编程语言的知识·本博主爱安全,爱折腾,爱代码</description>
+        <language>zh-CN</language>
+        <pubDate>Sun, 19 Sep 2021 11:50:41 +0800</pubDate>
+        <lastBuildDate>Sun, 19 Sep 2021 11:50:41 +0800</lastBuildDate>
+        <category>Docker</category>
+        <category>linux</category>
+        <category>mysql</category>
+        <category>Centos</category>
+        <category>优化</category>
+        <category>缓存</category>
+        <category>反爬</category>
+        <category>爬虫</category>
+        <category>服务器</category>
+        <category>ELK</category>
+        <category>安全管理</category>
+        <category>数据可视化</category>
+        <category>监控</category>
+        <category>运维</category>
+        <category>Zabbix</category>
+        <category>Kali</category>
+        <category>信息安全</category>
+        <category>数据库</category>
+        <category>nginx</category>
+        <category>PHP</category>
+        <category>openresty</category>
+        <category>网关</category>
+        <category>PHP框架</category>
+        <category>python</category>
+        <category>Security</category>
+        <category>信息收集</category>
+        <category>SSL</category>
+        <category>安全加固</category>
+        <category>Linux</category>
+        <category>waf</category>
+        <item>
+            <guid isPermalink="true">http://example.com/category/7b084077da53.html</guid>
+            <title>ELK收集nginx日志并展示来源IP地图</title>
+            <link>http://example.com/category/7b084077da53.html</link>
+            <category>服务器</category>
+            <category>ELK</category>
+            <category>安全管理</category>
+            <category>数据可视化</category>
+            <category>监控</category>
+            <category>运维</category>
+            <pubDate>Sun, 19 Sep 2021 11:50:41 +0800</pubDate>
+            <description><![CDATA[ &lt;h2 id=&#34;修改nginx配置文件&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#修改nginx配置文件&#34;&gt;#&lt;/a&gt; 修改 Nginx 配置文件&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;# 修改日志模式
+ # json 为规则名字 escape=json 设置日志文件格式为json
+ log_format json escape=json &#39;&amp;#123;&amp;quot;@timestamp&amp;quot;:&amp;quot;$time_iso8601&amp;quot;,&#39;
+                             &#39;&amp;quot;domain&amp;quot;:&amp;quot;$host&amp;quot;,&#39;
+                             &#39;&amp;quot;host&amp;quot;:&amp;quot;$server_addr&amp;quot;,&#39;
+                             &#39;&amp;quot;clientip&amp;quot;:&amp;quot;$remote_addr&amp;quot;,&#39;
+                             &#39;&amp;quot;remote_user&amp;quot;:&amp;quot;$remote_user&amp;quot;,&#39;
+                             &#39;&amp;quot;request&amp;quot;:&amp;quot;$request&amp;quot;,&#39;
+                             &#39;&amp;quot;request_method&amp;quot;:&amp;quot;$request_method&amp;quot;,&#39;
+                             &#39;&amp;quot;uri&amp;quot;:&amp;quot;$uri&amp;quot;,&#39;
+                             &#39;&amp;quot;request_time&amp;quot;:&amp;quot;$request_time&amp;quot;,&#39;
+                             &#39;&amp;quot;status&amp;quot;:&amp;quot;$status&amp;quot;,&#39;
+                             &#39;&amp;quot;http_referrer&amp;quot;:&amp;quot;$http_referer&amp;quot;,&#39;
+                             &#39;&amp;quot;body_bytes_sent&amp;quot;:&amp;quot;$body_bytes_sent&amp;quot;,&#39;
+                             &#39;&amp;quot;xff&amp;quot;:&amp;quot;$http_x_forwarded_for&amp;quot;,&#39;
+                             &#39;&amp;quot;http_user_agent&amp;quot;:&amp;quot;$http_user_agent&amp;quot;,&#39;
+                             &#39;&amp;quot;upstream_addr&amp;quot;:&amp;quot;$upstream_addr&amp;quot;,&#39;
+                             &#39;&amp;quot;upstream_response_time&amp;quot;:&amp;quot;$upstream_response_time&amp;quot;&amp;#125;&#39;;
+ # 将上方的规则名称写到最后
+ access_log /var/log/nginx/access.log json;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;添加高德地图&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#添加高德地图&#34;&gt;#&lt;/a&gt; 添加高德地图&lt;/h2&gt;
+&lt;p&gt;1. 编辑 kibana 配置文件 kibana.yml，最后面添加&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 默认情况下kibana使用&amp;quot;Elastic Maps Service&amp;quot;显示地图模块,要使用其他服务提供商的模块可以通过修改&amp;quot;map.tilemap.url&amp;quot;实现,下面是修改为高德地图
+ map.tilemap.url: &#39;http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&amp;amp;size=1&amp;amp;scale=1&amp;amp;style=7&amp;amp;x=&amp;#123;x&amp;#125;&amp;amp;y=&amp;#123;y&amp;#125;&amp;amp;z=&amp;#123;z&amp;#125;&#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;配置logstash&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#配置logstash&#34;&gt;#&lt;/a&gt; 配置 logstash&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRodWIuY29tL3RleG5pa3J1L0dlb0xpdGUyLURhdGFiYXNl&#34;&gt;Github:GeoLite2-Database&lt;/span&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 进入工作目录
+cd /opt
+# 下载GeoLite2数据库
+wget https://raw.githubusercontent.com/texnikru/GeoLite2-Database/master/GeoLite2-City.mmdb.gz
+# 解压文件
+gunzip GeoLite2-City.mmdb.gz
+# 将GeoLite2移动到logstash目录下
+mv GeoLite2-City.mmdb /usr/local/elk/logstash/config/
+# 修改logstash配置文件
+vim /usr/local/elk/logstash/default.conf
+​
+# 监听5044端口作为输入
+input &amp;#123;
+ beats &amp;#123;
+   port =&amp;gt; &amp;quot;5044&amp;quot;
+ &amp;#125;
+&amp;#125;
+# 数据过滤
+filter &amp;#123;
+ json &amp;#123;
+   source =&amp;gt; &amp;quot;message&amp;quot;
+    remove_field =&amp;gt; [ &amp;quot;message&amp;quot; ]
+   #删除重复的message收集。
+ &amp;#125;
+ mutate &amp;#123;
+     split =&amp;gt; &amp;#123; &amp;quot;request&amp;quot; =&amp;gt; &amp;quot; &amp;quot; &amp;#125;
+ &amp;#125;
+ mutate &amp;#123;
+   add_field =&amp;gt; &amp;#123;
+  &amp;quot;httpversion&amp;quot; =&amp;gt; &amp;quot;%&amp;#123;[request][2]&amp;#125;&amp;quot;
+   &amp;#125;
+ &amp;#125;
+ mutate &amp;#123;                           #这里应该是选取xff，这里没有可以删掉，
+     split =&amp;gt; &amp;#123; &amp;quot;xff&amp;quot; =&amp;gt; &amp;quot;,&amp;quot; &amp;#125;
+ &amp;#125;
+ mutate &amp;#123;
+   add_field =&amp;gt; &amp;#123;
+        &amp;quot;realip&amp;quot; =&amp;gt; &amp;quot;%&amp;#123;[xff][0]&amp;#125;&amp;quot;
+   &amp;#125;
+ &amp;#125;
+ geoip &amp;#123;
+    source =&amp;gt; &amp;quot;clientip&amp;quot;
+    target =&amp;gt; &amp;quot;geoip&amp;quot;
+    #填写自己的GeoLite2数据库目录
+     database =&amp;gt; &amp;quot;/usr/local/elk/logstash/config/GeoLite2-City.mmdb&amp;quot;
+    #获取经纬度
+    add_field =&amp;gt; [&amp;quot;[geoip][coordinates]&amp;quot;,&amp;quot;%&amp;#123;[geoip][longitude]&amp;#125;&amp;quot;]
+    add_field =&amp;gt; [&amp;quot;[geoip][coordinates]&amp;quot;,&amp;quot;%&amp;#123;[geoip][latitude]&amp;#125;&amp;quot;]
+ &amp;#125;
+ mutate &amp;#123;
+   convert =&amp;gt; [ &amp;quot;[geoip][coordinates]&amp;quot;, &amp;quot;float&amp;quot; ]
+ &amp;#125;​
+&amp;#125;
+# 这是ElasticSerach服务的监听端口
+output &amp;#123;
+ elasticsearch &amp;#123;
+   hosts =&amp;gt; [&amp;quot;192.168.10.129:9200&amp;quot;]
+   index =&amp;gt;  &amp;quot;nginx-%&amp;#123;+YYYY.MM.dd&amp;#125;&amp;quot;
+   #根据项目名称动态创建索引
+ &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;geoip&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#geoip&#34;&gt;#&lt;/a&gt; geoip&lt;/h2&gt;
+&lt;p&gt;geoip 是 object 类型，它有几个子字段，含义如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;geoip.city_name：城市&lt;/li&gt;
+&lt;li&gt;geoip.continent_name：大陆名称&lt;/li&gt;
+&lt;li&gt;geoip.country_iso_code：国家编码&lt;/li&gt;
+&lt;li&gt;geoip.location：经纬度坐标，必须是：geo_point 类型&lt;/li&gt;
+&lt;li&gt;geoip.region_iso_code：地域编码&lt;/li&gt;
+&lt;li&gt;geoip.region_name：地域名称&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;扩展程序是谷歌的&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9jaHJvbWUuZ29vZ2xlLmNvbS93ZWJzdG9yZS9kZXRhaWwvZWxhc3RpY3NlYXJjaC1oZWFkL2ZmbWtpZWpqbWVjb2xwZmxvb2Zwam9sb2dvYmxrZWdtP3V0bV9zb3VyY2U9Y2hyb21lLW50cC1pY29u&#34;&gt; ElasticSearch Head&lt;/span&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 创建一个名为geoip的模板
+http://192.168.10.129:9200/_template/geoip/
+
+# index_patterns:索引名称
+#  ignore_malformed 如果true，格式错误的地理位置被忽略。如果false（默认），格式错误的地理位置引发异常并拒绝整个文档
+此字段需要配置成true，以防地理格式错误导致文档被拒绝
+
+&amp;#123;
+  &amp;quot;index_patterns&amp;quot;: [
+    &amp;quot;nginx*&amp;quot;
+  ],
+  &amp;quot;order&amp;quot;: 10,
+  &amp;quot;mappings&amp;quot;: &amp;#123;
+    &amp;quot;properties&amp;quot;: &amp;#123;
+      &amp;quot;clientip&amp;quot;: &amp;#123;
+        &amp;quot;type&amp;quot;: &amp;quot;ip&amp;quot;
+      &amp;#125;,
+      &amp;quot;geoip&amp;quot;: &amp;#123;
+        &amp;quot;dynamic&amp;quot;: true,
+        &amp;quot;type&amp;quot;: &amp;quot;object&amp;quot;,
+        &amp;quot;properties&amp;quot;: &amp;#123;
+          &amp;quot;location&amp;quot;: &amp;#123;
+            &amp;quot;type&amp;quot;: &amp;quot;geo_point&amp;quot;,
+            &amp;quot;ignore_malformed&amp;quot;: &amp;quot;true&amp;quot;
+          &amp;#125;,
+          &amp;quot;coordinates&amp;quot;: &amp;#123;
+            &amp;quot;type&amp;quot;: &amp;quot;geo_point&amp;quot;,
+            &amp;quot;ignore_malformed&amp;quot;: &amp;quot;true&amp;quot;
+          &amp;#125;,
+          &amp;quot;ip&amp;quot;: &amp;#123;
+            &amp;quot;type&amp;quot;: &amp;quot;ip&amp;quot;
+          &amp;#125;
+        &amp;#125;
+      &amp;#125;
+    &amp;#125;
+  &amp;#125;,
+  &amp;quot;aliases&amp;quot;: &amp;#123;
+    &amp;quot;nginx&amp;quot;: &amp;#123;&amp;#125;
+  &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;以下就代表模板创建成功&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/geoiptype&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/geoiptype..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;kibana加载地图&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#kibana加载地图&#34;&gt;#&lt;/a&gt; Kibana 加载地图&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana1-2&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana1.-1.webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana2-2&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana2.-1.webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana3-2&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana3.-1.webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana4-2&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana4.-1.webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana5-2&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana5.-1.webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana6-2&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana6.-1.webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana7-2&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana7.-1.webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana8&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana8..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana9&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana9..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+ ]]></description>
+        </item>
+        <item>
+            <guid isPermalink="true">http://example.com/category/2e72a923fa65.html</guid>
+            <title>从零搭建日志采集报警系统(ELK+FileBeat)</title>
+            <link>http://example.com/category/2e72a923fa65.html</link>
+            <category>ELK</category>
+            <category>安全管理</category>
+            <category>数据可视化</category>
+            <category>监控</category>
+            <category>运维</category>
+            <pubDate>Fri, 17 Sep 2021 18:26:31 +0800</pubDate>
+            <description><![CDATA[ &lt;h2 id=&#34;系统选型&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#系统选型&#34;&gt;#&lt;/a&gt; 系统选型&lt;/h2&gt;
+&lt;p&gt;Elastic 公司有一套免费开源的日志采集系统（ELK），所以我选择拿来即用。 日志流：  &lt;code&gt;日志文件&lt;/code&gt; → &lt;code&gt;FileBeat&lt;/code&gt; → &lt;code&gt;Logstash&lt;/code&gt; → &lt;code&gt;ElasticSearch&lt;/code&gt; → &lt;code&gt;Kibana&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/archives/465/mindmap&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/MindMap..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;filebeat&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#filebeat&#34;&gt;#&lt;/a&gt; Filebeat&lt;/h3&gt;
+&lt;p&gt;Filebeat 是一款轻量级日志采集器，可用于转发和汇总日志与文件。Filebeat 内置有多种模块（Nginx、MySQL、Redis、Elasticsearch、Logstash 等），可针对常见格式的日志大大简化收集、解析和可视化过程，只需一条命令即可。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/archives/465/filebeat&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/filebeat..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;logstash&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#logstash&#34;&gt;#&lt;/a&gt; Logstash&lt;/h3&gt;
+&lt;p&gt;Logstash 是一个分布式日志收集框架，开发语言是 JRuby，经常与 ElasticSearch，Kibana 配合使用组成著名的 ELK 技术栈，所谓 ELK 就是 ElasticSearch、Logstash、Kibana 这三个组件。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/archives/465/logstash&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/Logstash..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;elasticsearch&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#elasticsearch&#34;&gt;#&lt;/a&gt; ElasticSearch&lt;/h3&gt;
+&lt;p&gt;Elasticsearch 是一个分布式、可扩展、实时的搜索与数据分析引擎。它提供了一个分布式多用户能力的全文搜索引擎，基于 RESTful web 接口。&lt;/p&gt;
+&lt;h3 id=&#34;kibana&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#kibana&#34;&gt;#&lt;/a&gt; Kibana&lt;/h3&gt;
+&lt;p&gt;Kibana 是一个免费且开放的用户界面，能够让您对 Elasticsearch 数据进行可视化。您可以进行各种操作，从跟踪查询负载，到理解请求如何流经您的整个应用，都能轻松完成。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/archives/465/kibanamap&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/KibanaMap..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;系统准备&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#系统准备&#34;&gt;#&lt;/a&gt; 系统准备&lt;/h2&gt;
+&lt;h3 id=&#34;系统设置&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#系统设置&#34;&gt;#&lt;/a&gt; 系统设置&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;# 关闭防火墙（如果因为其他原因不能关闭防火墙，也请不要禁止80端口）：
+systemctl stop firewalld.service
+# 禁止防火墙自动启动:
+systemctl disable firewalld.service
+# 修改操作系统参数
+vi /etc/sysctl.conf
+vm.max_map_count=262144
+
+# 加载sysctl配置，执行命令:
+sysctl -p
+
+vim /etc/security/limits.conf
+# 在文件最后加入
+* soft nofile 65536
+* hard nofile 131072
+* soft nproc 2048
+* hard nproc 4096
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;jdk安装&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#jdk安装&#34;&gt;#&lt;/a&gt; jdk 安装&lt;/h3&gt;
+&lt;p&gt;下载地址 **&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cub3BlbmxvZ2ljLmNvbS9vcGVuamRrLWRvd25sb2Fkcw==&#34;&gt;https://www.openlogic.com/openjdk-downloads&lt;/span&gt;**&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 进入opt目录
+cd /opt
+# 下载JDK,推荐11系列
+wget https://builds.openlogic.com/downloadJDK/openlogic-openjdk/11.0.8%2B10/openlogic-openjdk-11.0.8%2B10-linux-x64.tar.gz
+# 解压
+tar -zxvf openlogic-openjdk-11.0.8+10-linux-x64.tar.gz
+# 修改文件夹名
+mv openlogic-openjdk-11.0.8+10-linux-x64// jdk/
+# 定义环境变量
+sed -i.ori  &#39;$a export JAVA_HOME=/opt/jdk\nexport PATH=$JAVA_HOME/bin:$JAVA_HOME/jre/bin:$PATH\nexport CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib:$JAVA_HOME/lib/tools.jar&#39; /etc/profile
+# 加载环境变量配置信息
+source /etc/profile
+# 确认检查jdk版本信息
+java -version
+
+openjdk version &amp;quot;11.0.8&amp;quot; 2020-07-14
+OpenJDK Runtime Environment OpenLogic-OpenJDK (build 11.0.8+0-adhoc.centos.jdk11u)
+OpenJDK 64-Bit Server VM OpenLogic-OpenJDK (build 11.0.8+0-adhoc.centos.jdk11u, mixed mode)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;elasticsearch部署&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#elasticsearch部署&#34;&gt;#&lt;/a&gt; Elasticsearch 部署&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;# 进入opt目录
+cd /opt
+# 把tar包下载到opt目录下
+wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.14.1-linux-x86_64.tar.gz
+# 解压tar包
+tar -zxvf elasticsearch-7.14.1-linux-x86_64.tar.gz
+# 拷贝文件目录到/usr/local
+cp -r elasticsearch-7.14.1/ /usr/local/elasticsearch
+# 建立软连接
+ln -s /usr/local/elasticsearch/ elasticsearch
+# 修改配置文件
+vim /usr/local/elasticsearch/config/elasticsearch.yml
+
+# 以下取消注释
+# 集群名称，单机版使用默认即可
+cluster.name: my-application
+# 节点名称，单机版使用默认即可
+node.name: node-1
+# 数据存放的路径
+path.data: /usr/local/elasticsearch/data/
+# 应用日志存放的路径
+path.logs: /usr/local/elasticsearch/logs/
+# 服务绑定的IP地址
+network.host: 0.0.0.0
+# 服务监听的端口
+http.port: 9200
+#初始主节点
+cluster.initial_master_nodes: [&amp;quot;node-1&amp;quot;]
+
+# 跨域配置
+http.cors.enabled: true
+http.cors.allow-origin: &amp;quot;*&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;es 不能以 root 用户身份运行，所以要创建新的用户组和用户名称&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 创建用户组
+groupadd elsearch
+# 创建用户
+useradd elsearch -g elsearch -p elasticsearch
+
+# 把es要用到的路径都设置成的文件组权限设置成新的用户组和用户
+chown -R elsearch:elsearch /usr/local/elasticsearch
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;启动 es&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 切换到es用户
+su elsearch
+# 以后台服务运行
+/usr/local/elasticsearch/bin/elasticsearch -d 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;查看启动日志可执行命令 &lt;code&gt;tail -f /usr/local/elasticsearch/logs/my-application.log&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/elsearch_logs&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/elsearch_logs..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;通过 &lt;code&gt;ss -lntup&lt;/code&gt;  查看端口号已经启动&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/elsearch_port&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/elsearch_port..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;执行 &lt;code&gt;curl&lt;/code&gt;  命令检查服务是否正常响应: &lt;code&gt;curl 127.0.0.1:9200&lt;/code&gt; , 收到响应如下：&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/elsearch&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/elsearch..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;至此，ElasticSerach 服务启动成功&lt;/p&gt;
+&lt;h2 id=&#34;kibana部署&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#kibana部署&#34;&gt;#&lt;/a&gt; Kibana 部署&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;# 进入opt目录
+cd /opt
+# 把tar包下载到opt目录下
+wget https://artifacts.elastic.co/downloads/kibana/kibana-7.14.1-linux-x86_64.tar.gz
+# 解压
+tar -zxvf kibana-7.14.1-linux-x86_64.tar.gz
+# 拷贝文件目录到/usr/local
+cp -r kibana-7.14.1-linux-x86_64 /usr/local/kibana
+# 建立软连接
+ln -s /usr/local/kibana/ kibana
+#打开Kibana的配置文件
+vim /usr/local/kibana/config/kibana.yml
+
+# 服务端口
+server.port: 5601
+# 服务器主机IP地址
+server.host: &amp;quot;主机的IP地址&amp;quot;
+# es索引服务器地址与上一步配置es时的地址相同
+elasticsearch.hosts: [&amp;quot;http://xxx.xxx.xxx.xxx:9200&amp;quot;]
+i18n.locale: &amp;quot;zh-CN&amp;quot;
+
+# 按esc输入以下内容保存并退出
+:wq
+# 这样其他电脑就能用浏览器访问Kibana服务了
+
+# 不能以root用户运行
+# 把es要用到的路径都设置成的文件组权限设置成新的用户组和用户
+chown -R elsearch:elsearch /usr/local/kibana
+
+# 切换到es用户
+su elsearch
+# 先前台运行看有没有报错
+/usr/local/kibana/bin/kibana
+
+# # 让服务在后台运行
+nohup /usr/local/kibana/bin/kibana &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;查看启动日志: &lt;code&gt;tail -f /home/elsearch/nohup.out&lt;/code&gt;  以下信息表示启动成功:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana_log&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana_log..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;在浏览器访问 http:// 主机 IP:5601; 看到如下页面&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;filebeat部署日志机&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#filebeat部署日志机&#34;&gt;#&lt;/a&gt; Filebeat 部署 (日志机)&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;# 进入opt目录
+cd /opt
+# 把tar包下载到opt目录下
+wget https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.14.1-linux-x86_64.tar.gz
+tar -zxvf filebeat-7.14.1-linux-x86_64.tar.gz
+cp -r filebeat-7.14.1-linux-x86_64 /usr/local/elk/filebeat
+
+# 修改配置文件
+vim /usr/local/elk/filebeat/filebeat.yml
+
+# 配置输入插件，注意是yml格式
+filebeat.inputs:
+# 数据来源是log日志文件
+- type: log
+  enabled: true
+# 日志文件路径
+  paths:
+    - /usr/local/nginx/nginx/logs/access*.log
+
+# 解释内容格式为json的日志
+#  json.keys_under_root: true
+#  json.add_error_key: true
+#  json.message_key: log
+#  json.overwrite_keys: true
+# 额外的标识字段，可以于区分是来自于哪个应用
+  fields:
+    log_type: logbackjson
+
+# 配置多个log数据源
+# - type: log
+
+  # Change to true to enable this input configuration.
+#  enabled: true
+
+  # Paths that should be crawled and fetched. Glob based paths.
+#  paths:
+#    - /var/log/xhg/gateway/*.log
+#
+#  json.keys_under_root: true
+#  json.add_error_key: true
+#  json.message_key: log
+#  json.overwrite_keys: true
+
+#  fields:
+#    log_type: gateway
+
+# 当输出插件中要使用自定义索引名称的时候配置这个
+# setup.template.name: &amp;quot;cobee&amp;quot;
+# setup.template.pattern: &amp;quot;cobee-*&amp;quot;
+# 关闭ES配置
+# 配置数据输出目标地
+# output.elasticsearch:
+  # Array of hosts to connect to.
+  # hosts: [&amp;quot;172.18.219.11:9200&amp;quot;]
+  # index: &amp;quot;xhg-ms-%&amp;#123;+yyyy.MM.dd&amp;#125;&amp;quot;
+# 其它配置项保持默认即可
+
+output.logstash:
+  # The Logstash hosts
+  hosts: [&amp;quot;localhost:5044&amp;quot;]
+
+# 按esc输入以下内容保存并退出
+:wq
+
+# 后台运行filebeat，filebeat是一个轻量级的数据采集引擎，不需要安装jdk，不像logstash那么笨重
+
+nohup /usr/local/elk/filebeat/filebeat -e -c /usr/local/elk/filebeat/filebeat.yml -d &amp;quot;Publish&amp;quot; &amp;amp; &amp;gt; nohup.out
+
+#停止filebeat：
+ps -ef grep filebeat 
+kill -9 pid
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;h2 id=&#34;logstash部署日志机&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#logstash部署日志机&#34;&gt;#&lt;/a&gt; logstash 部署 (日志机)&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;wget https://artifacts.elastic.co/downloads/logstash/logstash-7.14.1-linux-x86_64.tar.gz
+tar -zxvf logstash-7.14.1-linux-x86_64.tar.gz
+mkdir /usr/local/elk
+cp -r logstash-7.14.1 /usr/local/elk/logstash
+# 在目录/usr/local/elk/logstash下创建文件
+vim /usr/local/elk/logstash/default.conf
+# 内容如下:
+# 监听5044端口作为输入
+input &amp;#123;
+    beats &amp;#123;
+        port =&amp;gt; &amp;quot;5044&amp;quot;
+    &amp;#125;
+&amp;#125;
+# 数据过滤
+filter &amp;#123;
+    grok &amp;#123;
+        match =&amp;gt; &amp;#123; &amp;quot;message&amp;quot; =&amp;gt; &amp;quot;%&amp;#123;COMBINEDAPACHELOG&amp;#125;&amp;quot; &amp;#125;
+    &amp;#125;
+    geoip &amp;#123;
+        source =&amp;gt; &amp;quot;clientip&amp;quot;
+    &amp;#125;
+&amp;#125;
+# 这是ElasticSerach服务的监听端口
+output &amp;#123;
+    elasticsearch &amp;#123;
+        hosts =&amp;gt; [&amp;quot;192.168.10.129:9200&amp;quot;]
+        index =&amp;gt;  &amp;quot;%&amp;#123;appname&amp;#125;-%&amp;#123;+YYYY.MM.dd&amp;#125;&amp;quot; #根据项目名称动态创建索引
+    &amp;#125;
+&amp;#125;
+
+
+# 启动logstash
+nohup /usr/local/elk/logstash/bin/logstash -f /usr/local/elk/logstash/default.conf --config.reload.automatic &amp;amp;
+tail -f /usr/local/elk/logstash/logs/logstash-plain.log
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/logstash_logs&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/logstash_logs..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;kibana配置&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#kibana配置&#34;&gt;#&lt;/a&gt; Kibana 配置&lt;/h2&gt;
+&lt;p&gt;Chrome 扩展程序下载 ElasticSearch Head, 查看 ElasticSearch 是否有数据&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/elsearchhttp&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/elsearchHttp..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; 配置 Kibana &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana1&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana1..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana2&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana2..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana3&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana3..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana4&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana4..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana5&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana5..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana6&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana6..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana7&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana7..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+ ]]></description>
+        </item>
+        <item>
+            <guid isPermalink="true">http://example.com/category/2d9a2ff9eff9.html</guid>
+            <title>Zabbix-Grafana图形展示软件</title>
+            <link>http://example.com/category/2d9a2ff9eff9.html</link>
+            <category>Centos</category>
+            <category>安全管理</category>
+            <category>数据可视化</category>
+            <category>监控</category>
+            <category>运维</category>
+            <category>Zabbix</category>
+            <pubDate>Tue, 14 Sep 2021 18:08:48 +0800</pubDate>
+            <description><![CDATA[ &lt;h2 id=&#34;下载grafana-rpm包&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#下载grafana-rpm包&#34;&gt;#&lt;/a&gt; 下载 grafana rpm 包&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;# 下载Rpm包
+wget https://dl.grafana.com/oss/release/grafana-7.4.0-1.x86_64.rpm
+# 安装grafana
+sudo yum install -y grafana-7.4.0-1.x86_64.rpm
+# Grafana安装zabbix插件
+grafana-cli plugins install alexanderzobnin-zabbix-app
+# 安装饼状图
+grafana-cli plugins install grafana-piechart-panel
+# 开机自启
+systemctl enable grafana-server
+# 启动
+systemctl start grafana-server
+地址:ip:3000
+# Grafana Zabbix插件配置数据源
+URL:http://localhost/api_jsonrpc.php
+&lt;/code&gt;&lt;/pre&gt;
+ ]]></description>
+        </item>
+        <item>
+            <guid isPermalink="true">http://example.com/category/5749008ccb19.html</guid>
+            <title>Python数据可视化之Matplotlib</title>
+            <link>http://example.com/category/5749008ccb19.html</link>
+            <category>数据可视化</category>
+            <category>python</category>
+            <pubDate>Mon, 24 May 2021 15:17:34 +0800</pubDate>
+            <description><![CDATA[ &lt;h2 id=&#34;matplotlib基本要点&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#matplotlib基本要点&#34;&gt;#&lt;/a&gt; matplotlib 基本要点&lt;/h2&gt;
+&lt;h3 id=&#34;基本使用&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#基本使用&#34;&gt;#&lt;/a&gt; 基本使用&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;from matplotlib import pyplot as plt # 导入pyplot
+x = range(2,26,2)
+# 数据在x轴的位置,是一个可迭代对象
+y =[15,13,14.5,17,20,25,26,26,24,22,18,15]
+# 数据在y轴的位置,是一个可迭代对象
+# x轴和y轴的数据一起组成了所有要绘制出的坐标
+分别是(2,15),(4,13),(6,14.5),(8,17)...
+plt.plot(x,y) # 传入x和y,通过plot绘制出折线图
+plt.show() # 在执行程序的时候展示图形
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;h3 id=&#34;图片大小&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#图片大小&#34;&gt;#&lt;/a&gt; 图片大小&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;plt.figure(figsize=(20,8),dpi=80)
+# figure图形图标的意思,在这里指的就是我们画的图
+# 通过实例化一个fgure并且传递参数,能够在后台自动使用该fgure实例
+# 在图像模糊的时候可以传入dpi参数,让图片更加清晰
+x = range(2,26,2)
+y =[15,13,14.5,17,20,25,26,26,24,22,18,15]plt.plot(x,y)
+plt.savefig(&amp;quot;./sig_size.png&amp;quot;) # 保存图片
+# 可以保存为svg这种矢量图格式,放大不会有锯齿
+plt.show()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;h3 id=&#34;xy轴刻度&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#xy轴刻度&#34;&gt;#&lt;/a&gt; x/y 轴刻度&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;plt.xticks(rotation=90) # x轴刻度rotation:旋转的度数
+plt.yticks() # y轴刻度
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;h3 id=&#34;中文显示&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#中文显示&#34;&gt;#&lt;/a&gt; 中文显示&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;# 设置matplotlib正常显示中文和负号
+plt.rcParams[&#39;font.sans-serif&#39;] = [&#39;SimHei&#39;]   # 用黑体显示中文
+plt.rcParams[&#39;axes.unicode_minus&#39;] = False     # 正常显示负号
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;h3 id=&#34;描述信息&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#描述信息&#34;&gt;#&lt;/a&gt; 描述信息&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;plt.xlabel(&#39;x轴描述信息&#39;)
+plt.ylabel(&#39;y轴描述信息&#39;)
+plt.title(&#39;标题&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;h3 id=&#34;图形网格&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#图形网格&#34;&gt;#&lt;/a&gt; 图形网格&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;plt.grid(alpha=0.4) # 绘制网格,alpha:透明度
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;h3 id=&#34;图例&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#图例&#34;&gt;#&lt;/a&gt; 图例&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;# 散点图
+from matplotlib import pyplot as plt
+from matplotlib import font_manager
+# 设置matplotlib正常显示中文和负号
+plt.rcParams[&#39;font.sans-serif&#39;] = [&#39;SimHei&#39;]   # 用黑体显示中文
+plt.rcParams[&#39;axes.unicode_minus&#39;] = False     # 正常显示负号
+
+y_3=[11,17,16,11,12,11,12,6,6,7,8,9,12,15,14,17,18,21,16,17,20,14,15,15,15,19,21,22,22,22,23]# 3月份
+y_10=[26,26,28,19,21,17,16,19,18,20,20,19,22,23,17,20,21,20,22,15,11,15,5,13,17,10,11,13,12,13,6]# 10月份
+x_3 =range(1,32)
+x_10=range(51,82)
+# 设置图形大小
+plt.figure(figsize=(20,8),dpi=80)
+# 使用scatter绘制散点图
+plt.scatter(x_3,y_3,label=&#39;3月份&#39;)
+plt.scatter(x_10,y_10,label=&#39;10月份&#39;)
+# 调整X轴的刻度
+_x = list(x_3)+list(x_10)
+_xtick_labels=[&#39;3月&amp;#123;&amp;#125;日&#39;.format(i) for i in x_3]
+_xtick_labels+=[&#39;10月&amp;#123;&amp;#125;日&#39;.format(i-50) for i in x_10]
+plt.xticks(_x[::3],_xtick_labels[::3],rotation=45) # [::3]步长为3,rotation倾斜角度
+# 添加图例
+plt.legend(loc=2)
+# 添加描述信息
+plt.xlabel(&#39;时间&#39;)
+plt.ylabel(&#39;温度&#39;)
+plt.title(&#39;标题&#39;)
+# 展示
+plt.show()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;h3 id=&#34;自定义绘制图形风格&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#自定义绘制图形风格&#34;&gt;#&lt;/a&gt; 自定义绘制图形风格&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;plt.plot(x,y,color=&#39;r&#39;,linestyle=&#39;--&#39;,linewidth=5,alpha=0.5)
+# color线条颜色,linestyle线条风格,linewidth线条粗细,alpha透明度
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;颜色字符&lt;/p&gt;
+&lt;p&gt;风格字符&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;r&lt;/code&gt;  红色&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;-&lt;/code&gt;  实线&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;g&lt;/code&gt;  绿色&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;--&lt;/code&gt;  虚线，破折线&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;b&lt;/code&gt;  蓝色&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;-.&lt;/code&gt;  点划线&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;c&lt;/code&gt;  青色&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;:&lt;/code&gt;  点虚线，虚线&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;m&lt;/code&gt;  洋红&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;&#39;&#39;&lt;/code&gt;  留空或空格，无线条&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;y&lt;/code&gt;  黄色&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;k&lt;/code&gt;  黑色&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;#00ff00&lt;/code&gt; 16 进制&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;0.8&lt;/code&gt;  灰度值字符串&lt;/p&gt;
+&lt;h3 id=&#34;折线图&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#折线图&#34;&gt;#&lt;/a&gt; 折线图&lt;/h3&gt;
+&lt;h4 id=&#34;动手&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#动手&#34;&gt;#&lt;/a&gt; 动手&lt;/h4&gt;
+&lt;p&gt;假设大家在 30 岁的时候，根据自己的实际情况，统计出来了你和你同桌各自从 11 岁到 30 岁每年交的女 (男) 朋友的数量如列表 a 和 b, 请在一个图中绘制出该数据的折线图，以便比较自己和同桌 20 年间的差异，同时分析每年交女 (男) 朋友的数量走势&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;a = [1,0,1,1,2,4,3,2,3,4,4,5,6,5,4,3,3,1,1,1]
+b =[1,0,3,1,2,2,3,3,2,1,2,1,1,1,1,1,1,1,1,1]
+要求:
+    y轴表示个数
+    x轴表示岁数,比如11岁,12岁等
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;代码:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;y_1 = [1,0,1,1,2,4,3,2,3,4,4,5,6,5,4,3,3,1,1,1]
+y_2 =[1,0,3,1,2,2,3,3,2,1,2,1,1,1,1,1,1,1,1,1]
+x=range(11,31)
+# 设置图形大小
+plt.figure(figsize=(20,8),dpi=80)
+# 设置X轴刻度
+xtick_labels=[&#39;&amp;#123;&amp;#125;岁&#39;.format(i) for i in x]
+plt.xticks(x,xtick_labels)
+plt.yticks(range(0,9))
+# 绘制网格
+plt.grid(alpha=0.4)
+plt.plot(x,y_1,label=&#39;自己&#39;)
+plt.plot(x,y_2,label=&#39;同桌&#39;)
+# 添加图例
+plt.legend()
+# 展示
+plt.show()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/05/post-62-60ac9c911bc26.png&#34; alt=&#34;在这里插入图片描述&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;散点图&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#散点图&#34;&gt;#&lt;/a&gt; 散点图&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;# 散点图
+from matplotlib import pyplot as plt
+from matplotlib import font_manager
+# 设置matplotlib正常显示中文和负号
+plt.rcParams[&#39;font.sans-serif&#39;] = [&#39;SimHei&#39;]   # 用黑体显示中文
+plt.rcParams[&#39;axes.unicode_minus&#39;] = False     # 正常显示负号
+
+y_3=[11,17,16,11,12,11,12,6,6,7,8,9,12,15,14,17,18,21,16,17,20,14,15,15,15,19,21,22,22,22,23] #3月份
+y_10=[26,26,28,19,21,17,16,19,18,20,20,19,22,23,17,20,21,20,22,15,11,15,5,13,17,10,11,13,12,13,6] #10月份
+x_3 =range(1,32)
+x_10=range(51,82)
+# 设置图形大小
+plt.figure(figsize=(20,8),dpi=80)
+plt.scatter(x_3,y_3)
+plt.scatter(x_10,y_10)
+# 调整X轴的刻度
+_x = list(x_3)+list(x_10)
+_xtick_labels=[&#39;3月&amp;#123;&amp;#125;日&#39;.format(i) for i in x_3]
+_xtick_labels+=[&#39;10月&amp;#123;&amp;#125;日&#39;.format(i-50) for i in x_10]
+plt.xticks(_x[::3],_xtick_labels[::3],rotation=45)
+# 展示
+plt.show()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/05/post-62-60ac9c91cb390.png&#34; alt=&#34;在这里插入图片描述&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;条形图&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#条形图&#34;&gt;#&lt;/a&gt; 条形图&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;# 绘制条形图
+x=[&amp;quot;战狼2&amp;quot;,&amp;quot;速度与激情8&amp;quot;,&amp;quot;功夫瑜伽&amp;quot;,&amp;quot;西游伏妖篇&amp;quot;,&amp;quot;变形金刚5:最后的骑士&amp;quot;,&amp;quot;摔跤吧!爸爸&amp;quot;,&amp;quot;加勒比海盗5死无对证&amp;quot; ,&amp;quot;金刚:骷髅岛&amp;quot;,&amp;quot;极限特工:终极回归&amp;quot;,&amp;quot;生化危机6:终章&amp;quot;, &amp;quot;乘风破浪&amp;quot;,&amp;quot;神偷奶爸3&amp;quot; ,&amp;quot;智取威虎山&amp;quot;,&amp;quot;大闹天竺&amp;quot;,&amp;quot;金刚狼3:殊死一战&amp;quot;,&amp;quot;蜘矜侠:英雄归来&amp;quot;,&amp;quot;悟空传&amp;quot;,&amp;quot;银河护卫队2&amp;quot;,&amp;quot;情圣&amp;quot;,&amp;quot;新木乃伊&amp;quot;,]
+y=[56.01,26.94,17.53,16.49,15.45,12.96,11.8,11.61,11.28,11.12,10.49,10.3,8.75,7.55,7.32,6.99,6.88,6.86,6.58,6.23] # 单位:亿
+plt.figure(figsize=(20,8),dpi=80)
+plt.bar(x,y,width=0.3)
+plt.xticks(x,rotation=90) # 让文字旋转90度,避免文字重叠
+plt.show()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/05/post-62-60ac9c92caac2.png&#34; alt=&#34;在这里插入图片描述&#34;&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 绘制横着的条形图
+x=[&amp;quot;战狼2&amp;quot;,&amp;quot;速度与激情8&amp;quot;,&amp;quot;功夫瑜伽&amp;quot;,&amp;quot;西游伏妖篇&amp;quot;,&amp;quot;变形金刚5:最后的骑士&amp;quot;,&amp;quot;摔跤吧!爸爸&amp;quot;,&amp;quot;加勒比海盗5死无对证&amp;quot; ,&amp;quot;金刚:骷髅岛&amp;quot;,&amp;quot;极限特工:终极回归&amp;quot;,&amp;quot;生化危机6:终章&amp;quot;, &amp;quot;乘风破浪&amp;quot;,&amp;quot;神偷奶爸3&amp;quot; ,&amp;quot;智取威虎山&amp;quot;,&amp;quot;大闹天竺&amp;quot;,&amp;quot;金刚狼3:殊死一战&amp;quot;,&amp;quot;蜘矜侠:英雄归来&amp;quot;,&amp;quot;悟空传&amp;quot;,&amp;quot;银河护卫队2&amp;quot;,&amp;quot;情圣&amp;quot;,&amp;quot;新木乃伊&amp;quot;,]
+y=[56.01,26.94,17.53,16.49,15.45,12.96,11.8,11.61,11.28,11.12,10.49,10.3,8.75,7.55,7.32,6.99,6.88,6.86,6.58,6.23] # 单位:亿
+plt.figure(figsize=(20,8),dpi=80)
+plt.barh(range(len(x)),y,height=0.3)
+plt.yticks(range(len(x)),x)
+plt.grid(alpha=0.4)
+plt.show()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/05/post-62-60ac9c937bdb7.png&#34; alt=&#34;在这里插入图片描述&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;多条形图&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#多条形图&#34;&gt;#&lt;/a&gt; 多条形图&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;# 假设你知道了列表a中电影分别在2017-09-14(b_14),2017-09-15(b_15),2017-09-16(b_16)三天的票房,为了展示列表中电影本身的票房以及同其他电影的数据对比情况,应该如何更加直观的呈现该数据?
+x = [&amp;quot;猩球崛起3:终极之战&amp;quot;, &amp;quot;敦刻尔克&amp;quot;, &amp;quot;蜘蛛侠:英雄归来&amp;quot;, &amp;quot;战狼2&amp;quot;]
+b_14 = [2358, 399, 2358, 362]
+b_15 = [12357, 156, 2045, 168]
+b_16 = [15746, 312, 4497, 319]
+bar_width = 0.2
+x_14 = list(range(len(x)))
+x_15 = [i+bar_width for i in x_14]
+x_16 = [i+bar_width*2 for i in x_14]
+# 设置图形大小
+plt.figure(figsize=(20, 8), dpi=80)
+plt.bar(range(len(x)),b_14, width=bar_width,label=&#39;9月14日&#39;)
+plt.bar(x_15, b_15, width=bar_width,label=&#39;9月15日&#39;)
+plt.bar(x_16, b_16, width=bar_width,label=&#39;9月16日&#39;)
+# 设置图例
+plt.legend()
+# 设置x轴的刻度
+plt.xticks(x_15,x)
+plt.show()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/05/post-62-60ac9c9463460.png&#34; alt=&#34;在这里插入图片描述&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;直方图&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#直方图&#34;&gt;#&lt;/a&gt; 直方图&lt;/h3&gt;
+&lt;p&gt;把&lt;mark&gt;数据分为多少组&lt;/mark&gt;进行统计？？？&lt;mark&gt;组数要适当，太少会有较大的统计误差，大多规律不明显&lt;/mark&gt; 组数：将数据分组，当数据在 100 个以内时， 按数据多少常分&lt;mark&gt; 5-12&lt;/mark&gt; 组。 组距：指每个小组的两个端点的距离 $$ 组距 =\frac {极差} {组距}=\frac {max (a)-min (a)}{bin_width} $$&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;bin_width = 3# 设置组距为3
+num_bins = int((max (a)-min(a))/bin_width) #分为多少组
+plt.hist(a,num_bins)
+# 传入需要统计的数据,以及组数即可
+# plt.hist(a，[min(a)+i*bin_width for i in range(num_bins)])
+# 可以传入一个列表,长度为组数,值为分组依据,当组距不均匀的时候使用
+# plt.hist(a, num_bins,normed=1)
+# normed : bool是否绘制频率分布直方图,默认为频数直方图
+plt.xticks(list(range(min(a),max(a))[::bin_width],rotation=45)
+plt.grid(True,linestyle = &amp;quot;-.&amp;quot;,alpha=0.5)
+# 显示网格,alpha为透明度
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 假设你获取了250部电影的时长(列表a中),希望统计出这些电影时长的分布状态(比如时长为100分钟到120分钟电影的数量,出现的频率)等信息,你应该如何呈现这些数据?
+a = [131, 98, 125, 131, 124, 139, 131, 117, 128, 108,135, 138, 131, 102, 107, 114, 119, 128, 121, 142, 127, 130, 124, 101,110, 116, 117, 110, 128, 128, 90, 99, 136, 126, 134, 95, 138, 117, 79, 78,132, 124, 113, 150, 110, 117, 86, 95, 144, 105, 126, 130, 126, 130, 126, 116, 123, 106, 112, 138,123, 86, 101, 99, 136, 123, 117, 119, 105, 137, 123, 128, 125, 104, 109, 134, 125, 127, 105, 120, 107, 129, 116,108, 132, 103, 136, 118, 102, 120, 114, 105, 115, 132, 145, 119, 121, 112, 139, 125, 138, 109, 132, 134, 156, 106,117, 127, 144, 139, 139, 119, 140, 83, 110, 102, 123, 107, 143, 115, 136, 118, 139, 123, 112, 88, 125, 109, 119, 133, 112, 114,122, 109, 106, 123, 116, 131, 127, 115, 118, 112, 135, 115, 146, 137, 116, 103, 144, 83, 123, 79, 110, 101, 100, 154, 136,100, 118, 119, 133, 134, 106, 129, 126, 110, 98, 109, 141, 120, 117, 106, 149, 122, 122, 110, 118, 127, 121, 114, 125, 126,114, 140, 103, 130, 141, 117, 106, 114, 121, 114, 133, 137, 92, 121, 112, 146, 97, 137, 105, 98, 117, 112, 81, 97, 139, 113, 134, 106, 144, 110, 137, 137, 91, 104, 117, 100, 111, 101, 110, 105, 129, 137, 112, 120, 113, 133,112, 83, 94, 146, 133, 101, 131, 116, 111, 84, 137, 115, 122, 106, 144, 109, 123, 116, 111, 111, 133, 150]
+plt.figure(figsize=(20,8),dpi=80)
+plt.grid()
+# 组距(组距最好选可以让max(a)-min(a)整除的)
+d = 3
+# 计算组数
+num_bins=(max(a)-min(a))//d
+plt.hist(a,num_bins)
+# 设置x轴的刻度
+plt.xticks(range(min(a),max(a)+d,d)) # max(a)+d保证可以取到最大值
+plt.show()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/05/post-62-60ac9c9519efb.png&#34; alt=&#34;在这里插入图片描述&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;用条形图绘制直方图&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#用条形图绘制直方图&#34;&gt;#&lt;/a&gt; 用条形图绘制直方图&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;# 在美国2004年人口普查发现有124 million的人在离家相对较远的地方工作。根据他们从家到上班地点所需要的时间,通过抽样统计(最后一列)出了下表的数据,这些数据能够绘制成直方图么?
+interval = [0,5,10,15,20,25,30,35,40,45,60,90] #时间段
+width =[5,5,5,5,5,5,5,5,5,15,30,60] #组距
+quantity = [836,2737,3723,3926,3596,1438,3273,642,824,613,215,47] # 数据
+# 前面的问题中给出的数据都是统计之后的数据，所以为了达到直方图的效果,需要绘制条形图
+# 所以:一般来说能够使用plt.hist方法的的是那些没有统计过的数据
+plt.figure(figsize=(20,8),dpi=80)
+plt.grid()
+plt.bar(range(12),quantity,width=1)
+# 设置x轴的刻度
+_x = [i-0.5 for i in range(13)]# 让x轴往左移动0.5
+plt.xticks(_x,interval+[150])
+plt.show()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/05/post-62-60ac9c95d7e11.png&#34; alt=&#34;在这里插入图片描述&#34;&gt;&lt;/p&gt;
+ ]]></description>
+        </item>
+    </channel>
+</rss>

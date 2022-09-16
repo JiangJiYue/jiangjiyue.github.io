@@ -1,0 +1,435 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="江霁月的私人小屋" href="http://example.com/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="江霁月的私人小屋" href="http://example.com/atom.xml" />
+<link rel="alternate" type="application/json" title="江霁月的私人小屋" href="http://example.com/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="nginx" />
+
+
+<link rel="canonical" href="http://example.com/category/17faee78d2f1.html">
+
+
+
+  <title>
+基于awstats的apache日志分析 - 安全运维 |
+江霁月的私人小屋</title>
+<meta name="generator" content="Hexo 5.4.2"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">基于awstats的apache日志分析
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="创建时间：2022-09-06 09:47:03">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">发表于</span>
+    <time itemprop="dateCreated datePublished" datetime="2022-09-06T09:47:03+08:00">2022-09-06</time>
+  </span>
+  <span class="item" title="本文字数">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">本文字数</span>
+    <span>2.5k</span>
+    <span class="text">字</span>
+  </span>
+  <span class="item" title="阅读时长">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">阅读时长</span>
+    <span>2 分钟</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="切换导航栏">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">江霁月的私人小屋</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipexj2jgzj20zk0m8b09.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gicliwyw55j20zk0m8hdt.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipet8c1a2j20zk0m8kct.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclip4jbpj20zk0m87cv.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclga70tsj20zk0m84mr.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipeuibk9fj20zk0m8ay2.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">首页</a></span><i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/SOC/" itemprop="item" rel="index" title="分类于 安全运维"><span itemprop="name">安全运维</span></a>
+<meta itemprop="position" content="1" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN">
+  <link itemprop="mainEntityOfPage" href="http://example.com/category/17faee78d2f1.html">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/avatar.jpg">
+    <meta itemprop="name" content="江霁月">
+    <meta itemprop="description" content=", 专注分享一些关于安全运维和编程语言的知识·本博主爱安全,爱折腾,爱代码">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="江霁月的私人小屋">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <h2 id="安装依赖"><a class="markdownIt-Anchor" href="#安装依赖">#</a> 安装依赖</h2>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>yum <span class="token function">install</span> <span class="token parameter variable">-y</span> deltarpm gcc gcc-c++ unixODBC-devel httpd mysql-devel libcurl libcurl-devel libevent libevent-devel fping curl-devel libxml2  libxml2-devel snmpd net-snmp-devel net-snmp pcre-devel  java-devel openssl-devel libxslt* perl-ExtUtils-Embed at gcc-c++ python subversion gperf <span class="token function">make</span> rpm-build <span class="token function">git</span> <span class="token function">curl</span> bzip2-devel libcurl-devel gd gd-devel t1lib t1lib-devel libmcrypt libmcrypt-devel libtidy libtidy-devel GeoIP-devel libatomic_ops-devel zlib-devel <span class="token function">unzip</span> libstdc++* net-snmp net-snmp* gmp gmp-devel openldap openldap-devel libpcap-devel glib2-devel GeoIP-devel libxml2-devel redis <span class="token function">vim</span> <span class="token function">wget</span> <span class="token function">git</span> <span class="token function">htop</span> iftop libtool <span class="token function">make</span> automake mlocate openssl-devel pam-devel <span class="token function">unzip</span> gcc <span class="token function">screen</span> openssl openssl-devel iptables-services bash-completion* pcre-devel openssl-devel libxslt* perl-ExtUtils-Embed at gcc-c++ python subversion gperf <span class="token function">make</span> rpm-build <span class="token function">git</span> <span class="token function">curl</span> bzip2-devel libcurl-devel gd gd-devel t1lib t1lib-devel libmcrypt libmcrypt-devel libtidy libtidy-devel GeoIP-devel libatomic_ops-devel zlib-devel <span class="token function">unzip</span> libstdc++* net-snmp net-snmp* gmp gmp-devel openldap openldap-devel net-tools libevent-devel net-snmp-devel mysql-devel libxslt-devel libssh2-devel jdk-8u191-linux-x64.rpm unixODBC-devel httpd  libcurl  libevent  fping curl-devel libxml2  snmpd net-snmp-devel net-snmp</pre></td></tr></table></figure><h2 id="安装epel-release"><a class="markdownIt-Anchor" href="#安装epel-release">#</a> 安装 EPEL-release</h2>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>yum <span class="token function">install</span> epel-release <span class="token parameter variable">-y</span></pre></td></tr></table></figure><p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209051431872.png" alt="image-20220905143124298"></p>
+<h2 id="安装awstats"><a class="markdownIt-Anchor" href="#安装awstats">#</a> 安装 awstats</h2>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>yum <span class="token function">install</span> awstats <span class="token parameter variable">-y</span></pre></td></tr></table></figure><p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209051434406.png" alt="image-20220905143406202"></p>
+<blockquote>
+<p>为 Apache 配置 awstats AWStats 会生成一个默认的 Apache 配置文件 /etc/httpd/conf.d/awstats.conf 此文件允许访问所有 IP 地址，但如果想从特定网络或 IP 地址访问 Awstats，就修改 “允许来自” 部分 此文件与您所需的网络 IP。进行更改后，重启 apache</p>
+</blockquote>
+<h3 id="为网站创建-awstats-配置文件"><a class="markdownIt-Anchor" href="#为网站创建-awstats-配置文件">#</a> 为网站创建 awstats 配置文件</h3>
+<p>为所需网站制作一个配置文件，以便我们检查其统计信息。也可以为每个网站制作单独 的文件。 使用以下命令<mark>使用自己的域名创建默认 AStats 配置文件的副本</mark></p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">cp</span> /etc/awstats/awstats.localhost.localdomain.conf /etc/awstats/awstats.192.168.226.133.conf</pre></td></tr></table></figure><p>然后在 <code>awstats.192.168.226.133.conf</code>  文件中进行一些更改，使用以下命令对其进行编辑。</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">vim</span> /etc/awstats/awstats.192.168.226.133.conf</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token comment"># 并使用自己的域名修改此文件中的以下行</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token assign-left variable">LogFile</span><span class="token operator">=</span>”/var/log/httpd/yourdomain.com-access_log”</pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token assign-left variable">SiteDomain</span><span class="token operator">=</span>”yourdomain.com”</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token assign-left variable">HostAliases</span><span class="token operator">=</span>”www.yourdomain.com localhost <span class="token number">127.0</span>.0.1”</pre></td></tr></table></figure><p>现在保存对文件的更改并启动 apache</p>
+<p>使用以下命令从当前日志更新您的网站统计信息 注意：不要忘记将  <code>-config=yourdomain.com </code> 替换你自己的域名。</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>/usr/share/awstats/wwwroot/cgi-bin/awstats.pl <span class="token parameter variable">-config</span><span class="token operator">=</span>yourdomain.com <span class="token parameter variable">-update</span></pre></td></tr></table></figure><p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209051556159.png" alt="image-20220905155656915"></p>
+<p>如果遇到日志文件错误，尝试新建.log 文件再尝试。</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">mkdir</span> /var/log/httpd/yourdomain.com-access_log</pre></td></tr></table></figure><p>修改 awstats.conf 文件</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">vim</span> /etc/httpd/conf.d/awstats.conf </pre></td></tr><tr><td data-num="2"></td><td><pre> <span class="token operator">&lt;</span>Directory <span class="token string">"/usr/share/awstats/wwwroot"</span><span class="token operator">></span></pre></td></tr><tr><td data-num="3"></td><td><pre>    Options None</pre></td></tr><tr><td data-num="4"></td><td><pre>    AllowOverride None</pre></td></tr><tr><td data-num="5"></td><td><pre>    Require all granted <span class="token comment"># （主要是增加了这一行）</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    </pre></td></tr><tr><td data-num="7"></td><td><pre>    </pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token comment"># 重启服务并设置开机自启    </span></pre></td></tr><tr><td data-num="9"></td><td><pre>systemctl restart httpd.service</pre></td></tr><tr><td data-num="10"></td><td><pre>systemctl <span class="token builtin class-name">enable</span> httpd.service</pre></td></tr></table></figure><h3 id="设置计划任务"><a class="markdownIt-Anchor" href="#设置计划任务">#</a> 设置计划任务</h3>
+<p>设置一个 cron 作业，以在特定时间间隔内不断更新网站统计信息。例如，我们希望每 59 分钟更新一次网站统计信息，因此我们将使用以下命令配置 cron 作业</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">crontab</span> <span class="token parameter variable">-e</span></pre></td></tr><tr><td data-num="2"></td><td><pre>*/59 * * * * root /usr/share/awstats/wwwroot/cgi-bin/awstats.pl <span class="token parameter variable">-config</span><span class="token operator">=</span>yourdomain.com <span class="token parameter variable">-update</span></pre></td></tr></table></figure><p>保存退出。</p>
+<h2 id="从web-浏览器访问-awstats"><a class="markdownIt-Anchor" href="#从web-浏览器访问-awstats">#</a> 从 Web 浏览器访问 Awstats</h2>
+<p>想查看您的网站统计信息，请使用以下链接，但不要忘记在该链接中使用我们自己的服 务器 IP 和域名</p>
+<p><span class="exturl" data-url="aHR0cDovLzE5Mi4xNjguMjI2LjEzMy9hd3N0YXRzL2F3c3RhdHMucGw/Y29uZmlnPTE5Mi4xNjguMjI2LjEzMw==">http://192.168.226.133/awstats/awstats.pl?config=192.168.226.133</span></p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209051648838.png" alt="image-20220905164842524"></p>
+
+      <div class="tags">
+          <a href="/tags/nginx/" rel="tag"><i class="ic i-tag"></i> nginx</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">更新于</span>
+    <time title="修改时间：2022-09-06 09:49:50" itemprop="dateModified" datetime="2022-09-06T09:49:50+08:00">2022-09-06</time>
+  </span>
+</div>
+
+      
+<div class="reward">
+  <button><i class="ic i-heartbeat"></i> 赞赏</button>
+  <p>请我喝[茶]~(￣▽￣)~*</p>
+  <div id="qr">
+  </div>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>本文作者： </strong>江霁月 <i class="ic i-at"><em>@</em></i>江霁月的私人小屋
+  </li>
+  <li class="link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/category/17faee78d2f1.html" title="基于awstats的apache日志分析">http://example.com/category/17faee78d2f1.html</a>
+  </li>
+  <li class="license">
+    <strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/category/1970703bb420.html" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gicliwyw55j20zk0m8hdt.jpg" title="Security-编译安装openresty2.14+Modsecurity以支持TLSv1.3">
+  <span class="type">上一篇</span>
+  <span class="category"><i class="ic i-flag"></i> 安全加固</span>
+  <h3>Security-编译安装openresty2.14+Modsecurity以支持TLSv1.3</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/category/664761ec1ed2.html" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gicli3sbvtj20zk0m8x6p.jpg" title="Docker安装LAMP">
+  <span class="type">下一篇</span>
+  <span class="category"><i class="ic i-flag"></i> 安全运维</span>
+  <h3>Docker安装LAMP</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="文章目录">
+          <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96"><span class="toc-number">1.</span> <span class="toc-text"> 安装依赖</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85epel-release"><span class="toc-number">2.</span> <span class="toc-text"> 安装 EPEL-release</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85awstats"><span class="toc-number">3.</span> <span class="toc-text"> 安装 awstats</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E7%BD%91%E7%AB%99%E5%88%9B%E5%BB%BA-awstats-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">3.1.</span> <span class="toc-text"> 为网站创建 awstats 配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1"><span class="toc-number">3.2.</span> <span class="toc-text"> 设置计划任务</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8Eweb-%E6%B5%8F%E8%A7%88%E5%99%A8%E8%AE%BF%E9%97%AE-awstats"><span class="toc-number">4.</span> <span class="toc-text"> 从 Web 浏览器访问 Awstats</span></a></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="系列文章">
+        <ul>
+          <li><a href="/category/c6d35287e59b.html" rel="bookmark" title="zabbix5.2安装教程">zabbix5.2安装教程</a></li><li><a href="/category/ab18ab7128a4.html" rel="bookmark" title="Linux-firewalld的基本操作">Linux-firewalld的基本操作</a></li><li><a href="/category/d6f317918d52.html" rel="bookmark" title="Linux-编译安装memcached扩展">Linux-编译安装memcached扩展</a></li><li><a href="/category/c4e85479f6ff.html" rel="bookmark" title="Linux-安装Lnmp">Linux-安装Lnmp</a></li><li><a href="/category/79bf3c2d498a.html" rel="bookmark" title="Linux-Mysql主主架构">Linux-Mysql主主架构</a></li><li><a href="/category/ecda3fb76685.html" rel="bookmark" title="Linux-Opcache参数配置优化 加速网站访问">Linux-Opcache参数配置优化 加速网站访问</a></li><li><a href="/category/dd602a6b35ac.html" rel="bookmark" title="Linux-利用acme为阿里云dns域名颁发泛域名证书">Linux-利用acme为阿里云dns域名颁发泛域名证书</a></li><li><a href="/category/ab8b660fc8ae.html" rel="bookmark" title="一.漫谈Nginx网关">一.漫谈Nginx网关</a></li><li><a href="/category/2d9a2ff9eff9.html" rel="bookmark" title="Zabbix-Grafana图形展示软件">Zabbix-Grafana图形展示软件</a></li><li><a href="/category/14fb0cb5989f.html" rel="bookmark" title="二.Nginx相关知识">二.Nginx相关知识</a></li><li><a href="/category/2dcd61781139.html" rel="bookmark" title="三.Nginx配置文件详解">三.Nginx配置文件详解</a></li><li><a href="/category/2e72a923fa65.html" rel="bookmark" title="从零搭建日志采集报警系统(ELK+FileBeat)">从零搭建日志采集报警系统(ELK+FileBeat)</a></li><li><a href="/category/7b084077da53.html" rel="bookmark" title="ELK收集nginx日志并展示来源IP地图">ELK收集nginx日志并展示来源IP地图</a></li><li><a href="/category/007554234c41.html" rel="bookmark" title="Linux-Mysql基本操作">Linux-Mysql基本操作</a></li><li><a href="/category/0447b4c5647f.html" rel="bookmark" title="Linux从入门到放弃-常用命令">Linux从入门到放弃-常用命令</a></li><li><a href="/category/8495ff9caf6a.html" rel="bookmark" title="Linux从入门到放弃-磁盘管理">Linux从入门到放弃-磁盘管理</a></li><li><a href="/category/c119bd60cc53.html" rel="bookmark" title="Linux-MySQL开启慢查询日志">Linux-MySQL开启慢查询日志</a></li><li><a href="/category/8acc85d10262.html" rel="bookmark" title="Linux-定时备份网站数据文件到阿里云盘">Linux-定时备份网站数据文件到阿里云盘</a></li><li><a href="/category/46cb37709f23.html" rel="bookmark" title="四.OpenResty中使用mysql">四.OpenResty中使用mysql</a></li><li><a href="/category/23cb1236ee1d.html" rel="bookmark" title="五.openresty执行流程">五.openresty执行流程</a></li><li><a href="/category/c1e57771066d.html" rel="bookmark" title="使用 Grafana 创建可视化面板">使用 Grafana 创建可视化面板</a></li><li><a href="/category/dc4b4724dfe7.html" rel="bookmark" title="Centos升级Python3.x版本踩过的坑">Centos升级Python3.x版本踩过的坑</a></li><li><a href="/category/10af10f41e58.html" rel="bookmark" title="Windows常用命令">Windows常用命令</a></li><li><a href="/category/1970703bb420.html" rel="bookmark" title="Security-编译安装openresty2.14+Modsecurity以支持TLSv1.3">Security-编译安装openresty2.14+Modsecurity以支持TLSv1.3</a></li><li class="active"><a href="/category/17faee78d2f1.html" rel="bookmark" title="基于awstats的apache日志分析">基于awstats的apache日志分析</a></li><li><a href="/category/664761ec1ed2.html" rel="bookmark" title="Docker安装LAMP">Docker安装LAMP</a></li><li><a href="/category/2517a85f9134.html" rel="bookmark" title="安全加固之Linux软件包封装脚本分析">安全加固之Linux软件包封装脚本分析</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="站点概览">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="江霁月"
+      data-src="/images/avatar.jpg">
+  <p class="name" itemprop="name">江霁月</p>
+  <div class="description" itemprop="description">专注分享一些关于安全运维和编程语言的知识·本博主爱安全,爱折腾,爱代码</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">55</span>
+        <span class="name">文章</span>
+      </a>
+    </div>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">17</span>
+        <span class="name">分类</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">30</span>
+        <span class="name">标签</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL0ppYW5nSmlZdWU=" title="https:&#x2F;&#x2F;github.com&#x2F;JiangJiYue"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS9qYW5naml5dWU=" title="https:&#x2F;&#x2F;twitter.com&#x2F;jangjiyue"><i class="ic i-twitter"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>首页</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a>
+  </li>
+
+  </ul>
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/category/1970703bb420.html" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/category/664761ec1ed2.html" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2010 – 
+    <span itemprop="copyrightYear">2022</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">江霁月 @ 江霁月的私人小屋</span>
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+    <span title="站点总字数">235k 字</span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:34</span>
+  </div>
+  <div class="powered-by">
+    基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: 'category/17faee78d2f1.html',
+    favicon: {
+      show: "（●´3｀●）やれやれだぜ",
+      hide: "(´Д｀)大変だ！"
+    },
+    search : {
+      placeholder: "文章搜索",
+      empty: "关于 「 ${query} 」，什么也没搜到",
+      stats: "${time} ms 内找到 ${hits} 条结果"
+    },
+    valine: true,fancybox: true,
+    copyright: '复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://cdn.polyfill.io/v2/polyfill.js"></script>
+
+<script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>

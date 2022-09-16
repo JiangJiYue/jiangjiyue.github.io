@@ -1,0 +1,572 @@
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>http://example.com</id>
+    <title>江霁月的私人小屋 • Posts by &#34;服务器&#34; tag</title>
+    <link href="http://example.com" />
+    <updated>2021-09-26T09:13:44.000Z</updated>
+    <category term="Docker" />
+    <category term="linux" />
+    <category term="mysql" />
+    <category term="Centos" />
+    <category term="优化" />
+    <category term="缓存" />
+    <category term="反爬" />
+    <category term="爬虫" />
+    <category term="服务器" />
+    <category term="ELK" />
+    <category term="安全管理" />
+    <category term="数据可视化" />
+    <category term="监控" />
+    <category term="运维" />
+    <category term="Zabbix" />
+    <category term="Kali" />
+    <category term="信息安全" />
+    <category term="数据库" />
+    <category term="nginx" />
+    <category term="PHP" />
+    <category term="openresty" />
+    <category term="网关" />
+    <category term="PHP框架" />
+    <category term="python" />
+    <category term="Security" />
+    <category term="信息收集" />
+    <category term="SSL" />
+    <category term="安全加固" />
+    <category term="Linux" />
+    <category term="waf" />
+    <entry>
+        <id>http://example.com/category/0a999daa44b8.html</id>
+        <title>CorePress主题优化</title>
+        <link rel="alternate" href="http://example.com/category/0a999daa44b8.html"/>
+        <content type="html">&lt;h2 id=&#34;corepress主题优化概述&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#corepress主题优化概述&#34;&gt;#&lt;/a&gt; CorePress 主题优化概述&lt;/h2&gt;
+&lt;p&gt;优化内容:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;加入了 font-display: swap; 属性，可确保在加载 Web 字体时用户可见文本.&lt;/li&gt;
+&lt;li&gt;压缩了 CSS 文件&lt;/li&gt;
+&lt;li&gt;利用 Nginx 可对 js 以及字体文件进行本地缓存&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;webfonts字体优化&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#webfonts字体优化&#34;&gt;#&lt;/a&gt; Webfonts 字体优化&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;# 下载fonts文件到主题目录下
+wget -P /wp-content/themes/CorePress/static https://github.com/JiangJiYue/yunwei/blob/main/webfonts.tar.gz
+# 解压
+tar -zxvf /wp-content/themes/CorePress/static/webfonts.tar.gz
+# 删除压缩包
+rm -rf /wp-content/themes/CorePress/static/webfonts.tar.gz
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;h2 id=&#34;css文件优化&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#css文件优化&#34;&gt;#&lt;/a&gt; Css 文件优化&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;# 下载css文件到主题目录下
+wget -P /wp-content/themes/CorePress/static/css/ https://raw.githubusercontent.com/JiangJiYue/yunwei/main/all.min.css
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;h2 id=&#34;utils-php文件优化&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#utils-php文件优化&#34;&gt;#&lt;/a&gt; Utils php 文件优化&lt;/h2&gt;
+&lt;p&gt;替换 &lt;code&gt;utils.php&lt;/code&gt;  中 &lt;code&gt;loadiconfont_by_cdn&lt;/code&gt;  函数内容 &lt;code&gt;vim /wp-content/themes/CorePress/geekframe/utils.php&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;function loadiconfont_by_cdn()
+&amp;#123;
+     echo &#39;&amp;lt;link rel=&amp;quot;stylesheet&amp;quot; href=&amp;quot;/wp-content/themes/CorePress/static/css/all.min.css?v=&#39; . THEME_VERSIONNAME . &#39;&amp;quot;&amp;gt;&#39;;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;h2 id=&#34;优化header-php文件&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#优化header-php文件&#34;&gt;#&lt;/a&gt; 优化 Header php 文件&lt;/h2&gt;
+&lt;p&gt;如果不想用主题提供的字体也可以将 &lt;code&gt;header.php&lt;/code&gt;  文件中的以下内容注释掉 &lt;code&gt;vim /wp-content/themes/CorePress/header.php&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;if ($set[&#39;theme&#39;][&#39;font&#39;] != &#39;no&#39;) &amp;#123;
+     echo &#39;&amp;lt;link rel=&amp;quot;stylesheet&amp;quot; type=&amp;quot;text/css&amp;quot; href=&amp;quot;https://cdn.jsdelivr.net/gh/ghboke/corepresscdn@master/static/lib/font/&#39; . $set[&#39;theme&#39;][&#39;font&#39;] . &#39;/font.css&amp;quot;&amp;gt;&#39;;
+     ?&amp;gt;
+     &amp;lt;style&amp;gt;
+         html, textarea &amp;#123;
+             font-family: &amp;lt;?php echo $set[&#39;theme&#39;][&#39;font&#39;]?&amp;gt;, PingFang\ SC, Hiragino\ Sans\ GB, Microsoft\ YaHei, STHeiti, WenQuanYi\ Micro\ Hei, Helvetica, Arial, sans-serif !important;
+        &amp;#125;
+     &amp;lt;/style&amp;gt;
+     &amp;lt;?php
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;优化nginx-conf文化&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#优化nginx-conf文化&#34;&gt;#&lt;/a&gt; 优化 Nginx Conf 文化&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;#缓存静态文件
+ location ~ .*\.(gifjpgjpegpngbmpicowebp)$ &amp;#123;
+     root 网站根目录;
+     expires 30d;
+&amp;#125;
+ #缓存静态文件
+location ~ .*\.(eotwoffwoff2ttf)$ &amp;#123;
+     root 网站根目录;
+     expires 30d;
+&amp;#125;
+ ​
+# expires 30s; 30秒
+# expires 30m; 30分钟
+# expires 2h; 2个小时
+# expires 30d; 30天
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;优化主页缩略图alt&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#优化主页缩略图alt&#34;&gt;#&lt;/a&gt; 优化主页缩略图 alt&lt;/h2&gt;
+&lt;p&gt;给 &lt;code&gt;/wp-content/themes/CorePress/component/post-list-item.php&lt;/code&gt;  中的 &lt;code&gt;$imgtag&lt;/code&gt;  变量添加 &lt;code&gt;alt&lt;/code&gt;  属性， &lt;code&gt;alt&lt;/code&gt;  内容为当前文章的标题&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 修改后的代码
+if ($set[&#39;module&#39;][&#39;imglazyload&#39;] == 1) &amp;#123;
+     $pathname = &#39;data-original&#39;;
+     $imgtag = &#39;&amp;lt;img src=&amp;quot;&#39; . file_get_img_url(&#39;loading.gif&#39;) . &#39;&amp;quot; data-original=&amp;quot;&#39; . $postitem[&#39;thumbnail&#39;] . &#39;&amp;quot; alt=&amp;quot;&#39;.$postitem[&#39;title&#39;] .&#39;&amp;quot;&amp;gt;&#39;;
+&amp;#125; else &amp;#123;
+     $imgtag = &#39;&amp;lt;img src=&amp;quot;&#39; . $postitem[&#39;thumbnail&#39;] . &#39;&amp;quot;alt=&amp;quot;&#39;.$postitem[&#39;title&#39;] .&#39;&amp;quot;&amp;gt;&#39;;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;优化友情链接无ul&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#优化友情链接无ul&#34;&gt;#&lt;/a&gt; 优化友情链接无 ul&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;/wp-content/themes/CorePress/index.php&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;div class=&amp;quot;frinds-links-list&amp;quot;&amp;gt;
+     &amp;lt;ul&amp;gt;
+    &amp;lt;?php wp_list_bookmarks(&#39;title_li=&amp;amp;categorize=0&amp;amp;show_images=0&amp;amp;category=&#39; . $set[&#39;index&#39;][&#39;links_ids&#39;]); ?&amp;gt;
+     &amp;lt;/ul&amp;gt;
+&amp;lt;/div&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;wp-content/themes/CorePress/static/css/main.css&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/*文件中的.frinds-links li Css样式替换为下面 */
+.frinds-links li&amp;#123;float: left;font-size:15px;list-style:none;margin-right:20px;margin-bottom:6px;vertical-align:middle&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+</content>
+        <category term="优化" />
+        <category term="缓存" />
+        <category term="服务器" />
+        <updated>2021-09-26T09:13:44.000Z</updated>
+    </entry>
+    <entry>
+        <id>http://example.com/category/8495ff9caf6a.html</id>
+        <title>Linux从入门到放弃-磁盘管理</title>
+        <link rel="alternate" href="http://example.com/category/8495ff9caf6a.html"/>
+        <content type="html">&lt;h2 id=&#34;文件系统配置文件&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#文件系统配置文件&#34;&gt;#&lt;/a&gt; 文件系统配置文件&lt;/h2&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/etc/filesystems:系统指定的测试挂载文件系统类型&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; /proc/filesystems:Linux 系统已经加载的文件系统类型&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; /lib/modules/2.6.18-274.el5/kernel/fs/ 文件系统类型的驱动所在目录&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; /etc/fstab&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; /etc/mtab&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h2 id=&#34;linux-文件类型的颜色&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#linux-文件类型的颜色&#34;&gt;#&lt;/a&gt; linux 文件类型的颜色&lt;/h2&gt;
+&lt;h3 id=&#34;linux文件颜色的含义&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#linux文件颜色的含义&#34;&gt;#&lt;/a&gt; linux 文件颜色的含义:&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;蓝色代表目录&lt;/li&gt;
+&lt;li&gt;绿色代表可执行文件&lt;/li&gt;
+&lt;li&gt;红色表示压缩文件&lt;/li&gt;
+&lt;li&gt;浅蓝色表示链接文件&lt;/li&gt;
+&lt;li&gt;灰色表示其他文件&lt;/li&gt;
+&lt;li&gt;红色闪烁表示链接的文件有问题了&lt;/li&gt;
+&lt;li&gt;黄色表示设备文件&lt;/li&gt;
+&lt;li&gt;蓝色文件 ---------- 目录&lt;/li&gt;
+&lt;li&gt;白色文件 ---------- 一般性文件，如文本文件，配置文件，源码文件等&lt;/li&gt;
+&lt;li&gt;浅蓝色文件 ---------- 链接文件，主要是使用 ln 命令建立的文件&lt;/li&gt;
+&lt;li&gt;绿色文件 ---------- 可执行文件，可执行的程序&lt;/li&gt;
+&lt;li&gt;红色文件 ----------- 压缩文件或者包文件&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;linux-下用字符表示的文件类型&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#linux-下用字符表示的文件类型&#34;&gt;#&lt;/a&gt; Linux 下用字符表示的文件类型&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;-: 普通文件&lt;/li&gt;
+&lt;li&gt;d: 目录文件&lt;/li&gt;
+&lt;li&gt;l: 链接文件&lt;/li&gt;
+&lt;li&gt;b: 块设备文件&lt;/li&gt;
+&lt;li&gt;c: 字符设备文件&lt;/li&gt;
+&lt;li&gt;p: 管道文件&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;文件系统操作命令&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#文件系统操作命令&#34;&gt;#&lt;/a&gt; 文件系统操作命令&lt;/h2&gt;
+&lt;h3 id=&#34;df列出文件系统的整体磁盘使用情况&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#df列出文件系统的整体磁盘使用情况&#34;&gt;#&lt;/a&gt; df: 列出文件系统的整体磁盘使用情况&lt;/h3&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;root@localhost ~&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;df&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-h&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; 文件系统                   容量   已用 可用 已用% 挂载点&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; devtmpfs                 898M     &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt; 898M   &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;%   /dev&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; tmpfs                   910M     &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt; 910M   &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;%   /dev/shm&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; tmpfs                   910M  &lt;span class=&#34;token number&#34;&gt;9&lt;/span&gt;.6M 901M   &lt;span class=&#34;token number&#34;&gt;2&lt;/span&gt;%   /run&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; tmpfs                   910M     &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt; 910M   &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;%   /sys/fs/cgroup&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; /dev/mapper/centos-root   37G  &lt;span class=&#34;token number&#34;&gt;6&lt;/span&gt;.3G   31G  &lt;span class=&#34;token number&#34;&gt;18&lt;/span&gt;%   /&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; /dev/sda1               1014M 151M 864M  &lt;span class=&#34;token number&#34;&gt;15&lt;/span&gt;%   /boot&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; tmpfs                   182M     &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt; 182M   &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;%   /run/user/0&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; ​&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;11&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; &lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;root@localhost ~&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;df&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-i&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;12&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; 文件系统                   Inodes &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;I&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;已用 &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;I&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;可用 &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;I&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;已用% 挂载点&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;13&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; devtmpfs                   &lt;span class=&#34;token number&#34;&gt;229863&lt;/span&gt;     &lt;span class=&#34;token number&#34;&gt;391&lt;/span&gt;    &lt;span class=&#34;token number&#34;&gt;229472&lt;/span&gt;     &lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;%   /dev&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;14&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; tmpfs                      &lt;span class=&#34;token number&#34;&gt;232879&lt;/span&gt;       &lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;    &lt;span class=&#34;token number&#34;&gt;232878&lt;/span&gt;     &lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;%   /dev/shm&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;15&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; tmpfs                      &lt;span class=&#34;token number&#34;&gt;232879&lt;/span&gt;     &lt;span class=&#34;token number&#34;&gt;733&lt;/span&gt;    &lt;span class=&#34;token number&#34;&gt;232146&lt;/span&gt;     &lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;%   /run&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;16&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; tmpfs                      &lt;span class=&#34;token number&#34;&gt;232879&lt;/span&gt;     &lt;span class=&#34;token number&#34;&gt;16&lt;/span&gt;     &lt;span class=&#34;token number&#34;&gt;232863&lt;/span&gt;     &lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;%   /sys/fs/cgroup&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;17&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; /dev/mapper/centos-root    &lt;span class=&#34;token number&#34;&gt;19394560&lt;/span&gt;  &lt;span class=&#34;token number&#34;&gt;149676&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;19244884&lt;/span&gt;    &lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;%   /&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;18&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; /dev/sda1                  &lt;span class=&#34;token number&#34;&gt;524288&lt;/span&gt;      &lt;span class=&#34;token number&#34;&gt;327&lt;/span&gt;   &lt;span class=&#34;token number&#34;&gt;523961&lt;/span&gt;     &lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;% /boot&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;19&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; tmpfs                      &lt;span class=&#34;token number&#34;&gt;232879&lt;/span&gt;       &lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;    &lt;span class=&#34;token number&#34;&gt;232878&lt;/span&gt;     &lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;% /run/user/0&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h3 id=&#34;du列出目录所占空间&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#du列出目录所占空间&#34;&gt;#&lt;/a&gt; du: 列出目录所占空间&lt;/h3&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;du&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-sh&lt;/span&gt;    &lt;span class=&#34;token comment&#34;&gt;# 显示当前目录大小&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; &lt;span class=&#34;token function&#34;&gt;du&lt;/span&gt; –sh /  &lt;span class=&#34;token comment&#34;&gt;# 显示 / 目录下的所有目录大小&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h3 id=&#34;ln连接文件快捷方式&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#ln连接文件快捷方式&#34;&gt;#&lt;/a&gt; ln: 连接文件 (快捷方式)&lt;/h3&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;ln&lt;/span&gt; –sf 源文件 目标文件&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 不加任何参数就进行连接，就是 hard link, 加上 - s 就是 Symbolic link,hard link 不支持目录和跨文件系统&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h3 id=&#34;fdisk&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#fdisk&#34;&gt;#&lt;/a&gt; Fdisk&lt;/h3&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# Fdisk 不支持大于 2T 的磁盘&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; &lt;span class=&#34;token comment&#34;&gt;# Fdisk –l 显示系统中的所有分区内容&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; &lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;root@localhost ~&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;fdisk&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-l&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; Disk /dev/sda: &lt;span class=&#34;token number&#34;&gt;42.9&lt;/span&gt; GB, &lt;span class=&#34;token number&#34;&gt;42949672960&lt;/span&gt; bytes, &lt;span class=&#34;token number&#34;&gt;83886080&lt;/span&gt; sectors&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; Units &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; sectors of &lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt; * &lt;span class=&#34;token number&#34;&gt;512&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;512&lt;/span&gt; bytes&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; Sector size&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;logical/physical&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;: &lt;span class=&#34;token number&#34;&gt;512&lt;/span&gt; bytes / &lt;span class=&#34;token number&#34;&gt;512&lt;/span&gt; bytes&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; I/O size&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;minimum/optimal&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;: &lt;span class=&#34;token number&#34;&gt;512&lt;/span&gt; bytes / &lt;span class=&#34;token number&#34;&gt;512&lt;/span&gt; bytes&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; Disk label type: dos&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; Disk identifier: 0x000b9d69&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; ​&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;11&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; Device   Boot     Start         End     Blocks   Id System&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;12&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; /dev/sda1   *        &lt;span class=&#34;token number&#34;&gt;2048&lt;/span&gt;     &lt;span class=&#34;token number&#34;&gt;2099199&lt;/span&gt;     &lt;span class=&#34;token number&#34;&gt;1048576&lt;/span&gt;   &lt;span class=&#34;token number&#34;&gt;83&lt;/span&gt; Linux&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;13&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; /dev/sda2         &lt;span class=&#34;token number&#34;&gt;2099200&lt;/span&gt;    &lt;span class=&#34;token number&#34;&gt;83886079&lt;/span&gt;    &lt;span class=&#34;token number&#34;&gt;40893440&lt;/span&gt;   8e Linux LVM&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;14&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; ​&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;15&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; Disk /dev/mapper/centos-root: &lt;span class=&#34;token number&#34;&gt;39.7&lt;/span&gt; GB, &lt;span class=&#34;token number&#34;&gt;39720058880&lt;/span&gt; bytes, &lt;span class=&#34;token number&#34;&gt;77578240&lt;/span&gt; sectors&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;16&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; Units &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; sectors of &lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt; * &lt;span class=&#34;token number&#34;&gt;512&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;512&lt;/span&gt; bytes&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;17&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; Sector size&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;logical/physical&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;: &lt;span class=&#34;token number&#34;&gt;512&lt;/span&gt; bytes / &lt;span class=&#34;token number&#34;&gt;512&lt;/span&gt; bytes&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;18&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; I/O size&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;minimum/optimal&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;: &lt;span class=&#34;token number&#34;&gt;512&lt;/span&gt; bytes / &lt;span class=&#34;token number&#34;&gt;512&lt;/span&gt; bytes&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;19&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; ​&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;20&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; ​&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;21&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; Disk /dev/mapper/centos-swap: &lt;span class=&#34;token number&#34;&gt;2147&lt;/span&gt; MB, &lt;span class=&#34;token number&#34;&gt;2147483648&lt;/span&gt; bytes, &lt;span class=&#34;token number&#34;&gt;4194304&lt;/span&gt; sectors&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;22&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; Units &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; sectors of &lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt; * &lt;span class=&#34;token number&#34;&gt;512&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;512&lt;/span&gt; bytes&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;23&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; Sector size&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;logical/physical&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;: &lt;span class=&#34;token number&#34;&gt;512&lt;/span&gt; bytes / &lt;span class=&#34;token number&#34;&gt;512&lt;/span&gt; bytes&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;24&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; I/O size&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;minimum/optimal&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;: &lt;span class=&#34;token number&#34;&gt;512&lt;/span&gt; bytes / &lt;span class=&#34;token number&#34;&gt;512&lt;/span&gt; bytes&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h3 id=&#34;parted2t以上磁盘分区工具&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#parted2t以上磁盘分区工具&#34;&gt;#&lt;/a&gt; Parted:2T 以上磁盘分区工具&lt;/h3&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 支持大于 2T 的磁盘，2T 以下的最好还是用 Fdisk 来分区.&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; &lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;root@localhost aixi&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;parted&lt;/span&gt; /dev/hda print&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; Model: VMware Virtual IDE Hard Drive&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;ide&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; Disk /dev/hda: 2147MB&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; Sector size&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;logical/physical&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;: 512B/512B&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; Partition Table: msdos&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; Number Start End Size Type File system 标志&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; &lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;32&lt;/span&gt;.3kB 101MB 101MB 主分区 ext3  &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; &lt;span class=&#34;token number&#34;&gt;2&lt;/span&gt; 101MB 357MB 256MB 主分区 linux-swap&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; ​&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;11&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; &lt;span class=&#34;token function&#34;&gt;parted&lt;/span&gt; /dev/hda &lt;span class=&#34;token function&#34;&gt;rm&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;token comment&#34;&gt;# 删除第 2 个分区&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;12&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; &lt;span class=&#34;token function&#34;&gt;parted&lt;/span&gt; /dev/hda mkpart primary ext3 120MB 200MB&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;13&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt; &lt;span class=&#34;token comment&#34;&gt;# 创建分区，primary 代表主分区，还可以是 extended 扩展分区，logical 逻辑分区；ext3 代表分区类型，120MB 是开始位置，最好是接上一分区的结束位 置，200M 是结束位置&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h3 id=&#34;partprobe-更新分区表磁盘&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#partprobe-更新分区表磁盘&#34;&gt;#&lt;/a&gt; partprobe : 更新分区表 / 磁盘&lt;/h3&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 用于重读分区表，当出现删除文件后，出现仍然占用空间。可以 partprobe 在不重启的情况下重读分区&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;partprobe&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 这个命令执行完毕之后不会输出任何返回信息，你可以使用 mke2fs 命令在新的分区上创建文件系统.&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h3 id=&#34;mkfs磁盘格式化&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#mkfs磁盘格式化&#34;&gt;#&lt;/a&gt; Mkfs: 磁盘格式化&lt;/h3&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# mkfs –t 文件系统格式 设备文件名（盘符）&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;root@localhost ~&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;mkfs&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-t&lt;/span&gt; ext3 /dev/hda1&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h3 id=&#34;e2label设置磁盘卷标&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#e2label设置磁盘卷标&#34;&gt;#&lt;/a&gt; e2label: 设置磁盘卷标&lt;/h3&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# e2label 设备名称 新 label 名称，可以用 dumpe2fs 查看卷标&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;root@localhost ~&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt; e2label /dev/hda1 aixi&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h3 id=&#34;mount挂载磁盘&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#mount挂载磁盘&#34;&gt;#&lt;/a&gt; Mount: 挂载磁盘&lt;/h3&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;#命令格式:&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;mount&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;-t vfstype&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;-o options&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt; device &lt;span class=&#34;token function&#34;&gt;dir&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;mount&lt;/span&gt; –o remount,rw,auto / &lt;span class=&#34;token comment&#34;&gt;# 重新挂载&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;mount&lt;/span&gt; –n –o remount,rw / &lt;span class=&#34;token comment&#34;&gt;# 重新挂载根目录，设置为可读写&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 其中:&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 1.-t vfstype 指定文件系统的类型，通常不必指定.mount 会自动选择正确的类型。常用类型有：光盘或光盘镜像:iso9660&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# DOS fat16 文件系统:msdos&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# Windows 9x fat32 文件系统:vfat&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# Windows NT ntfs 文件系统:ntfs&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# Mount Windows 文件网络共享:smbfs UNIX (LINUX) 文件网络共享:nfs&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;11&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 2.-o options 主要用来描述设备或档案的挂接方式。常用的参数有:&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;12&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# loop: 用来把一个文件当成硬盘分区挂接上系统&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;13&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# ro: 采用只读方式挂接设备&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;14&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# rw: 采用读写方式挂接设备&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;15&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# iocharset: 指定访问文件系统所用字符集&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;16&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 3.device 要挂接 (mount) 的设备.&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;17&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 4.dir 设备在系统上的挂接点 (mount point).&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h4 id=&#34;挂载光盘镜像文件&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#挂载光盘镜像文件&#34;&gt;#&lt;/a&gt; 挂载光盘镜像文件&lt;/h4&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 1. 从光盘制作光盘镜像文件。将光盘放入光驱，执行下面的命令.&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;cp&lt;/span&gt; /dev/cdrom /home/sunky/mydisk.iso&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;dd&lt;/span&gt; &lt;span class=&#34;token assign-left variable&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;/dev/cdrom &lt;span class=&#34;token assign-left variable&#34;&gt;of&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;/home/sunky/mydisk.iso&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 注：执行上面的任何一条命令都可将当前光驱里的光盘制作成光盘镜像文件 /home/sunky/mydisk.iso&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 2. 将文件和目录制作成光盘镜像文件，执行下面的命令.&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;mkisofs&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-r&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-J&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-V&lt;/span&gt; mydisk &lt;span class=&#34;token parameter variable&#34;&gt;-o&lt;/span&gt; /home/sunky/mydisk.iso /home/sunky/ mydir&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 注：这条命令将 /home/sunky/mydir 目录下所有的目录和文件制作成光盘镜像文件 /home/sunky/mydisk.iso, 光盘卷标为:mydisk&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 3. 光盘镜像文件的挂接 (mount)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;mkdir&lt;/span&gt; /mnt/vcdrom&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 注：建立一个目录用来作挂接点 (mount point)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;11&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;mount&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-o&lt;/span&gt; loop &lt;span class=&#34;token parameter variable&#34;&gt;-t&lt;/span&gt; iso9660 /home/sunky/mydisk.iso /mnt/vcdrom&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;12&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 注：使用 /mnt/vcdrom 就可以访问盘镜像文件 mydisk.iso 里的所有文件了.&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h4 id=&#34;挂载移动硬盘&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#挂载移动硬盘&#34;&gt;#&lt;/a&gt; 挂载移动硬盘&lt;/h4&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 对 linux 系统而言，USB 接口的移动硬盘是当作 SCSI 设备对待的。插入移动硬盘之前，应先用 fdisk –l 或 more /proc/partitions 查看系统的硬盘和硬盘分区情况.&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;root@localhost ~&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;fdisk&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-l&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;Disk /dev/sda: &lt;span class=&#34;token number&#34;&gt;73&lt;/span&gt; dot &lt;span class=&#34;token number&#34;&gt;4&lt;/span&gt; GB, &lt;span class=&#34;token number&#34;&gt;73407820800&lt;/span&gt; bytes&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token number&#34;&gt;255&lt;/span&gt; heads, &lt;span class=&#34;token number&#34;&gt;63&lt;/span&gt; sectors/track, &lt;span class=&#34;token number&#34;&gt;8924&lt;/span&gt; cylinders&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;Units &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; cylinders of &lt;span class=&#34;token number&#34;&gt;16065&lt;/span&gt; * &lt;span class=&#34;token number&#34;&gt;512&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;8225280&lt;/span&gt; bytes&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;Device Boot Start End Blocks Id System&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/dev/sda1 &lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;4&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;32098&lt;/span&gt;+ de Dell Utility&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/dev/sda2 * &lt;span class=&#34;token number&#34;&gt;5&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;2554&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;20482875&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;7&lt;/span&gt; HPFS/NTFS&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/dev/sda3 &lt;span class=&#34;token number&#34;&gt;2555&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;7904&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;42973875&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;83&lt;/span&gt; Linux&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/dev/sda4 &lt;span class=&#34;token number&#34;&gt;7905&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;8924&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;8193150&lt;/span&gt; f Win95 Ext&lt;span class=&#34;token string&#34;&gt;&#39;d(LBA)&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;11&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/dev/sda5 7905 8924 8193118+ 82 Linux swap&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;12&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;# 在这里可以清楚地看到系统有一块SCSI硬盘/dev/sda和它的四个磁盘分区/dev/sda1 -- /dev/sda4,/dev/sda5是分区/dev/sda4 的逻辑分区.接好移动硬盘后,再用fdisk –l或more /proc/partitions查看系统的硬盘和硬盘分区情况&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;13&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;[root@localhost ~] fdisk -l&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;14&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;Disk /dev/sda: 73 dot 4 GB, 73407820800 bytes&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;15&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;255 heads, 63 sectors/track, 8924 cylinders&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;16&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;Units = cylinders of 16065 * 512 = 8225280 bytes&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;17&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;Device Boot Start End Blocks Id System&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;18&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/dev/sda1 1 4 32098+ de Dell Utility&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;19&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/dev/sda2 * 5 2554 20482875 7 HPFS/NTFS&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;20&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/dev/sda3 2555 7904 42973875 83 Linux&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;21&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/dev/sda4 7905 8924 8193150 f Win95 Ext&#39;&lt;/span&gt;d&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;LBA&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;22&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/dev/sda5 &lt;span class=&#34;token number&#34;&gt;7905&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;8924&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;8193118&lt;/span&gt;+ &lt;span class=&#34;token number&#34;&gt;82&lt;/span&gt; Linux swap Disk&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;23&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/dev/sdc: &lt;span class=&#34;token number&#34;&gt;40.0&lt;/span&gt; GB, &lt;span class=&#34;token number&#34;&gt;40007761920&lt;/span&gt; bytes&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;24&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token number&#34;&gt;255&lt;/span&gt; heads, &lt;span class=&#34;token number&#34;&gt;63&lt;/span&gt; sectors/track, &lt;span class=&#34;token number&#34;&gt;4864&lt;/span&gt; cylinders&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;25&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;Units &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; cylinders of &lt;span class=&#34;token number&#34;&gt;16065&lt;/span&gt; * &lt;span class=&#34;token number&#34;&gt;512&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;8225280&lt;/span&gt; bytes&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;26&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;Device Boot Start End Blocks Id System&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;27&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/dev/sdc1 &lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;510&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;4096543&lt;/span&gt;+ &lt;span class=&#34;token number&#34;&gt;7&lt;/span&gt; HPFS/NTFS&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;28&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/dev/sdc2 &lt;span class=&#34;token number&#34;&gt;511&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;4864&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;34973505&lt;/span&gt; f Win95 Ext&#39;d&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;LBA&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;29&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/dev/sdc5 &lt;span class=&#34;token number&#34;&gt;511&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;4864&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;34973473&lt;/span&gt;+ b Win95 FAT32&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;30&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 大家应该可以发现多了一个 SCSI 硬盘 /dev/sdc 和它的两个磁盘分区 /dev/sdc1?./dev/sdc2, 其中 /dev/sdc5 是 /dev/sdc2 分区的逻辑分区。我们可以使用下面的命令挂接 /dev/sdc1 和 /dev/sdc5.&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;31&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;mkdir&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-p&lt;/span&gt; /mnt/usbhd1&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;32&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;mkdir&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-p&lt;/span&gt; /mnt/usbhd2&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;33&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 注：建立目录用来作挂接点 (mount point)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;34&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;mount&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-t&lt;/span&gt; ntfs /dev/sdc1 /mnt/usbhd1&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;35&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;mount&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-t&lt;/span&gt; vfat /dev/sdc5 /mnt/usbhd2&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;36&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 注：对 ntfs 格式的磁盘分区应使用 - t ntfs 参数，对 fat32 格式的磁盘分区应使用 - t vfat 参数。若汉字文件名显示为乱码或不显示，可以使用下面的命令格式.&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;37&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;mount&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-t&lt;/span&gt; ntfs &lt;span class=&#34;token parameter variable&#34;&gt;-o&lt;/span&gt; &lt;span class=&#34;token assign-left variable&#34;&gt;iocharset&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;cp936 /dev/sdc1 /mnt/usbhd1&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;38&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;mount&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-t&lt;/span&gt; vfat &lt;span class=&#34;token parameter variable&#34;&gt;-o&lt;/span&gt; &lt;span class=&#34;token assign-left variable&#34;&gt;iocharset&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;cp936 /dev/sdc5 /mnt/usbhd2&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;39&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# linux 系统下使用 fdisk 分区命令和 mkfs 文件系统创建命令可以将移动硬盘的分区制作成 linux 系统所特有的 ext2.ext3 格式。这样，在 linux 下使用就更方便了。使用下面的命令直接挂接即可.&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;40&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;mount&lt;/span&gt; /dev/sdc1 /mnt/usbhd1&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h4 id=&#34;挂载u盘&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#挂载u盘&#34;&gt;#&lt;/a&gt; 挂载 U 盘&lt;/h4&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 和 USB 接口的移动硬盘一样对 linux 系统而言 U 盘也是当作 SCSI 设备对待的。使用方法和移动硬盘完全一样。插入 U 盘之前，应先用 fdisk –l 或 more /proc/partitions 查看系统的硬盘和硬盘分区情况.&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;root@localhost ~&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;fdisk&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-l&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;Disk /dev/sda: &lt;span class=&#34;token number&#34;&gt;73&lt;/span&gt; dot &lt;span class=&#34;token number&#34;&gt;4&lt;/span&gt; GB, &lt;span class=&#34;token number&#34;&gt;73407820800&lt;/span&gt; bytes&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token number&#34;&gt;255&lt;/span&gt; heads, &lt;span class=&#34;token number&#34;&gt;63&lt;/span&gt; sectors/track, &lt;span class=&#34;token number&#34;&gt;8924&lt;/span&gt; cylinders&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;Units &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; cylinders of &lt;span class=&#34;token number&#34;&gt;16065&lt;/span&gt; * &lt;span class=&#34;token number&#34;&gt;512&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;8225280&lt;/span&gt; bytes&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;Device Boot Start End Blocks Id System&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/dev/sda1 &lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;4&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;32098&lt;/span&gt;+ de Dell Utility&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/dev/sda2 * &lt;span class=&#34;token number&#34;&gt;5&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;2554&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;20482875&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;7&lt;/span&gt; HPFS/NTFS&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/dev/sda3 &lt;span class=&#34;token number&#34;&gt;2555&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;7904&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;42973875&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;83&lt;/span&gt; Linux&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/dev/sda4 &lt;span class=&#34;token number&#34;&gt;7905&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;8924&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;8193150&lt;/span&gt; f Win95 Ext&lt;span class=&#34;token string&#34;&gt;&#39;d(LBA)&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;11&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/dev/sda5 7905 8924 8193118+ 82 Linux swap&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;12&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;# 插入U盘后,再用fdisk –l或more /proc/partitions查看系统的硬盘和硬盘分区情况.&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;13&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;[root@localhost ~] fdisk -l&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;14&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;Disk /dev/sda: 73 dot 4 GB, 73407820800 bytes&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;15&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;255 heads, 63 sectors/track, 8924 cylinders&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;16&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;Units = cylinders of 16065 * 512 = 8225280 bytes&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;17&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;Device Boot Start End Blocks Id System&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;18&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/dev/sda1 1 4 32098+ de Dell Utility&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;19&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/dev/sda2 * 5 2554 20482875 7 HPFS/NTFS&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;20&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/dev/sda3 2555 7904 42973875 83 Linux&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;21&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/dev/sda4 7905 8924 8193150 f Win95 Ext&#39;&lt;/span&gt;d&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;LBA&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;22&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/dev/sda5 &lt;span class=&#34;token number&#34;&gt;7905&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;8924&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;8193118&lt;/span&gt;+ &lt;span class=&#34;token number&#34;&gt;82&lt;/span&gt; Linux swap Disk&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;23&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/dev/sdd: &lt;span class=&#34;token number&#34;&gt;131&lt;/span&gt; MB, &lt;span class=&#34;token number&#34;&gt;131072000&lt;/span&gt; bytes&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;24&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token number&#34;&gt;9&lt;/span&gt; heads, &lt;span class=&#34;token number&#34;&gt;32&lt;/span&gt; sectors/track, &lt;span class=&#34;token number&#34;&gt;888&lt;/span&gt; cylinders&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;25&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;Units &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; cylinders of &lt;span class=&#34;token number&#34;&gt;288&lt;/span&gt; * &lt;span class=&#34;token number&#34;&gt;512&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;147456&lt;/span&gt; bytes&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;26&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;Device Boot Start End Blocks Id System&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;27&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/dev/sdd1 * &lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;889&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;127983&lt;/span&gt;+ b Win95 FAT32&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;28&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;Partition &lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt; has different physical/logical endings:&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;29&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token assign-left variable&#34;&gt;phys&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;1000&lt;/span&gt;, &lt;span class=&#34;token number&#34;&gt;8&lt;/span&gt;, &lt;span class=&#34;token number&#34;&gt;32&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token assign-left variable&#34;&gt;logical&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;888&lt;/span&gt;, &lt;span class=&#34;token number&#34;&gt;7&lt;/span&gt;, &lt;span class=&#34;token number&#34;&gt;31&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;30&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 系统多了一个 SCSI 硬盘 /dev/sdd 和一个磁盘分区 /dev/sdd1,/dev/sdd1 就是我们要挂接的 U 盘.&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;31&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;mkdir&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-p&lt;/span&gt; /mnt/usb&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;32&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 注：建立一个目录用来作挂接点 (mount point)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;33&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;mount&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-t&lt;/span&gt; vfat /dev/sdd1 /mnt/usb&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;34&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 注：现在可以通过 /mnt/usb 来访问 U 盘了，若汉字文件名显示为乱码或不显示，可以使用下面的命令.&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;35&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;mount&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-t&lt;/span&gt; vfat &lt;span class=&#34;token parameter variable&#34;&gt;-o&lt;/span&gt; &lt;span class=&#34;token assign-left variable&#34;&gt;iocharset&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;cp936 /dev/sdd1 /mnt/usb&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h4 id=&#34;挂载windows文件共享&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#挂载windows文件共享&#34;&gt;#&lt;/a&gt; 挂载 Windows 文件共享&lt;/h4&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;Windows网络共享的核心是SMB/CIFS,在linux下要挂接&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;mount&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;windows的磁盘共享,就必须安装和使用samba软件包.&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;现在流行的linux发行版绝大多数已经包含了samba软件包,如果安装linux系统时未安装samba请首先安装samba.&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;当然也可以到 www.samba.org网站下载最新版本.当windows系统共享设置好以后,就可以在linux客户端挂接&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;mount&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;了.&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 具体操作如下:&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;mkdir&lt;/span&gt; –p /mnt/samba&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 注：建立一个目录用来作挂接点 (mount point)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;mount&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-t&lt;/span&gt; smbfs &lt;span class=&#34;token parameter variable&#34;&gt;-o&lt;/span&gt; &lt;span class=&#34;token assign-left variable&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;用户名,password&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;密码 //IP地址/磁盘共享文件夹 /mnt/samba &lt;span class=&#34;token comment&#34;&gt;#本地文件夹&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h4 id=&#34;挂载unix系统nfs文件共享&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#挂载unix系统nfs文件共享&#34;&gt;#&lt;/a&gt; 挂载 UNIX 系统 NFS 文件共享&lt;/h4&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;类似于windows 的网络共享,UNIX&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;Linux&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;系统也有自己的网络共享,那就是NFS&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;网络文件系统&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;,&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;在linux客户端挂接&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;mount&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;NFS磁盘共享之前,必须先配置好NFS服务端.&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Solaris 系统 NFS 服务端配置方法如下:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;修改  &lt;code&gt;/etc/dfs/dfstab&lt;/code&gt; , 增加共享目录
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;share -F nfs -o rw /export/home/sunky&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;启动 &lt;code&gt;nfs&lt;/code&gt;  服务
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;/etc/init.d/nfs.server start&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;NFS&lt;/code&gt;  服务启动以后，也可以使用下面的命令增加新的共享
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;share /export/home/sunky1&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;share /export/home/sunky2&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;# 注:/export/home/sunky 和/export/home/sunky1 是准备共享的目录&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;linux 系统 NFS 服务端配置方法如下:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;修改 /etc/exports, 增加共享目录
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;/export/home/sunky 10.140.133.23(rw)&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;/export/home/sunky1 *(rw)&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;/export/home/sunky2 linux-client(rw)&lt;/code&gt;&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 注:/export/home/ 目录下的 sunky.sunky1.sunky2 是准备共享的目录，10.140.133.23.*. linux-client 是被允许挂接此共享 linux 客户机的 IP 地址或主机名。如果要使用主机名 linux-client 必须在服务端主机 /etc/hosts 文件里增加 linux-client 主机 ip 定义。格式如下:&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token number&#34;&gt;10.140&lt;/span&gt;.133.23 linux-client&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;启动与停止 NFS 服务&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;/etc/rc.d/init.d/portmap start&lt;/code&gt;  在 REDHAT 中 PORTMAP 是默认启动的&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;/etc/rc.d/init.d/nfs start&lt;/code&gt;  启动 NFS 服务&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;/etc/rc.d/init.d/nfs stop&lt;/code&gt;  停止 NFS 服务&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 注：若修改 /etc/export 文件增加新的共享，应先停止 NFS 服务，再启动 NFS 服务方能使新增加的共享 起作用。使用命令 exportfs -rv 也可以达到同样的效果.&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;linux&lt;/code&gt;  客户端挂载 &lt;code&gt;(mount)&lt;/code&gt;  其他 &lt;code&gt;linux&lt;/code&gt;  系统或 &lt;code&gt;UNIX&lt;/code&gt;  系统的 &lt;code&gt;NFS&lt;/code&gt;  共享&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;mkdir&lt;/span&gt; –p /mnt/nfs&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 注：建立一个目录用来作挂接点 (mount point)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;mount&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-t&lt;/span&gt; nfs &lt;span class=&#34;token parameter variable&#34;&gt;-o&lt;/span&gt; rw 主机IP地址/主机名:为服务端共享的目录 本地目录&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;mount&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-t&lt;/span&gt; nfs &lt;span class=&#34;token parameter variable&#34;&gt;-o&lt;/span&gt; rw &lt;span class=&#34;token number&#34;&gt;10.10&lt;/span&gt;.10.1:/opt /opt/nfs&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 如此就可以在 linux 客户端通过 /opt/nfs 来访问其它 linux 系统或 UNIX 系统以 NFS 方式共享出来的文件了.&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;umount将文件设备卸载&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#umount将文件设备卸载&#34;&gt;#&lt;/a&gt; umount: 将文件设备卸载&lt;/h3&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;root@localhost ~&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;umount&lt;/span&gt; /dev/hda1 &lt;span class=&#34;token comment&#34;&gt;# 用设备文件名来卸载&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;root@localhost ~&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;umount&lt;/span&gt; /aixi &lt;span class=&#34;token comment&#34;&gt;# 用挂载点来卸载&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;root@localhost ~&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt; umount: /aixi: device is busy &lt;span class=&#34;token comment&#34;&gt;# 如果提示设备忙，不急可以使用如下命令卸载&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;root@localhost ~&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;umount&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-l&lt;/span&gt; /mnt/hda1 &lt;span class=&#34;token comment&#34;&gt;# 选项–l 并不是马上 umount, 而是在该目录空闲后再 umount.&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 如果比较急，可用如下命令:&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;root@localhost ~&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;umount&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-f&lt;/span&gt; /mnt/hda1 &lt;span class=&#34;token comment&#34;&gt;# -f 代表强制卸载&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 如果还不行，可使用&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;fuser&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-m&lt;/span&gt; –v /dev/hda1 &lt;span class=&#34;token comment&#34;&gt;# 来查询是哪些程序在占用，结束这些程序进程即可卸载&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;root@localhost ~&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;sync&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;fuser&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-m&lt;/span&gt; /dev/hda1 –k &lt;span class=&#34;token comment&#34;&gt;# 使用这条命令后一定可以卸载&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h2 id=&#34;交换分区&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#交换分区&#34;&gt;#&lt;/a&gt; 交换分区&lt;/h2&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;交换分区最大容量为 64G,最多只能建 &lt;span class=&#34;token number&#34;&gt;32&lt;/span&gt; 个&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h3 id=&#34;创建交换分区&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#创建交换分区&#34;&gt;#&lt;/a&gt; 创建交换分区&lt;/h3&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;fdisk&lt;/span&gt; /dev/hda---&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;n---&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;+容量---&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;p---&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;t&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;修改系统ID&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;---&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;分区号---&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;82&lt;/span&gt;---&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;p---&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;w&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;mkswap&lt;/span&gt; /dev/hda2 &lt;span class=&#34;token comment&#34;&gt;# （以上划分的分区号） 构建 swap 格式&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;swapon&lt;/span&gt; /dev/hda2 &lt;span class=&#34;token comment&#34;&gt;# 加载即完成增加 swap&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;swapon&lt;/span&gt; –s &lt;span class=&#34;token comment&#34;&gt;# 显示目前使用的 Swap 设备&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h3 id=&#34;创建交换文件&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#创建交换文件&#34;&gt;#&lt;/a&gt; 创建交换文件&lt;/h3&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;dd&lt;/span&gt; &lt;span class=&#34;token assign-left variable&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;/dev/hda1 &lt;span class=&#34;token assign-left variable&#34;&gt;of&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;/aixi/swap &lt;span class=&#34;token assign-left variable&#34;&gt;bs&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;1M &lt;span class=&#34;token assign-left variable&#34;&gt;count&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;64&lt;/span&gt; &lt;span class=&#34;token comment&#34;&gt;# 创建大文件&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;mkswap&lt;/span&gt; /aixi/swap&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;swapon&lt;/span&gt; /aixi/swap &lt;span class=&#34;token comment&#34;&gt;# 完成&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;&lt;/p&gt;
+&lt;h3 id=&#34;取消交换分区或者交换文件&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#取消交换分区或者交换文件&#34;&gt;#&lt;/a&gt; 取消交换分区或者交换文件&lt;/h3&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;swapon&lt;/span&gt; –s &lt;span class=&#34;token comment&#34;&gt;# 显示目前使用的 Swap 设备&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;swapoff /aixi/swap&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;swapoff /dev/hda2&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;free&lt;/span&gt; –m &lt;span class=&#34;token comment&#34;&gt;# 查看&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;</content>
+        <category term="linux" />
+        <category term="服务器" />
+        <category term="运维" />
+        <updated>2021-09-23T05:24:00.000Z</updated>
+    </entry>
+    <entry>
+        <id>http://example.com/category/0447b4c5647f.html</id>
+        <title>Linux从入门到放弃-常用命令</title>
+        <link rel="alternate" href="http://example.com/category/0447b4c5647f.html"/>
+        <content type="html">&lt;h2 id=&#34;linux常用操作命令和命令行编辑快捷键&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#linux常用操作命令和命令行编辑快捷键&#34;&gt;#&lt;/a&gt; LINUX 常用操作命令和命令行编辑快捷键&lt;/h2&gt;
+&lt;h3 id=&#34;终端快捷键&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#终端快捷键&#34;&gt;#&lt;/a&gt; 终端快捷键：&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;Ctrl + a/Home # 切换到命令行开始
+Ctrl + e/End # 切换到命令行末尾
+Ctrl + l # 清除屏幕内容，效果等同于 clear
+Ctrl + u # 清除剪切光标之前的内容
+Ctrl + k # 剪切清除光标之后的内容
+Ctrl + y # 粘贴刚才所删除的字符
+Ctrl + r # 在历史命令中查找 （这个非常好用，输入关键字就调出以前的命令了）
+Ctrl + c # 终止命令
+ctrl + o # 重复执行命令
+Ctrl + d # 退出 shell，logout
+Ctrl + z # 转入后台运行,但在当前用户退出后就会终止
+Ctrl + t # 颠倒光标所在处及其之前的字符位置，并将光标移动到下一个字符
+Alt + t # 交换当前与以前单词的位置
+Alt + d # 剪切光标之后的词
+Ctrl+w # 剪切光标所在处之前的一个词（以空格、标点等为分隔符）
+Ctrl+（x u） # 按住 Ctrl 的同时再先后按 x 和 u，撤销刚才的操作
+Ctrl+s # 锁住终端
+Ctrl+q # 解锁终端
+!! # 重复执行最后一条命令
+history # 显示你所有执行过的编号+历史命令。这个可以配合!编辑来执行某某命令
+!$ # 显示系统最近的一条参数
+最后这个比较有用，比如我先用 
+cat /etc/sysconfig/network-scripts/ifconfig-eth0
+然后我想用 vim 编辑。
+一般的做法是先用↑ 显示最后一条命令,然后用 Home移动到命令最前删除cat,然后再输入 vim 命令.其实完全可以用 vim !$来代替。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;gnome快捷键&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#gnome快捷键&#34;&gt;#&lt;/a&gt; gnome 快捷键&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;Alt + F1 # 类似 Windows 下的 Win 键，在 GNOME 中打开&amp;quot;应用程序&amp;quot;菜单(Applications)
+Alt + F2 # 类似 Windows 下的 Win + R 组合键，在 GNOME 中运行应用程序
+Ctrl + Alt + D # 类似 Windows 下的 Win + D 组合键，显示桌面
+Ctrl + Alt + L # 锁定桌面并启动屏幕保护程序
+Alt + Tab # 同 Windows 下的 Alt + Tab 组合键，在不同程序窗口间切换
+PrintScreen # 全屏抓图
+Alt + PrintScreen # 当前窗口抓图
+Ctrl + Alt + → / ← # 在不同工作台间切换
+Ctrl + Alt + Shift + → / ← # 移动当前窗口到不同工作台
+Ctrl+Alt+Fn # 终端 N 或模拟终端 N(n 和 N 为数字 1－6)
+Ctrl+Alt+F7 # 返回桌面
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;h3 id=&#34;窗口操作快捷键&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#窗口操作快捷键&#34;&gt;#&lt;/a&gt; 窗口操作快捷键&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;Alt + F4 # 关闭窗口
+Alt + F5 # 取消最大化窗口 (恢复窗口原来的大小)
+Alt + F7 # 移动窗口 (注: 在窗口最大化的状态下无效)
+Alt + F8 # 改变窗口大小 (注: 在窗口最大化的状态下无效)
+Alt + F9 # 最小化窗口
+Alt + F10 # 最大化窗口
+Alt + 空格键 # 打开窗口的控制菜单 (点击窗口左上角图标出现的菜单）
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;文件浏览器&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#文件浏览器&#34;&gt;#&lt;/a&gt; 文件浏览器&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;Ctrl+N # 新建窗口
+Ctrl + Shift + W # 关闭所有文件浏览器
+Ctrl + 1/2 # 改变文件夹视图查看方式，图标视图/列表视图
+Alt + → / ← # 后退/前进
+Alt + ↑/↓ # 移动到父文件夹/选择的文件夹
+Alt + Home # 直接移动到主文件夹
+F9 # 开关显示隐藏 Nautilus 侧边栏
+Ctrl+H # 显示隐藏文件（切换键）
+Shift+Ctrl+N # 新建文件夹， 很有用
+Alt + Enter # 查看选择文件/文件夹的属性，代替单击右键选择属性
+Ctrl+Page Up # 上一个标签
+Ctrl+Page Down # 下一个标签
+Alt+N # 切换到第 N 个标签(N 为数字)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;关机和重启命令&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#关机和重启命令&#34;&gt;#&lt;/a&gt; 关机和重启命令&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;Shutdown
+Reboot
+Halt
+poweroff
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;grep和管道符&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#grep和管道符&#34;&gt;#&lt;/a&gt; grep 和管道符&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;1、grep -l &#39;boss&#39; *  # 显示所有包含 boss 的文件名。
+2、grep -n &#39;boss&#39; file # 在匹配行之前加行号。
+3、grep -i &#39;boss&#39; file # 显示匹配行，boss 不区分大小写。
+4、grep -v &#39;boss&#39; file # 显示所有不匹配行。
+5、grep -q &#39;boss&#39; file # 找到匹配行，但不显示，但可以检查 grep 的退出状态。（0 为匹配成功）
+6、grep -c &#39;boss&#39; file # 只显示匹配行数（包括 0）。
+7、grep &amp;quot;$boss&amp;quot; file # 扩展变量 boss 的值再执行命令。
+8、ps -efgrep &amp;quot;^*user1&amp;quot; # 搜索 user1 的命令，即使它前面有零个或多个空格。
+9、ps -egrep -E &#39;grant_servercommsvrtcpsvrdainfo&#39; # 查找多个字符串的匹配（grep -E 相当于 egrep）
+# 管道符，比如&amp;quot;&amp;quot;，示例： ls -a  more 利用 Linux所提供的管道符&amp;quot;&amp;quot;将两个命令隔开，管道符左边命令的输出就会作为管道符右边命令的输入。
+# 连续使用管道意味着第一个命令的输出会作为第二个命令的输入，第二个命令的输出又会作为第三个命令的输入，依此类推。
+# 所以查找的时候可以这样写：
+grep -rl &amp;quot;aaa&amp;quot; *  grep -v &amp;quot;bbb&amp;quot;
+# 这样右边的命令就可以从前面的结果中筛选了。然后还有 generate 命令,因为生成文件的命令格式是这样的：
+generate 文件名
+# 不过如果直接使用 generate grep -rl &amp;quot;aaa&amp;quot; *  grep -v &amp;quot;bbb&amp;quot; 的话会出错，因为命令会从左向右执行，这条命令就会把 grep 作为一个文件名来看待。怎么办呢？这个时候就要使用 · (键盘上数字键 1 旁边的那个符号，和“~”在一个按键上)来做命令替换了，用 · 把后面的 grep 命令包起来就好了，这样：
+generate ·grep -rl &amp;quot;aaa&amp;quot; *  grep -v &amp;quot;bbb&amp;quot;·
+# 查找包含 logField 又包含 open 的文件：
+grep &amp;quot;logFileId&amp;quot; *.tbcgrep &amp;quot;open&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+</content>
+        <category term="linux" />
+        <category term="服务器" />
+        <category term="运维" />
+        <updated>2021-09-22T11:18:37.000Z</updated>
+    </entry>
+    <entry>
+        <id>http://example.com/category/7b084077da53.html</id>
+        <title>ELK收集nginx日志并展示来源IP地图</title>
+        <link rel="alternate" href="http://example.com/category/7b084077da53.html"/>
+        <content type="html">&lt;h2 id=&#34;修改nginx配置文件&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#修改nginx配置文件&#34;&gt;#&lt;/a&gt; 修改 Nginx 配置文件&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;# 修改日志模式
+ # json 为规则名字 escape=json 设置日志文件格式为json
+ log_format json escape=json &#39;&amp;#123;&amp;quot;@timestamp&amp;quot;:&amp;quot;$time_iso8601&amp;quot;,&#39;
+                             &#39;&amp;quot;domain&amp;quot;:&amp;quot;$host&amp;quot;,&#39;
+                             &#39;&amp;quot;host&amp;quot;:&amp;quot;$server_addr&amp;quot;,&#39;
+                             &#39;&amp;quot;clientip&amp;quot;:&amp;quot;$remote_addr&amp;quot;,&#39;
+                             &#39;&amp;quot;remote_user&amp;quot;:&amp;quot;$remote_user&amp;quot;,&#39;
+                             &#39;&amp;quot;request&amp;quot;:&amp;quot;$request&amp;quot;,&#39;
+                             &#39;&amp;quot;request_method&amp;quot;:&amp;quot;$request_method&amp;quot;,&#39;
+                             &#39;&amp;quot;uri&amp;quot;:&amp;quot;$uri&amp;quot;,&#39;
+                             &#39;&amp;quot;request_time&amp;quot;:&amp;quot;$request_time&amp;quot;,&#39;
+                             &#39;&amp;quot;status&amp;quot;:&amp;quot;$status&amp;quot;,&#39;
+                             &#39;&amp;quot;http_referrer&amp;quot;:&amp;quot;$http_referer&amp;quot;,&#39;
+                             &#39;&amp;quot;body_bytes_sent&amp;quot;:&amp;quot;$body_bytes_sent&amp;quot;,&#39;
+                             &#39;&amp;quot;xff&amp;quot;:&amp;quot;$http_x_forwarded_for&amp;quot;,&#39;
+                             &#39;&amp;quot;http_user_agent&amp;quot;:&amp;quot;$http_user_agent&amp;quot;,&#39;
+                             &#39;&amp;quot;upstream_addr&amp;quot;:&amp;quot;$upstream_addr&amp;quot;,&#39;
+                             &#39;&amp;quot;upstream_response_time&amp;quot;:&amp;quot;$upstream_response_time&amp;quot;&amp;#125;&#39;;
+ # 将上方的规则名称写到最后
+ access_log /var/log/nginx/access.log json;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;添加高德地图&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#添加高德地图&#34;&gt;#&lt;/a&gt; 添加高德地图&lt;/h2&gt;
+&lt;p&gt;1. 编辑 kibana 配置文件 kibana.yml，最后面添加&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 默认情况下kibana使用&amp;quot;Elastic Maps Service&amp;quot;显示地图模块,要使用其他服务提供商的模块可以通过修改&amp;quot;map.tilemap.url&amp;quot;实现,下面是修改为高德地图
+ map.tilemap.url: &#39;http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&amp;amp;size=1&amp;amp;scale=1&amp;amp;style=7&amp;amp;x=&amp;#123;x&amp;#125;&amp;amp;y=&amp;#123;y&amp;#125;&amp;amp;z=&amp;#123;z&amp;#125;&#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;配置logstash&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#配置logstash&#34;&gt;#&lt;/a&gt; 配置 logstash&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRodWIuY29tL3RleG5pa3J1L0dlb0xpdGUyLURhdGFiYXNl&#34;&gt;Github:GeoLite2-Database&lt;/span&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 进入工作目录
+cd /opt
+# 下载GeoLite2数据库
+wget https://raw.githubusercontent.com/texnikru/GeoLite2-Database/master/GeoLite2-City.mmdb.gz
+# 解压文件
+gunzip GeoLite2-City.mmdb.gz
+# 将GeoLite2移动到logstash目录下
+mv GeoLite2-City.mmdb /usr/local/elk/logstash/config/
+# 修改logstash配置文件
+vim /usr/local/elk/logstash/default.conf
+​
+# 监听5044端口作为输入
+input &amp;#123;
+ beats &amp;#123;
+   port =&amp;gt; &amp;quot;5044&amp;quot;
+ &amp;#125;
+&amp;#125;
+# 数据过滤
+filter &amp;#123;
+ json &amp;#123;
+   source =&amp;gt; &amp;quot;message&amp;quot;
+    remove_field =&amp;gt; [ &amp;quot;message&amp;quot; ]
+   #删除重复的message收集。
+ &amp;#125;
+ mutate &amp;#123;
+     split =&amp;gt; &amp;#123; &amp;quot;request&amp;quot; =&amp;gt; &amp;quot; &amp;quot; &amp;#125;
+ &amp;#125;
+ mutate &amp;#123;
+   add_field =&amp;gt; &amp;#123;
+  &amp;quot;httpversion&amp;quot; =&amp;gt; &amp;quot;%&amp;#123;[request][2]&amp;#125;&amp;quot;
+   &amp;#125;
+ &amp;#125;
+ mutate &amp;#123;                           #这里应该是选取xff，这里没有可以删掉，
+     split =&amp;gt; &amp;#123; &amp;quot;xff&amp;quot; =&amp;gt; &amp;quot;,&amp;quot; &amp;#125;
+ &amp;#125;
+ mutate &amp;#123;
+   add_field =&amp;gt; &amp;#123;
+        &amp;quot;realip&amp;quot; =&amp;gt; &amp;quot;%&amp;#123;[xff][0]&amp;#125;&amp;quot;
+   &amp;#125;
+ &amp;#125;
+ geoip &amp;#123;
+    source =&amp;gt; &amp;quot;clientip&amp;quot;
+    target =&amp;gt; &amp;quot;geoip&amp;quot;
+    #填写自己的GeoLite2数据库目录
+     database =&amp;gt; &amp;quot;/usr/local/elk/logstash/config/GeoLite2-City.mmdb&amp;quot;
+    #获取经纬度
+    add_field =&amp;gt; [&amp;quot;[geoip][coordinates]&amp;quot;,&amp;quot;%&amp;#123;[geoip][longitude]&amp;#125;&amp;quot;]
+    add_field =&amp;gt; [&amp;quot;[geoip][coordinates]&amp;quot;,&amp;quot;%&amp;#123;[geoip][latitude]&amp;#125;&amp;quot;]
+ &amp;#125;
+ mutate &amp;#123;
+   convert =&amp;gt; [ &amp;quot;[geoip][coordinates]&amp;quot;, &amp;quot;float&amp;quot; ]
+ &amp;#125;​
+&amp;#125;
+# 这是ElasticSerach服务的监听端口
+output &amp;#123;
+ elasticsearch &amp;#123;
+   hosts =&amp;gt; [&amp;quot;192.168.10.129:9200&amp;quot;]
+   index =&amp;gt;  &amp;quot;nginx-%&amp;#123;+YYYY.MM.dd&amp;#125;&amp;quot;
+   #根据项目名称动态创建索引
+ &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;geoip&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#geoip&#34;&gt;#&lt;/a&gt; geoip&lt;/h2&gt;
+&lt;p&gt;geoip 是 object 类型，它有几个子字段，含义如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;geoip.city_name：城市&lt;/li&gt;
+&lt;li&gt;geoip.continent_name：大陆名称&lt;/li&gt;
+&lt;li&gt;geoip.country_iso_code：国家编码&lt;/li&gt;
+&lt;li&gt;geoip.location：经纬度坐标，必须是：geo_point 类型&lt;/li&gt;
+&lt;li&gt;geoip.region_iso_code：地域编码&lt;/li&gt;
+&lt;li&gt;geoip.region_name：地域名称&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;扩展程序是谷歌的&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9jaHJvbWUuZ29vZ2xlLmNvbS93ZWJzdG9yZS9kZXRhaWwvZWxhc3RpY3NlYXJjaC1oZWFkL2ZmbWtpZWpqbWVjb2xwZmxvb2Zwam9sb2dvYmxrZWdtP3V0bV9zb3VyY2U9Y2hyb21lLW50cC1pY29u&#34;&gt; ElasticSearch Head&lt;/span&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 创建一个名为geoip的模板
+http://192.168.10.129:9200/_template/geoip/
+
+# index_patterns:索引名称
+#  ignore_malformed 如果true，格式错误的地理位置被忽略。如果false（默认），格式错误的地理位置引发异常并拒绝整个文档
+此字段需要配置成true，以防地理格式错误导致文档被拒绝
+
+&amp;#123;
+  &amp;quot;index_patterns&amp;quot;: [
+    &amp;quot;nginx*&amp;quot;
+  ],
+  &amp;quot;order&amp;quot;: 10,
+  &amp;quot;mappings&amp;quot;: &amp;#123;
+    &amp;quot;properties&amp;quot;: &amp;#123;
+      &amp;quot;clientip&amp;quot;: &amp;#123;
+        &amp;quot;type&amp;quot;: &amp;quot;ip&amp;quot;
+      &amp;#125;,
+      &amp;quot;geoip&amp;quot;: &amp;#123;
+        &amp;quot;dynamic&amp;quot;: true,
+        &amp;quot;type&amp;quot;: &amp;quot;object&amp;quot;,
+        &amp;quot;properties&amp;quot;: &amp;#123;
+          &amp;quot;location&amp;quot;: &amp;#123;
+            &amp;quot;type&amp;quot;: &amp;quot;geo_point&amp;quot;,
+            &amp;quot;ignore_malformed&amp;quot;: &amp;quot;true&amp;quot;
+          &amp;#125;,
+          &amp;quot;coordinates&amp;quot;: &amp;#123;
+            &amp;quot;type&amp;quot;: &amp;quot;geo_point&amp;quot;,
+            &amp;quot;ignore_malformed&amp;quot;: &amp;quot;true&amp;quot;
+          &amp;#125;,
+          &amp;quot;ip&amp;quot;: &amp;#123;
+            &amp;quot;type&amp;quot;: &amp;quot;ip&amp;quot;
+          &amp;#125;
+        &amp;#125;
+      &amp;#125;
+    &amp;#125;
+  &amp;#125;,
+  &amp;quot;aliases&amp;quot;: &amp;#123;
+    &amp;quot;nginx&amp;quot;: &amp;#123;&amp;#125;
+  &amp;#125;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;以下就代表模板创建成功&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/geoiptype&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/geoiptype..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;kibana加载地图&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#kibana加载地图&#34;&gt;#&lt;/a&gt; Kibana 加载地图&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana1-2&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana1.-1.webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana2-2&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana2.-1.webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana3-2&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana3.-1.webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana4-2&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana4.-1.webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana5-2&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana5.-1.webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana6-2&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana6.-1.webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana7-2&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana7.-1.webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana8&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana8..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt; &lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana9&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana9..webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+</content>
+        <category term="服务器" />
+        <category term="ELK" />
+        <category term="安全管理" />
+        <category term="数据可视化" />
+        <category term="监控" />
+        <category term="运维" />
+        <updated>2021-09-19T03:50:41.000Z</updated>
+    </entry>
+    <entry>
+        <id>http://example.com/category/ab8b660fc8ae.html</id>
+        <title>一.漫谈Nginx网关</title>
+        <link rel="alternate" href="http://example.com/category/ab8b660fc8ae.html"/>
+        <content type="html">&lt;h3 id=&#34;什么是网关&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#什么是网关&#34;&gt;#&lt;/a&gt; 什么是网关&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;在传统&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvVENQL0lQ&#34;&gt; TCP/IP&lt;/span&gt; 术语中，网络设备只分成两种，一种为网关 (gateway), 另一种为主机 (host). 网关能在网络间转递数据包，但主机不能转送数据包。在主机 (又称终端系统，end system) 中，数据包需经过 TCP/IP 四层协议处理，但是在网关 (又称中介系统，intermediate system) 只需要到达&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3cvaW5kZXgucGhwP3RpdGxlPSVFNyVCNiVCMiVFOSU5QSU5QiVFNSVCMSVBNCZhbXA7YWN0aW9uPWVkaXQmYW1wO3JlZGxpbms9MQ==&#34;&gt;网际层&lt;/span&gt; (Internet layer), 决定路径之后就可以转送。在当时，网关 (gateway) 与路由器 (router) 还没有区别.&lt;/p&gt;
+&lt;p&gt;在现代网络术语中，网关 (gateway) 与路由器 (router) 的定义不同。网关 (gateway) 能在不同&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvJUU3JUJEJTkxJUU3JUJCJTlDJUU0JUJDJUEwJUU4JUJFJTkzJUU1JThEJThGJUU4JUFFJUFF&#34;&gt;协议&lt;/span&gt;间移动资料，而路由器 (router) 是在不同&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvJUU3JUI2JUIyJUU4JUI3JUFG&#34;&gt;网络&lt;/span&gt;间移动资料，相当于传统所说的 IP 网关 (IP gateway).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;网关&lt;/strong&gt;顾名思义就是连接两个网络的设备，对于语音网关来说，他可以连接&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvUFNUTg==&#34;&gt; PSTN&lt;/span&gt; 和&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvJUU0JUJCJUE1JUU1JUE0JUFBJUU3JUJEJTkx&#34;&gt;以太网&lt;/span&gt;，这就相当于&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvVk9JUA==&#34;&gt; VOIP&lt;/span&gt;, 把不同电话中的模拟信号通过网关而转换成数字信号，而且加入协议再去传输。在到了接收端的时候再通过&lt;strong&gt;网关&lt;/strong&gt;还原成模拟的电话信号，最后才能在电话机上听到.&lt;/p&gt;
+&lt;p&gt;对于以太网中的&lt;strong&gt;网关&lt;/strong&gt;只能转发三层以上数据包，这一点和路由是一样的。而不同的是&lt;strong&gt;网关&lt;/strong&gt;中并没有&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvJUU4JUI3JUFGJUU3JTk0JUIxJUU4JUExJUE4&#34;&gt;路由表&lt;/span&gt;，他只能按照预先设定的不同网段来进行转发。网关最重要的一点就是端口映射，子网内用户在外网看来只是外网的 IP 地址对应着不同的端口，这样看来就会保护子网内的用户.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;单节点场景&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#单节点场景&#34;&gt;#&lt;/a&gt; 单节点场景&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/archives/422/attachment/1&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/1.webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;多节点场景&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#多节点场景&#34;&gt;#&lt;/a&gt; 多节点场景&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/archives/422/attachment/2&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/2.webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;网关作用&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#网关作用&#34;&gt;#&lt;/a&gt; 网关作用&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;统一入口&lt;/li&gt;
+&lt;li&gt;安全：黑名单、权限身份认证&lt;/li&gt;
+&lt;li&gt;限流：实现微服务访问流量计算，基于流量计算分析进行限流，可以定义多种限流规则&lt;/li&gt;
+&lt;li&gt;缓存：数据缓存&lt;/li&gt;
+&lt;li&gt;日志：日志记录&lt;/li&gt;
+&lt;li&gt;监控：记录请求响应数据，api 耗时分析，性能监控&lt;/li&gt;
+&lt;li&gt;重试：异常重试&lt;/li&gt;
+&lt;li&gt;熔断：降级&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;现有框架&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#现有框架&#34;&gt;#&lt;/a&gt; 现有框架&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Tyk: Tyk 是一个开放源码的 API 网关，它是快速、可扩展和现代的.Tyk 提供了一个 API 管理平台，其中包括 API 网关、API 分析、开发人员门户和 API 管理面板.Trk 是一个基于 Go 实现的网关服务.&lt;/li&gt;
+&lt;li&gt;Kong: Kong 是一个可扩展的开放源码 API Layer (也称为 API 网关或 API 中间件).Kong 在任何 RESTful API 的前面运行，通过插件扩展，它提供了超越核心平台的额外功能和服务.&lt;/li&gt;
+&lt;li&gt;Orange: 和 Kong 类似也是基于 OpenResty 的一个 API 网关程序，是由国人开发的.&lt;/li&gt;
+&lt;li&gt;Netflix zuul:Zuul 是一种提供动态路由、监视、弹性、安全性等功能的边缘服务.Zuul 是 Netflix 出品的一个基于 JVM 路由和服务端的负载均衡器.&lt;/li&gt;
+&lt;li&gt;apiaxle: Nodejs 实现的一个 API 网关.&lt;/li&gt;
+&lt;li&gt;api-umbrella: Ruby 实现的一个 API 网关.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;技术选型&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#技术选型&#34;&gt;#&lt;/a&gt; 技术选型&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/archives/422/3-3&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/3-1.webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;正向代理&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#正向代理&#34;&gt;#&lt;/a&gt; 正向代理&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;代理 (英语：Proxy), 也称网络代理，是一种特殊的网络服务，允许一个网络终端 (一般为客户端) 通过这个服务与另一个网络终端 (一般为服务器) 进行非直接的连接。一些网关、路由器等网络设备具备网络代理功能。一般认为代理服务有利于保障网络终端的隐私或安全，防止攻击.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/archives/422/attachment/4&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/4.webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;反向代理&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#反向代理&#34;&gt;#&lt;/a&gt; 反向代理&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;反向代理&lt;/strong&gt;在&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvJUU3JTk0JUI1JUU4JTg0JTkxJUU3JUJEJTkxJUU3JUJCJTlD&#34;&gt;电脑网络&lt;/span&gt;中是&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvJUU0JUJCJUEzJUU3JTkwJTg2JUU0JUJDJUJBJUU2JTlDJThEJUU1JTk5JUE4&#34;&gt;代理服务器&lt;/span&gt;的一种。服务器根据客户端的请求，从其关系的一组或多组后端&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvJUU2JTlDJThEJUU1JThBJUExJUU1JTk5JUE4&#34;&gt;服务器&lt;/span&gt; (如&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvV2ViJUU2JTlDJThEJUU1JThBJUExJUU1JTk5JUE4&#34;&gt; Web 服务器&lt;/span&gt;) 上获取资源，然后再将这些资源返回给客户端，客户端只会得知反向代理的 IP 地址，而不知道在代理服务器后面的服务器集群的存在 [&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvJUU1JThGJThEJUU1JTkwJTkxJUU0JUJCJUEzJUU3JTkwJTg2I2NpdGVfbm90ZS0x&#34;&gt;1]&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;与&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvJUU1JTg5JThEJUU1JTkwJTkxJUU0JUJCJUEzJUU3JTkwJTg2&#34;&gt;前向代理&lt;/span&gt;不同，前向代理作为客户端的代理，将从互联网上获取的资源返回给一个或多个的客户端，服务端 (如 Web 服务器) 只知道代理的 IP 地址而不知道客户端的 IP 地址；而反向代理是作为服务器端 (如 Web 服务器) 的代理使用，而不是客户端。客户端借由前向代理可以间接访问很多不同互联网服务器 (集群) 的资源，而反向代理是供很多客户端都通过它间接访问不同后端服务器上的资源，而不需要知道这些后端服务器的存在，而以为所有资源都来自于这个反向代理服务器.&lt;/p&gt;
+&lt;p&gt;反向代理在现时的互联网中并不少见，而另一些例子，像是&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvJUU1JTg1JUE3JUU1JUFFJUI5JUU1JTgyJUIzJUU5JTgxJTlFJUU3JUI2JUIyJUU4JUI3JUFG&#34;&gt; CDN&lt;/span&gt;、SNI 代理等，是反向代理结合&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvRE5T&#34;&gt; DNS&lt;/span&gt; 的一类延伸应用.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/archives/422/attachment/5&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/5.webp&#34; alt=&#34;&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;正向代理与反向代理的区别&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#正向代理与反向代理的区别&#34;&gt;#&lt;/a&gt; 正向代理与反向代理的区别&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;正向代理是需要在用户的电脑上配置正向代理服务器的；而反向代理不需要，因为用户是直接访问的反向代理服务器&lt;/li&gt;
+&lt;li&gt;正向代理的应用场景是用户是知道目标服务器的地址，如:&lt;a href=&#34;www.google.com&#34;&gt;www.google.com&lt;/a&gt;, 但不能直接访问，那么就需要在用户电脑配置一个正向代理服务器，用户再次访问&lt;a href=&#34;www.google.com&#34;&gt; www.google.com&lt;/a&gt; 就可以正常访问了；而反向代理的应用场景是用户本来就不知道目标服务器的地址。而是由平台方提供一个反向代理服务器的地址，用户直接访问反向代理服务器的地址就行如&lt;a href=&#34;wordpress-1258894728.cos.ap-beijing.myqcloud.com&#34;&gt; wordpress-1258894728.cos.ap-beijing.myqcloud.com&lt;/a&gt; 不管目标服务器有多少，用户不需要关心，只要访问反向代理服务器就 ok; 由反向代理服务器去解析访问目标服务器&lt;/li&gt;
+&lt;li&gt;反向代理极大的保护了应用的安全性，而且此结构可以很好的搭建负载均衡&lt;/li&gt;
+&lt;/ol&gt;
+</content>
+        <category term="缓存" />
+        <category term="服务器" />
+        <category term="运维" />
+        <category term="nginx" />
+        <category term="openresty" />
+        <category term="网关" />
+        <updated>2021-09-12T02:20:12.000Z</updated>
+    </entry>
+</feed>

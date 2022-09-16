@@ -1,0 +1,483 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="江霁月的私人小屋" href="http://example.com/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="江霁月的私人小屋" href="http://example.com/atom.xml" />
+<link rel="alternate" type="application/json" title="江霁月的私人小屋" href="http://example.com/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="linux,优化,缓存,运维,PHP" />
+
+
+<link rel="canonical" href="http://example.com/category/ecda3fb76685.html">
+
+
+
+  <title>
+Linux-Opcache参数配置优化 加速网站访问 - 安全运维 |
+江霁月的私人小屋</title>
+<meta name="generator" content="Hexo 5.4.2"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">Linux-Opcache参数配置优化 加速网站访问
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="创建时间：2021-09-09 10:40:27">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">发表于</span>
+    <time itemprop="dateCreated datePublished" datetime="2021-09-09T10:40:27+08:00">2021-09-09</time>
+  </span>
+  <span class="item" title="本文字数">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">本文字数</span>
+    <span>3.7k</span>
+    <span class="text">字</span>
+  </span>
+  <span class="item" title="阅读时长">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">阅读时长</span>
+    <span>3 分钟</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="切换导航栏">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">江霁月的私人小屋</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giciryrr3rj20zk0m8nhk.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipew8gmvyj20zk0m87wh.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclh0m9pdj20zk0m8hdt.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipet4bz0yj20zk0m8e81.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipetlbztpj20zk0m84qp.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipeun65urj20zk0m81ii.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">首页</a></span><i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/SOC/" itemprop="item" rel="index" title="分类于 安全运维"><span itemprop="name">安全运维</span></a>
+<meta itemprop="position" content="1" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN">
+  <link itemprop="mainEntityOfPage" href="http://example.com/category/ecda3fb76685.html">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/avatar.jpg">
+    <meta itemprop="name" content="江霁月">
+    <meta itemprop="description" content=", 专注分享一些关于安全运维和编程语言的知识·本博主爱安全,爱折腾,爱代码">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="江霁月的私人小屋">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <p>如果想要网站响应速度快，肯定少不了进行网站优化，比如开启各种缓存，像<span class="exturl" data-url="aHR0cHM6Ly93b3JkcHJlc3MtMTI1ODg5NDcyOC5jb3MuYXAtYmVpamluZy5teXFjbG91ZC5jb20vYXJjaGl2ZXMvNzU="> Memcached</span> 缓存，Opcache 缓存等等。这里记录一下 Opcache 设置教程。</p>
+<h2 id="什么是opcache呢"><a class="markdownIt-Anchor" href="#什么是opcache呢">#</a> 什么是 Opcache 呢？</h2>
+<p>Opcache 的前生是  <code>Optimizer+</code>  ，它是 PHP 的官方公司 Zend 开发的一款闭源但可以免费使用的 PHP 优化加速组件。 Optimizer+ 将 PHP 代码预编译生成的脚本文件  <code>Opcode</code>  缓存在共享内存中供以后反复使用，从而避免了从磁盘读取代码再次编译的时间消耗。同时，它还应用了一些代码优化模式，使得代码执行更快。从而加速 PHP 的执行。 PHP 的正常执行流程如下 <img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/20210909100618.png" alt=""> request 请求（nginx,apache,cli 等）–&gt;Zend 引擎读取.php 文件–&gt; 扫描其词典和表达式 --&gt; 解析文件–&gt; 创建要执行的计算机代码 (称为 Opcode)–&gt; 最后执行 Opcode–&gt; response 返回 每一次请求 PHP 脚本都会执行一遍以上步骤，如果 PHP 源代码没有变化，那么 Opcode 也不会变化，显然没有必要每次都重新生成 Opcode，结合在 Web 中无所不在的缓存机制，我们可以把 Opcode 缓存下来，以后直接访问缓存的 Opcode 岂不是更快，启用 Opcode 缓存之后的流程图如下所示： <img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/QQ%E6%88%AA%E5%9B%BE20210909100706.png" alt=""> Opcode cache 的目地是避免重复编译，减少 CPU 和内存开销。</p>
+<h2 id="下面介绍opcache的安装"><a class="markdownIt-Anchor" href="#下面介绍opcache的安装">#</a> 下面介绍 Opcache 的安装</h2>
+<pre><code>1、找到opcache的扩展，我的是php7.4
+yum list php74*
+2、安装扩展
+yum install php74-php-opcache.x86_64 -y
+</code></pre>
+<h2 id="php配置文件"><a class="markdownIt-Anchor" href="#php配置文件">#</a> PHP 配置文件</h2>
+<pre><code>[root@centos opt]# find / -name php.ini #查找php.ini文件位置 
+/etc/opt/remi/php74/php.ini
+</code></pre>
+<p>编辑配置文件，找到 <code>[opcache]</code>  加入</p>
+<pre><code>opcache.enable=1
+</code></pre>
+<p>此参数的值为 1 代表开启 Opcache，值为 0 代表关闭 Opcache，默认值为 1。</p>
+<pre><code>opcache.memory_consumption=512
+</code></pre>
+<p>此参数的值代表 Opcache 占用内存的大小，单位是 MB，默认值为 64。建议根据服务器内存情况来设置</p>
+<pre><code>opcache.interned_strings_buffer=64
+</code></pre>
+<p>此参数的值的单位是 MB，默认值为 8，建议根据服务器内存大小，设置一个大于 64 的值即可。 PHP 使用了一种叫做字符串驻留（string interning）的技术来改善性能。例如，如果你在代码中使用了 1000 次字符串 foobar，Zend 引擎在第一次使用这个字符串时会分配一个不可变的内存区域来存储这个字符串，之后的 999 次都会直接引用这个内存区域，而不需要重复创建。</p>
+<pre><code>opcache.max_accelerated_files=3000
+</code></pre>
+<p>Zend 引擎在第一次执行某 PHP 文件后，会将该文件的 OPcode 存储在哈希表中，之后的请求直接从哈希表中找到相应文件的 OPcode，从而达到性能优化，而此配置选项决定了可以存储的 PHP 文件数量上限。 Zend 引擎对此配置参数的真实取值是在质数集合 {223, 463, 983, 1979, 3907, 7963, 16229, 32531, 65407, 130987} 中找到的第一个大于等于参数值的质数，例如设置此参数的值为 222，则真实取值为 223。 那么如何知道我们应用中的 PHP 文件数量呢？进入应用目录，一般这里指的是进入我们 WordPress 的站点根目录，使用如下命令即可查看应用中的 PHP 文件数量：</p>
+<pre><code>[root@VM-8-7-centos wordpress-1258894728.cos.ap-beijing.myqcloud.com]# cd /root/jiangjiyue/wordpress-1258894728.cos.ap-beijing.myqcloud.com/ 
+[root@VM-8-7-centos wordpress-1258894728.cos.ap-beijing.myqcloud.com]# find . -type f -print  grep php  wc -l 
+1292
+</code></pre>
+<p>PHP 文件数量为 1292，所以我将该参数的值设置为 3000。</p>
+<pre><code>opcache.validate_timestamps=0
+</code></pre>
+<p>如果此参数的值设置为 1，那么 Zend 引擎在收到请求时，会每隔一段时间检测一次被请求的 PHP 文件是否已更新。如果文件已更新，就会重新对该文件进行语法分析、编译等步骤，生成新的 Opcode。 检测的周期是根据另一个参数  <code>opcache.revalidate_freq</code>  而定的，每次检测都是一次 stat 系统调用，众所周知，系统调用会消耗一些 CPU 时间，并且 stat 系统调用会进行磁盘 I/O，更加浪费性能。 不仅如此，假设你对服务器中的 PHP 文件进行了一次大量的更新，更新的过程中部分旧的文件会因为未过期而依然生效，和部分已生效的新文件混合在一起产生作用，必然会产生不确定因素，带来很多麻烦，<strong>所以建议将此参数的值设置为 0</strong> 。 不过需要注意的是，设置为 0 后，无论你怎么更新文件，Zend 引擎都会使用已缓存的 Opcode，除非重启 php-fpm 或使用  <code>opcache_reset()</code>  方法清空缓存，当然下面我也会提供 Opcache-gui (通过 Web 界面管理，可以重置缓存)</p>
+<pre><code>opcache.save_comments=1
+</code></pre>
+<p>如果禁用，脚本文件中的注释内容将不会被包含到操作码缓存文件， 这样可以有效减小优化后的文件体积。 禁用此配置指令可能会导致一些依赖注释或注解的 应用或框架无法正常工作， 比如： Doctrine， Zend Framework 2 以及 PHPUnit. 所以这里启用</p>
+<pre><code>opcache.file_update_protection=0
+</code></pre>
+<p>当 Zend 引擎执行某 PHP 文件时，如果该文件的 Modify 时间戳 距当前时间的差值小于此参数的值，则该文件不会被缓存，此参数值的单位为秒，默认为 2。 此参数的目的是为了防止文件还未修改完成就被 Opcache 缓存了，从而产生错误。而实际生产环境中，我们将  <code>opcache.validate_timestamps</code>  设置为 0，文件只要被访问一次，就会被永久缓存，除非重启 php-fpm 才会刷新缓存，所以此参数没什么用，还浪费性能，建议设置为 0。</p>
+<pre><code>opcache.huge_code_pages=1
+</code></pre>
+<p>众所周知，Linux 系统默认内存是以 4KB 进行分页的，而虚拟地址和内存地址是需要转换的，转换过程需要进行查表，CPU 为了加速查表会内建 TLB（Translation Lookaside Buffer），而 TLB 的大小是有限的，分页越小，表里的条目也就越多，TLB 的 Cache Miss 也就越高。 所以我们如果启用大内存页，就能间接降低 TLB 的 Cache Miss，而 Opcache 也能使用 Hugepage 来缓存 Opcodes，从而达到性能优化的目的。 此参数值为 1 即可开启以上功能，默认值为 0。 设置完后还没正式开启，需要系统开启 Hugepage 功能，使用如下命令可以查看当前系统 Hugepage 的信息：</p>
+<pre><code>[root@centos wordpress-1258894728.cos.ap-beijing.myqcloud.com]# cat /proc/meminfo  grep Huge AnonHugePages: 133120 kB 
+HugePages_Total: 0 
+HugePages_Free: 0 
+HugePages_Rsvd: 0 
+HugePages_Surp: 0 
+Hugepagesize: 2048 kB
+</code></pre>
+<p>可以看到 HugePages_Total 等参数的值为 0，也就是未开启 HugePages 功能。</p>
+<p>运行如下命令即可开启 HugePages，其中 128 代表 HugePages 的大小，单位是 MB：</p>
+<pre><code>sysctl vm.nr_hugepages=128
+</code></pre>
+<p>建议根据服务器内存情况进行分配 HugePages，例如服务器是 2G，设置为 128，可以自行参考进行设置</p>
+<h2 id="最终配置"><a class="markdownIt-Anchor" href="#最终配置">#</a> 最终配置</h2>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/20210909103033.png" alt=""></p>
+<h2 id="opcache-gui"><a class="markdownIt-Anchor" href="#opcache-gui">#</a> Opcache-gui</h2>
+<p>这里使用的 gui 界面是 amnuts 分享的<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtbnV0cy9vcGNhY2hlLWd1aQ=="> opcache-gui</span></p>
+<pre><code># 进入opt目录
+cd /opt
+# 安装git
+yum install -y git
+# 克隆项目到本地
+wget https://github.com/amnuts/opcache-gui.git
+</code></pre>
+<p>然后将项目中的 index.php 移到您的 Web 服务器可以加载的位置。然后将浏览器指向该位置，例如 <code>https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/Opcache-gui-zn.php</code>  [c-alert type=“warning”] 一定要重启 PHP-FPM 服务 [/c-alert] 如图: <img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/opcache-English.png" alt=""> 我将此文件进行了大概的汉化 [c-downbtn type=“github” url=“<span class="exturl" data-url="aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL0ppYW5nSmlZdWUveXVud2VpL21haW4vT3BjYWNoZS1ndWktem4ucGhw">https://raw.githubusercontent.com/JiangJiYue/yunwei/main/Opcache-gui-zn.php</span>”] Opcache 汉化下载 [/c-downbtn] <img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/cache-ZN.png" alt=""></p>
+
+      <div class="tags">
+          <a href="/tags/linux/" rel="tag"><i class="ic i-tag"></i> linux</a>
+          <a href="/tags/%E4%BC%98%E5%8C%96/" rel="tag"><i class="ic i-tag"></i> 优化</a>
+          <a href="/tags/%E7%BC%93%E5%AD%98/" rel="tag"><i class="ic i-tag"></i> 缓存</a>
+          <a href="/tags/%E8%BF%90%E7%BB%B4/" rel="tag"><i class="ic i-tag"></i> 运维</a>
+          <a href="/tags/PHP/" rel="tag"><i class="ic i-tag"></i> PHP</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">更新于</span>
+    <time title="修改时间：2022-08-31 14:35:32" itemprop="dateModified" datetime="2022-08-31T14:35:32+08:00">2022-08-31</time>
+  </span>
+</div>
+
+      
+<div class="reward">
+  <button><i class="ic i-heartbeat"></i> 赞赏</button>
+  <p>请我喝[茶]~(￣▽￣)~*</p>
+  <div id="qr">
+  </div>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>本文作者： </strong>江霁月 <i class="ic i-at"><em>@</em></i>江霁月的私人小屋
+  </li>
+  <li class="link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/category/ecda3fb76685.html" title="Linux-Opcache参数配置优化 加速网站访问">http://example.com/category/ecda3fb76685.html</a>
+  </li>
+  <li class="license">
+    <strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/category/79bf3c2d498a.html" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gicitspjpbj20zk0m81ky.jpg" title="Linux-Mysql主主架构">
+  <span class="type">上一篇</span>
+  <span class="category"><i class="ic i-flag"></i> 数据库</span>
+  <h3>Linux-Mysql主主架构</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/category/dd602a6b35ac.html" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gicitcxhpij20zk0m8hdt.jpg" title="Linux-利用acme为阿里云dns域名颁发泛域名证书">
+  <span class="type">下一篇</span>
+  <span class="category"><i class="ic i-flag"></i> 安全运维</span>
+  <h3>Linux-利用acme为阿里云dns域名颁发泛域名证书</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="文章目录">
+          <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFopcache%E5%91%A2"><span class="toc-number">1.</span> <span class="toc-text"> 什么是 Opcache 呢？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E9%9D%A2%E4%BB%8B%E7%BB%8Dopcache%E7%9A%84%E5%AE%89%E8%A3%85"><span class="toc-number">2.</span> <span class="toc-text"> 下面介绍 Opcache 的安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#php%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">3.</span> <span class="toc-text"> PHP 配置文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E7%BB%88%E9%85%8D%E7%BD%AE"><span class="toc-number">4.</span> <span class="toc-text"> 最终配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#opcache-gui"><span class="toc-number">5.</span> <span class="toc-text"> Opcache-gui</span></a></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="系列文章">
+        <ul>
+          <li><a href="/category/c6d35287e59b.html" rel="bookmark" title="zabbix5.2安装教程">zabbix5.2安装教程</a></li><li><a href="/category/ab18ab7128a4.html" rel="bookmark" title="Linux-firewalld的基本操作">Linux-firewalld的基本操作</a></li><li><a href="/category/d6f317918d52.html" rel="bookmark" title="Linux-编译安装memcached扩展">Linux-编译安装memcached扩展</a></li><li><a href="/category/c4e85479f6ff.html" rel="bookmark" title="Linux-安装Lnmp">Linux-安装Lnmp</a></li><li><a href="/category/79bf3c2d498a.html" rel="bookmark" title="Linux-Mysql主主架构">Linux-Mysql主主架构</a></li><li class="active"><a href="/category/ecda3fb76685.html" rel="bookmark" title="Linux-Opcache参数配置优化 加速网站访问">Linux-Opcache参数配置优化 加速网站访问</a></li><li><a href="/category/dd602a6b35ac.html" rel="bookmark" title="Linux-利用acme为阿里云dns域名颁发泛域名证书">Linux-利用acme为阿里云dns域名颁发泛域名证书</a></li><li><a href="/category/ab8b660fc8ae.html" rel="bookmark" title="一.漫谈Nginx网关">一.漫谈Nginx网关</a></li><li><a href="/category/2d9a2ff9eff9.html" rel="bookmark" title="Zabbix-Grafana图形展示软件">Zabbix-Grafana图形展示软件</a></li><li><a href="/category/14fb0cb5989f.html" rel="bookmark" title="二.Nginx相关知识">二.Nginx相关知识</a></li><li><a href="/category/2dcd61781139.html" rel="bookmark" title="三.Nginx配置文件详解">三.Nginx配置文件详解</a></li><li><a href="/category/2e72a923fa65.html" rel="bookmark" title="从零搭建日志采集报警系统(ELK+FileBeat)">从零搭建日志采集报警系统(ELK+FileBeat)</a></li><li><a href="/category/7b084077da53.html" rel="bookmark" title="ELK收集nginx日志并展示来源IP地图">ELK收集nginx日志并展示来源IP地图</a></li><li><a href="/category/007554234c41.html" rel="bookmark" title="Linux-Mysql基本操作">Linux-Mysql基本操作</a></li><li><a href="/category/0447b4c5647f.html" rel="bookmark" title="Linux从入门到放弃-常用命令">Linux从入门到放弃-常用命令</a></li><li><a href="/category/8495ff9caf6a.html" rel="bookmark" title="Linux从入门到放弃-磁盘管理">Linux从入门到放弃-磁盘管理</a></li><li><a href="/category/c119bd60cc53.html" rel="bookmark" title="Linux-MySQL开启慢查询日志">Linux-MySQL开启慢查询日志</a></li><li><a href="/category/8acc85d10262.html" rel="bookmark" title="Linux-定时备份网站数据文件到阿里云盘">Linux-定时备份网站数据文件到阿里云盘</a></li><li><a href="/category/46cb37709f23.html" rel="bookmark" title="四.OpenResty中使用mysql">四.OpenResty中使用mysql</a></li><li><a href="/category/23cb1236ee1d.html" rel="bookmark" title="五.openresty执行流程">五.openresty执行流程</a></li><li><a href="/category/c1e57771066d.html" rel="bookmark" title="使用 Grafana 创建可视化面板">使用 Grafana 创建可视化面板</a></li><li><a href="/category/dc4b4724dfe7.html" rel="bookmark" title="Centos升级Python3.x版本踩过的坑">Centos升级Python3.x版本踩过的坑</a></li><li><a href="/category/10af10f41e58.html" rel="bookmark" title="Windows常用命令">Windows常用命令</a></li><li><a href="/category/1970703bb420.html" rel="bookmark" title="Security-编译安装openresty2.14+Modsecurity以支持TLSv1.3">Security-编译安装openresty2.14+Modsecurity以支持TLSv1.3</a></li><li><a href="/category/17faee78d2f1.html" rel="bookmark" title="基于awstats的apache日志分析">基于awstats的apache日志分析</a></li><li><a href="/category/664761ec1ed2.html" rel="bookmark" title="Docker安装LAMP">Docker安装LAMP</a></li><li><a href="/category/2517a85f9134.html" rel="bookmark" title="安全加固之Linux软件包封装脚本分析">安全加固之Linux软件包封装脚本分析</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="站点概览">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="江霁月"
+      data-src="/images/avatar.jpg">
+  <p class="name" itemprop="name">江霁月</p>
+  <div class="description" itemprop="description">专注分享一些关于安全运维和编程语言的知识·本博主爱安全,爱折腾,爱代码</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">55</span>
+        <span class="name">文章</span>
+      </a>
+    </div>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">17</span>
+        <span class="name">分类</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">30</span>
+        <span class="name">标签</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL0ppYW5nSmlZdWU=" title="https:&#x2F;&#x2F;github.com&#x2F;JiangJiYue"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS9qYW5naml5dWU=" title="https:&#x2F;&#x2F;twitter.com&#x2F;jangjiyue"><i class="ic i-twitter"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>首页</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a>
+  </li>
+
+  </ul>
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/category/79bf3c2d498a.html" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/category/dd602a6b35ac.html" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2010 – 
+    <span itemprop="copyrightYear">2022</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">江霁月 @ 江霁月的私人小屋</span>
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+    <span title="站点总字数">235k 字</span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:34</span>
+  </div>
+  <div class="powered-by">
+    基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: 'category/ecda3fb76685.html',
+    favicon: {
+      show: "（●´3｀●）やれやれだぜ",
+      hide: "(´Д｀)大変だ！"
+    },
+    search : {
+      placeholder: "文章搜索",
+      empty: "关于 「 ${query} 」，什么也没搜到",
+      stats: "${time} ms 内找到 ${hits} 条结果"
+    },
+    valine: true,fancybox: true,
+    copyright: '复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://cdn.polyfill.io/v2/polyfill.js"></script>
+
+<script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>

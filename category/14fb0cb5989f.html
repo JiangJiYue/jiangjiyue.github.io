@@ -1,0 +1,556 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="江霁月的私人小屋" href="http://example.com/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="江霁月的私人小屋" href="http://example.com/atom.xml" />
+<link rel="alternate" type="application/json" title="江霁月的私人小屋" href="http://example.com/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="运维,nginx,openresty,网关" />
+
+
+<link rel="canonical" href="http://example.com/category/14fb0cb5989f.html">
+
+
+
+  <title>
+二.Nginx相关知识 - 微服务Api网关框架 - 安全运维 |
+江霁月的私人小屋</title>
+<meta name="generator" content="Hexo 5.4.2"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">二.Nginx相关知识
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="创建时间：2021-09-15 21:19:19">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">发表于</span>
+    <time itemprop="dateCreated datePublished" datetime="2021-09-15T21:19:19+08:00">2021-09-15</time>
+  </span>
+  <span class="item" title="本文字数">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">本文字数</span>
+    <span>7.8k</span>
+    <span class="text">字</span>
+  </span>
+  <span class="item" title="阅读时长">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">阅读时长</span>
+    <span>7 分钟</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="切换导航栏">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">江霁月的私人小屋</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclga70tsj20zk0m84mr.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gicit31ffoj20zk0m8naf.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipev1x5e4j20zk0m8b29.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipevgoki5j20zk0m84qp.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipet4bz0yj20zk0m8e81.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclh0m9pdj20zk0m8hdt.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">首页</a></span><i class="ic i-angle-right"></i>
+<span  itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/SOC/" itemprop="item" rel="index" title="分类于 安全运维"><span itemprop="name">安全运维</span></a>
+<meta itemprop="position" content="1" /></span>
+<i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/SOC/openresty/" itemprop="item" rel="index" title="分类于 微服务Api网关框架"><span itemprop="name">微服务Api网关框架</span></a>
+<meta itemprop="position" content="2" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN">
+  <link itemprop="mainEntityOfPage" href="http://example.com/category/14fb0cb5989f.html">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/avatar.jpg">
+    <meta itemprop="name" content="江霁月">
+    <meta itemprop="description" content=", 专注分享一些关于安全运维和编程语言的知识·本博主爱安全,爱折腾,爱代码">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="江霁月的私人小屋">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <h2 id="nginx安装"><a class="markdownIt-Anchor" href="#nginx安装">#</a> Nginx 安装</h2>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token builtin class-name">cd</span> /opt</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token comment"># Nginx 下载</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token function">wget</span> http://nginx.org/download/nginx-1.13.0.tar.gz</pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token comment"># 解压</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token function">tar</span> <span class="token parameter variable">-zxvf</span> nginx-1.13.0.tar.gz</pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token comment"># 安装依赖</span></pre></td></tr><tr><td data-num="7"></td><td><pre>yum <span class="token parameter variable">-y</span> <span class="token function">install</span> gcc gcc-c++ ncurses-devel perl pcre pcre-devel zlib <span class="token function">gzip</span> zlib-devel</pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token comment"># Nginx 编译</span></pre></td></tr><tr><td data-num="9"></td><td><pre>./configure <span class="token parameter variable">--prefix</span><span class="token operator">=</span>/usr/local/nginx</pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token comment"># 安装 Nginx</span></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token function">make</span> <span class="token operator">&amp;</span> <span class="token function">make</span> <span class="token function">install</span></pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token comment"># 安装路径:/usr/local/nginx</span></pre></td></tr><tr><td data-num="13"></td><td><pre>conf 存放配置文件</pre></td></tr><tr><td data-num="14"></td><td><pre>html 网页文件</pre></td></tr><tr><td data-num="15"></td><td><pre>logs 存放日志</pre></td></tr><tr><td data-num="16"></td><td><pre>sbin shell启动、停止等脚本</pre></td></tr></table></figure><h2 id="nginx平滑升级"><a class="markdownIt-Anchor" href="#nginx平滑升级">#</a> Nginx 平滑升级</h2>
+<p>把服务器从低版本升级为高版本，强行停止服务器，会影响正在运行的进程。平滑升级不会停掉正在进行中的进程，这些进程会继续处理请求。但不会再接受新请求，这些老的进程在处理完请求之后会停止。此平滑升级过程中，新开的进程会被处理.</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># 下载高版本 nginx</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">wget</span> http://nginx.org/download/nginx-1.13.1.tar.gz</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token comment"># configure</span></pre></td></tr><tr><td data-num="4"></td><td><pre>./configure</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token comment"># 编译平滑升级不要进行安装，不要 make install</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token function">make</span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token comment"># 进入 objs 目录有高版本的 nginx</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token builtin class-name">cd</span> objs</pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token comment"># 备份低版本的 nginx</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token function">cp</span> /usr/sbin/nginx ./nginx.old</pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token comment"># 执行强制覆盖</span></pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token function">cp</span> <span class="token parameter variable">-rfp</span> objs/nginx /usr/sbin/</pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token comment"># 测试一下新复制过来文件生效情况</span></pre></td></tr><tr><td data-num="14"></td><td><pre>/usr/local/nginx/sbin/nginx <span class="token parameter variable">-t</span></pre></td></tr><tr><td data-num="15"></td><td><pre><span class="token function">ps</span> <span class="token parameter variable">-ef</span>  <span class="token function">grep</span> nginx</pre></td></tr><tr><td data-num="16"></td><td><pre><span class="token comment"># 执行信号平滑升级</span></pre></td></tr><tr><td data-num="17"></td><td><pre><span class="token function">kill</span> <span class="token parameter variable">-USR2</span> 主程序进程号</pre></td></tr><tr><td data-num="18"></td><td><pre><span class="token comment"># 给 nginx 发送 USR2 信号后，nginx 会将 1ogs/nginx.pid 文件重命名为 nginx.pid.oldbin, 然后用新的可执行文件启动一个新的 nginx 主进程和对应的工作进程，并新建一个新的 nginx.pid 保存新的主进程号</span></pre></td></tr><tr><td data-num="19"></td><td><pre><span class="token function">ps</span> <span class="token parameter variable">-ef</span>  <span class="token function">grep</span> nginx</pre></td></tr><tr><td data-num="20"></td><td><pre><span class="token function">kill</span> <span class="token parameter variable">-WINCH</span> 旧的主进程号</pre></td></tr><tr><td data-num="21"></td><td><pre><span class="token comment"># 旧的主进程号收到 WINCH 信号后，将旧进程号管理的旧的工作进程优雅的关闭。即一段时间后旧的工作进程全部关闭，只有新的工作进程在处理请求连接。这时，依然可以恢复到旧的进程服务，因为旧的进程的监听 socket 还未停止。处理完后，工作进程会自动关闭</span></pre></td></tr><tr><td data-num="22"></td><td><pre><span class="token function">ps</span> <span class="token parameter variable">-ef</span>  <span class="token function">grep</span> nginx</pre></td></tr><tr><td data-num="23"></td><td><pre>KILL <span class="token parameter variable">-QUIT</span> 旧的主进程号</pre></td></tr><tr><td data-num="24"></td><td><pre><span class="token comment"># 给旧的发送 QUIT 信号后，旧的主进程退出，并移除 nginx.pid.oldbin 文件，nginx 升级完成</span></pre></td></tr><tr><td data-num="25"></td><td><pre><span class="token comment"># 升级完成后，看一下升级后的版本</span></pre></td></tr><tr><td data-num="26"></td><td><pre>/usr/sbin/nginx <span class="token parameter variable">-v</span></pre></td></tr><tr><td data-num="27"></td><td><pre></pre></td></tr><tr><td data-num="28"></td><td><pre><span class="token comment"># 中途停止升级，回滚到旧的 nginx 不在升级</span></pre></td></tr><tr><td data-num="29"></td><td><pre><span class="token comment"># 在以上 kill -WINCH 旧的主进程号 这个步骤时，如果想回到旧的 nginx, 不再进行升级</span></pre></td></tr><tr><td data-num="30"></td><td><pre><span class="token comment"># 1. 给旧的主进程号发送 HUP 命令，此时 nginx 不重新读取配置文件的情况下重新启动旧主进程的工作进程.</span></pre></td></tr><tr><td data-num="31"></td><td><pre><span class="token function">kill</span> <span class="token parameter variable">-HUP</span> 旧主进程号</pre></td></tr><tr><td data-num="32"></td><td><pre><span class="token comment"># 2. 优雅的关闭新的主进程</span></pre></td></tr><tr><td data-num="33"></td><td><pre><span class="token function">kill</span> <span class="token parameter variable">-QUIT</span> 新主进程号</pre></td></tr></table></figure><h2 id="nginx命令"><a class="markdownIt-Anchor" href="#nginx命令">#</a> Nginx 命令</h2>
+<ol>
+<li><code>nginx</code>  启动
+<ul>
+<li><code>nginx/nginx -c nginx</code>  配置文件</li>
+</ul>
+</li>
+<li><code>nginx</code>  重启 (重启是建立在 <code>nginx</code>  服务器已经启动的基础上)
+<ul>
+<li><code>nginx -s reload</code></li>
+</ul>
+</li>
+<li><code>nginx</code>  停止
+<ul>
+<li><code>nginx -s stop</code>   <code>stop</code>  是快速关闭，不管有没有正在处理的请求</li>
+<li><code>nginx -s quit</code>   <code>quit</code>  是一个优雅的关闭方式， <code>Nginx</code>  在退出前完成已经接受的连接请求</li>
+</ul>
+</li>
+<li><code>nginx</code>  重启打开日志
+<ul>
+<li><code>nginx -s reopen</code></li>
+</ul>
+</li>
+<li><code>nginx</code>  检查配置文件
+<ul>
+<li><code>nginx -t</code></li>
+</ul>
+</li>
+</ol>
+<h3 id="nginx信号控制"><a class="markdownIt-Anchor" href="#nginx信号控制">#</a> Nginx 信号控制</h3>
+<p>从容关闭旧进程</p>
+<p>具体语法: <code>kill -信号选项 nginx的主进程号</code></p>
+<p>例: <code>kill -INT 26661</code></p>
+<p><code>ps -ef grep nginx</code>  获得进程号</p>
+<ol>
+<li>从容 &quot;优雅&quot; 停止
+<ul>
+<li><code>kill -QUIT master进程号</code></li>
+<li><code>Nginx</code>  服务可以正常地处理完当前所有请求再停止服务</li>
+<li>步骤：首先会关闭监听端口，停止接收新的连接，然后把当前正在处理的连接全部处理完，最后再退出进程</li>
+</ul>
+</li>
+<li>快速停止</li>
+<li>
+<ul>
+<li><code>kill -TERM master进程号</code></li>
+<li><code>kill -INT master进程号</code></li>
+<li>快速停止服务时， <code>worker</code>  进程与 <code>master</code>  进程在收到信号后会立刻跳出循环，退出进程</li>
+</ul>
+</li>
+<li>强制停止
+<ul>
+<li><code>kill -9 nginx</code>  系统强杀 <code>nginx</code>  进程</li>
+</ul>
+</li>
+<li>重启 <code>nginx</code>
+<ul>
+<li><code>kill -HUP master进程号</code></li>
+</ul>
+</li>
+</ol>
+<h2 id="nginx基本配置"><a class="markdownIt-Anchor" href="#nginx基本配置">#</a> Nginx 基本配置</h2>
+<p><span class="exturl" data-url="aHR0cHM6Ly93b3JkcHJlc3MtMTI1ODg5NDcyOC5jb3MuYXAtYmVpamluZy5teXFjbG91ZC5jb20vYXJjaGl2ZXMvNDMw">Nginx 配置文件详解</span></p>
+<figure class="highlight nginx"><figcaption data-lang="nginx"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># Nginx 的主配置文件是:nginx.conf,nginx.conf 主要组成如下:</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token comment"># 全局区有一个工作子进程，一般设置为 CPU 数 * 核数</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token directive"><span class="token keyword">worker_processes</span> <span class="token number">1</span></span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token directive"><span class="token keyword">events</span></span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token comment"># 一般是配置 nginx 进程与连接的特性</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token comment"># 如 1 个 word 能同时允许多少连接，一个子进程最大允许连接 1024 个连接</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token directive"><span class="token keyword">worker_connections</span> <span class="token number">1024</span></span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token comment"># 配置 HTTP 服务器配置段</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token directive"><span class="token keyword">http</span></span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    <span class="token comment"># 配置虚拟主机段</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    <span class="token directive"><span class="token keyword">server</span></span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="13"></td><td><pre>        <span class="token comment"># 定位，把特殊的路径或文件再次定位。</span></pre></td></tr><tr><td data-num="14"></td><td><pre>        <span class="token directive"><span class="token keyword">location</span></span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="15"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="16"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="17"></td><td><pre>    <span class="token directive"><span class="token keyword">server</span></span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="18"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="19"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><h2 id="nginx配置连接数"><a class="markdownIt-Anchor" href="#nginx配置连接数">#</a> nginx 配置连接数</h2>
+<figure class="highlight nginx"><figcaption data-lang="nginx"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># 表示开启 nginx 的 worker 进程的个数，nginx 启动会开两种进程，master 进程用来管理调度，worker 进程用来处理请求:</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token directive"><span class="token keyword">worker_processes:1</span></span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token comment"># 两种设置方法，比如</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token comment"># 方法一:</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token directive"><span class="token keyword">worker_processes</span> auto</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token comment"># 表示设置服务器 cpu 核数匹配开启 nginx 开启的 worker 进程数</span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token comment"># 查看 cpu 核数:cat /proc/cpuinfo</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token comment"># 方法二:nginx 设置 cpu 亲和力</span></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token directive"><span class="token keyword">worker_processes</span> <span class="token number">8</span></span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token directive"><span class="token keyword">worker_cpu_affinity</span> <span class="token number">00000001</span> <span class="token number">0000010</span> <span class="token number">00000100</span> <span class="token number">00001000</span> <span class="token number">00010000</span> <span class="token number">00100000</span> <span class="token number">01000000</span> <span class="token number">10000000</span></span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token comment"># 00000001 表示启用第一个 CPU 内核，00000010 表示启用第二个 CPU 内核，以此类推</span></pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token comment"># worker_cpu_affinity: 表示开启八个进程，第一个进程对应着第一个 CPU 内核，第二个进程对应着第二个 CPU 内核，以此类推.</span></pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token comment"># 这种设置方法更高效，因将每个 cpu 核提供给固定的 worker 进程服务，减少 cpu 上下文切换带来的资源浪费</span></pre></td></tr><tr><td data-num="14"></td><td><pre><span class="token comment"># 如果服务器 cpu 有限 比如：2 核 CPU, 开启 2 个进程，设置如下</span></pre></td></tr><tr><td data-num="15"></td><td><pre><span class="token directive"><span class="token keyword">worker_processes</span> <span class="token number">2</span></span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="16"></td><td><pre><span class="token directive"><span class="token keyword">worker_cpu_affinity</span> <span class="token number">01</span> <span class="token number">10</span></span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="17"></td><td><pre><span class="token comment"># 比如：4 核 CPU, 开启 4 个进程，设置如下</span></pre></td></tr><tr><td data-num="18"></td><td><pre><span class="token directive"><span class="token keyword">worker_processes</span> <span class="token number">2</span></span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="19"></td><td><pre><span class="token directive"><span class="token keyword">worker_cpu_affinity</span> <span class="token number">0001</span> <span class="token number">0010</span> <span class="token number">0100</span> <span class="token number">1000</span></span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="20"></td><td><pre><span class="token comment"># 1 个 worker 进程能够最大打开的文件数 (线程数) worker_connections 65535 (参考 worker_rlimit_nofile)</span></pre></td></tr></table></figure><p><code>nginx</code>  作为 <code>http</code>  服务器</p>
+<p>最大的客户端连接数  <code>max_cloents = worker_processes * worker_connections/2</code> <a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/archives/435/http-server"><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/HTTP-Server.webp" alt=""></a></p>
+<p><code>nginx</code>  作为反向代理服务器的时候</p>
+<p>最大的客户端连接数  <code>max_cloents = worker_processes * worker_connections/4</code></p>
+<p><a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/archives/435/attachment/10915213057"><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/10915213057.webp" alt=""></a></p>
+<p>由此，我们可以进算出 <code>nginx</code>  作为 <code>http</code>  服务器最大并发量 (作为反向代理服务器自己类推), 可以作为压测和线上环境的优化提供一些理论依据:</p>
+<p>单位时间 <code>keepalive_timeout</code>  内 <code>nginx</code>  最大并发量 C <code>C = worker_processes * worker_connections/2=8*65535/2</code></p>
+<p>每秒并发量 CS: <code>CS = worker_processes * worker_connections/(2*65)</code></p>
+<h2 id="虚拟主机"><a class="markdownIt-Anchor" href="#虚拟主机">#</a> 虚拟主机</h2>
+<blockquote>
+<p><strong>虚拟主机</strong> (英语：virtual hosting) 或称 <strong>共享主机</strong> (shared web hosting), 又称<strong>虚拟服务器</strong>，是一种在单一主机或主机群上，实现多网域服务的方法，可以运行多个<span class="exturl" data-url="aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvJUU3JUI2JUIyJUU3JUFCJTk5">网站</span>或服务的技术。虚拟主机之间完全独立，并可由用户自行管理，虚拟并非指不存在，而是指空间是由实体的服务器延伸而来，其<span class="exturl" data-url="aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvJUU3JUExJUFDJUU5JUFCJTk0">硬件</span>系统可以是基于服务器群，或者单个服务器。</p>
+<p>其技术是<span class="exturl" data-url="aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvJUU0JUJBJTkyJUU4JTgxJUFGJUU3JUI2JUIy">互联网</span><span class="exturl" data-url="aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvJUU0JUJDJUJBJUU2JTlDJThEJUU1JTk5JUE4">服务器</span>采用的节省服务器<span class="exturl" data-url="aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvJUU3JUExJUFDJUU5JUFCJTk0">硬件</span>成本的技术，虚拟主机技术主要应用于 HTTP,FTP,EMAIL 等多项服务，将一台服务器的某项或者全部服务内容<span class="exturl" data-url="aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvJUU5JTgyJThGJUU4JUJDJUFG">逻辑</span>划分为多个服务单位，对外表现为多个服务器，从而充分利用服务器硬件资源。如果划分是系统级别的，则称为虚拟服务器.</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/archives/435/web-hosting"><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/Web-hosting.webp" alt=""></a></p>
+<h3 id="配置虚拟主机"><a class="markdownIt-Anchor" href="#配置虚拟主机">#</a> 配置虚拟主机</h3>
+<p>我们先配置在一个 <code>nginx</code>  中配置一个虚拟主机，编辑 <code>nginx.conf</code>  配置文件，在 <code>http</code>  模块中，配置 <code>server</code>  模块，一个 <code>server</code>  模块就针对一个虚拟主机。我们模拟一个独立的网站，此网站域名访问为<a href="www.server1.com"> www.server1.com</a>; 网站的根目录放到 <code>nginx</code>  目录下 <code>htm1/server1</code>  目录，我们创建一个首页 <code>index.html</code>  到 <code>server1</code>  中，编辑 <code>index.html</code></p>
+<figure class="highlight html"><figcaption data-lang="HTML"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token doctype"><span class="token punctuation">&lt;!</span><span class="token doctype-tag">DOCTYPE</span> <span class="token name">html</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">></span></span>server1 首页<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">></span></span>/ head></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h1</span><span class="token punctuation">></span></span>server1 首页<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h1</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">></span></span></pre></td></tr></table></figure><p>下面我们回到 <code>nginx.conf</code>  配置文件中，配置 <code>server</code>  模块</p>
+<figure class="highlight nginx"><figcaption data-lang="nginx"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># 下面我们回到 nginx.conf 配置文件中，配置 server 模块</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token directive"><span class="token keyword">server</span></span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token comment"># 监听 80 端口</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token directive"><span class="token keyword">listen</span> <span class="token number">80</span></span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token comment"># 虚拟主机名，可以为域名或 ip 地址</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token directive"><span class="token keyword">server_name</span> www.server1.com</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token comment"># 默认请求路由，以后文章中会重点介绍</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token directive"><span class="token keyword">location</span> /</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>        <span class="token comment"># 网站的根目录</span></pre></td></tr><tr><td data-num="10"></td><td><pre>        <span class="token directive"><span class="token keyword">root</span> html/server1</span><span class="token punctuation">;</span> </pre></td></tr><tr><td data-num="11"></td><td><pre>        <span class="token comment"># 默认首页文件名</span></pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token directive"><span class="token keyword">index</span> index.html index.htm</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="13"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="14"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="15"></td><td><pre><span class="token directive"><span class="token keyword">server</span></span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="16"></td><td><pre><span class="token comment"># 监听 80 端口</span></pre></td></tr><tr><td data-num="17"></td><td><pre><span class="token directive"><span class="token keyword">listen</span> <span class="token number">80</span></span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="18"></td><td><pre><span class="token comment"># 虚拟主机名，可以为域名或 ip 地址</span></pre></td></tr><tr><td data-num="19"></td><td><pre><span class="token directive"><span class="token keyword">server_name</span> www.server2.com</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="20"></td><td><pre><span class="token comment"># 默认请求路由，以后文章中会重点介绍</span></pre></td></tr><tr><td data-num="21"></td><td><pre><span class="token directive"><span class="token keyword">location</span> /</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="22"></td><td><pre>        <span class="token comment"># 网站的根目录</span></pre></td></tr><tr><td data-num="23"></td><td><pre>        <span class="token directive"><span class="token keyword">root</span> html/server2</span><span class="token punctuation">;</span> </pre></td></tr><tr><td data-num="24"></td><td><pre>        <span class="token comment"># 默认首页文件名</span></pre></td></tr><tr><td data-num="25"></td><td><pre><span class="token directive"><span class="token keyword">index</span> index.html index.htm</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="26"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="27"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>注意：在配置 server 模块时，监听的端口 <code>listen</code>  和 <code>server_name</code>  组合起来是唯一的，如果 <code>server_name</code>  一样，那么 <code>listen</code>  监听的端口就不一样：如端口一样， <code>server_name</code>  就不一样。这是很好理解的，虚拟主机的请求映射系统才能够判别。</p>
+<h2 id="日志文件格式配置"><a class="markdownIt-Anchor" href="#日志文件格式配置">#</a> 日志文件格式配置</h2>
+<p>nginx 服务在运行的时候，会有各种操作，操作的信息会记录到日志文件中，日志文件的记录是有格式的。那我们如何设置日志文件的格式呢？</p>
+<figure class="highlight nginx"><figcaption data-lang="nginx"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># 使用 log_format 指令进行配置文件格式</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token comment"># nginx 的 1og_format 有很多可选的参数用于指示服务器的活动状态，默认的是:</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token directive"><span class="token keyword">log_format</span> main <span class="token string">'<span class="token variable">$remote_addr</span> - <span class="token variable">$remote_user</span> [<span class="token variable">$time_local]</span> "<span class="token variable">$request</span>"'</span> <span class="token string">'<span class="token variable">$status</span> <span class="token variable">$body_bytes_sent</span> "<span class="token variable">$http_referer</span>" '</span> <span class="token string">'"<span class="token variable">$http_user_agent</span>" "<span class="token variable">$http_x_forwarded_for</span>"'</span></span><span class="token punctuation">;</span></pre></td></tr></table></figure><h3 id="access_log指令"><a class="markdownIt-Anchor" href="#access_log指令">#</a> access_log 指令</h3>
+<figure class="highlight nginx"><figcaption data-lang="nginx"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># 语法:</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token directive"><span class="token keyword">access_log</span> path [format [buffer=size [flush=time]]]</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token directive"><span class="token keyword">access_log</span> path format gzip[=level] [buffer=size] [flush=time]</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token directive"><span class="token keyword">access_log</span> <span class="token boolean">off</span></span><span class="token punctuation">;</span></pre></td></tr></table></figure><p>配置段:</p>
+<p><code>gzip</code>  压缩等级。  <code>buffer</code>  设置内存缓存区大小。  <code>flush</code>  保存在缓存区中的最长时间。不记录日志: <code>access_log off;</code>  使用默认 <code>combined</code>  格式记录日志: <code>access_log logs/access.log</code>  或  <code>access_log logs/access.log combined;</code>  值得注意的是， <code>Nginx</code>  进程设置的用户和组必须对日志路径有创建文件的权限，否则，会报错。此外，对于每一条日志记录，都将是先打开文件，再写入日志，然后关闭。可以使用 <code>open_log file_cache</code>  来设置日志文件缓存 (默认是 <code>off</code> ).</p>
+<p><a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/archives/435/log_file"><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/log_file.webp" alt=""></a></p>
+<h2 id="日志切割"><a class="markdownIt-Anchor" href="#日志切割">#</a> 日志切割</h2>
+<p><code>wordpress.log</code> ----&gt; <code>wordpress-2021-09-16.log</code>  以日期命名存放</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># 将 log 文件修改为想存放的日志格式</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">mv</span> access.log access-2021-09-16.log</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token comment"># 查看 Nginx 进程号</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token function">ps</span> <span class="token parameter variable">-ef</span>  <span class="token function">grep</span> nginx</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token comment"># 发送重读日志信号</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token function">kill</span> <span class="token parameter variable">-USR1</span> nginx进程号</pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token comment"># 通过 mv 命令 把当前的 log 文件重读命令，再用信号控制指令 发送重读日志指令 产生了新的日志 log 文件</span></pre></td></tr></table></figure><h3 id="系统自动切割"><a class="markdownIt-Anchor" href="#系统自动切割">#</a> 系统自动切割</h3>
+<p>利用 sh 脚本的方式执行刚才的手动操作，在每天凌晨执行一个计划任务调用 sh 脚本，就完成了系统自动切割日志文件</p>
+<p>在 <code>opt/</code>  目录下编写 sh 脚本</p>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># 进入目录</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token builtin class-name">cd</span> /opt</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token comment"># 创建脚本文件</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token function">touch</span> cutlog.sh</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token comment"># 打开文件</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token function">vim</span> cutlog.sh</pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token comment"># 以下是文件内容</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token comment">#!/bin/bash</span></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token comment"># 根据自己的 logs 路径修改一下路径</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token assign-left variable">LOGS_PATH</span><span class="token operator">=</span>/usr/local/nginx/logs/wordpress</pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token assign-left variable">YESTERDAY</span><span class="token operator">=</span><span class="token variable"><span class="token variable">$(</span><span class="token function">date</span> <span class="token parameter variable">-d</span> <span class="token string">"yesterday"</span> +%Y-%m-%d<span class="token variable">)</span></span></pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token comment"># 根据自己的日志文件名修改下方 access.log 名称</span></pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token function">mv</span> <span class="token variable">$&#123;LOGS_PATH&#125;</span>/wordpress_access.log <span class="token variable">$&#123;LOGS_PATH&#125;</span>/wordpress_access_<span class="token variable">$&#123;YESTERDAY&#125;</span>.1og</pre></td></tr><tr><td data-num="14"></td><td><pre><span class="token comment">#向 Nginx 主进程发送 USR1 信号。USR1 信号是重新打开日志文件</span></pre></td></tr><tr><td data-num="15"></td><td><pre><span class="token function">kill</span> <span class="token parameter variable">-USR1</span> <span class="token variable"><span class="token variable">$(</span><span class="token function">cat</span> /usr/local/nginx/nginx/logs/nginx.pid<span class="token variable">)</span></span> </pre></td></tr><tr><td data-num="16"></td><td><pre><span class="token comment"># 保存并退出 (按 ESC 键输入)</span></pre></td></tr><tr><td data-num="17"></td><td><pre>:wq</pre></td></tr><tr><td data-num="18"></td><td><pre><span class="token comment"># 给 sh 脚本赋予权限</span></pre></td></tr><tr><td data-num="19"></td><td><pre><span class="token function">chmod</span> +x cutlog.sh</pre></td></tr><tr><td data-num="20"></td><td><pre><span class="token comment"># 设置定时任务</span></pre></td></tr><tr><td data-num="21"></td><td><pre><span class="token function">vim</span> /etc/crontab</pre></td></tr><tr><td data-num="22"></td><td><pre><span class="token comment"># 定时每天 00:00 以 root 身份执行脚本 /opt/cutlog.sh</span></pre></td></tr><tr><td data-num="23"></td><td><pre><span class="token number">0</span> <span class="token number">0</span> * * * root /opt/cutlog.sh</pre></td></tr><tr><td data-num="24"></td><td><pre><span class="token comment"># 实现定时定点自动切割日志文件</span></pre></td></tr></table></figure><h2 id="location配置详解"><a class="markdownIt-Anchor" href="#location配置详解">#</a> location 配置详解</h2>
+<ol>
+<li>
+<p>语法规则: <code>location [=~~*^~] /uri/ &#123;...&#125;</code></p>
+</li>
+<li>
+<p><code>location</code>  区分普通匹配和正则匹配</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>用前缀“~”和“ <span class="token punctuation">\</span>~*”修饰的为正则匹配</pre></td></tr><tr><td data-num="2"></td><td><pre>~ 前缀表示区分大小写的正则匹配</pre></td></tr><tr><td data-num="3"></td><td><pre>~* 前缀表示不区分大小写的正则匹配</pre></td></tr><tr><td data-num="4"></td><td><pre>除上面修饰的前缀（“<span class="token operator">=</span>”和“^~”,或没有前缀修饰）都为普通匹配</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token operator">=</span> 前缀表示精确匹配</pre></td></tr><tr><td data-num="6"></td><td><pre>^~前缀表示uri以某个常规字符串开头,可以理解为url的普通匹配</pre></td></tr></table></figure><p><code>location</code>  作用于 <code>server</code>  模块，且支持多个 <code>location</code>  模块</p>
+<figure class="highlight nginx"><figcaption data-lang="nginx"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token directive"><span class="token keyword">server</span></span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>       <span class="token directive"><span class="token keyword">location</span> /test</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>             <span class="token directive"><span class="token keyword">root</span> html/p</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>             <span class="token directive"><span class="token keyword">index</span> index.html index.htm</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        <span class="token directive"><span class="token keyword">location</span> = /50x.html</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>              <span class="token directive"><span class="token keyword">root</span> html</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>        <span class="token directive"><span class="token keyword">location</span> /</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token directive"><span class="token keyword">root</span> html/server1</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token directive"><span class="token keyword">index</span> index.html index.htm</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="12"></td><td><pre>         <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure></li>
+<li>
+<p>匹配的原则</p>
+<ol>
+<li>
+<p>普通匹配，最大前缀匹配原则</p>
+<figure class="highlight nginx"><figcaption data-lang="nginx"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token directive"><span class="token keyword">server</span></span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>  <span class="token directive"><span class="token keyword">location</span> /prefix/</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>         <span class="token comment">#规则 A</span></pre></td></tr><tr><td data-num="4"></td><td><pre>  <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>  <span class="token directive"><span class="token keyword">location</span> /prefix/mid/</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>         <span class="token comment">#规则 B</span></pre></td></tr><tr><td data-num="7"></td><td><pre>  <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="8"></td><td><pre> <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>请求ur1为:/prefix/mid/t.html</pre></td></tr><tr><td data-num="10"></td><td><pre>此请求匹配的是规则B,是以最大的匹配原则进行的,跟顺序无关</pre></td></tr></table></figure></li>
+<li>
+<p>正则匹配 为顺序匹配</p>
+<figure class="highlight nginx"><figcaption data-lang="nginx"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token directive"><span class="token keyword">server</span></span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>     <span class="token directive"><span class="token keyword">location</span> ~ \.(gifljpglpngljscss)$</span> </pre></td></tr><tr><td data-num="3"></td><td><pre>      <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>                 <span class="token comment">#规则 C</span></pre></td></tr><tr><td data-num="5"></td><td><pre>     <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>     <span class="token directive"><span class="token keyword">location~*</span> \.png$</span> </pre></td></tr><tr><td data-num="7"></td><td><pre>      <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>                   <span class="token comment">#规则 D</span></pre></td></tr><tr><td data-num="9"></td><td><pre>       <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="10"></td><td><pre> <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="11"></td><td><pre>请求http://localhost/1.png,匹配的是规则c,因为规则c在前面,即叫做顺序匹配</pre></td></tr></table></figure></li>
+<li>
+<p>在实际场景中，通常至少有三个匹配规则定义</p>
+<figure class="highlight nginx"><figcaption data-lang="nginx"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">#直接匹配网站根，通过域名访问网站首页比较频繁，使用这个会加速处理。</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token comment">#这里是直接转发给后端应用服务器了，也可以是一个静态首页</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token comment">#第一个必选规则</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token directive"><span class="token keyword">location</span> =/</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    ····</pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token comment">#第二个必选规则是处理静态文件请求，这是 nginx 作为 http 服务器的强项</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token comment">#有两种配置模式，目录匹配或后缀匹配，任选其一或搭配使用</span></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token directive"><span class="token keyword">location</span> ^~ /static/</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token directive"><span class="token keyword">root</span> /webroot/static/</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token directive"><span class="token keyword">location</span> ~* \.(gifjpgjpegpngcssjsico)$</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token directive"><span class="token keyword">root</span> /webroot/res/</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="14"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="15"></td><td><pre><span class="token comment">#第三个规则就是通用规则，用来转发动态请求到后端应用服务器</span></pre></td></tr><tr><td data-num="16"></td><td><pre><span class="token comment">#非静态文件请求就默认是动态请求，自己根据实际把握</span></pre></td></tr><tr><td data-num="17"></td><td><pre><span class="token comment">#毕竟目前的一些框架的流行、带.php,.jsp 后缀的情况很少了</span></pre></td></tr><tr><td data-num="18"></td><td><pre><span class="token directive"><span class="token keyword">location</span> /</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="19"></td><td><pre>    ·····</pre></td></tr><tr><td data-num="20"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure></li>
+</ol>
+</li>
+</ol>
+<h2 id="负载均衡"><a class="markdownIt-Anchor" href="#负载均衡">#</a> 负载均衡</h2>
+<blockquote>
+<p><strong>负载平衡</strong>（Load balancing）是一种<span class="exturl" data-url="aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvJUU3JTk0JUI1JUU1JUFEJTkwJUU4JUFFJUExJUU3JUFFJTk3JUU2JTlDJUJB">电脑</span>技术，用来在多个电脑（<span class="exturl" data-url="aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvJUU4JUFFJUExJUU3JUFFJTk3JUU2JTlDJUJBJUU5JTlCJTg2JUU3JUJFJUE0">电脑集群</span>）、网络连接、CPU、磁盘驱动器或其他资源中分配负载，以达到优化资源使用、最大化吞吐率、最小化响应时间、同时避免过载的目的。 使用带有负载平衡的多个服务器组件，取代单一的组件，可以通过<span class="exturl" data-url="aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3dpa2kvJUU1JTg2JTk3JUU0JUJEJTk5">冗余</span>提高可靠性。负载平衡服务通常是由专用软件和硬件来完成。 主要作用是将大量作业合理地分摊到多个操作单元上进行执行，用于解决互联网架构中的<strong>高并发</strong>和<strong>高可用</strong>的问题。</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/archives/435/attachment/0542"><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/0542.webp" alt=""></a></p>
+<p><code>nginx</code>  实现负载均衡原理，用户访问首先访问到 <code>nginx</code>  服务器，然后 <code>nginx</code>  服务器再从应用服务器集群中选择压力比较小的服务器，然后将该访问请求引向该服务器。如果应用服务器集群中某一台服务器崩溃，那么从待选择服务器列表中将该服务器删除，也就是说一个服务器崩溃了，那么 <code>nginx</code>  服务器不会把请求引向到该服务器。</p>
+<figure class="highlight nginx"><figcaption data-lang="nginx"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token directive"><span class="token keyword">upstream</span> myproxy</span><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>  <span class="token directive"><span class="token keyword">server</span> 10.10.1.2:8080</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>  <span class="token directive"><span class="token keyword">server</span> 10.10.1.3:8080</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre> <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="5"></td><td><pre> <span class="token directive"><span class="token keyword">server</span></span><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>  <span class="token directive"><span class="token keyword">listen</span> <span class="token number">80</span></span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>  <span class="token directive"><span class="token keyword">server\_name</span> wordpress-1258894728.cos.ap-beijing.myqcloud.com</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>  <span class="token directive"><span class="token keyword">location</span> /</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>  <span class="token directive"><span class="token keyword">proxy\_pass</span> http://myproxy</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>  <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="11"></td><td><pre> <span class="token punctuation">&#125;</span></pre></td></tr></table></figure><h3 id="负载均衡方案"><a class="markdownIt-Anchor" href="#负载均衡方案">#</a> 负载均衡方案</h3>
+<ol>
+<li>
+<p>随机 (轮询)</p>
+<figure class="highlight nginx"><figcaption data-lang="nginx"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token directive"><span class="token keyword">upstream</span> myproxy</span><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token directive"><span class="token keyword">server</span> 10.10.1.2:8080</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token directive"><span class="token keyword">server</span> 10.10.1.3:8080</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure></li>
+<li>
+<p>权重</p>
+<figure class="highlight nginx"><figcaption data-lang="nginx"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token directive"><span class="token keyword">upstream</span> myproxy</span><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token directive"><span class="token keyword">server</span> 10.10.1.2:8080 weight=5</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token directive"><span class="token keyword">server</span> 10.10.1.3:8080 weight=10</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure></li>
+<li>
+<p>ip_hash</p>
+<figure class="highlight nginx"><figcaption data-lang="nginx"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token directive"><span class="token keyword">upstream</span> myproxy</span><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token directive"><span class="token keyword">ip_hash</span></span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token directive"><span class="token keyword">server</span> 10.10.1.2:8080</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token directive"><span class="token keyword">server</span> 10.10.1.3:8080</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure></li>
+</ol>
+
+      <div class="tags">
+          <a href="/tags/%E8%BF%90%E7%BB%B4/" rel="tag"><i class="ic i-tag"></i> 运维</a>
+          <a href="/tags/nginx/" rel="tag"><i class="ic i-tag"></i> nginx</a>
+          <a href="/tags/openresty/" rel="tag"><i class="ic i-tag"></i> openresty</a>
+          <a href="/tags/%E7%BD%91%E5%85%B3/" rel="tag"><i class="ic i-tag"></i> 网关</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">更新于</span>
+    <time title="修改时间：2022-08-31 14:35:33" itemprop="dateModified" datetime="2022-08-31T14:35:33+08:00">2022-08-31</time>
+  </span>
+</div>
+
+      
+<div class="reward">
+  <button><i class="ic i-heartbeat"></i> 赞赏</button>
+  <p>请我喝[茶]~(￣▽￣)~*</p>
+  <div id="qr">
+  </div>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>本文作者： </strong>江霁月 <i class="ic i-at"><em>@</em></i>江霁月的私人小屋
+  </li>
+  <li class="link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/category/14fb0cb5989f.html" title="二.Nginx相关知识">http://example.com/category/14fb0cb5989f.html</a>
+  </li>
+  <li class="license">
+    <strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/category/2d9a2ff9eff9.html" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipeyonbf9j20zk0m8e81.jpg" title="Zabbix-Grafana图形展示软件">
+  <span class="type">上一篇</span>
+  <span class="category"><i class="ic i-flag"></i> 安全运维</span>
+  <h3>Zabbix-Grafana图形展示软件</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/category/2dcd61781139.html" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipevuctzzj20zk0m84qp.jpg" title="三.Nginx配置文件详解">
+  <span class="type">下一篇</span>
+  <span class="category"><i class="ic i-flag"></i> 微服务Api网关框架</span>
+  <h3>三.Nginx配置文件详解</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="文章目录">
+          <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#nginx%E5%AE%89%E8%A3%85"><span class="toc-number">1.</span> <span class="toc-text"> Nginx 安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nginx%E5%B9%B3%E6%BB%91%E5%8D%87%E7%BA%A7"><span class="toc-number">2.</span> <span class="toc-text"> Nginx 平滑升级</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nginx%E5%91%BD%E4%BB%A4"><span class="toc-number">3.</span> <span class="toc-text"> Nginx 命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#nginx%E4%BF%A1%E5%8F%B7%E6%8E%A7%E5%88%B6"><span class="toc-number">3.1.</span> <span class="toc-text"> Nginx 信号控制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nginx%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE"><span class="toc-number">4.</span> <span class="toc-text"> Nginx 基本配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nginx%E9%85%8D%E7%BD%AE%E8%BF%9E%E6%8E%A5%E6%95%B0"><span class="toc-number">5.</span> <span class="toc-text"> nginx 配置连接数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA"><span class="toc-number">6.</span> <span class="toc-text"> 虚拟主机</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA"><span class="toc-number">6.1.</span> <span class="toc-text"> 配置虚拟主机</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E9%85%8D%E7%BD%AE"><span class="toc-number">7.</span> <span class="toc-text"> 日志文件格式配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#access_log%E6%8C%87%E4%BB%A4"><span class="toc-number">7.1.</span> <span class="toc-text"> access_log 指令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%A5%E5%BF%97%E5%88%87%E5%89%B2"><span class="toc-number">8.</span> <span class="toc-text"> 日志切割</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E5%88%87%E5%89%B2"><span class="toc-number">8.1.</span> <span class="toc-text"> 系统自动切割</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#location%E9%85%8D%E7%BD%AE%E8%AF%A6%E8%A7%A3"><span class="toc-number">9.</span> <span class="toc-text"> location 配置详解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="toc-number">10.</span> <span class="toc-text"> 负载均衡</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E6%96%B9%E6%A1%88"><span class="toc-number">10.1.</span> <span class="toc-text"> 负载均衡方案</span></a></li></ol></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="系列文章">
+        <ul>
+          <li><a href="/category/ab8b660fc8ae.html" rel="bookmark" title="一.漫谈Nginx网关">一.漫谈Nginx网关</a></li><li class="active"><a href="/category/14fb0cb5989f.html" rel="bookmark" title="二.Nginx相关知识">二.Nginx相关知识</a></li><li><a href="/category/2dcd61781139.html" rel="bookmark" title="三.Nginx配置文件详解">三.Nginx配置文件详解</a></li><li><a href="/category/46cb37709f23.html" rel="bookmark" title="四.OpenResty中使用mysql">四.OpenResty中使用mysql</a></li><li><a href="/category/23cb1236ee1d.html" rel="bookmark" title="五.openresty执行流程">五.openresty执行流程</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="站点概览">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="江霁月"
+      data-src="/images/avatar.jpg">
+  <p class="name" itemprop="name">江霁月</p>
+  <div class="description" itemprop="description">专注分享一些关于安全运维和编程语言的知识·本博主爱安全,爱折腾,爱代码</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">55</span>
+        <span class="name">文章</span>
+      </a>
+    </div>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">17</span>
+        <span class="name">分类</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">30</span>
+        <span class="name">标签</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL0ppYW5nSmlZdWU=" title="https:&#x2F;&#x2F;github.com&#x2F;JiangJiYue"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS9qYW5naml5dWU=" title="https:&#x2F;&#x2F;twitter.com&#x2F;jangjiyue"><i class="ic i-twitter"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>首页</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a>
+  </li>
+
+  </ul>
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/category/2d9a2ff9eff9.html" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/category/2dcd61781139.html" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2010 – 
+    <span itemprop="copyrightYear">2022</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">江霁月 @ 江霁月的私人小屋</span>
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+    <span title="站点总字数">235k 字</span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:34</span>
+  </div>
+  <div class="powered-by">
+    基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: 'category/14fb0cb5989f.html',
+    favicon: {
+      show: "（●´3｀●）やれやれだぜ",
+      hide: "(´Д｀)大変だ！"
+    },
+    search : {
+      placeholder: "文章搜索",
+      empty: "关于 「 ${query} 」，什么也没搜到",
+      stats: "${time} ms 内找到 ${hits} 条结果"
+    },
+    valine: true,fancybox: true,
+    copyright: '复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://cdn.polyfill.io/v2/polyfill.js"></script>
+
+<script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,566 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="江霁月的私人小屋" href="http://example.com/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="江霁月的私人小屋" href="http://example.com/atom.xml" />
+<link rel="alternate" type="application/json" title="江霁月的私人小屋" href="http://example.com/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="Docker,linux,mysql" />
+
+
+<link rel="canonical" href="http://example.com/category/664761ec1ed2.html">
+
+
+
+  <title>
+Docker安装LAMP - 安全运维 |
+江霁月的私人小屋</title>
+<meta name="generator" content="Hexo 5.4.2"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">Docker安装LAMP
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="创建时间：2022-09-11 18:06:45">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">发表于</span>
+    <time itemprop="dateCreated datePublished" datetime="2022-09-11T18:06:45+08:00">2022-09-11</time>
+  </span>
+  <span class="item" title="本文字数">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">本文字数</span>
+    <span>3.1k</span>
+    <span class="text">字</span>
+  </span>
+  <span class="item" title="阅读时长">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">阅读时长</span>
+    <span>3 分钟</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="切换导航栏">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">江霁月的私人小屋</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gicli3sbvtj20zk0m8x6p.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclhnx9glj20zk0m8npd.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclj61ylzj20zk0m8b29.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gicivghyooj20zk0m8dir.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gicm0n457cj20zk0m8e81.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclhfehz7j20zk0m8u0x.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">首页</a></span><i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/SOC/" itemprop="item" rel="index" title="分类于 安全运维"><span itemprop="name">安全运维</span></a>
+<meta itemprop="position" content="1" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN">
+  <link itemprop="mainEntityOfPage" href="http://example.com/category/664761ec1ed2.html">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/avatar.jpg">
+    <meta itemprop="name" content="江霁月">
+    <meta itemprop="description" content=", 专注分享一些关于安全运维和编程语言的知识·本博主爱安全,爱折腾,爱代码">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="江霁月的私人小屋">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <h2 id="docker基本使用"><a class="markdownIt-Anchor" href="#docker基本使用">#</a> Docker 基本使用</h2>
+<h3 id="docker的组成"><a class="markdownIt-Anchor" href="#docker的组成">#</a> Docker 的组成</h3>
+<ul>
+<li>docker 服务器与 docker 客户端</li>
+<li>docker 镜像
+<ul>
+<li>分层</li>
+<li>写时复制</li>
+<li>内容寻址</li>
+<li>联合挂载</li>
+</ul>
+</li>
+<li>docker 仓库</li>
+<li>docker 容器</li>
+</ul>
+<h3 id="仓库与镜像"><a class="markdownIt-Anchor" href="#仓库与镜像">#</a> 仓库与镜像</h3>
+<ul>
+<li>
+<p>设置国内镜像仓库</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># 注册阿里云账号，选择镜像仓库加速服务</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token comment"># 修改文件</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token function">vim</span> /etc/docker/daemon.json</pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token punctuation">&#123;</span><span class="token string">"registry-mirrors"</span>:<span class="token punctuation">[</span><span class="token string">"https://xxxxx.mirror.aliyun.com"</span><span class="token punctuation">]</span><span class="token punctuation">&#125;</span></pre></td></tr></table></figure></li>
+<li>
+<p>搜索镜像</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">docker</span> search centos</pre></td></tr></table></figure></li>
+<li>
+<p>下载镜像</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">docker</span> pull centos</pre></td></tr></table></figure></li>
+<li>
+<p>查看镜像</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">docker</span> images</pre></td></tr></table></figure></li>
+</ul>
+<h3 id="创建容器与进入容器"><a class="markdownIt-Anchor" href="#创建容器与进入容器">#</a> 创建容器与进入容器</h3>
+<ul>
+<li>
+<p>创建第一个容器</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">docker</span> run <span class="token parameter variable">-itd</span> <span class="token punctuation">[</span>--name 容器名称<span class="token punctuation">]</span> 镜像名/ID</pre></td></tr></table></figure></li>
+<li>
+<p>查看容器列表</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">docker</span> <span class="token function">ps</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">docker</span> <span class="token function">ps</span> <span class="token parameter variable">-a</span></pre></td></tr></table></figure></li>
+<li>
+<p>进入这个容器</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">docker</span> <span class="token builtin class-name">exec</span> <span class="token parameter variable">-it</span> 容器名/ID /bin/bash</pre></td></tr></table></figure></li>
+</ul>
+<h3 id="关闭容器和删除容器"><a class="markdownIt-Anchor" href="#关闭容器和删除容器">#</a> 关闭容器和删除容器</h3>
+<ul>
+<li>
+<p>关闭一个正在运行的容器</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">docker</span> stop 容器名/ID</pre></td></tr></table></figure></li>
+<li>
+<p>删除一个没有运行的容器</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">docker</span> <span class="token function">rm</span> 容器名/ID</pre></td></tr></table></figure></li>
+<li>
+<p>杀死一个正在运行的容器</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">docker</span> <span class="token function">kill</span> 容器名/ID</pre></td></tr></table></figure></li>
+</ul>
+<h3 id="制作离线镜像包"><a class="markdownIt-Anchor" href="#制作离线镜像包">#</a> 制作离线镜像包</h3>
+<ul>
+<li>
+<p>使用修改过的容器制作新镜像</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">docker</span> commit 容器ID 镜像名称:新tag</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">docker</span> save <span class="token parameter variable">-o</span> 离线包名.tar 镜像名:镜像tag</pre></td></tr></table></figure></li>
+<li>
+<p>查看镜像差异</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">docker</span> <span class="token function">diff</span> 镜像ID</pre></td></tr></table></figure></li>
+<li>
+<p>保存为离线包</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">docker</span> save <span class="token parameter variable">-o</span> 离线包名.tar 镜像名:镜像tag</pre></td></tr></table></figure></li>
+</ul>
+<h3 id="导入离线镜像包"><a class="markdownIt-Anchor" href="#导入离线镜像包">#</a> 导入离线镜像包</h3>
+<ul>
+<li>
+<p>将离线包导入到 docker 镜像中</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">docker</span> load <span class="token parameter variable">-i</span> tar包</pre></td></tr></table></figure></li>
+<li>
+<p>使用离线镜像创建容器</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">docker</span> run <span class="token parameter variable">-itd</span> ID</pre></td></tr></table></figure></li>
+</ul>
+<h3 id="暴露端口与目录"><a class="markdownIt-Anchor" href="#暴露端口与目录">#</a> 暴露端口与目录</h3>
+<ul>
+<li>
+<p>将容器内的端口号暴露到宿主系统</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">docker</span> run <span class="token parameter variable">-itd</span> <span class="token parameter variable">-v</span> 宿主路径:容器内路径  镜像ID</pre></td></tr></table></figure></li>
+<li>
+<p>将宿主系统的目录挂载到容器中</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">docker</span> run <span class="token parameter variable">-itd</span> <span class="token parameter variable">-p</span> 宿主端口号:容器内端口号 镜像ID</pre></td></tr></table></figure></li>
+</ul>
+<h3 id="容器与宿主机数据拷贝"><a class="markdownIt-Anchor" href="#容器与宿主机数据拷贝">#</a> 容器与宿主机数据拷贝</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># docker cp : 用于容器与主机之间的数据拷贝。</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token comment"># 语法</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token comment"># docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|-</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token comment"># docker cp [OPTIONS] SRC_PATH|- CONTAINER:DEST_PATH</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token comment"># OPTIONS 说明：</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token comment"># -L : 保持源目标中的链接</span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token comment"># 实例</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token comment"># 将主机 /opt/nginx 目录拷贝到容器 96f7f14e99ab 的 /www 目录下。</span></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token function">docker</span> <span class="token function">cp</span> /opt/nginx 96f7f14e99ab:/www/</pre></td></tr><tr><td data-num="10"></td><td><pre></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token comment"># 将主机 /opt/nginx 目录拷贝到容器 96f7f14e99ab 中，目录重命名为 www。</span></pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token function">docker</span> <span class="token function">cp</span> /opt/nginx 96f7f14e99ab:/www</pre></td></tr><tr><td data-num="13"></td><td><pre></pre></td></tr><tr><td data-num="14"></td><td><pre><span class="token comment"># 将容器 96f7f14e99ab 的 /www 目录拷贝到主机的 /tmp 目录中。</span></pre></td></tr><tr><td data-num="15"></td><td><pre><span class="token function">docker</span> <span class="token function">cp</span>  96f7f14e99ab:/www /tmp/</pre></td></tr></table></figure><h3 id="查看容器日志"><a class="markdownIt-Anchor" href="#查看容器日志">#</a> 查看容器日志</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># docker logs : 获取容器的日志</span></pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token comment"># 语法</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token comment"># docker logs [OPTIONS] CONTAINER</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token comment"># OPTIONS 说明：</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token comment"># -f : 跟踪日志输出</span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token comment"># --since : 显示某个开始时间的所有日志</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token comment"># -t : 显示时间戳</span></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token comment"># --tail : 仅列出最新 N 条容器日志</span></pre></td></tr><tr><td data-num="10"></td><td><pre></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token comment"># 实例</span></pre></td></tr><tr><td data-num="12"></td><td><pre></pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token comment"># 跟踪查看容器 nginx 的日志输出。</span></pre></td></tr><tr><td data-num="14"></td><td><pre><span class="token function">docker</span> logs <span class="token parameter variable">-f</span> nginx</pre></td></tr><tr><td data-num="15"></td><td><pre></pre></td></tr><tr><td data-num="16"></td><td><pre><span class="token number">192.168</span>.239.1 - - <span class="token punctuation">[</span><span class="token number">10</span>/sep/2022:16:53:33 +0000<span class="token punctuation">]</span> <span class="token string">"GET / HTTP/1.1"</span> <span class="token number">200</span> <span class="token number">612</span> <span class="token string">"-"</span> <span class="token string">"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.93 Safari/537.36"</span> <span class="token string">"-"</span></pre></td></tr><tr><td data-num="17"></td><td><pre><span class="token number">2022</span>/09/10 <span class="token number">16</span>:53:33 <span class="token punctuation">[</span>error<span class="token punctuation">]</span> <span class="token number">5</span><span class="token comment">#5: *1 open() "/usr/share/nginx/html/favicon.ico" failed (2: No such file or directory), client: 192.168.239.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "192.168.239.130", referrer: "http://192.168.239.130/"</span></pre></td></tr><tr><td data-num="18"></td><td><pre><span class="token number">192.168</span>.239.1 - - <span class="token punctuation">[</span><span class="token number">10</span>/sep/2022:16:53:33 +0000<span class="token punctuation">]</span> <span class="token string">"GET /favicon.ico HTTP/1.1"</span> <span class="token number">404</span> <span class="token number">571</span> <span class="token string">"http://192.168.239.130/"</span> <span class="token string">"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.93 Safari/537.36"</span> <span class="token string">"-"</span></pre></td></tr><tr><td data-num="19"></td><td><pre><span class="token number">192.168</span>.239.1 - - <span class="token punctuation">[</span><span class="token number">10</span>/sep/2022:16:53:59 +0000<span class="token punctuation">]</span> <span class="token string">"GET / HTTP/1.1"</span> <span class="token number">304</span> <span class="token number">0</span> <span class="token string">"-"</span> <span class="token string">"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.93 Safari/537.36"</span> <span class="token string">"-"</span></pre></td></tr><tr><td data-num="20"></td><td><pre></pre></td></tr><tr><td data-num="21"></td><td><pre><span class="token comment"># 查看容器 nginx 从 2022 年 9 月 10 日后的最新 10 条日志。</span></pre></td></tr><tr><td data-num="22"></td><td><pre><span class="token function">docker</span> logs <span class="token parameter variable">--since</span><span class="token operator">=</span><span class="token string">"2022-09-10"</span> <span class="token parameter variable">--tail</span><span class="token operator">=</span><span class="token number">10</span> nginx</pre></td></tr></table></figure><h2 id="docker安装lamp"><a class="markdownIt-Anchor" href="#docker安装lamp">#</a> Docker 安装 lamp</h2>
+<h3 id="安装mysql"><a class="markdownIt-Anchor" href="#安装mysql">#</a> 安装 MySQL</h3>
+<ul>
+<li>
+<p>搜索镜像</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">docker</span> search mariadb</pre></td></tr></table></figure></li>
+<li>
+<p>下载镜像</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">docker</span> pull docker.io/mariadb</pre></td></tr></table></figure></li>
+<li>
+<p>创建并启动 MySQL 容器</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">docker</span> run <span class="token parameter variable">-d</span> <span class="token parameter variable">--name</span> mariadb <span class="token parameter variable">-p</span> <span class="token number">3306</span>:3306 <span class="token parameter variable">-e</span> <span class="token assign-left variable">MYSQL_ROOT_PASSWORD</span><span class="token operator">=</span><span class="token string">'你的mysql密码'</span> docker.io/mariadb</pre></td></tr></table></figure></li>
+<li>
+<p>访问测试 进入到容器内部</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">docker</span> <span class="token builtin class-name">exec</span> <span class="token parameter variable">-it</span> mariadb <span class="token function">bash</span></pre></td></tr></table></figure></li>
+<li>
+<p>连接 mysql 数据库</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>mysql <span class="token parameter variable">-uroot</span> <span class="token parameter variable">-p</span></pre></td></tr></table></figure></li>
+<li>
+<p>授权主机访问</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>GRANT ALL PRIVILEGES ON *.* TO <span class="token string">'root'</span>@<span class="token string">'%'</span> IDENTIFIED BY <span class="token string">'你的mysql密码'</span> WITH GRANT OPTION<span class="token punctuation">;</span></pre></td></tr></table></figure></li>
+<li>
+<p>刷新权限</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>FLUSH PRIVILEGES<span class="token punctuation">;</span></pre></td></tr></table></figure><p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209111547048.png" alt="image-20220911154727633"></p>
+</li>
+</ul>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209111548532.png" alt="image-20220911154801378"></p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209111548774.png" alt="image-20220911154832425"></p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209111549949.png" alt="image-20220911154951790"></p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209111550025.png" alt="image-20220911155030823"></p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209111552275.png" alt="image-20220911155257060"></p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209111553252.png" alt="image-20220911155313149"></p>
+<h3 id="安装php-and-apache"><a class="markdownIt-Anchor" href="#安装php-and-apache">#</a> 安装 PHP AND Apache</h3>
+<ul>
+<li>
+<p>搜索镜像</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">docker</span> search php</pre></td></tr></table></figure></li>
+<li>
+<p>下载镜像</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">docker</span> pull php:7.2-apache</pre></td></tr></table></figure></li>
+<li>
+<p>创建并启动 PHP 容器</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">mkdir</span> /opt/php</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">docker</span> run <span class="token parameter variable">-d</span> <span class="token parameter variable">--name</span> php <span class="token parameter variable">-p</span> <span class="token number">80</span>:80 <span class="token parameter variable">-v</span> /opt/php:/var/www/html php:7.2-apache</pre></td></tr></table></figure></li>
+<li>
+<p>访问测试</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">vim</span> /opt/php/index.php</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token operator">&lt;</span>?php</pre></td></tr><tr><td data-num="3"></td><td><pre>phpinfo<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr></table></figure></li>
+<li>
+<p>进入容器</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">docker</span> <span class="token builtin class-name">exec</span> <span class="token parameter variable">-it</span> php /bin/bash</pre></td></tr></table></figure></li>
+<li>
+<p>安装 mysql 扩展</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token builtin class-name">cd</span> /usr/local/bin</pre></td></tr><tr><td data-num="2"></td><td><pre>./docker-php-ext-install pdo_mysql</pre></td></tr><tr><td data-num="3"></td><td><pre>./docker-php-ext-install mysqli</pre></td></tr></table></figure></li>
+<li>
+<p>重启容器</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">docker</span> restart 容器ID</pre></td></tr></table></figure></li>
+<li>
+<p>检查 mysql 连接</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">rm</span> <span class="token parameter variable">-rf</span> /opt/php/index.php</pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token function">vim</span> /opt/php/index.php</pre></td></tr></table></figure><figure class="highlight php"><figcaption data-lang="PHP"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token php language-php"><span class="token delimiter important">&lt;?php</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token variable">$servername</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"mariadb容器的IP"</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token variable">$username</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"username"</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token variable">$password</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"password"</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre> </pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token comment">// 创建连接</span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token variable">$conn</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">mysqli</span><span class="token punctuation">(</span><span class="token variable">$servername</span><span class="token punctuation">,</span> <span class="token variable">$username</span><span class="token punctuation">,</span> <span class="token variable">$password</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre> </pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token comment">// 检测连接</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token variable">$conn</span><span class="token operator">-></span><span class="token property">connect_error</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"连接失败: "</span> <span class="token operator">.</span> <span class="token variable">$conn</span><span class="token operator">-></span><span class="token property">connect_error</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token punctuation">&#125;</span> </pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token keyword">echo</span> <span class="token string double-quoted-string">"连接成功"</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="14"></td><td><pre><span class="token delimiter important">?></span></span></pre></td></tr></table></figure><p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209111620935.png" alt="image-20220911162029622"></p>
+</li>
+</ul>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209111622443.png" alt="image-20220911162207300"></p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209111637416.png" alt="image-20220911163708227"></p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209111638093.png" alt="image-20220911163828854"></p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209111639269.png" alt="image-20220911163916058"></p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209111757268.png" alt="image-20220911175701043"></p>
+<p><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209111757455.png" alt="image-20220911175710354"></p>
+
+      <div class="tags">
+          <a href="/tags/Docker/" rel="tag"><i class="ic i-tag"></i> Docker</a>
+          <a href="/tags/linux/" rel="tag"><i class="ic i-tag"></i> linux</a>
+          <a href="/tags/mysql/" rel="tag"><i class="ic i-tag"></i> mysql</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">更新于</span>
+    <time title="修改时间：2022-09-11 18:09:08" itemprop="dateModified" datetime="2022-09-11T18:09:08+08:00">2022-09-11</time>
+  </span>
+</div>
+
+      
+<div class="reward">
+  <button><i class="ic i-heartbeat"></i> 赞赏</button>
+  <p>请我喝[茶]~(￣▽￣)~*</p>
+  <div id="qr">
+  </div>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>本文作者： </strong>江霁月 <i class="ic i-at"><em>@</em></i>江霁月的私人小屋
+  </li>
+  <li class="link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/category/664761ec1ed2.html" title="Docker安装LAMP">http://example.com/category/664761ec1ed2.html</a>
+  </li>
+  <li class="license">
+    <strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/category/17faee78d2f1.html" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipewf5l51j20zk0m8b29.jpg" title="基于awstats的apache日志分析">
+  <span class="type">上一篇</span>
+  <span class="category"><i class="ic i-flag"></i> 安全运维</span>
+  <h3>基于awstats的apache日志分析</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/category/2517a85f9134.html" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipexe4oykj20zk0m87ji.jpg" title="安全加固之Linux软件包封装脚本分析">
+  <span class="type">下一篇</span>
+  <span class="category"><i class="ic i-flag"></i> 安全加固</span>
+  <h3>安全加固之Linux软件包封装脚本分析</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="文章目录">
+          <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#docker%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text"> Docker 基本使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#docker%E7%9A%84%E7%BB%84%E6%88%90"><span class="toc-number">1.1.</span> <span class="toc-text"> Docker 的组成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%93%E5%BA%93%E4%B8%8E%E9%95%9C%E5%83%8F"><span class="toc-number">1.2.</span> <span class="toc-text"> 仓库与镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%AE%B9%E5%99%A8%E4%B8%8E%E8%BF%9B%E5%85%A5%E5%AE%B9%E5%99%A8"><span class="toc-number">1.3.</span> <span class="toc-text"> 创建容器与进入容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%97%AD%E5%AE%B9%E5%99%A8%E5%92%8C%E5%88%A0%E9%99%A4%E5%AE%B9%E5%99%A8"><span class="toc-number">1.4.</span> <span class="toc-text"> 关闭容器和删除容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%B6%E4%BD%9C%E7%A6%BB%E7%BA%BF%E9%95%9C%E5%83%8F%E5%8C%85"><span class="toc-number">1.5.</span> <span class="toc-text"> 制作离线镜像包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%BC%E5%85%A5%E7%A6%BB%E7%BA%BF%E9%95%9C%E5%83%8F%E5%8C%85"><span class="toc-number">1.6.</span> <span class="toc-text"> 导入离线镜像包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9A%B4%E9%9C%B2%E7%AB%AF%E5%8F%A3%E4%B8%8E%E7%9B%AE%E5%BD%95"><span class="toc-number">1.7.</span> <span class="toc-text"> 暴露端口与目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%B9%E5%99%A8%E4%B8%8E%E5%AE%BF%E4%B8%BB%E6%9C%BA%E6%95%B0%E6%8D%AE%E6%8B%B7%E8%B4%9D"><span class="toc-number">1.8.</span> <span class="toc-text"> 容器与宿主机数据拷贝</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E5%AE%B9%E5%99%A8%E6%97%A5%E5%BF%97"><span class="toc-number">1.9.</span> <span class="toc-text"> 查看容器日志</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#docker%E5%AE%89%E8%A3%85lamp"><span class="toc-number">2.</span> <span class="toc-text"> Docker 安装 lamp</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85mysql"><span class="toc-number">2.1.</span> <span class="toc-text"> 安装 MySQL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85php-and-apache"><span class="toc-number">2.2.</span> <span class="toc-text"> 安装 PHP AND Apache</span></a></li></ol></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="系列文章">
+        <ul>
+          <li><a href="/category/c6d35287e59b.html" rel="bookmark" title="zabbix5.2安装教程">zabbix5.2安装教程</a></li><li><a href="/category/ab18ab7128a4.html" rel="bookmark" title="Linux-firewalld的基本操作">Linux-firewalld的基本操作</a></li><li><a href="/category/d6f317918d52.html" rel="bookmark" title="Linux-编译安装memcached扩展">Linux-编译安装memcached扩展</a></li><li><a href="/category/c4e85479f6ff.html" rel="bookmark" title="Linux-安装Lnmp">Linux-安装Lnmp</a></li><li><a href="/category/79bf3c2d498a.html" rel="bookmark" title="Linux-Mysql主主架构">Linux-Mysql主主架构</a></li><li><a href="/category/ecda3fb76685.html" rel="bookmark" title="Linux-Opcache参数配置优化 加速网站访问">Linux-Opcache参数配置优化 加速网站访问</a></li><li><a href="/category/dd602a6b35ac.html" rel="bookmark" title="Linux-利用acme为阿里云dns域名颁发泛域名证书">Linux-利用acme为阿里云dns域名颁发泛域名证书</a></li><li><a href="/category/ab8b660fc8ae.html" rel="bookmark" title="一.漫谈Nginx网关">一.漫谈Nginx网关</a></li><li><a href="/category/2d9a2ff9eff9.html" rel="bookmark" title="Zabbix-Grafana图形展示软件">Zabbix-Grafana图形展示软件</a></li><li><a href="/category/14fb0cb5989f.html" rel="bookmark" title="二.Nginx相关知识">二.Nginx相关知识</a></li><li><a href="/category/2dcd61781139.html" rel="bookmark" title="三.Nginx配置文件详解">三.Nginx配置文件详解</a></li><li><a href="/category/2e72a923fa65.html" rel="bookmark" title="从零搭建日志采集报警系统(ELK+FileBeat)">从零搭建日志采集报警系统(ELK+FileBeat)</a></li><li><a href="/category/7b084077da53.html" rel="bookmark" title="ELK收集nginx日志并展示来源IP地图">ELK收集nginx日志并展示来源IP地图</a></li><li><a href="/category/007554234c41.html" rel="bookmark" title="Linux-Mysql基本操作">Linux-Mysql基本操作</a></li><li><a href="/category/0447b4c5647f.html" rel="bookmark" title="Linux从入门到放弃-常用命令">Linux从入门到放弃-常用命令</a></li><li><a href="/category/8495ff9caf6a.html" rel="bookmark" title="Linux从入门到放弃-磁盘管理">Linux从入门到放弃-磁盘管理</a></li><li><a href="/category/c119bd60cc53.html" rel="bookmark" title="Linux-MySQL开启慢查询日志">Linux-MySQL开启慢查询日志</a></li><li><a href="/category/8acc85d10262.html" rel="bookmark" title="Linux-定时备份网站数据文件到阿里云盘">Linux-定时备份网站数据文件到阿里云盘</a></li><li><a href="/category/46cb37709f23.html" rel="bookmark" title="四.OpenResty中使用mysql">四.OpenResty中使用mysql</a></li><li><a href="/category/23cb1236ee1d.html" rel="bookmark" title="五.openresty执行流程">五.openresty执行流程</a></li><li><a href="/category/c1e57771066d.html" rel="bookmark" title="使用 Grafana 创建可视化面板">使用 Grafana 创建可视化面板</a></li><li><a href="/category/dc4b4724dfe7.html" rel="bookmark" title="Centos升级Python3.x版本踩过的坑">Centos升级Python3.x版本踩过的坑</a></li><li><a href="/category/10af10f41e58.html" rel="bookmark" title="Windows常用命令">Windows常用命令</a></li><li><a href="/category/1970703bb420.html" rel="bookmark" title="Security-编译安装openresty2.14+Modsecurity以支持TLSv1.3">Security-编译安装openresty2.14+Modsecurity以支持TLSv1.3</a></li><li><a href="/category/17faee78d2f1.html" rel="bookmark" title="基于awstats的apache日志分析">基于awstats的apache日志分析</a></li><li class="active"><a href="/category/664761ec1ed2.html" rel="bookmark" title="Docker安装LAMP">Docker安装LAMP</a></li><li><a href="/category/2517a85f9134.html" rel="bookmark" title="安全加固之Linux软件包封装脚本分析">安全加固之Linux软件包封装脚本分析</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="站点概览">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="江霁月"
+      data-src="/images/avatar.jpg">
+  <p class="name" itemprop="name">江霁月</p>
+  <div class="description" itemprop="description">专注分享一些关于安全运维和编程语言的知识·本博主爱安全,爱折腾,爱代码</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">55</span>
+        <span class="name">文章</span>
+      </a>
+    </div>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">17</span>
+        <span class="name">分类</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">30</span>
+        <span class="name">标签</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL0ppYW5nSmlZdWU=" title="https:&#x2F;&#x2F;github.com&#x2F;JiangJiYue"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS9qYW5naml5dWU=" title="https:&#x2F;&#x2F;twitter.com&#x2F;jangjiyue"><i class="ic i-twitter"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>首页</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a>
+  </li>
+
+  </ul>
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/category/17faee78d2f1.html" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/category/2517a85f9134.html" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2010 – 
+    <span itemprop="copyrightYear">2022</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">江霁月 @ 江霁月的私人小屋</span>
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+    <span title="站点总字数">235k 字</span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:34</span>
+  </div>
+  <div class="powered-by">
+    基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: 'category/664761ec1ed2.html',
+    favicon: {
+      show: "（●´3｀●）やれやれだぜ",
+      hide: "(´Д｀)大変だ！"
+    },
+    search : {
+      placeholder: "文章搜索",
+      empty: "关于 「 ${query} 」，什么也没搜到",
+      stats: "${time} ms 内找到 ${hits} 条结果"
+    },
+    valine: true,fancybox: true,
+    copyright: '复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://cdn.polyfill.io/v2/polyfill.js"></script>
+
+<script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>

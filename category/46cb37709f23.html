@@ -1,0 +1,429 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="江霁月的私人小屋" href="http://example.com/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="江霁月的私人小屋" href="http://example.com/atom.xml" />
+<link rel="alternate" type="application/json" title="江霁月的私人小屋" href="http://example.com/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="nginx,openresty,网关" />
+
+
+<link rel="canonical" href="http://example.com/category/46cb37709f23.html">
+
+
+
+  <title>
+四.OpenResty中使用mysql - 微服务Api网关框架 - 安全运维 |
+江霁月的私人小屋</title>
+<meta name="generator" content="Hexo 5.4.2"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">四.OpenResty中使用mysql
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="创建时间：2021-09-27 16:38:46">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">发表于</span>
+    <time itemprop="dateCreated datePublished" datetime="2021-09-27T16:38:46+08:00">2021-09-27</time>
+  </span>
+  <span class="item" title="本文字数">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">本文字数</span>
+    <span>3.1k</span>
+    <span class="text">字</span>
+  </span>
+  <span class="item" title="阅读时长">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">阅读时长</span>
+    <span>3 分钟</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="切换导航栏">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">江霁月的私人小屋</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipesx5fdwj20zk0m81kx.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipew8gmvyj20zk0m87wh.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclwuom7cj20zk0m8dvn.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclfw2t96j20zk0m8x6p.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclhnx9glj20zk0m8npd.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclj9410cj20zk0m8h12.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">首页</a></span><i class="ic i-angle-right"></i>
+<span  itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/SOC/" itemprop="item" rel="index" title="分类于 安全运维"><span itemprop="name">安全运维</span></a>
+<meta itemprop="position" content="1" /></span>
+<i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/SOC/openresty/" itemprop="item" rel="index" title="分类于 微服务Api网关框架"><span itemprop="name">微服务Api网关框架</span></a>
+<meta itemprop="position" content="2" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN">
+  <link itemprop="mainEntityOfPage" href="http://example.com/category/46cb37709f23.html">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/avatar.jpg">
+    <meta itemprop="name" content="江霁月">
+    <meta itemprop="description" content=", 专注分享一些关于安全运维和编程语言的知识·本博主爱安全,爱折腾,爱代码">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="江霁月的私人小屋">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <h2 id="定义关闭mysql连接函数"><a class="markdownIt-Anchor" href="#定义关闭mysql连接函数">#</a> 定义关闭 mysql 连接函数</h2>
+<figure class="highlight lua"><figcaption data-lang="lua"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">-- 定义关闭 mysql 的连接</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">local</span> <span class="token keyword">function</span> <span class="token function">close_db</span><span class="token punctuation">(</span>db<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">if</span> <span class="token keyword">not</span> db <span class="token keyword">then</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        <span class="token keyword">return</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">end</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    db<span class="token punctuation">:</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token keyword">end</span></pre></td></tr></table></figure><h2 id="创建实例"><a class="markdownIt-Anchor" href="#创建实例">#</a> 创建实例</h2>
+<figure class="highlight lua"><figcaption data-lang="lua"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">-- 引入 mysql 模块</span></pre></td></tr><tr><td data-num="2"></td><td><pre> <span class="token keyword">local</span> mysql <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"resty.mysql"</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre> <span class="token comment">-- 创建实例</span></pre></td></tr><tr><td data-num="4"></td><td><pre> <span class="token keyword">local</span> db<span class="token punctuation">,</span>err <span class="token operator">=</span> mysql<span class="token punctuation">:</span><span class="token function">new</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre> <span class="token keyword">if</span> <span class="token keyword">not</span> db <span class="token keyword">then</span></pre></td></tr><tr><td data-num="6"></td><td><pre>     ngx<span class="token punctuation">.</span><span class="token function">say</span><span class="token punctuation">(</span><span class="token string">"new mysql error:"</span><span class="token punctuation">,</span>error<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre>     <span class="token keyword">return</span></pre></td></tr><tr><td data-num="8"></td><td><pre> <span class="token keyword">end</span></pre></td></tr><tr><td data-num="9"></td><td><pre> <span class="token comment">-- 设置超时时间 (毫秒)</span></pre></td></tr><tr><td data-num="10"></td><td><pre> db<span class="token punctuation">:</span><span class="token function">set_timeout</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="11"></td><td><pre> <span class="token comment">-- 连接属性定义</span></pre></td></tr><tr><td data-num="12"></td><td><pre> <span class="token keyword">local</span> props <span class="token operator">=</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="13"></td><td><pre>     host <span class="token operator">=</span> <span class="token string">"192.168.8.106"</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="14"></td><td><pre>     port <span class="token operator">=</span> <span class="token string">"3306"</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="15"></td><td><pre>     database <span class="token operator">=</span> <span class="token string">"test"</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="16"></td><td><pre>     user <span class="token operator">=</span> <span class="token string">"test"</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="17"></td><td><pre>     password <span class="token operator">=</span> <span class="token string">"123456"</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="18"></td><td><pre>     charset <span class="token operator">=</span> <span class="token string">"utf8"</span></pre></td></tr><tr><td data-num="19"></td><td><pre> <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="20"></td><td><pre></pre></td></tr><tr><td data-num="21"></td><td><pre> <span class="token keyword">local</span> res<span class="token punctuation">,</span>err<span class="token punctuation">,</span>errno<span class="token punctuation">,</span>sqlstate <span class="token operator">=</span> db<span class="token punctuation">:</span><span class="token function">connect</span><span class="token punctuation">(</span>props<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="22"></td><td><pre></pre></td></tr><tr><td data-num="23"></td><td><pre> <span class="token keyword">if</span> <span class="token keyword">not</span> res <span class="token keyword">then</span></pre></td></tr><tr><td data-num="24"></td><td><pre>     ngx<span class="token punctuation">.</span><span class="token function">say</span><span class="token punctuation">(</span><span class="token string">"connect to mysql error:"</span><span class="token punctuation">,</span>err<span class="token punctuation">,</span><span class="token string">",errno:"</span><span class="token punctuation">,</span>errno<span class="token punctuation">,</span><span class="token string">",sqlstate:"</span><span class="token punctuation">,</span>sqlstate<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="25"></td><td><pre>     <span class="token keyword">return</span> <span class="token function">close_db</span><span class="token punctuation">(</span>db<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="26"></td><td><pre> <span class="token keyword">end</span></pre></td></tr></table></figure><h2 id="删除语句函数"><a class="markdownIt-Anchor" href="#删除语句函数">#</a> 删除语句函数</h2>
+<figure class="highlight lua"><figcaption data-lang="lua"></figcaption><table><tr><td data-num="1"></td><td><pre>ngx<span class="token punctuation">.</span><span class="token function">say</span><span class="token punctuation">(</span><span class="token string">"--删除表user--"</span><span class="token punctuation">,</span><span class="token string">"&lt;br/>"</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre> <span class="token comment">-- 定义删除语句</span></pre></td></tr><tr><td data-num="4"></td><td><pre> <span class="token keyword">local</span> drop_table_sql <span class="token operator">=</span> <span class="token string">"drop table if exists user"</span></pre></td></tr><tr><td data-num="5"></td><td><pre> res<span class="token punctuation">,</span>err<span class="token punctuation">,</span>errno<span class="token punctuation">,</span>sqlstate<span class="token operator">=</span>db<span class="token punctuation">:</span><span class="token function">query</span><span class="token punctuation">(</span>drop_table_sql<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre> <span class="token keyword">if</span> <span class="token keyword">not</span> res <span class="token keyword">then</span></pre></td></tr><tr><td data-num="7"></td><td><pre>     ngx<span class="token punctuation">.</span><span class="token function">say</span><span class="token punctuation">(</span><span class="token string">"drop table error:"</span><span class="token punctuation">,</span>err<span class="token punctuation">,</span><span class="token string">"errno:"</span><span class="token punctuation">,</span>errno<span class="token punctuation">,</span><span class="token string">",sqlstate:"</span><span class="token punctuation">,</span>sqlstate<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre>     <span class="token keyword">return</span> <span class="token function">close_db</span><span class="token punctuation">(</span>db<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="9"></td><td><pre> <span class="token keyword">end</span></pre></td></tr></table></figure><h2 id="创建语句函数"><a class="markdownIt-Anchor" href="#创建语句函数">#</a> 创建语句函数</h2>
+<figure class="highlight lua"><figcaption data-lang="lua"></figcaption><table><tr><td data-num="1"></td><td><pre>ngx<span class="token punctuation">.</span><span class="token function">say</span><span class="token punctuation">(</span><span class="token string">"--创建表user--"</span><span class="token punctuation">,</span><span class="token string">"&lt;br/>"</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="2"></td><td><pre> <span class="token comment">-- 定义创建语句</span></pre></td></tr><tr><td data-num="3"></td><td><pre> <span class="token keyword">local</span> create_table_sql <span class="token operator">=</span> <span class="token string">"create table user(id int primary key auto_increment, ch varchar(100))"</span></pre></td></tr><tr><td data-num="4"></td><td><pre> res<span class="token punctuation">,</span>err<span class="token punctuation">,</span>errno<span class="token punctuation">,</span>sqlstate<span class="token operator">=</span>db<span class="token punctuation">:</span><span class="token function">query</span><span class="token punctuation">(</span>create_table_sql<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre> <span class="token keyword">if</span> <span class="token keyword">not</span> res <span class="token keyword">then</span></pre></td></tr><tr><td data-num="6"></td><td><pre>     ngx<span class="token punctuation">.</span><span class="token function">say</span><span class="token punctuation">(</span><span class="token string">"create table error:"</span><span class="token punctuation">,</span>err<span class="token punctuation">,</span><span class="token string">"errno:"</span><span class="token punctuation">,</span>errno<span class="token punctuation">,</span><span class="token string">",sqlstate:"</span><span class="token punctuation">,</span>sqlstate<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre>     <span class="token keyword">return</span> <span class="token function">close_db</span><span class="token punctuation">(</span>db<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre> <span class="token keyword">end</span></pre></td></tr></table></figure><p></p>
+<h2 id="插入语句函数"><a class="markdownIt-Anchor" href="#插入语句函数">#</a> 插入语句函数</h2>
+<figure class="highlight lua"><figcaption data-lang="lua"></figcaption><table><tr><td data-num="1"></td><td><pre>ngx<span class="token punctuation">.</span><span class="token function">say</span><span class="token punctuation">(</span><span class="token string">"--插入数据user--"</span><span class="token punctuation">,</span><span class="token string">"&lt;br/>"</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre> <span class="token keyword">local</span> insert_sql <span class="token operator">=</span> <span class="token string">"insert into user(ch) values('hello')"</span></pre></td></tr><tr><td data-num="4"></td><td><pre> res<span class="token punctuation">,</span>err<span class="token punctuation">,</span>errno<span class="token punctuation">,</span>sqlstate<span class="token operator">=</span>db<span class="token punctuation">:</span><span class="token function">query</span><span class="token punctuation">(</span>insert_sql<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre> <span class="token keyword">if</span> <span class="token keyword">not</span> res <span class="token keyword">then</span></pre></td></tr><tr><td data-num="6"></td><td><pre>     ngx<span class="token punctuation">.</span><span class="token function">say</span><span class="token punctuation">(</span><span class="token string">"insert error:"</span><span class="token punctuation">,</span>err<span class="token punctuation">,</span><span class="token string">",errno:"</span><span class="token punctuation">,</span>errno<span class="token punctuation">,</span><span class="token string">",sqlstate:"</span><span class="token punctuation">,</span>sqlstate<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre>     <span class="token keyword">return</span> <span class="token function">close_db</span><span class="token punctuation">(</span>db<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre> <span class="token keyword">end</span></pre></td></tr><tr><td data-num="9"></td><td><pre> res<span class="token punctuation">,</span>err<span class="token punctuation">,</span>errno<span class="token punctuation">,</span>sqlstate<span class="token operator">=</span>db<span class="token punctuation">:</span><span class="token function">query</span><span class="token punctuation">(</span>insert_sql<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="10"></td><td><pre> ngx<span class="token punctuation">.</span><span class="token function">say</span><span class="token punctuation">(</span><span class="token string">"insert rows:"</span><span class="token punctuation">,</span>res<span class="token punctuation">.</span>affected_rows<span class="token punctuation">,</span><span class="token string">",id:"</span><span class="token punctuation">,</span>res<span class="token punctuation">.</span>insert_id<span class="token punctuation">,</span><span class="token string">"&lt;br/>"</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="11"></td><td><pre></pre></td></tr><tr><td data-num="12"></td><td><pre> <span class="token comment">-- res 的返回值 对于新增 / 修改 / 删除会返回如下格式的响应:</span></pre></td></tr><tr><td data-num="13"></td><td><pre> <span class="token comment">--[[</pre></td></tr><tr><td data-num="14"></td><td><pre> &#123;</pre></td></tr><tr><td data-num="15"></td><td><pre> insert id = 0,                 insert_id 是在使用自增序列时产生的 id</pre></td></tr><tr><td data-num="16"></td><td><pre> server_status = 2,</pre></td></tr><tr><td data-num="17"></td><td><pre> warning_count = 1,</pre></td></tr><tr><td data-num="18"></td><td><pre> affected_rows = 32,           affected_rows 表示操作影响的行数</pre></td></tr><tr><td data-num="19"></td><td><pre> message =nil</pre></td></tr><tr><td data-num="20"></td><td><pre> &#125;</pre></td></tr><tr><td data-num="21"></td><td><pre></pre></td></tr><tr><td data-num="22"></td><td><pre> -- 对于查询会返回如下格式的响应:</pre></td></tr><tr><td data-num="23"></td><td><pre> &#123;</pre></td></tr><tr><td data-num="24"></td><td><pre>     id = 1,ch = "hello"&#125;,</pre></td></tr><tr><td data-num="25"></td><td><pre>     id = 2,ch = "hello2"&#125;</pre></td></tr><tr><td data-num="26"></td><td><pre> &#125;</pre></td></tr><tr><td data-num="27"></td><td><pre> --]]</span></pre></td></tr></table></figure><h2 id="更新语句函数"><a class="markdownIt-Anchor" href="#更新语句函数">#</a> 更新语句函数</h2>
+<figure class="highlight lua"><figcaption data-lang="lua"></figcaption><table><tr><td data-num="1"></td><td><pre>ngx<span class="token punctuation">.</span><span class="token function">say</span><span class="token punctuation">(</span><span class="token string">"--更新表user--"</span><span class="token punctuation">,</span><span class="token string">"&lt;br/>"</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="2"></td><td><pre> <span class="token comment">-- 定义更新语句</span></pre></td></tr><tr><td data-num="3"></td><td><pre> <span class="token keyword">local</span> update_table_sql <span class="token operator">=</span> <span class="token string">"update user set ch = 'hello2' where id ="</span><span class="token operator">..</span>res<span class="token punctuation">.</span>insert_id</pre></td></tr><tr><td data-num="4"></td><td><pre> res<span class="token punctuation">,</span>err<span class="token punctuation">,</span>errno<span class="token punctuation">,</span>sqlstate<span class="token operator">=</span>db<span class="token punctuation">:</span><span class="token function">query</span><span class="token punctuation">(</span>update_table_sql<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre> <span class="token keyword">if</span> <span class="token keyword">not</span> res <span class="token keyword">then</span></pre></td></tr><tr><td data-num="6"></td><td><pre>     ngx<span class="token punctuation">.</span><span class="token function">say</span><span class="token punctuation">(</span><span class="token string">"update table error:"</span><span class="token punctuation">,</span>err<span class="token punctuation">,</span><span class="token string">"errno:"</span><span class="token punctuation">,</span>errno<span class="token punctuation">,</span><span class="token string">",sqlstate:"</span><span class="token punctuation">,</span>sqlstate<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre>     <span class="token keyword">return</span> <span class="token function">close_db</span><span class="token punctuation">(</span>db<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre> <span class="token keyword">end</span></pre></td></tr><tr><td data-num="9"></td><td><pre> ngx<span class="token punctuation">.</span><span class="token function">say</span><span class="token punctuation">(</span><span class="token string">"update rows:"</span><span class="token punctuation">,</span>res<span class="token punctuation">.</span>affected_rows<span class="token punctuation">,</span><span class="token string">"&lt;br/>"</span><span class="token punctuation">)</span></pre></td></tr></table></figure><p></p>
+<h2 id="查询语句函数"><a class="markdownIt-Anchor" href="#查询语句函数">#</a> 查询语句函数</h2>
+<figure class="highlight lua"><figcaption data-lang="lua"></figcaption><table><tr><td data-num="1"></td><td><pre>ngx<span class="token punctuation">.</span><span class="token function">say</span><span class="token punctuation">(</span><span class="token string">"--查询user--"</span><span class="token punctuation">,</span><span class="token string">"&lt;br/>"</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre> <span class="token keyword">local</span> select_sql <span class="token operator">=</span> <span class="token string">"select id, ch from user"</span></pre></td></tr><tr><td data-num="4"></td><td><pre> res<span class="token punctuation">,</span>err<span class="token punctuation">,</span>errno<span class="token punctuation">,</span>sqlstate<span class="token operator">=</span>db<span class="token punctuation">:</span><span class="token function">query</span><span class="token punctuation">(</span>select_sql<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre> <span class="token keyword">if</span> <span class="token keyword">not</span> res <span class="token keyword">then</span></pre></td></tr><tr><td data-num="6"></td><td><pre>     ngx<span class="token punctuation">.</span><span class="token function">say</span><span class="token punctuation">(</span><span class="token string">"select error:"</span><span class="token punctuation">,</span>err<span class="token punctuation">,</span><span class="token string">"errno:"</span><span class="token punctuation">,</span>errno<span class="token punctuation">,</span><span class="token string">",sqlstate:"</span><span class="token punctuation">,</span>sqlstate<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre>     <span class="token keyword">return</span> <span class="token function">close_db</span><span class="token punctuation">(</span>db<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre> <span class="token keyword">end</span></pre></td></tr><tr><td data-num="9"></td><td><pre></pre></td></tr><tr><td data-num="10"></td><td><pre> <span class="token keyword">for</span> i<span class="token punctuation">,</span> row <span class="token keyword">in</span> <span class="token function">ipairs</span><span class="token punctuation">(</span>res<span class="token punctuation">)</span> <span class="token keyword">do</span></pre></td></tr><tr><td data-num="11"></td><td><pre>     <span class="token keyword">for</span> name<span class="token punctuation">,</span>value <span class="token keyword">in</span> <span class="token function">pairs</span><span class="token punctuation">(</span>row<span class="token punctuation">)</span> <span class="token keyword">do</span></pre></td></tr><tr><td data-num="12"></td><td><pre>         ngx<span class="token punctuation">.</span><span class="token function">say</span><span class="token punctuation">(</span><span class="token string">"select row"</span><span class="token punctuation">,</span>i<span class="token punctuation">,</span><span class="token string">":"</span><span class="token punctuation">,</span>name<span class="token punctuation">,</span><span class="token string">"="</span><span class="token punctuation">,</span>value<span class="token punctuation">,</span><span class="token string">"&lt;br/>"</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="13"></td><td><pre>     <span class="token keyword">end</span></pre></td></tr><tr><td data-num="14"></td><td><pre> <span class="token keyword">end</span></pre></td></tr><tr><td data-num="15"></td><td><pre></pre></td></tr><tr><td data-num="16"></td><td><pre></pre></td></tr><tr><td data-num="17"></td><td><pre> <span class="token comment">-- 参数查询</span></pre></td></tr><tr><td data-num="18"></td><td><pre></pre></td></tr><tr><td data-num="19"></td><td><pre> ngx<span class="token punctuation">.</span><span class="token function">say</span><span class="token punctuation">(</span><span class="token string">"--查询user-根据ch参数--"</span><span class="token punctuation">,</span><span class="token string">"&lt;br/>"</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="20"></td><td><pre> <span class="token comment">-- 防止 sql 注入</span></pre></td></tr><tr><td data-num="21"></td><td><pre> <span class="token keyword">local</span> ch_param <span class="token operator">=</span> ngx<span class="token punctuation">.</span>req<span class="token punctuation">.</span><span class="token function">get_uri_args</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token string">"ch"</span><span class="token punctuation">]</span> <span class="token keyword">or</span> <span class="token string">''</span></pre></td></tr><tr><td data-num="22"></td><td><pre> <span class="token comment">-- 使用 ngx.quote_sql _str 防止 sql 注入</span></pre></td></tr><tr><td data-num="23"></td><td><pre> <span class="token keyword">local</span> query_sql <span class="token operator">=</span> <span class="token string">"select id,ch from user where ch = "</span> <span class="token operator">..</span> ngx<span class="token punctuation">.</span><span class="token function">quote_sql_str</span><span class="token punctuation">(</span>ch_param<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="24"></td><td><pre> res<span class="token punctuation">,</span>err<span class="token punctuation">,</span>errno<span class="token punctuation">,</span>sqlstate <span class="token operator">=</span> db<span class="token punctuation">:</span><span class="token function">query</span> <span class="token punctuation">(</span>query_sql<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="25"></td><td><pre> <span class="token keyword">if</span> <span class="token keyword">not</span> res <span class="token keyword">then</span></pre></td></tr><tr><td data-num="26"></td><td><pre>     ngx<span class="token punctuation">.</span><span class="token function">say</span><span class="token punctuation">(</span><span class="token string">"select error:"</span><span class="token punctuation">,</span>err<span class="token punctuation">,</span><span class="token string">",errno:"</span><span class="token punctuation">,</span>errno<span class="token punctuation">,</span><span class="token string">"salstate:"</span><span class="token punctuation">,</span>sqlstate<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="27"></td><td><pre>     <span class="token keyword">return</span> <span class="token function">close_db</span> <span class="token punctuation">(</span>db<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="28"></td><td><pre> <span class="token keyword">end</span></pre></td></tr><tr><td data-num="29"></td><td><pre></pre></td></tr><tr><td data-num="30"></td><td><pre> <span class="token keyword">for</span> i<span class="token punctuation">,</span> row <span class="token keyword">in</span> <span class="token function">ipairs</span> <span class="token punctuation">(</span>res<span class="token punctuation">)</span> <span class="token keyword">do</span></pre></td></tr><tr><td data-num="31"></td><td><pre>     <span class="token keyword">for</span> name<span class="token punctuation">,</span>value <span class="token keyword">in</span> <span class="token function">pairs</span> <span class="token punctuation">(</span>row<span class="token punctuation">)</span> <span class="token keyword">do</span></pre></td></tr><tr><td data-num="32"></td><td><pre>         ngx<span class="token punctuation">.</span><span class="token function">say</span> <span class="token punctuation">(</span><span class="token string">"select row"</span><span class="token punctuation">,</span>i<span class="token punctuation">,</span><span class="token string">":"</span><span class="token punctuation">,</span>name<span class="token punctuation">,</span><span class="token string">"="</span><span class="token punctuation">,</span>value<span class="token punctuation">,</span><span class="token string">"&lt;br/>"</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="33"></td><td><pre>     <span class="token keyword">end</span></pre></td></tr><tr><td data-num="34"></td><td><pre> <span class="token keyword">end</span></pre></td></tr></table></figure><p>[c-alert type=“warning”] 最后使用 <code>close_db(db)</code>  关闭数据库 [/c-alert]</p>
+<h2 id="nginx引入lua"><a class="markdownIt-Anchor" href="#nginx引入lua">#</a> Nginx 引入 Lua</h2>
+<figure class="highlight lua"><figcaption data-lang="lua"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">http</span><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>     <span class="token operator">#</span> 定义lua文件的路径</pre></td></tr><tr><td data-num="3"></td><td><pre>     lua_package_path <span class="token string">"/usr/local/openresty/nginx/lua?.lua;;"</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>     <span class="token function">server</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>             listen       <span class="token number">80</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>             server_name localhost<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre>             charset utf<span class="token operator">-</span><span class="token number">8</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>             location <span class="token operator">/</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>                 default_type text<span class="token operator">/</span>html<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="11"></td><td><pre>                 charset utf<span class="token operator">-</span><span class="token number">8</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="12"></td><td><pre>                 <span class="token operator">#</span> 引入lua文件</pre></td></tr><tr><td data-num="13"></td><td><pre>            content_by_lua_file <span class="token operator">/</span>usr<span class="token operator">/</span><span class="token keyword">local</span><span class="token operator">/</span>openresty<span class="token operator">/</span>nginx<span class="token operator">/</span>lua<span class="token operator">/</span>mysql<span class="token punctuation">.</span>lua<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="14"></td><td><pre>            <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="15"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="16"></td><td><pre> <span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p><a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/MysqlSelect.webp"><img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/MysqlSelect-300x162.webp" alt="" title="MysqlSelect"></a>    <img data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/MysqlSelect1-300x203.webp" alt="" title="MysqlSelect1"></p>
+
+      <div class="tags">
+          <a href="/tags/nginx/" rel="tag"><i class="ic i-tag"></i> nginx</a>
+          <a href="/tags/openresty/" rel="tag"><i class="ic i-tag"></i> openresty</a>
+          <a href="/tags/%E7%BD%91%E5%85%B3/" rel="tag"><i class="ic i-tag"></i> 网关</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">更新于</span>
+    <time title="修改时间：2022-08-31 14:35:29" itemprop="dateModified" datetime="2022-08-31T14:35:29+08:00">2022-08-31</time>
+  </span>
+</div>
+
+      
+<div class="reward">
+  <button><i class="ic i-heartbeat"></i> 赞赏</button>
+  <p>请我喝[茶]~(￣▽￣)~*</p>
+  <div id="qr">
+  </div>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>本文作者： </strong>江霁月 <i class="ic i-at"><em>@</em></i>江霁月的私人小屋
+  </li>
+  <li class="link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/category/46cb37709f23.html" title="四.OpenResty中使用mysql">http://example.com/category/46cb37709f23.html</a>
+  </li>
+  <li class="license">
+    <strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/category/0a999daa44b8.html" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipexbei4hj20zk0m8npd.jpg" title="CorePress主题优化">
+  <span class="type">上一篇</span>
+  <span class="category"><i class="ic i-flag"></i> 生活记录</span>
+  <h3>CorePress主题优化</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/category/23cb1236ee1d.html" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipeun65urj20zk0m81ii.jpg" title="五.openresty执行流程">
+  <span class="type">下一篇</span>
+  <span class="category"><i class="ic i-flag"></i> 微服务Api网关框架</span>
+  <h3>五.openresty执行流程</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="文章目录">
+          <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E5%85%B3%E9%97%ADmysql%E8%BF%9E%E6%8E%A5%E5%87%BD%E6%95%B0"><span class="toc-number">1.</span> <span class="toc-text"> 定义关闭 mysql 连接函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%AE%9E%E4%BE%8B"><span class="toc-number">2.</span> <span class="toc-text"> 创建实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E8%AF%AD%E5%8F%A5%E5%87%BD%E6%95%B0"><span class="toc-number">3.</span> <span class="toc-text"> 删除语句函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E8%AF%AD%E5%8F%A5%E5%87%BD%E6%95%B0"><span class="toc-number">4.</span> <span class="toc-text"> 创建语句函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%92%E5%85%A5%E8%AF%AD%E5%8F%A5%E5%87%BD%E6%95%B0"><span class="toc-number">5.</span> <span class="toc-text"> 插入语句函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E8%AF%AD%E5%8F%A5%E5%87%BD%E6%95%B0"><span class="toc-number">6.</span> <span class="toc-text"> 更新语句函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E8%AF%AD%E5%8F%A5%E5%87%BD%E6%95%B0"><span class="toc-number">7.</span> <span class="toc-text"> 查询语句函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nginx%E5%BC%95%E5%85%A5lua"><span class="toc-number">8.</span> <span class="toc-text"> Nginx 引入 Lua</span></a></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="系列文章">
+        <ul>
+          <li><a href="/category/ab8b660fc8ae.html" rel="bookmark" title="一.漫谈Nginx网关">一.漫谈Nginx网关</a></li><li><a href="/category/14fb0cb5989f.html" rel="bookmark" title="二.Nginx相关知识">二.Nginx相关知识</a></li><li><a href="/category/2dcd61781139.html" rel="bookmark" title="三.Nginx配置文件详解">三.Nginx配置文件详解</a></li><li class="active"><a href="/category/46cb37709f23.html" rel="bookmark" title="四.OpenResty中使用mysql">四.OpenResty中使用mysql</a></li><li><a href="/category/23cb1236ee1d.html" rel="bookmark" title="五.openresty执行流程">五.openresty执行流程</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="站点概览">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="江霁月"
+      data-src="/images/avatar.jpg">
+  <p class="name" itemprop="name">江霁月</p>
+  <div class="description" itemprop="description">专注分享一些关于安全运维和编程语言的知识·本博主爱安全,爱折腾,爱代码</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">55</span>
+        <span class="name">文章</span>
+      </a>
+    </div>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">17</span>
+        <span class="name">分类</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">30</span>
+        <span class="name">标签</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL0ppYW5nSmlZdWU=" title="https:&#x2F;&#x2F;github.com&#x2F;JiangJiYue"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS9qYW5naml5dWU=" title="https:&#x2F;&#x2F;twitter.com&#x2F;jangjiyue"><i class="ic i-twitter"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>首页</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>分类</a>
+  </li>
+
+  </ul>
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/category/0a999daa44b8.html" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/category/23cb1236ee1d.html" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2010 – 
+    <span itemprop="copyrightYear">2022</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">江霁月 @ 江霁月的私人小屋</span>
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+    <span title="站点总字数">235k 字</span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:34</span>
+  </div>
+  <div class="powered-by">
+    基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: 'category/46cb37709f23.html',
+    favicon: {
+      show: "（●´3｀●）やれやれだぜ",
+      hide: "(´Д｀)大変だ！"
+    },
+    search : {
+      placeholder: "文章搜索",
+      empty: "关于 「 ${query} 」，什么也没搜到",
+      stats: "${time} ms 内找到 ${hits} 条结果"
+    },
+    valine: true,fancybox: true,
+    copyright: '复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://cdn.polyfill.io/v2/polyfill.js"></script>
+
+<script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>

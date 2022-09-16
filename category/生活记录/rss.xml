@@ -1,0 +1,249 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+    <channel>
+        <title>江霁月的私人小屋 • Posts by &#34;生活记录&#34; category</title>
+        <link>http://example.com</link>
+        <description>专注分享一些关于安全运维和编程语言的知识·本博主爱安全,爱折腾,爱代码</description>
+        <language>zh-CN</language>
+        <pubDate>Sun, 26 Sep 2021 17:13:44 +0800</pubDate>
+        <lastBuildDate>Sun, 26 Sep 2021 17:13:44 +0800</lastBuildDate>
+        <category>Docker</category>
+        <category>linux</category>
+        <category>mysql</category>
+        <category>Centos</category>
+        <category>优化</category>
+        <category>缓存</category>
+        <category>反爬</category>
+        <category>爬虫</category>
+        <category>服务器</category>
+        <category>ELK</category>
+        <category>安全管理</category>
+        <category>数据可视化</category>
+        <category>监控</category>
+        <category>运维</category>
+        <category>Zabbix</category>
+        <category>Kali</category>
+        <category>信息安全</category>
+        <category>数据库</category>
+        <category>nginx</category>
+        <category>PHP</category>
+        <category>openresty</category>
+        <category>网关</category>
+        <category>PHP框架</category>
+        <category>python</category>
+        <category>Security</category>
+        <category>信息收集</category>
+        <category>SSL</category>
+        <category>安全加固</category>
+        <category>Linux</category>
+        <category>waf</category>
+        <item>
+            <guid isPermalink="true">http://example.com/category/0a999daa44b8.html</guid>
+            <title>CorePress主题优化</title>
+            <link>http://example.com/category/0a999daa44b8.html</link>
+            <category>优化</category>
+            <category>缓存</category>
+            <category>服务器</category>
+            <pubDate>Sun, 26 Sep 2021 17:13:44 +0800</pubDate>
+            <description><![CDATA[ &lt;h2 id=&#34;corepress主题优化概述&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#corepress主题优化概述&#34;&gt;#&lt;/a&gt; CorePress 主题优化概述&lt;/h2&gt;
+&lt;p&gt;优化内容:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;加入了 font-display: swap; 属性，可确保在加载 Web 字体时用户可见文本.&lt;/li&gt;
+&lt;li&gt;压缩了 CSS 文件&lt;/li&gt;
+&lt;li&gt;利用 Nginx 可对 js 以及字体文件进行本地缓存&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;webfonts字体优化&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#webfonts字体优化&#34;&gt;#&lt;/a&gt; Webfonts 字体优化&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;# 下载fonts文件到主题目录下
+wget -P /wp-content/themes/CorePress/static https://github.com/JiangJiYue/yunwei/blob/main/webfonts.tar.gz
+# 解压
+tar -zxvf /wp-content/themes/CorePress/static/webfonts.tar.gz
+# 删除压缩包
+rm -rf /wp-content/themes/CorePress/static/webfonts.tar.gz
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;h2 id=&#34;css文件优化&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#css文件优化&#34;&gt;#&lt;/a&gt; Css 文件优化&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;# 下载css文件到主题目录下
+wget -P /wp-content/themes/CorePress/static/css/ https://raw.githubusercontent.com/JiangJiYue/yunwei/main/all.min.css
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;h2 id=&#34;utils-php文件优化&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#utils-php文件优化&#34;&gt;#&lt;/a&gt; Utils php 文件优化&lt;/h2&gt;
+&lt;p&gt;替换 &lt;code&gt;utils.php&lt;/code&gt;  中 &lt;code&gt;loadiconfont_by_cdn&lt;/code&gt;  函数内容 &lt;code&gt;vim /wp-content/themes/CorePress/geekframe/utils.php&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;function loadiconfont_by_cdn()
+&amp;#123;
+     echo &#39;&amp;lt;link rel=&amp;quot;stylesheet&amp;quot; href=&amp;quot;/wp-content/themes/CorePress/static/css/all.min.css?v=&#39; . THEME_VERSIONNAME . &#39;&amp;quot;&amp;gt;&#39;;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;h2 id=&#34;优化header-php文件&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#优化header-php文件&#34;&gt;#&lt;/a&gt; 优化 Header php 文件&lt;/h2&gt;
+&lt;p&gt;如果不想用主题提供的字体也可以将 &lt;code&gt;header.php&lt;/code&gt;  文件中的以下内容注释掉 &lt;code&gt;vim /wp-content/themes/CorePress/header.php&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;if ($set[&#39;theme&#39;][&#39;font&#39;] != &#39;no&#39;) &amp;#123;
+     echo &#39;&amp;lt;link rel=&amp;quot;stylesheet&amp;quot; type=&amp;quot;text/css&amp;quot; href=&amp;quot;https://cdn.jsdelivr.net/gh/ghboke/corepresscdn@master/static/lib/font/&#39; . $set[&#39;theme&#39;][&#39;font&#39;] . &#39;/font.css&amp;quot;&amp;gt;&#39;;
+     ?&amp;gt;
+     &amp;lt;style&amp;gt;
+         html, textarea &amp;#123;
+             font-family: &amp;lt;?php echo $set[&#39;theme&#39;][&#39;font&#39;]?&amp;gt;, PingFang\ SC, Hiragino\ Sans\ GB, Microsoft\ YaHei, STHeiti, WenQuanYi\ Micro\ Hei, Helvetica, Arial, sans-serif !important;
+        &amp;#125;
+     &amp;lt;/style&amp;gt;
+     &amp;lt;?php
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;优化nginx-conf文化&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#优化nginx-conf文化&#34;&gt;#&lt;/a&gt; 优化 Nginx Conf 文化&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;#缓存静态文件
+ location ~ .*\.(gifjpgjpegpngbmpicowebp)$ &amp;#123;
+     root 网站根目录;
+     expires 30d;
+&amp;#125;
+ #缓存静态文件
+location ~ .*\.(eotwoffwoff2ttf)$ &amp;#123;
+     root 网站根目录;
+     expires 30d;
+&amp;#125;
+ ​
+# expires 30s; 30秒
+# expires 30m; 30分钟
+# expires 2h; 2个小时
+# expires 30d; 30天
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;优化主页缩略图alt&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#优化主页缩略图alt&#34;&gt;#&lt;/a&gt; 优化主页缩略图 alt&lt;/h2&gt;
+&lt;p&gt;给 &lt;code&gt;/wp-content/themes/CorePress/component/post-list-item.php&lt;/code&gt;  中的 &lt;code&gt;$imgtag&lt;/code&gt;  变量添加 &lt;code&gt;alt&lt;/code&gt;  属性， &lt;code&gt;alt&lt;/code&gt;  内容为当前文章的标题&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 修改后的代码
+if ($set[&#39;module&#39;][&#39;imglazyload&#39;] == 1) &amp;#123;
+     $pathname = &#39;data-original&#39;;
+     $imgtag = &#39;&amp;lt;img src=&amp;quot;&#39; . file_get_img_url(&#39;loading.gif&#39;) . &#39;&amp;quot; data-original=&amp;quot;&#39; . $postitem[&#39;thumbnail&#39;] . &#39;&amp;quot; alt=&amp;quot;&#39;.$postitem[&#39;title&#39;] .&#39;&amp;quot;&amp;gt;&#39;;
+&amp;#125; else &amp;#123;
+     $imgtag = &#39;&amp;lt;img src=&amp;quot;&#39; . $postitem[&#39;thumbnail&#39;] . &#39;&amp;quot;alt=&amp;quot;&#39;.$postitem[&#39;title&#39;] .&#39;&amp;quot;&amp;gt;&#39;;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;优化友情链接无ul&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#优化友情链接无ul&#34;&gt;#&lt;/a&gt; 优化友情链接无 ul&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;/wp-content/themes/CorePress/index.php&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;div class=&amp;quot;frinds-links-list&amp;quot;&amp;gt;
+     &amp;lt;ul&amp;gt;
+    &amp;lt;?php wp_list_bookmarks(&#39;title_li=&amp;amp;categorize=0&amp;amp;show_images=0&amp;amp;category=&#39; . $set[&#39;index&#39;][&#39;links_ids&#39;]); ?&amp;gt;
+     &amp;lt;/ul&amp;gt;
+&amp;lt;/div&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;wp-content/themes/CorePress/static/css/main.css&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/*文件中的.frinds-links li Css样式替换为下面 */
+.frinds-links li&amp;#123;float: left;font-size:15px;list-style:none;margin-right:20px;margin-bottom:6px;vertical-align:middle&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+ ]]></description>
+        </item>
+        <item>
+            <guid isPermalink="true">http://example.com/category/80de777b598a.html</guid>
+            <title>救护概论</title>
+            <link>http://example.com/category/80de777b598a.html</link>
+            <pubDate>Mon, 13 Sep 2021 18:30:09 +0800</pubDate>
+            <description><![CDATA[ &lt;h2 id=&#34;现场救护定义&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#现场救护定义&#34;&gt;#&lt;/a&gt; 现场救护定义&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;最初的治疗和救护&lt;/li&gt;
+&lt;li&gt;在医务人员到来之前&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;现场救护目的&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#现场救护目的&#34;&gt;#&lt;/a&gt; 现场救护目的&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;保存生命&lt;/li&gt;
+&lt;li&gt;防止情况恶化 减少进一步的损害或伤害&lt;/li&gt;
+&lt;li&gt;改善预后 促进恢复&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;骨折的基本原则&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#骨折的基本原则&#34;&gt;#&lt;/a&gt; 骨折的基本原则&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;不要轻易去搬动病人&lt;/li&gt;
+&lt;li&gt;如果被物体压住了，遵守第一目的，保存生命，快速将人员拖出来或将物体移走&lt;/li&gt;
+&lt;li&gt;如果没有二次损伤的情况遵守第二目的，防止情况恶化&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;现场救护原则&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#现场救护原则&#34;&gt;#&lt;/a&gt; 现场救护原则&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;环境安全或者自身安全&lt;/li&gt;
+&lt;li&gt;防止交叉感染，有效地收集伤病员的污染物&lt;/li&gt;
+&lt;li&gt;及时合理的救护，先救命后治伤&lt;/li&gt;
+&lt;li&gt;心理支持，有效的沟通安抚
+&lt;ul&gt;
+&lt;li&gt;认真倾听伤病员的诉说，不随意的打断，可以点头或者是简单的应答表示在听&lt;/li&gt;
+&lt;li&gt;用文稳重的语气与伤病员说话，让伤病员能够听到，但不要喊叫&lt;/li&gt;
+&lt;li&gt;伤病员由于受到惊吓，可能会拒绝他人的靠近，救护者可以先和伤病员保持一定的距离，等得到异允许之后再靠近&lt;/li&gt;
+&lt;li&gt;呼叫救护者之后要守护和安慰伤病员，直到救护车的到来&lt;/li&gt;
+&lt;li&gt;救护的时候要告诉伤病员采取的措施，让伤病员放心&lt;/li&gt;
+&lt;li&gt;情况允许时，可帮助伤病员与自己的亲友联系，请他们来协助救护&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;集体协作
+&lt;ul&gt;
+&lt;li&gt;拨打急救电话&lt;/li&gt;
+&lt;li&gt;取来急救设备。如自动体外除颤器&lt;/li&gt;
+&lt;li&gt;维护现场安全。如放置安全指示牌，疏散旁观者&lt;/li&gt;
+&lt;li&gt;帮助控制出血。如压迫止血，固定伤肢等&lt;/li&gt;
+&lt;li&gt;保管伤病员的财物&lt;/li&gt;
+&lt;li&gt;如有确实的必要协助转运伤病员到安全的地点。现场其他人可能没有接受过急救的培训，会害怕或者是不知道能做些什么在请求他人帮助和指挥他人时，语气要稳重，指令要简短而明确，以使它们能够镇定并准确的执行指令&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;事故现场是否存在危险因素&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#事故现场是否存在危险因素&#34;&gt;#&lt;/a&gt; 事故现场是否存在危险因素&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;交通事故当中受损的汽车是否有起火爆炸或者是再次倾覆的危险&lt;/li&gt;
+&lt;li&gt;是否有脱落的高压电线或者是其他带电的物体&lt;/li&gt;
+&lt;li&gt;是否有化学物质，腐蚀性物质，放射性物质等&lt;/li&gt;
+&lt;li&gt;是否发生自然灾害的可能。比如说洪水，泥石流，海啸，雷电等&lt;/li&gt;
+&lt;li&gt;地面是否湿滑，是否有磕绊的杂物或者是锐利的金属和玻璃等&lt;/li&gt;
+&lt;li&gt;地震后的建筑物是否牢固，有无倒塌的危险&lt;/li&gt;
+&lt;li&gt;其他危险因素，比如说环境是否酷暑，严寒，有无毒蛇，野蜂等&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;防护措施&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#防护措施&#34;&gt;#&lt;/a&gt; 防护措施&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;关掉受损汽车的开关，防止起火爆炸。同时拉起手刹，防止汽车滑动&lt;/li&gt;
+&lt;li&gt;抢救触电者时，设法切断电源&lt;/li&gt;
+&lt;li&gt;穿戴防护装备&lt;/li&gt;
+&lt;li&gt;在室外遇到雷雨天气时，避开高压线，大树，不要使用手机&lt;/li&gt;
+&lt;li&gt;在极端的环境中要注意防暑或者是降温&lt;/li&gt;
+&lt;li&gt;如果遇到不能够排除的危险，要立即呼救争取救援&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;现场救护流程&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#现场救护流程&#34;&gt;#&lt;/a&gt; 现场救护流程&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;评估环境 自我保护&lt;/li&gt;
+&lt;li&gt;检查患者的基本反应&lt;/li&gt;
+&lt;li&gt;迅速拨打电话进行求助
+&lt;ul&gt;
+&lt;li&gt;通过横纵坐标和明显标识物明确位置&lt;/li&gt;
+&lt;li&gt;明确说明发生事故的情况&lt;/li&gt;
+&lt;li&gt;伤病人数和基本伤情&lt;/li&gt;
+&lt;li&gt;清楚告知呼救者电话&lt;/li&gt;
+&lt;li&gt;不要主动挂电话&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;无意识:
+&lt;ul&gt;
+&lt;li&gt;打开呼吸道 头后仰 抬下颌&lt;/li&gt;
+&lt;li&gt;检查呼吸：时间约 10 秒&lt;/li&gt;
+&lt;li&gt;有呼吸的话，检查循环
+&lt;ul&gt;
+&lt;li&gt;脉搏 一般情况下检查颈动脉&lt;/li&gt;
+&lt;li&gt;有没有严重的大出血情况&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;从头到脚由内而外的详细检查&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;应急救护的程序&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#应急救护的程序&#34;&gt;#&lt;/a&gt; 应急救护的程序&lt;/h2&gt;
+&lt;p&gt;D-R-A-B-C-D-E&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;评估环境 (Danger)&lt;/li&gt;
+&lt;li&gt;检查反应 (Response)&lt;/li&gt;
+&lt;li&gt;检查气道 (Airway)&lt;/li&gt;
+&lt;li&gt;检查呼吸 (Breathing)&lt;/li&gt;
+&lt;li&gt;检查循环 (Circulation)&lt;/li&gt;
+&lt;li&gt;检查清醒程度 (Disability)&lt;/li&gt;
+&lt;li&gt;详细检查伤情 (Exposure)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;现场救护注意事项&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#现场救护注意事项&#34;&gt;#&lt;/a&gt; 现场救护注意事项&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;对患者进行救助是要充满自信&lt;/li&gt;
+&lt;li&gt;对伤病员要做到一视同仁&lt;/li&gt;
+&lt;li&gt;注意对伤病员财物的保护&lt;/li&gt;
+&lt;li&gt;做好对急救人员的心理建设&lt;/li&gt;
+&lt;li&gt;从技能和知识上丰富自己&lt;/li&gt;
+&lt;li&gt;自我保护 对安全的预知&lt;/li&gt;
+&lt;li&gt;三大精神 人道 博爱 奉献&lt;/li&gt;
+&lt;/ol&gt;
+ ]]></description>
+        </item>
+    </channel>
+</rss>

@@ -1,0 +1,19 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "江霁月的私人小屋 • All posts by \"反爬\" tag",
+    "description": "专注分享一些关于安全运维和编程语言的知识·本博主爱安全,爱折腾,爱代码",
+    "home_page_url": "http://example.com",
+    "items": [
+        {
+            "id": "http://example.com/category/8f71a0bfc873.html",
+            "url": "http://example.com/category/8f71a0bfc873.html",
+            "title": "cnvd反反爬方案",
+            "date_published": "2022-08-23T12:37:54.000Z",
+            "content_html": "<h2 id=\"puppeteer-extra\"><a class=\"markdownIt-Anchor\" href=\"#puppeteer-extra\">#</a> puppeteer-extra</h2>\n<p>即使给我们的 selenium 设置 User-Agent 也不会获取到 cnvd 的数据</p>\n<p><img data-src=\"https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2022/08/3149c6248a203045-1024x93.png\" alt=\"\"></p>\n<p><img data-src=\"https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2022/08/81981192bb203054-1024x780.png\" alt=\"\"></p>\n<p>那么这时候就要用到一个反爬策略<strong> puppeteer-extra</strong></p>\n<blockquote>\n<p>这个脚本提供了一种快速的方法来提取从<span class=\"exturl\" data-url=\"aHR0cHM6Ly9naXRodWIuY29tL2JlcnN0ZW5kL3B1cHBldGVlci1leHRyYS90cmVlL21hc3Rlci9wYWNrYWdlcy9wdXBwZXRlZXItZXh0cmEtcGx1Z2luLXN0ZWFsdGg=\"> puppeteer-extra-stealth</span> 到（缩小的）JavaScript 的最新隐身规避。生成的 JS 文件可用于纯<span class=\"exturl\" data-url=\"aHR0cHM6Ly9jaHJvbWVkZXZ0b29scy5naXRodWIuaW8vZGV2dG9vbHMtcHJvdG9jb2wvdG90Lw==\"> CDP</span> 实现或在您的开发工具中测试规避。</p>\n</blockquote>\n<ol>\n<li>安装 nodejs &amp;&amp; npm</li>\n<li>运行 <code>npx extract-stealth-evasions</code>\n<ul>\n<li>运行完成后会在你执行命令的文件夹下面生成一个 <code>stealth.min.js</code>  文件。然后打开此文件点击注释中的 GitHub 链接</li>\n<li><img data-src=\"https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2022/08/4900f2522e203112.png\" alt=\"\"></li>\n<li>下载 GitHub 中的 <code>index.js</code>  文件 &amp;&amp; <code>package.json</code>  文件</li>\n</ul>\n</li>\n<li>修改 <code>package.json</code>  中的内容\n<ol>\n<li>将 <code>puppeteer</code>  改成 <code>puppeteer-core</code></li>\n<li><img data-src=\"https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2022/08/2331acd24c203133.png\" alt=\"\"></li>\n</ol>\n</li>\n<li>修改 <code>index.js</code>  中的内容\n<ol>\n<li>给 <code>.launch()</code>  函数增加一个参数 <code>executablePath</code> , 指向你电脑上的 <code>Chrome</code>  浏览器<strong>切记：路径不要使用 \\\\, 要使用 /, 否则会报错未转义字符</strong></li>\n<li><img data-src=\"https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2022/08/5815791eb7203147.png\" alt=\"\"></li>\n</ol>\n</li>\n<li>保存文件，执行 <code>yarn install</code>  安装依赖包</li>\n<li>执行 <code>node index.js</code> 1 秒钟以后就会生成 <code>stealth.min.js</code>  了\n<ul>\n<li><img data-src=\"https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2022/08/018254d39f203204.png\" alt=\"\"></li>\n</ul>\n</li>\n</ol>\n<h2 id=\"python-selenium\"><a class=\"markdownIt-Anchor\" href=\"#python-selenium\">#</a> Python-selenium</h2>\n<pre><code>'''\nAuthor: 江霁月\nDate: 2022-08-23 18:35:58\nLastEditors: 江霁月\nLastEditTime: 2022-08-23 20:21:34\nDescription: cnvd反爬\n'''\n\nfrom selenium.webdriver import Chrome\nfrom selenium.webdriver.chrome.options import Options\nopt = Options()\nopt.add_argument(\n    'user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36')\n\n\nweb = Chrome()\n\nwith open(&quot;C:\\\\Users\\\\48967\\\\Desktop\\\\test\\\\stealth.min.js&quot;) as f:\n    js = f.read()\n\nweb.execute_cdp_cmd(&quot;Page.addScriptToEvaluateOnNewDocument&quot;, &#123;\n    &quot;source&quot;: js\n&#125;)\nopt.add_argument(&quot;--disable-blink-features=AutomationControlled&quot;)\n\n\nweb.get('https://www.cnvd.org.cn/flaw/list')\n</code></pre>\n<p><img data-src=\"https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2022/08/2eb89d3923203217-1024x549.png\" alt=\"\"></p>\n",
+            "tags": [
+                "反爬",
+                "爬虫"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+    <channel>
+        <title>江霁月的私人小屋 • Posts by &#34;ssl&#34; tag</title>
+        <link>http://example.com</link>
+        <description>专注分享一些关于安全运维和编程语言的知识·本博主爱安全,爱折腾,爱代码</description>
+        <language>zh-CN</language>
+        <pubDate>Sat, 11 Sep 2021 08:11:47 +0800</pubDate>
+        <lastBuildDate>Sat, 11 Sep 2021 08:11:47 +0800</lastBuildDate>
+        <category>Docker</category>
+        <category>linux</category>
+        <category>mysql</category>
+        <category>Centos</category>
+        <category>优化</category>
+        <category>缓存</category>
+        <category>反爬</category>
+        <category>爬虫</category>
+        <category>服务器</category>
+        <category>ELK</category>
+        <category>安全管理</category>
+        <category>数据可视化</category>
+        <category>监控</category>
+        <category>运维</category>
+        <category>Zabbix</category>
+        <category>Kali</category>
+        <category>信息安全</category>
+        <category>数据库</category>
+        <category>nginx</category>
+        <category>PHP</category>
+        <category>openresty</category>
+        <category>网关</category>
+        <category>PHP框架</category>
+        <category>python</category>
+        <category>Security</category>
+        <category>信息收集</category>
+        <category>SSL</category>
+        <category>安全加固</category>
+        <category>Linux</category>
+        <category>waf</category>
+        <item>
+            <guid isPermalink="true">http://example.com/category/dd602a6b35ac.html</guid>
+            <title>Linux-利用acme为阿里云dns域名颁发泛域名证书</title>
+            <link>http://example.com/category/dd602a6b35ac.html</link>
+            <category>nginx</category>
+            <category>Security</category>
+            <category>SSL</category>
+            <pubDate>Sat, 11 Sep 2021 08:11:47 +0800</pubDate>
+            <description><![CDATA[ &lt;h2 id=&#34;克隆acme&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#克隆acme&#34;&gt;#&lt;/a&gt; 克隆&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRodWIuY29tL2FjbWVzaC1vZmZpY2lhbC9hY21lLnNo&#34;&gt; acme&lt;/span&gt;&lt;/h2&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;git&lt;/span&gt; clone https://hub.fastgit.org/acmesh-official/acme.sh.git&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h2 id=&#34;使用阿里云域api自动签发证书&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#使用阿里云域api自动签发证书&#34;&gt;#&lt;/a&gt; 使用阿里云域 API 自动签发证书&lt;/h2&gt;
+&lt;p&gt;首先，您需要登录您的阿里云帐户以获取您的 API 密钥. &lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9hay1jb25zb2xlLmFsaXl1bi5jb20vIy9hY2Nlc3NrZXk=&#34;&gt;https://ak-console.aliyun.com/#/accesskey&lt;/span&gt;&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token builtin class-name&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;token assign-left variable&#34;&gt;Ali_Key&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;sdfsdfsdfljlbjkljlkjsdfoiwje&#34;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token builtin class-name&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;token assign-left variable&#34;&gt;Ali_Secret&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;jlsdflanljkljlfdsaklkjflsa&#34;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;好的，让我们现在颁发证书:&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;acme.sh --set-default-ca &lt;span class=&#34;token parameter variable&#34;&gt;--server&lt;/span&gt; letsencrypt &lt;span class=&#34;token parameter variable&#34;&gt;--issue&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-d&lt;/span&gt; example.com &lt;span class=&#34;token parameter variable&#34;&gt;-d&lt;/span&gt; *.example.com &lt;span class=&#34;token parameter variable&#34;&gt;-d&lt;/span&gt; www.example.com &lt;span class=&#34;token parameter variable&#34;&gt;--dns&lt;/span&gt; dns_ali &lt;span class=&#34;token parameter variable&#34;&gt;--reloadcmd&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#34;nginx -s reload&#34;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;#--reloadcmd 是重启 Apache/Nginx 的命令请根据自身的命令修改&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;阿里云的 &lt;code&gt;Ali_Key&lt;/code&gt;  和 &lt;code&gt;Ali_Secret&lt;/code&gt;  将被保存 &lt;code&gt;~/.acme.sh/account.conf&lt;/code&gt; ，需要时会被重用。 如图所示已经颁发成功了，绿色的是代表你的证书和私钥的存放位置，一般 3 个月会自动更新一次，如果网站还是没有 ssl 的话请检查 Nginx/Apache 的配置文件或手动重启 &lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/QQ%E6%88%AA%E5%9B%BE20210909080716.png&#34; alt=&#34;&#34;&gt; &lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/QQ%E6%88%AA%E5%9B%BE20210909080108.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+ ]]></description>
+        </item>
+    </channel>
+</rss>
