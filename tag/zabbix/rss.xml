@@ -13,7 +13,6 @@
         <category>Centos</category>
         <category>优化</category>
         <category>缓存</category>
-        <category>反爬</category>
         <category>爬虫</category>
         <category>服务器</category>
         <category>ELK</category>
@@ -80,71 +79,18 @@ URL:http://localhost/api_jsonrpc.php
 &lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuYmlsaWJpbGkuY29tL3ZpZGVvL0JWMVZONDExUjd1WA==&#34;&gt;Zabbix+Grafana 视频讲解&lt;/span&gt;&lt;/p&gt;
 &lt;h2 id=&#34;准备工作&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#准备工作&#34;&gt;#&lt;/a&gt; 准备工作&lt;/h2&gt;
 &lt;h3 id=&#34;工作目录opt&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#工作目录opt&#34;&gt;#&lt;/a&gt; 工作目录 /opt&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;cd /opt
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;关闭防火墙&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#关闭防火墙&#34;&gt;#&lt;/a&gt; 关闭防火墙&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;# 关闭防火墙
-systemctl stop firewalld.service
-# 禁止开机自启
-systemctl disable firewalld.service
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;关闭selinux&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#关闭selinux&#34;&gt;#&lt;/a&gt; 关闭 selinux&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;# 打开selinux的配置文件
-vim /etc/selinux/config
-# 将第7行的enforcing改为disabled
-SELINUX=disabled
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;yum清华源&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#yum清华源&#34;&gt;#&lt;/a&gt; Yum 清华源&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;sudo sed -e &#39;s^mirrorlist=#mirrorlist=g&#39; \
-         -e &#39;s^#baseurl=http://mirror.centos.orgbaseurl=https://mirrors.tuna.tsinghua.edu.cng&#39; \
-         -i.bak \
-         /etc/yum.repos.d/CentOS-*.repo
-# 生成缓存
-sudo yum makecache
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;下载依赖环境&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#下载依赖环境&#34;&gt;#&lt;/a&gt; 下载依赖环境&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;yum install deltarpm -y
-yum -y install gcc gcc-c++ unixODBC-devel httpd mysql-devel libcurl libcurl-devel libevent libevent-devel fping curl-devel libxml2  libxml2-devel snmpd net-snmp-devel net-snmp
-yum install -y pcre-devel  java-devel openssl-devel libxslt* perl-ExtUtils-Embed at gcc-c++ python subversion gperf make rpm-build git curl bzip2-devel libcurl-devel gd gd-devel t1lib t1lib-devel libmcrypt libmcrypt-devel libtidy libtidy-devel GeoIP-devel libatomic_ops-devel zlib-devel unzip libstdc++* net-snmp net-snmp* gmp gmp-devel openldap openldap-devel libpcap-devel glib2-devel GeoIP-devel libxml2-devel redis vim wget git htop iftop libtool make automake mlocate openssl-devel pam-devel unzip gcc screen openssl openssl-devel iptables-services bash-completion* pcre-devel openssl-devel libxslt* perl-ExtUtils-Embed at gcc-c++ python subversion gperf make rpm-build git curl bzip2-devel libcurl-devel gd gd-devel t1lib t1lib-devel libmcrypt libmcrypt-devel libtidy libtidy-devel GeoIP-devel libatomic_ops-devel zlib-devel unzip libstdc++* net-snmp net-snmp* gmp gmp-devel openldap openldap-devel net-tools libevent-devel net-snmp-devel mysql-devel libxslt-devel libssh2-devel jdk-8u191-linux-x64.rpm unixODBC-devel httpd  libcurl  libevent  fping curl-devel libxml2  snmpd net-snmp-devel net-snmp
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;准备lnmp&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#准备lnmp&#34;&gt;#&lt;/a&gt; 准备 LNMP&lt;/h2&gt;
-&lt;p&gt;参考文章:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93b3JkcHJlc3MtMTI1ODg5NDcyOC5jb3MuYXAtYmVpamluZy5teXFjbG91ZC5jb20vYXJjaGl2ZXMvMjQ0&#34;&gt;Centos 安装 Lnmp&lt;/span&gt;&lt;/li&gt;
-&lt;li&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93b3JkcHJlc3MtMTI1ODg5NDcyOC5jb3MuYXAtYmVpamluZy5teXFjbG91ZC5jb20vYXJjaGl2ZXMvMjYx&#34;&gt;Grafana 图形展示软件&lt;/span&gt;&lt;/li&gt;
-&lt;/ol&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token builtin class-name&#34;&gt;cd&lt;/span&gt; /opt&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h3 id=&#34;关闭防火墙&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#关闭防火墙&#34;&gt;#&lt;/a&gt; 关闭防火墙&lt;/h3&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 关闭防火墙&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;systemctl stop firewalld.service&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 禁止开机自启&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;systemctl disable firewalld.service&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h3 id=&#34;关闭selinux&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#关闭selinux&#34;&gt;#&lt;/a&gt; 关闭 selinux&lt;/h3&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 打开 selinux 的配置文件&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;vim&lt;/span&gt; /etc/selinux/config&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 将第 7 行的 enforcing 改为 disabled&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token assign-left variable&#34;&gt;SELINUX&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;disabled&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h3 id=&#34;yum清华源&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#yum清华源&#34;&gt;#&lt;/a&gt; Yum 清华源&lt;/h3&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;sudo&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;sed&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-e&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39;s^mirrorlist=#mirrorlist=g&#39;&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;\&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;         &lt;span class=&#34;token parameter variable&#34;&gt;-e&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#39;s^#baseurl=http://mirror.centos.orgbaseurl=https://mirrors.tuna.tsinghua.edu.cng&#39;&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;\&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;         &lt;span class=&#34;token parameter variable&#34;&gt;-i.bak&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;\&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;         /etc/yum.repos.d/CentOS-*.repo&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 生成缓存&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;sudo&lt;/span&gt; yum makecache&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h3 id=&#34;下载依赖环境&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#下载依赖环境&#34;&gt;#&lt;/a&gt; 下载依赖环境&lt;/h3&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;yum &lt;span class=&#34;token function&#34;&gt;install&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-y&lt;/span&gt; deltarpm gcc gcc-c++ unixODBC-devel httpd mysql-devel libcurl libcurl-devel libevent libevent-devel curl-devel libxml2  libxml2-devel  net-snmp-devel pcre-devel  java-devel openssl-devel perl-ExtUtils-Embed at python subversion gperf &lt;span class=&#34;token function&#34;&gt;make&lt;/span&gt; rpm-build &lt;span class=&#34;token function&#34;&gt;git&lt;/span&gt; bzip2-devel gd gd-devel t1lib t1lib-devel GeoIP-devel libatomic_ops-devel zlib-devel &lt;span class=&#34;token function&#34;&gt;unzip&lt;/span&gt; libstdc++* net-snmp net-snmp* gmp gmp-devel openldap openldap-devel libpcap-devel glib2-devel GeoIP-devel &lt;span class=&#34;token function&#34;&gt;vim&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;wget&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;git&lt;/span&gt; libtool &lt;span class=&#34;token function&#34;&gt;make&lt;/span&gt; automake mlocate pam-devel &lt;span class=&#34;token function&#34;&gt;unzip&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;screen&lt;/span&gt; openssl iptables-services bash-completion*  libxslt*  &lt;span class=&#34;token function&#34;&gt;curl&lt;/span&gt; net-tools libssh2-devel&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h2 id=&#34;准备lnmp&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#准备lnmp&#34;&gt;#&lt;/a&gt; 准备 LNMP&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;本博客其他文章有讲到&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h2 id=&#34;安装zabbix&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#安装zabbix&#34;&gt;#&lt;/a&gt; 安装 Zabbix&lt;/h2&gt;
 &lt;h3 id=&#34;下载zabbix-server&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#下载zabbix-server&#34;&gt;#&lt;/a&gt; 下载 zabbix-server&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;# 进入到opt目录
-cd /opt
-# 下载二进制包
-wget https://cdn.zabbix.com/zabbix/sources/stable/5.2/zabbix-5.2.1.tar.gz
-# 解压
-tar -zxvf zabbix-5.2.1.tar.gz
-# 进入到zabbix目录
-cd zabbix-5.2.1
-# 编译安装
-./configure --prefix=/usr/local/zabbix/zabbix-server --enable-server --enable-agent --with-mysql --with-net-snmp --with-libcurl --with-libxml2 --with-unixodbc --enable-java &amp;amp;&amp;amp; make &amp;amp;&amp;amp; make install
-# 参数说明
---prefix              #编译安装路径
---enable-server       #启动server端
---enable-agent        #启动agent端
---with-mysql          #编译连接mysql相关依赖包
---with-net-snmp       #启动snmp相关，用于snmp监控设备
---with-libcurl        #启动curl相关
---with-libxml2        #启动xml相关
---with-unixodbc       #启动odbc相关用于监控数据库
---enable-java         #启动java-agent 用于监控java类
-
-# 设置环境变量
-vim /etc/profile
-
-export PATH=$PATH:/usr/local/zabbix/zabbix-server/sbin/:/usr/local/zabbix/zabbix-server/bin/
-
-source /etc/profile
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;创建zabbix数据库&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#创建zabbix数据库&#34;&gt;#&lt;/a&gt; 创建 zabbix 数据库&lt;/h2&gt;
-&lt;pre&gt;&lt;code&gt;# mariadb
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 进入到 opt 目录&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token builtin class-name&#34;&gt;cd&lt;/span&gt; /opt&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 下载二进制包&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;wget&lt;/span&gt; https://cdn.zabbix.com/zabbix/sources/stable/5.2/zabbix-5.2.1.tar.gz&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 解压&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;tar&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-zxvf&lt;/span&gt; zabbix-5.2.1.tar.gz&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 进入到 zabbix 目录&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token builtin class-name&#34;&gt;cd&lt;/span&gt; zabbix-5.2.1&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 编译安装&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;./configure &lt;span class=&#34;token parameter variable&#34;&gt;--prefix&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;/usr/local/zabbix/zabbix-server --enable-server --enable-agent --with-mysql --with-net-snmp --with-libcurl --with-libxml2 --with-unixodbc --enable-java &lt;span class=&#34;token operator&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;make&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;make&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;install&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;11&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 参数说明&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;12&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token parameter variable&#34;&gt;--prefix&lt;/span&gt;              &lt;span class=&#34;token comment&#34;&gt;#编译安装路径&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;13&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;--enable-server       &lt;span class=&#34;token comment&#34;&gt;#启动 server 端&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;14&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;--enable-agent        &lt;span class=&#34;token comment&#34;&gt;#启动 agent 端&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;15&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;--with-mysql          &lt;span class=&#34;token comment&#34;&gt;#编译连接 mysql 相关依赖包&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;16&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;--with-net-snmp       &lt;span class=&#34;token comment&#34;&gt;#启动 snmp 相关，用于 snmp 监控设备&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;17&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;--with-libcurl        &lt;span class=&#34;token comment&#34;&gt;#启动 curl 相关&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;18&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;--with-libxml2        &lt;span class=&#34;token comment&#34;&gt;#启动 xml 相关&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;19&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;--with-unixodbc       &lt;span class=&#34;token comment&#34;&gt;#启动 odbc 相关用于监控数据库&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;20&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;--enable-java         &lt;span class=&#34;token comment&#34;&gt;#启动 java-agent 用于监控 java 类&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;21&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;22&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 设置环境变量&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;23&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;vim&lt;/span&gt; /etc/profile&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;24&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;25&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token builtin class-name&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;token assign-left variable&#34;&gt;&lt;span class=&#34;token environment constant&#34;&gt;PATH&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token environment constant&#34;&gt;$PATH&lt;/span&gt;:/usr/local/zabbix/zabbix-server/sbin/:/usr/local/zabbix/zabbix-server/bin/&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;26&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;27&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token builtin class-name&#34;&gt;source&lt;/span&gt; /etc/profile&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h2 id=&#34;创建zabbix数据库&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#创建zabbix数据库&#34;&gt;#&lt;/a&gt; 创建 zabbix 数据库&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-mariadb&#34;&gt;# mariadb
 # 创建用户
 CREATE USER &#39;用户名&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;密码&#39;;
 
@@ -167,79 +113,8 @@ mysql -uroot -p密码 zabbix &amp;lt; /opt/zabbix-5.2.1/database/mysql/images.sq
 mysql -uroot -p密码 zabbix &amp;lt; /opt/zabbix-5.2.1/database/mysql/data.sql   # 模版相关数据
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id=&#34;centos准备&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#centos准备&#34;&gt;#&lt;/a&gt; Centos 准备&lt;/h2&gt;
-&lt;pre&gt;&lt;code&gt;# 创建用户
-useradd zabbix
-passwd  zabbix
-# 赋予权限
-chown -R zabbix:zabbix /usr/local/zabbix/zabbix-server/
-
-# 修改zabbix-server的配置文件
-vi /usr/local/zabbix/zabbix-server/etc/zabbix_server.conf
-
-# 找到对应的属性修改
-#数据库地址
-DBHost=localhost
-#数据库名
-DBName=zabbix
-#数据库用户名
-DBUser=zabbix
-#数据库密码
-DBPassword=root
-#数据库端口
-DBPort=3306
-Timeout=30
-AlertScriptsPath=/usr/local/zabbix/zabbix-server/share/zabbix/alertscripts
-ExternalScripts=/usr/local/zabbix/zabbix-server/share/zabbix/externalscripts
-
-# 检查端口
-ps auxfgrep zabbix_server
-netstat -tulnpgrep zabbix
-
-# 清空html下的文件并剪切
-rm -rf /usr/local/nginx/nginx/html/*
-cp -a /opt/zabbix-5.2.1/ui/* /usr/local/nginx/nginx/html/
-&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;# php.ini调整
-vim /etc/opt/remi/php74/php.ini
-
-post_max_size = 16M
-max_execution_time = 300
-max_input_time = 300
-date.timezone = Asia/Shanghai
-
-#启动相关项目
-systemctl restart php74-php-fpm.service
-zabbix_server
-
-##Zabbix默认用户名密码
-Admin
-zabbix
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;zabbix客户端安装&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#zabbix客户端安装&#34;&gt;#&lt;/a&gt; zabbix 客户端安装&lt;/h2&gt;
-&lt;pre&gt;&lt;code&gt;# 创建用户
-useradd zabbix
-# 下载Zabbix_agent安装包
-wget https://nchc.dl.sourceforge.net/project/zabbix/ZABBIX%20Latest%20Stable/4.4.7/zabbix-4.4.7.tar.gz
-# 解压
-tar -zxvf zabbix-3.4.15.tar.gz
-# 进入目录
-cd zabbix-3.4.15/
-编译zabbix agent
-./configure --prefix=/usr/local/zabbix_agent --enable-agent
-# 安装
-make &amp;amp;&amp;amp; make install
-# 修改配置文件
-vim /usr/local/zabbix_agent/etc/zabbix_agentd.conf
-
-Server=服务端ip地址或域名
-ServerActive=服务端ip地址或域名
-Hostname=客户端主机名
-HostMetadata=自动注册的关键字
-
-# 启动
-/usr/local/zabbix_agent/sbin/zabbix_agentd
-&lt;/code&gt;&lt;/pre&gt;
- ]]></description>
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 创建用户&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;useradd&lt;/span&gt; zabbix&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;passwd&lt;/span&gt;  zabbix&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 赋予权限&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;chown&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-R&lt;/span&gt; zabbix:zabbix /usr/local/zabbix/zabbix-server/&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 修改 zabbix-server 的配置文件&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;vi&lt;/span&gt; /usr/local/zabbix/zabbix-server/etc/zabbix_server.conf&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 找到对应的属性修改&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;11&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;#数据库地址&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;12&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token assign-left variable&#34;&gt;DBHost&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;localhost&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;13&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;#数据库名&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;14&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token assign-left variable&#34;&gt;DBName&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;zabbix&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;15&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;#数据库用户名&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;16&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token assign-left variable&#34;&gt;DBUser&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;zabbix&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;17&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;#数据库密码&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;18&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token assign-left variable&#34;&gt;DBPassword&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;root&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;19&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;#数据库端口&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;20&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token assign-left variable&#34;&gt;DBPort&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;3306&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;21&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token assign-left variable&#34;&gt;Timeout&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;30&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;22&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token assign-left variable&#34;&gt;AlertScriptsPath&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;/usr/local/zabbix/zabbix-server/share/zabbix/alertscripts&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;23&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token assign-left variable&#34;&gt;ExternalScripts&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;/usr/local/zabbix/zabbix-server/share/zabbix/externalscripts&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;24&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;25&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 检查端口&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;26&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;ps&lt;/span&gt; auxfgrep zabbix_server&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;27&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;netstat&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-tulnpgrep&lt;/span&gt; zabbix&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;28&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;29&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 清空 html 下的文件并剪切&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;30&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;rm&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-rf&lt;/span&gt; /usr/local/nginx/nginx/html/*&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;31&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;cp&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-a&lt;/span&gt; /opt/zabbix-5.2.1/ui/* /usr/local/nginx/nginx/html/&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# php.ini 调整&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;vim&lt;/span&gt; /etc/opt/remi/php74/php.ini&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;post_max_size &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; 16M&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;max_execution_time &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;300&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;max_input_time &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;300&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;date.timezone &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; Asia/Shanghai&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;#启动相关项目&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;systemctl restart php74-php-fpm.service&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;11&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;zabbix_server&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;12&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;13&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;##Zabbix 默认用户名密码&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;14&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;Admin&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;15&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;zabbix&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h2 id=&#34;zabbix客户端安装&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#zabbix客户端安装&#34;&gt;#&lt;/a&gt; zabbix 客户端安装&lt;/h2&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 创建用户&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;useradd&lt;/span&gt; zabbix&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 下载 Zabbix_agent 安装包&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;wget&lt;/span&gt; https://nchc.dl.sourceforge.net/project/zabbix/ZABBIX%20Latest%20Stable/4.4.7/zabbix-4.4.7.tar.gz&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 解压&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;tar&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-zxvf&lt;/span&gt; zabbix-3.4.15.tar.gz&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 进入目录&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token builtin class-name&#34;&gt;cd&lt;/span&gt; zabbix-3.4.15/&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;编译zabbix agent&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;./configure &lt;span class=&#34;token parameter variable&#34;&gt;--prefix&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;/usr/local/zabbix_agent --enable-agent&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;11&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 安装&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;12&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;make&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;make&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;install&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;13&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 修改配置文件&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;14&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;vim&lt;/span&gt; /usr/local/zabbix_agent/etc/zabbix_agentd.conf&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;15&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;16&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token assign-left variable&#34;&gt;Server&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;服务端ip地址或域名&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;17&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token assign-left variable&#34;&gt;ServerActive&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;服务端ip地址或域名&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;18&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token assign-left variable&#34;&gt;Hostname&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;客户端主机名&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;19&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token assign-left variable&#34;&gt;HostMetadata&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;自动注册的关键字&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;20&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;21&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 启动&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;22&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/usr/local/zabbix_agent/sbin/zabbix_agentd&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt; ]]></description>
         </item>
     </channel>
 </rss>
