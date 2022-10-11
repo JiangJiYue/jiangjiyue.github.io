@@ -84,7 +84,7 @@ Python-Scrapy的基本使用 - 爬虫 - Python |
       <i class="ic i-clock"></i>
     </span>
     <span class="text">阅读时长</span>
-    <span>14 分钟</span>
+    <span>13 分钟</span>
   </span>
 </div>
 
@@ -117,12 +117,12 @@ Python-Scrapy的基本使用 - 爬虫 - Python |
       </div>
       <div id="imgs" class="pjax">
         <ul>
-          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gicitf0kl1j20zk0m87fe.jpg"></li>
-          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gicitspjpbj20zk0m81ky.jpg"></li>
-          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gipev1x5e4j20zk0m8b29.jpg"></li>
-          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gicis081o9j20zk0m8dmr.jpg"></li>
-          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gipet8c1a2j20zk0m8kct.jpg"></li>
-          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gipet4bz0yj20zk0m8e81.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giclhtuo6nj20zk0m8ttm.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giclwuom7cj20zk0m8dvn.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gicitht3xtj20zk0m8k5v.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gicljgocqbj20zk0m8e81.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gipewf5l51j20zk0m8b29.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gipewr8iypj20zk0m8b29.jpg"></li>
         </ul>
       </div>
     </header>
@@ -195,21 +195,7 @@ Python-Scrapy的基本使用 - 爬虫 - Python |
 </li>
 </ul>
 <h3 id="scrapy解析"><a class="markdownIt-Anchor" href="#scrapy解析">#</a> scrapy 解析</h3>
-<pre><code>def parse(self, response):
-    # 解析:作者的名称+段子的内容
-    div_list = response.xpath('//div[@class=&quot;col1 old-style-col1&quot;]/div')
-    for div in div_list:
-        # xpath返回的是列表, 但是列表元素一定是Selector类型的对象想要取得内容可以直接.extract()
-        # .extract可以将Selector对象中的data参数存储的字符串提取出来
-        # 只要能保证返回的列表里只有一个内容就可以使用.extract_first否则还是使用[下标]取出
-        # .extract_first将列表中的第0个取出
-        author = div.xpath('./div[1]/a[2]/h2/text()').extract_first()
-        # 列表调用了.extract之后, 则表示将列表中每一个Selector对象中的data对应的字符串提取了出来
-        content = div.xpath('./a[1]/div/span//text()').extract()
-        content = ''.join(content)  # 将列表转换为字符串
-        print(author, content)
-</code></pre>
-<h3 id="scrapy持久化存储"><a class="markdownIt-Anchor" href="#scrapy持久化存储">#</a> scrapy 持久化存储</h3>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">def</span> <span class="token function">parse</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> response<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token comment"># 解析：作者的名称 + 段子的内容</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    div_list <span class="token operator">=</span> response<span class="token punctuation">.</span>xpath<span class="token punctuation">(</span><span class="token string">'//div[@class="col1 old-style-col1"]/div'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">for</span> div <span class="token keyword">in</span> div_list<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="5"></td><td><pre>        <span class="token comment"># xpath 返回的是列表，但是列表元素一定是 Selector 类型的对象想要取得内容可以直接.extract ()</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        <span class="token comment"># .extract 可以将 Selector 对象中的 data 参数存储的字符串提取出来</span></pre></td></tr><tr><td data-num="7"></td><td><pre>        <span class="token comment"># 只要能保证返回的列表里只有一个内容就可以使用.extract_first 否则还是使用 [下标] 取出</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        <span class="token comment"># .extract_first 将列表中的第 0 个取出</span></pre></td></tr><tr><td data-num="9"></td><td><pre>        author <span class="token operator">=</span> div<span class="token punctuation">.</span>xpath<span class="token punctuation">(</span><span class="token string">'./div[1]/a[2]/h2/text()'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>extract_first<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="10"></td><td><pre>        <span class="token comment"># 列表调用了.extract 之后，则表示将列表中每一个 Selector 对象中的 data 对应的字符串提取了出来</span></pre></td></tr><tr><td data-num="11"></td><td><pre>        content <span class="token operator">=</span> div<span class="token punctuation">.</span>xpath<span class="token punctuation">(</span><span class="token string">'./a[1]/div/span//text()'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>extract<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="12"></td><td><pre>        content <span class="token operator">=</span> <span class="token string">''</span><span class="token punctuation">.</span>join<span class="token punctuation">(</span>content<span class="token punctuation">)</span>  <span class="token comment"># 将列表转换为字符串</span></pre></td></tr><tr><td data-num="13"></td><td><pre>        <span class="token keyword">print</span><span class="token punctuation">(</span>author<span class="token punctuation">,</span> content<span class="token punctuation">)</span></pre></td></tr></table></figure><h3 id="scrapy持久化存储"><a class="markdownIt-Anchor" href="#scrapy持久化存储">#</a> scrapy 持久化存储</h3>
 <ul>
 <li>
 <p>基于终端指令:</p>
@@ -229,107 +215,22 @@ Python-Scrapy的基本使用 - 爬虫 - Python |
 </li>
 <li>
 <p>数据解析</p>
-<pre><code>#qiubai.py 文件名
-
-import scrapy from qiubaiPro.items import QiubaiproItem#导入item类
-class QiubaiSpider(scrapy.Spider):
-    name = 'qiubai'
-    # allowed_domains = ['www.xxx.com']
-    start_urls = ['https://www.qiushibaike.com/text/']
-
-    def parse(self, response):
-        # 解析:作者的名称+段子的内容
-        div_list = response.xpath('//div[@class=&quot;col1 old-style-col1&quot;]/div')
-        for div in div_list:
-            # xpath返回的是列表, 但是列表元素一定是Selector类型的对象想要取得内容可以直接.extract()
-            # .extract可以将Selector对象中的data参数存储的字符串提取出来
-            # 只要能保证返回的列表里只有一个内容就可以使用.extract_first否则还是使用[下标]取出
-            # .extract_first将列表中的第0个取出
-          # 匿名用户和正常用户的用户名不在同一个div中所以使用管道符分割,来写2个xpath表达式
-        author = div.xpath('./div[1]/a[2]/h2/text()  ./div[1]/span[2]/h2/text()').extract_first()
-            # 列表调用了.extract之后, 则表示将列表中每一个Selector对象中的data对应的字符串提取了出来
-            content = div.xpath('./a[1]/div/span//text()').extract()
-            content = ''.join(content)  # 将列表转换为字符串
-</code></pre>
-</li>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">#qiubai.py 文件名</span></pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token keyword">import</span> scrapy <span class="token keyword">from</span> qiubaiPro<span class="token punctuation">.</span>items <span class="token keyword">import</span> QiubaiproItem<span class="token comment">#导入 item 类</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token keyword">class</span> <span class="token class-name">QiubaiSpider</span><span class="token punctuation">(</span>scrapy<span class="token punctuation">.</span>Spider<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    name <span class="token operator">=</span> <span class="token string">'qiubai'</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token comment"># allowed_domains = ['www.xxx.com']</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    start_urls <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'https://www.qiushibaike.com/text/'</span><span class="token punctuation">]</span></pre></td></tr><tr><td data-num="8"></td><td><pre></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">parse</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> response<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="10"></td><td><pre>        <span class="token comment"># 解析：作者的名称 + 段子的内容</span></pre></td></tr><tr><td data-num="11"></td><td><pre>        div_list <span class="token operator">=</span> response<span class="token punctuation">.</span>xpath<span class="token punctuation">(</span><span class="token string">'//div[@class="col1 old-style-col1"]/div'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="12"></td><td><pre>        <span class="token keyword">for</span> div <span class="token keyword">in</span> div_list<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="13"></td><td><pre>            <span class="token comment"># xpath 返回的是列表，但是列表元素一定是 Selector 类型的对象想要取得内容可以直接.extract ()</span></pre></td></tr><tr><td data-num="14"></td><td><pre>            <span class="token comment"># .extract 可以将 Selector 对象中的 data 参数存储的字符串提取出来</span></pre></td></tr><tr><td data-num="15"></td><td><pre>            <span class="token comment"># 只要能保证返回的列表里只有一个内容就可以使用.extract_first 否则还是使用 [下标] 取出</span></pre></td></tr><tr><td data-num="16"></td><td><pre>            <span class="token comment"># .extract_first 将列表中的第 0 个取出</span></pre></td></tr><tr><td data-num="17"></td><td><pre>          <span class="token comment"># 匿名用户和正常用户的用户名不在同一个 div 中所以使用管道符分割，来写 2 个 xpath 表达式</span></pre></td></tr><tr><td data-num="18"></td><td><pre>        author <span class="token operator">=</span> div<span class="token punctuation">.</span>xpath<span class="token punctuation">(</span><span class="token string">'./div[1]/a[2]/h2/text()  ./div[1]/span[2]/h2/text()'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>extract_first<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="19"></td><td><pre>            <span class="token comment"># 列表调用了.extract 之后，则表示将列表中每一个 Selector 对象中的 data 对应的字符串提取了出来</span></pre></td></tr><tr><td data-num="20"></td><td><pre>            content <span class="token operator">=</span> div<span class="token punctuation">.</span>xpath<span class="token punctuation">(</span><span class="token string">'./a[1]/div/span//text()'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>extract<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="21"></td><td><pre>            content <span class="token operator">=</span> <span class="token string">''</span><span class="token punctuation">.</span>join<span class="token punctuation">(</span>content<span class="token punctuation">)</span>  <span class="token comment"># 将列表转换为字符串</span></pre></td></tr></table></figure></li>
 <li>
 <p>在 <code>item</code>  类中定义相关的属性</p>
-<pre><code>#items.py 文件名
-
-# Define here the models for your scraped items
-#
-# See documentation in:
-# https://docs.scrapy.org/en/latest/topics/items.html
-
-import scrapy
-
-
-class QiubaiproItem(scrapy.Item):
-    # define the fields for your item here like:
-    author = scrapy.Field()#定义author属性
-    content = scrapy.Field()#定义content属性
-</code></pre>
-</li>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">#items.py 文件名</span></pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token comment"># Define here the models for your scraped items</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token comment">#</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token comment"># See documentation in:</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token comment"># https://docs.scrapy.org/en/latest/topics/items.html</span></pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token keyword">import</span> scrapy</pre></td></tr><tr><td data-num="9"></td><td><pre></pre></td></tr><tr><td data-num="10"></td><td><pre></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token keyword">class</span> <span class="token class-name">QiubaiproItem</span><span class="token punctuation">(</span>scrapy<span class="token punctuation">.</span>Item<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    <span class="token comment"># define the fields for your item here like:</span></pre></td></tr><tr><td data-num="13"></td><td><pre>    author <span class="token operator">=</span> scrapy<span class="token punctuation">.</span>Field<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token comment">#定义 author 属性</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    content <span class="token operator">=</span> scrapy<span class="token punctuation">.</span>Field<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token comment">#定义 content 属性</span></pre></td></tr></table></figure></li>
 <li>
 <p>将解析的数据封装存储到 <code>item</code>  类型的对象中</p>
-<pre><code>#qiubai.py 文件名
-item = QiubaiproItem()#实例化对象
-item['author'] = author#将author存储到item对象中
-item['content'] = content#将content存储到item对象中
-</code></pre>
-</li>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">#qiubai.py 文件名</span></pre></td></tr><tr><td data-num="2"></td><td><pre>item <span class="token operator">=</span> QiubaiproItem<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token comment">#实例化对象</span></pre></td></tr><tr><td data-num="3"></td><td><pre>item<span class="token punctuation">[</span><span class="token string">'author'</span><span class="token punctuation">]</span> <span class="token operator">=</span> author<span class="token comment">#将 author 存储到 item 对象中</span></pre></td></tr><tr><td data-num="4"></td><td><pre>item<span class="token punctuation">[</span><span class="token string">'content'</span><span class="token punctuation">]</span> <span class="token operator">=</span> content<span class="token comment">#将 content 存储到 item 对象中</span></pre></td></tr></table></figure></li>
 <li>
 <p>将 <code>item</code>  类型的对象提交给管道进行持久化存储的操作</p>
-<pre><code># 将item提交给了管道
-yield item
-</code></pre>
-</li>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># 将 item 提交给了管道</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">yield</span> item</pre></td></tr></table></figure></li>
 <li>
 <p>在管道类的 <code>process_item</code>  中要将其接收到的 <code>item</code>  对象中存储的数据进行持久化存储操作</p>
-<pre><code>#pipelines.py 文件名
-
-# Define your item pipelines here
-#
-# Don't forget to add your pipeline to the ITEM_PIPELINES setting
-# See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-
-
-# useful for handling different item types with a single interface
-from itemadapter import ItemAdapter
-
-
-class QiubaiproPipeline:
-    # 专门用来处理item类型对象
-    # 该方法可以接收爬虫文件提交过来的item对象
-    # 该方法每接收到一个item就会被调用一次
-    fp = None
-    # 重写父类的一个方法:该方法只在开始爬虫的时候被调用一次
-
-    def open_spider(self, spider):
-        print('打开文件')
-        self.fp = open('./qiubai.txt', 'w', encoding='utf-8')
-        pass
-
-    def process_item(self, item, spider):
-        author = item['author']
-        content = item['content']
-        self.fp.write(author+':'+content+'\n')
-        return item
-
-    def close_spider(self, spider):
-        print('关闭文件')
-        self.fp.close()
-</code></pre>
-</li>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">#pipelines.py 文件名</span></pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token comment"># Define your item pipelines here</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token comment">#</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token comment"># Don't forget to add your pipeline to the ITEM_PIPELINES setting</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token comment"># See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html</span></pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token comment"># useful for handling different item types with a single interface</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token keyword">from</span> itemadapter <span class="token keyword">import</span> ItemAdapter</pre></td></tr><tr><td data-num="11"></td><td><pre></pre></td></tr><tr><td data-num="12"></td><td><pre></pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token keyword">class</span> <span class="token class-name">QiubaiproPipeline</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    <span class="token comment"># 专门用来处理 item 类型对象</span></pre></td></tr><tr><td data-num="15"></td><td><pre>    <span class="token comment"># 该方法可以接收爬虫文件提交过来的 item 对象</span></pre></td></tr><tr><td data-num="16"></td><td><pre>    <span class="token comment"># 该方法每接收到一个 item 就会被调用一次</span></pre></td></tr><tr><td data-num="17"></td><td><pre>    fp <span class="token operator">=</span> <span class="token boolean">None</span></pre></td></tr><tr><td data-num="18"></td><td><pre>    <span class="token comment"># 重写父类的一个方法：该方法只在开始爬虫的时候被调用一次</span></pre></td></tr><tr><td data-num="19"></td><td><pre></pre></td></tr><tr><td data-num="20"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">open_spider</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> spider<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="21"></td><td><pre>        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'打开文件'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="22"></td><td><pre>        self<span class="token punctuation">.</span>fp <span class="token operator">=</span> <span class="token builtin">open</span><span class="token punctuation">(</span><span class="token string">'./qiubai.txt'</span><span class="token punctuation">,</span> <span class="token string">'w'</span><span class="token punctuation">,</span> encoding<span class="token operator">=</span><span class="token string">'utf-8'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="23"></td><td><pre>        <span class="token keyword">pass</span></pre></td></tr><tr><td data-num="24"></td><td><pre></pre></td></tr><tr><td data-num="25"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">process_item</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> item<span class="token punctuation">,</span> spider<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="26"></td><td><pre>        author <span class="token operator">=</span> item<span class="token punctuation">[</span><span class="token string">'author'</span><span class="token punctuation">]</span></pre></td></tr><tr><td data-num="27"></td><td><pre>        content <span class="token operator">=</span> item<span class="token punctuation">[</span><span class="token string">'content'</span><span class="token punctuation">]</span></pre></td></tr><tr><td data-num="28"></td><td><pre>        self<span class="token punctuation">.</span>fp<span class="token punctuation">.</span>write<span class="token punctuation">(</span>author<span class="token operator">+</span><span class="token string">':'</span><span class="token operator">+</span>content<span class="token operator">+</span><span class="token string">'\n'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="29"></td><td><pre>        <span class="token keyword">return</span> item</pre></td></tr><tr><td data-num="30"></td><td><pre></pre></td></tr><tr><td data-num="31"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">close_spider</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> spider<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="32"></td><td><pre>        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'关闭文件'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="33"></td><td><pre>        self<span class="token punctuation">.</span>fp<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr></table></figure></li>
 <li>
 <p>在配置文件中开启管道好处:</p>
-<pre><code>#setting.py 文件名
-#将以下内容取消注释,300代表优先级,数字越小优先级越高,一个键值对应一个管道类
-ITEM_PIPELINES = &#123;
-    'qiubaiPro.pipelines.QiubaiproPipeline': 300,
-&#125;
-</code></pre>
-</li>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">#setting.py 文件名</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token comment">#将以下内容取消注释，300 代表优先级，数字越小优先级越高，一个键值对应一个管道类</span></pre></td></tr><tr><td data-num="3"></td><td><pre>ITEM_PIPELINES <span class="token operator">=</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token string">'qiubaiPro.pipelines.QiubaiproPipeline'</span><span class="token punctuation">:</span> <span class="token number">300</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure></li>
 <li>
 <p>优点:</p>
 <ul>
@@ -349,77 +250,7 @@ ITEM_PIPELINES = &#123;
 <ul>
 <li>将爬取到的数据一份存储到本地一份存储到数据库，如何实现？</li>
 </ul>
-<pre><code>#settings.py 文件名
-
-ITEM_PIPELINES = &#123;
-    'qiubaiPro.pipelines.QiubaiproPipeline': 300,
-    'qiubaiPro.pipelines.mysqlPileLine': 301,
-&#125;
-</code></pre>
-<pre><code>#pipelines.py 文件名
-
-# Define your item pipelines here
-#
-# Don't forget to add your pipeline to the ITEM_PIPELINES setting
-# See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-
-
-# useful for handling different item types with a single interface
-from itemadapter import ItemAdapter
-import pymysql
-
-
-class QiubaiproPipeline:
-    # 专门用来处理item类型对象
-    # 该方法可以接收爬虫文件提交过来的item对象
-    # 该方法每接收到一个item就会被调用一次
-    fp = None
-    # 重写父类的一个方法:该方法只在开始爬虫的时候被调用一次
-
-    def open_spider(self, spider):
-        print('打开文件')
-        self.fp = open('./qiubai.txt', 'w', encoding='utf-8')
-        pass
-
-    def process_item(self, item, spider):
-        author = item['author']
-        content = item['content']
-        self.fp.write(author+':'+content+'\n')
-        return item  # return item就会传递给下一个即将被执行的管道类
-
-    def close_spider(self, spider):
-        print('关闭文件')
-        self.fp.close()
-        # 管道文件中一个管道类对应将一组数据存储到一个平台或者载体中
-
-
-        class mysqlPileLine:
-            conn = None
-            cursor = None
-
-            def open_spider(self, spider):
-                print('正在连接数据库')
-                self.conn = pymysql.Connect(
-                    host='127.0.0.1', port=3306, user='root', password='123456789', db='qiubai', charset=&quot;utf8&quot;)
-
-                def process_item(self, item, spider):
-                    print('正在写入数据')
-                    self.cursor = self.conn.cursor()
-                    try:
-                        self.cursor.execute('insert into qiubai values(&quot;%s&quot;,&quot;%s&quot;)' %
-                                            (item[&quot;author&quot;], item[&quot;content&quot;]))
-                        self.conn.commit()
-                        except Exception as e:
-                            print(e)
-                            self.conn.rollback
-                            return item
-
-                        def close_spider(self, spider):
-                            print('正在关闭连接')
-                            self.cursor.close()
-                            self.conn.close()
-</code></pre>
-<ul>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">#settings.py 文件名</span></pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre>ITEM_PIPELINES <span class="token operator">=</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token string">'qiubaiPro.pipelines.QiubaiproPipeline'</span><span class="token punctuation">:</span> <span class="token number">300</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token string">'qiubaiPro.pipelines.mysqlPileLine'</span><span class="token punctuation">:</span> <span class="token number">301</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">#pipelines.py 文件名</span></pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token comment"># Define your item pipelines here</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token comment">#</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token comment"># Don't forget to add your pipeline to the ITEM_PIPELINES setting</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token comment"># See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html</span></pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token comment"># useful for handling different item types with a single interface</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token keyword">from</span> itemadapter <span class="token keyword">import</span> ItemAdapter</pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token keyword">import</span> pymysql</pre></td></tr><tr><td data-num="12"></td><td><pre></pre></td></tr><tr><td data-num="13"></td><td><pre></pre></td></tr><tr><td data-num="14"></td><td><pre><span class="token keyword">class</span> <span class="token class-name">QiubaiproPipeline</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="15"></td><td><pre>    <span class="token comment"># 专门用来处理 item 类型对象</span></pre></td></tr><tr><td data-num="16"></td><td><pre>    <span class="token comment"># 该方法可以接收爬虫文件提交过来的 item 对象</span></pre></td></tr><tr><td data-num="17"></td><td><pre>    <span class="token comment"># 该方法每接收到一个 item 就会被调用一次</span></pre></td></tr><tr><td data-num="18"></td><td><pre>    fp <span class="token operator">=</span> <span class="token boolean">None</span></pre></td></tr><tr><td data-num="19"></td><td><pre>    <span class="token comment"># 重写父类的一个方法：该方法只在开始爬虫的时候被调用一次</span></pre></td></tr><tr><td data-num="20"></td><td><pre></pre></td></tr><tr><td data-num="21"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">open_spider</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> spider<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="22"></td><td><pre>        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'打开文件'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="23"></td><td><pre>        self<span class="token punctuation">.</span>fp <span class="token operator">=</span> <span class="token builtin">open</span><span class="token punctuation">(</span><span class="token string">'./qiubai.txt'</span><span class="token punctuation">,</span> <span class="token string">'w'</span><span class="token punctuation">,</span> encoding<span class="token operator">=</span><span class="token string">'utf-8'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="24"></td><td><pre>        <span class="token keyword">pass</span></pre></td></tr><tr><td data-num="25"></td><td><pre></pre></td></tr><tr><td data-num="26"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">process_item</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> item<span class="token punctuation">,</span> spider<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="27"></td><td><pre>        author <span class="token operator">=</span> item<span class="token punctuation">[</span><span class="token string">'author'</span><span class="token punctuation">]</span></pre></td></tr><tr><td data-num="28"></td><td><pre>        content <span class="token operator">=</span> item<span class="token punctuation">[</span><span class="token string">'content'</span><span class="token punctuation">]</span></pre></td></tr><tr><td data-num="29"></td><td><pre>        self<span class="token punctuation">.</span>fp<span class="token punctuation">.</span>write<span class="token punctuation">(</span>author<span class="token operator">+</span><span class="token string">':'</span><span class="token operator">+</span>content<span class="token operator">+</span><span class="token string">'\n'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="30"></td><td><pre>        <span class="token keyword">return</span> item  <span class="token comment"># return item 就会传递给下一个即将被执行的管道类</span></pre></td></tr><tr><td data-num="31"></td><td><pre></pre></td></tr><tr><td data-num="32"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">close_spider</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> spider<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="33"></td><td><pre>        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'关闭文件'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="34"></td><td><pre>        self<span class="token punctuation">.</span>fp<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="35"></td><td><pre>        <span class="token comment"># 管道文件中一个管道类对应将一组数据存储到一个平台或者载体中</span></pre></td></tr><tr><td data-num="36"></td><td><pre></pre></td></tr><tr><td data-num="37"></td><td><pre></pre></td></tr><tr><td data-num="38"></td><td><pre>        <span class="token keyword">class</span> <span class="token class-name">mysqlPileLine</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="39"></td><td><pre>            conn <span class="token operator">=</span> <span class="token boolean">None</span></pre></td></tr><tr><td data-num="40"></td><td><pre>            cursor <span class="token operator">=</span> <span class="token boolean">None</span></pre></td></tr><tr><td data-num="41"></td><td><pre></pre></td></tr><tr><td data-num="42"></td><td><pre>            <span class="token keyword">def</span> <span class="token function">open_spider</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> spider<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="43"></td><td><pre>                <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'正在连接数据库'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="44"></td><td><pre>                self<span class="token punctuation">.</span>conn <span class="token operator">=</span> pymysql<span class="token punctuation">.</span>Connect<span class="token punctuation">(</span></pre></td></tr><tr><td data-num="45"></td><td><pre>                    host<span class="token operator">=</span><span class="token string">'127.0.0.1'</span><span class="token punctuation">,</span> port<span class="token operator">=</span><span class="token number">3306</span><span class="token punctuation">,</span> user<span class="token operator">=</span><span class="token string">'root'</span><span class="token punctuation">,</span> password<span class="token operator">=</span><span class="token string">'123456789'</span><span class="token punctuation">,</span> db<span class="token operator">=</span><span class="token string">'qiubai'</span><span class="token punctuation">,</span> charset<span class="token operator">=</span><span class="token string">"utf8"</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="46"></td><td><pre></pre></td></tr><tr><td data-num="47"></td><td><pre>                <span class="token keyword">def</span> <span class="token function">process_item</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> item<span class="token punctuation">,</span> spider<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="48"></td><td><pre>                    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'正在写入数据'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="49"></td><td><pre>                    self<span class="token punctuation">.</span>cursor <span class="token operator">=</span> self<span class="token punctuation">.</span>conn<span class="token punctuation">.</span>cursor<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="50"></td><td><pre>                    <span class="token keyword">try</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="51"></td><td><pre>                        self<span class="token punctuation">.</span>cursor<span class="token punctuation">.</span>execute<span class="token punctuation">(</span><span class="token string">'insert into qiubai values("%s","%s")'</span> <span class="token operator">%</span></pre></td></tr><tr><td data-num="52"></td><td><pre>                                            <span class="token punctuation">(</span>item<span class="token punctuation">[</span><span class="token string">"author"</span><span class="token punctuation">]</span><span class="token punctuation">,</span> item<span class="token punctuation">[</span><span class="token string">"content"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="53"></td><td><pre>                        self<span class="token punctuation">.</span>conn<span class="token punctuation">.</span>commit<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="54"></td><td><pre>                        <span class="token keyword">except</span> Exception <span class="token keyword">as</span> e<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="55"></td><td><pre>                            <span class="token keyword">print</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="56"></td><td><pre>                            self<span class="token punctuation">.</span>conn<span class="token punctuation">.</span>rollback</pre></td></tr><tr><td data-num="57"></td><td><pre>                            <span class="token keyword">return</span> item</pre></td></tr><tr><td data-num="58"></td><td><pre></pre></td></tr><tr><td data-num="59"></td><td><pre>                        <span class="token keyword">def</span> <span class="token function">close_spider</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> spider<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="60"></td><td><pre>                            <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'正在关闭连接'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="61"></td><td><pre>                            self<span class="token punctuation">.</span>cursor<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="62"></td><td><pre>                            self<span class="token punctuation">.</span>conn<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr></table></figure><ul>
 <li>爬虫文件提交的 <code>item</code>  类型的对象最终会提交给哪一个管道类？
 <ul>
 <li>爬虫文件提交的 <code>item</code>  只会给管道文件中第一个被执行的管道类接收</li>
@@ -432,8 +263,9 @@ class QiubaiproPipeline:
 <h3 id="基于spider的全站数据爬取"><a class="markdownIt-Anchor" href="#基于spider的全站数据爬取">#</a> 基于 Spider 的全站数据爬取</h3>
 <h4 id="什么是全站数据爬取"><a class="markdownIt-Anchor" href="#什么是全站数据爬取">#</a> 什么是全站数据爬取</h4>
 <p>就是将网站中某板块下的全部页码对应的页面数据爬取下来</p>
-<pre><code>- 需求:爬取校花网中的照片的名称
-</code></pre>
+<ul>
+<li>需求：爬取校花网中的照片的名称</li>
+</ul>
 <ul>
 <li>实现方式:
 <ul>
@@ -442,32 +274,7 @@ class QiubaiproPipeline:
 </ul>
 </li>
 </ul>
-<pre><code>#xiaohua.py
-
-import scrapy
-
-
-class XiaohuaSpider(scrapy.Spider):
-    name = 'xiaohua'
-    # allowed_domains = ['www.xxx.com']
-    start_urls = ['http://www.521609.com/tuku/index.html']
-    # 生成一个通用的url模板(不可变)
-    url = 'http://www.521609.com/tuku/index_%d.html'
-    page_num = 2
-
-    def parse(self, response):
-        li_list = response.xpath('//ul[@class=&quot;pbl &quot;]/li')
-        for li in li_list:
-            img_name = li.xpath('./a/p/text()').extract_first()
-            print(img_name)
-        if self.page_num &lt;= 51:
-            print(self.page_num)
-            new_url = format(self.url % self.page_num)
-            # 手动请求发送:callbak回调函数是专门用于数据解析
-            self.page_num += 1
-            yield scrapy.Request(url=new_url, callback=self.parse)
-</code></pre>
-<h3 id="请求传参"><a class="markdownIt-Anchor" href="#请求传参">#</a> 请求传参</h3>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">#xiaohua.py</span></pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token keyword">import</span> scrapy</pre></td></tr><tr><td data-num="4"></td><td><pre></pre></td></tr><tr><td data-num="5"></td><td><pre></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token keyword">class</span> <span class="token class-name">XiaohuaSpider</span><span class="token punctuation">(</span>scrapy<span class="token punctuation">.</span>Spider<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    name <span class="token operator">=</span> <span class="token string">'xiaohua'</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token comment"># allowed_domains = ['www.xxx.com']</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    start_urls <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'http://www.521609.com/tuku/index.html'</span><span class="token punctuation">]</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token comment"># 生成一个通用的 url 模板 (不可变)</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    url <span class="token operator">=</span> <span class="token string">'http://www.521609.com/tuku/index_%d.html'</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    page_num <span class="token operator">=</span> <span class="token number">2</span></pre></td></tr><tr><td data-num="13"></td><td><pre></pre></td></tr><tr><td data-num="14"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">parse</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> response<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="15"></td><td><pre>        li_list <span class="token operator">=</span> response<span class="token punctuation">.</span>xpath<span class="token punctuation">(</span><span class="token string">'//ul[@class="pbl "]/li'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="16"></td><td><pre>        <span class="token keyword">for</span> li <span class="token keyword">in</span> li_list<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="17"></td><td><pre>            img_name <span class="token operator">=</span> li<span class="token punctuation">.</span>xpath<span class="token punctuation">(</span><span class="token string">'./a/p/text()'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>extract_first<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="18"></td><td><pre>            <span class="token keyword">print</span><span class="token punctuation">(</span>img_name<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="19"></td><td><pre>        <span class="token keyword">if</span> self<span class="token punctuation">.</span>page_num <span class="token operator">&lt;=</span> <span class="token number">51</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="20"></td><td><pre>            <span class="token keyword">print</span><span class="token punctuation">(</span>self<span class="token punctuation">.</span>page_num<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="21"></td><td><pre>            new_url <span class="token operator">=</span> <span class="token builtin">format</span><span class="token punctuation">(</span>self<span class="token punctuation">.</span>url <span class="token operator">%</span> self<span class="token punctuation">.</span>page_num<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="22"></td><td><pre>            <span class="token comment"># 手动请求发送:callbak 回调函数是专门用于数据解析</span></pre></td></tr><tr><td data-num="23"></td><td><pre>            self<span class="token punctuation">.</span>page_num <span class="token operator">+=</span> <span class="token number">1</span></pre></td></tr><tr><td data-num="24"></td><td><pre>            <span class="token keyword">yield</span> scrapy<span class="token punctuation">.</span>Request<span class="token punctuation">(</span>url<span class="token operator">=</span>new_url<span class="token punctuation">,</span> callback <span class="token operator">=</span>self<span class="token punctuation">.</span>parse<span class="token punctuation">)</span></pre></td></tr></table></figure><h3 id="请求传参"><a class="markdownIt-Anchor" href="#请求传参">#</a> 请求传参</h3>
 <ul>
 <li>使用场景：如果爬取的解析数据不在同一张页面中.(深度爬取)</li>
 </ul>
@@ -496,53 +303,13 @@ class XiaohuaSpider(scrapy.Spider):
 <li>将存储文件地址的 <code>item</code>  提交到指定的管道类</li>
 <li>在管道文件中定制一个基于 <code>ImagesPipeLine</code>  的一个管道类</li>
 </ul>
-<pre><code>#pipelines.py
-
-# Define your item pipelines here
-#
-# Don't forget to add your pipeline to the ITEM_PIPELINES setting
-# See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-
-
-# useful for handling different item types with a single interface
-from itemadapter import ItemAdapter
-from scrapy.pipelines.images import ImagesPipeline
-import scrapy
-# class ZhanzhangproPipeline:
-#     def process_item(self, item, spider):
-#         return item
-
-
-class imgsPileLine(ImagesPipeline):
-    # 就是可以根据图片地址进行图片数据的请求
-    def get_media_requests(self, item, info):
-        yield scrapy.Request(item['src'])
-    # 指定图片存储的路径
-
-    def file_path(self, request, response=None, info=None):
-        imgName = request.url.split('/')[-1]
-        return imgName
-
-    def item_completed(self, results, item, info):
-        return item  # 返回给下一个即将被执行的管道类
-</code></pre>
-<ul>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">#pipelines.py</span></pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token comment"># Define your item pipelines here</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token comment">#</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token comment"># Don't forget to add your pipeline to the ITEM_PIPELINES setting</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token comment"># See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html</span></pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token comment"># useful for handling different item types with a single interface</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token keyword">from</span> itemadapter <span class="token keyword">import</span> ItemAdapter</pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token keyword">from</span> scrapy<span class="token punctuation">.</span>pipelines<span class="token punctuation">.</span>images <span class="token keyword">import</span> ImagesPipeline</pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token keyword">import</span> scrapy</pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token comment"># class ZhanzhangproPipeline:</span></pre></td></tr><tr><td data-num="14"></td><td><pre><span class="token comment">#     def process_item(self, item, spider):</span></pre></td></tr><tr><td data-num="15"></td><td><pre><span class="token comment">#         return item</span></pre></td></tr><tr><td data-num="16"></td><td><pre></pre></td></tr><tr><td data-num="17"></td><td><pre></pre></td></tr><tr><td data-num="18"></td><td><pre><span class="token keyword">class</span> <span class="token class-name">imgsPileLine</span><span class="token punctuation">(</span>ImagesPipeline<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="19"></td><td><pre>    <span class="token comment"># 就是可以根据图片地址进行图片数据的请求</span></pre></td></tr><tr><td data-num="20"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">get_media_requests</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> item<span class="token punctuation">,</span> info<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="21"></td><td><pre>        <span class="token keyword">yield</span> scrapy<span class="token punctuation">.</span>Request<span class="token punctuation">(</span>item<span class="token punctuation">[</span><span class="token string">'src'</span><span class="token punctuation">]</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="22"></td><td><pre>    <span class="token comment"># 指定图片存储的路径</span></pre></td></tr><tr><td data-num="23"></td><td><pre></pre></td></tr><tr><td data-num="24"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">file_path</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> request<span class="token punctuation">,</span> response<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">,</span> info<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="25"></td><td><pre>        imgName <span class="token operator">=</span> request<span class="token punctuation">.</span>url<span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span></pre></td></tr><tr><td data-num="26"></td><td><pre>        <span class="token keyword">return</span> imgName</pre></td></tr><tr><td data-num="27"></td><td><pre></pre></td></tr><tr><td data-num="28"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">item_completed</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> results<span class="token punctuation">,</span> item<span class="token punctuation">,</span> info<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="29"></td><td><pre>        <span class="token keyword">return</span> item  <span class="token comment"># 返回给下一个即将被执行的管道类</span></pre></td></tr></table></figure><ul>
 <li>修改 <code>serrings.py</code>  配置文件</li>
 </ul>
-<pre><code>#serrings.py
-#指定图片存储的目录
-IMAGES_STORE = './imgs'
-</code></pre>
-<ul>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">#serrings.py</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token comment">#指定图片存储的目录</span></pre></td></tr><tr><td data-num="3"></td><td><pre>IMAGES_STORE <span class="token operator">=</span> <span class="token string">'./imgs'</span></pre></td></tr></table></figure><ul>
 <li>指定开启的管道类：定制的管道类</li>
 </ul>
-<pre><code>serrings.py
-
-ITEM_PIPELINES = &#123;
-    'zhanzhangPro.pipelines.imgsPileLine': 300,
-&#125;
-</code></pre>
-</li>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre>serrings<span class="token punctuation">.</span>py</pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre>ITEM_PIPELINES <span class="token operator">=</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token string">'zhanzhangPro.pipelines.imgsPileLine'</span><span class="token punctuation">:</span> <span class="token number">300</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure></li>
 </ul>
 <h3 id="中间件"><a class="markdownIt-Anchor" href="#中间件">#</a> 中间件</h3>
 <ul>
@@ -572,108 +339,12 @@ ITEM_PIPELINES = &#123;
 </li>
 <li>
 <p>设置 <code>UA</code>  伪装以及代理 <code>IP</code></p>
-<pre><code>#middlewares.py
-
-# Define here the models for your spider middleware
-#
-# See documentation in:
-# https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-
-from scrapy import signals
-
-# useful for handling different item types with a single interface
-from itemadapter import is_item, ItemAdapter
-import random
-
-
-class QiubaiproDownloaderMiddleware:
-    user_agent_list = [
-        &quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 &quot;
-        &quot;(KHTML, like Gecko) Chrome/22.0.1207.1 Safari/537.1&quot;,
-        &quot;Mozilla/5.0 (X11; CrOS i686 2268.111.0) AppleWebKit/536.11 &quot;
-        &quot;(KHTML, like Gecko) Chrome/20.0.1132.57 Safari/536.11&quot;,
-        &quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.6 &quot;
-        &quot;(KHTML, like Gecko) Chrome/20.0.1092.0 Safari/536.6&quot;,
-        &quot;Mozilla/5.0 (Windows NT 6.2) AppleWebKit/536.6 &quot;
-        &quot;(KHTML, like Gecko) Chrome/20.0.1090.0 Safari/536.6&quot;,
-        &quot;Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.1 &quot;
-        &quot;(KHTML, like Gecko) Chrome/19.77.34.5 Safari/537.1&quot;,
-        &quot;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/536.5 &quot;
-        &quot;(KHTML, like Gecko) Chrome/19.0.1084.9 Safari/536.5&quot;,
-        &quot;Mozilla/5.0 (Windows NT 6.0) AppleWebKit/536.5 &quot;
-        &quot;(KHTML, like Gecko) Chrome/19.0.1084.36 Safari/536.5&quot;,
-        &quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.3 &quot;
-        &quot;(KHTML, like Gecko) Chrome/19.0.1063.0 Safari/536.3&quot;,
-        &quot;Mozilla/5.0 (Windows NT 5.1) AppleWebKit/536.3 &quot;
-        &quot;(KHTML, like Gecko) Chrome/19.0.1063.0 Safari/536.3&quot;,
-        &quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_0) AppleWebKit/536.3 &quot;
-        &quot;(KHTML, like Gecko) Chrome/19.0.1063.0 Safari/536.3&quot;,
-        &quot;Mozilla/5.0 (Windows NT 6.2) AppleWebKit/536.3 &quot;
-        &quot;(KHTML, like Gecko) Chrome/19.0.1062.0 Safari/536.3&quot;,
-        &quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.3 &quot;
-        &quot;(KHTML, like Gecko) Chrome/19.0.1062.0 Safari/536.3&quot;,
-        &quot;Mozilla/5.0 (Windows NT 6.2) AppleWebKit/536.3 &quot;
-        &quot;(KHTML, like Gecko) Chrome/19.0.1061.1 Safari/536.3&quot;,
-        &quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.3 &quot;
-        &quot;(KHTML, like Gecko) Chrome/19.0.1061.1 Safari/536.3&quot;,
-        &quot;Mozilla/5.0 (Windows NT 6.1) AppleWebKit/536.3 &quot;
-        &quot;(KHTML, like Gecko) Chrome/19.0.1061.1 Safari/536.3&quot;,
-        &quot;Mozilla/5.0 (Windows NT 6.2) AppleWebKit/536.3 &quot;
-        &quot;(KHTML, like Gecko) Chrome/19.0.1061.0 Safari/536.3&quot;,
-        &quot;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.24 &quot;
-        &quot;(KHTML, like Gecko) Chrome/19.0.1055.1 Safari/535.24&quot;,
-        &quot;Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/535.24 &quot;
-        &quot;(KHTML, like Gecko) Chrome/19.0.1055.1 Safari/535.24&quot;
-    ]
-    # 可被选用的代理IP
-    PROXY_http = [
-        '153.180.102.104:80',
-        '195.208.131.189:56055',
-    ]
-    PROXY_https = [
-        '120.83.49.90:9000',
-        '95.189.112.214:35508',
-    ]
-
-    # 拦截请求
-    def process_request(self, request, spider):
-        # UA伪装
-        request.headers['User-Agent'] = random.choice(self.user_agent_list)
-        return None
-
-    # 拦截所有的响应
-    def process_response(self, request, response, spider):
-        # Called with the response returned from the downloader.
-
-        # Must either;
-        # - return a Response object
-        # - return a Request object
-        # - or raise IgnoreRequest
-        return response
-
-    # 拦截发生异常的请求
-    def process_exception(self, request, exception, spider):
-        # 发生请求异常后设置代理
-        # 对拦截到请求的url进行判断（协议头到底是http还是https）
-        # request.url返回值：http://www.xxx.com
-        if request.url.split(':')[0] == 'https':  # 请求的协议头
-            ip = random.choice(self.PROXY_https)
-            request.meta['proxy'] = 'https://'+ip
-        else:
-            ip = random.choice(self.PROXY_http)
-            request.meta['proxy'] = 'http://' + ip
-        return request  # 将修正之后的请求对象进行重新的请求发送
-</code></pre>
-</li>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">#middlewares.py</span></pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token comment"># Define here the models for your spider middleware</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token comment">#</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token comment"># See documentation in:</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token comment"># https://docs.scrapy.org/en/latest/topics/spider-middleware.html</span></pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token keyword">from</span> scrapy <span class="token keyword">import</span> signals</pre></td></tr><tr><td data-num="9"></td><td><pre></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token comment"># useful for handling different item types with a single interface</span></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token keyword">from</span> itemadapter <span class="token keyword">import</span> is_item<span class="token punctuation">,</span> ItemAdapter</pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token keyword">import</span> random</pre></td></tr><tr><td data-num="13"></td><td><pre></pre></td></tr><tr><td data-num="14"></td><td><pre></pre></td></tr><tr><td data-num="15"></td><td><pre><span class="token keyword">class</span> <span class="token class-name">QiubaiproDownloaderMiddleware</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="16"></td><td><pre>    user_agent_list <span class="token operator">=</span> <span class="token punctuation">[</span></pre></td></tr><tr><td data-num="17"></td><td><pre>        <span class="token string">"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 "</span></pre></td></tr><tr><td data-num="18"></td><td><pre>        <span class="token string">"(KHTML, like Gecko) Chrome/22.0.1207.1 Safari/537.1"</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="19"></td><td><pre>        <span class="token string">"Mozilla/5.0 (X11; CrOS i686 2268.111.0) AppleWebKit/536.11 "</span></pre></td></tr><tr><td data-num="20"></td><td><pre>        <span class="token string">"(KHTML, like Gecko) Chrome/20.0.1132.57 Safari/536.11"</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="21"></td><td><pre>        <span class="token string">"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.6 "</span></pre></td></tr><tr><td data-num="22"></td><td><pre>        <span class="token string">"(KHTML, like Gecko) Chrome/20.0.1092.0 Safari/536.6"</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="23"></td><td><pre>        <span class="token string">"Mozilla/5.0 (Windows NT 6.2) AppleWebKit/536.6 "</span></pre></td></tr><tr><td data-num="24"></td><td><pre>        <span class="token string">"(KHTML, like Gecko) Chrome/20.0.1090.0 Safari/536.6"</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="25"></td><td><pre>        <span class="token string">"Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.1 "</span></pre></td></tr><tr><td data-num="26"></td><td><pre>        <span class="token string">"(KHTML, like Gecko) Chrome/19.77.34.5 Safari/537.1"</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="27"></td><td><pre>        <span class="token string">"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/536.5 "</span></pre></td></tr><tr><td data-num="28"></td><td><pre>        <span class="token string">"(KHTML, like Gecko) Chrome/19.0.1084.9 Safari/536.5"</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="29"></td><td><pre>        <span class="token string">"Mozilla/5.0 (Windows NT 6.0) AppleWebKit/536.5 "</span></pre></td></tr><tr><td data-num="30"></td><td><pre>        <span class="token string">"(KHTML, like Gecko) Chrome/19.0.1084.36 Safari/536.5"</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="31"></td><td><pre>        <span class="token string">"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.3 "</span></pre></td></tr><tr><td data-num="32"></td><td><pre>        <span class="token string">"(KHTML, like Gecko) Chrome/19.0.1063.0 Safari/536.3"</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="33"></td><td><pre>        <span class="token string">"Mozilla/5.0 (Windows NT 5.1) AppleWebKit/536.3 "</span></pre></td></tr><tr><td data-num="34"></td><td><pre>        <span class="token string">"(KHTML, like Gecko) Chrome/19.0.1063.0 Safari/536.3"</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="35"></td><td><pre>        <span class="token string">"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_0) AppleWebKit/536.3 "</span></pre></td></tr><tr><td data-num="36"></td><td><pre>        <span class="token string">"(KHTML, like Gecko) Chrome/19.0.1063.0 Safari/536.3"</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="37"></td><td><pre>        <span class="token string">"Mozilla/5.0 (Windows NT 6.2) AppleWebKit/536.3 "</span></pre></td></tr><tr><td data-num="38"></td><td><pre>        <span class="token string">"(KHTML, like Gecko) Chrome/19.0.1062.0 Safari/536.3"</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="39"></td><td><pre>        <span class="token string">"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.3 "</span></pre></td></tr><tr><td data-num="40"></td><td><pre>        <span class="token string">"(KHTML, like Gecko) Chrome/19.0.1062.0 Safari/536.3"</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="41"></td><td><pre>        <span class="token string">"Mozilla/5.0 (Windows NT 6.2) AppleWebKit/536.3 "</span></pre></td></tr><tr><td data-num="42"></td><td><pre>        <span class="token string">"(KHTML, like Gecko) Chrome/19.0.1061.1 Safari/536.3"</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="43"></td><td><pre>        <span class="token string">"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.3 "</span></pre></td></tr><tr><td data-num="44"></td><td><pre>        <span class="token string">"(KHTML, like Gecko) Chrome/19.0.1061.1 Safari/536.3"</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="45"></td><td><pre>        <span class="token string">"Mozilla/5.0 (Windows NT 6.1) AppleWebKit/536.3 "</span></pre></td></tr><tr><td data-num="46"></td><td><pre>        <span class="token string">"(KHTML, like Gecko) Chrome/19.0.1061.1 Safari/536.3"</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="47"></td><td><pre>        <span class="token string">"Mozilla/5.0 (Windows NT 6.2) AppleWebKit/536.3 "</span></pre></td></tr><tr><td data-num="48"></td><td><pre>        <span class="token string">"(KHTML, like Gecko) Chrome/19.0.1061.0 Safari/536.3"</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="49"></td><td><pre>        <span class="token string">"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.24 "</span></pre></td></tr><tr><td data-num="50"></td><td><pre>        <span class="token string">"(KHTML, like Gecko) Chrome/19.0.1055.1 Safari/535.24"</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="51"></td><td><pre>        <span class="token string">"Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/535.24 "</span></pre></td></tr><tr><td data-num="52"></td><td><pre>        <span class="token string">"(KHTML, like Gecko) Chrome/19.0.1055.1 Safari/535.24"</span></pre></td></tr><tr><td data-num="53"></td><td><pre>    <span class="token punctuation">]</span></pre></td></tr><tr><td data-num="54"></td><td><pre>    <span class="token comment"># 可被选用的代理 IP</span></pre></td></tr><tr><td data-num="55"></td><td><pre>    PROXY_http <span class="token operator">=</span> <span class="token punctuation">[</span></pre></td></tr><tr><td data-num="56"></td><td><pre>        <span class="token string">'153.180.102.104:80'</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="57"></td><td><pre>        <span class="token string">'195.208.131.189:56055'</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="58"></td><td><pre>    <span class="token punctuation">]</span></pre></td></tr><tr><td data-num="59"></td><td><pre>    PROXY_https <span class="token operator">=</span> <span class="token punctuation">[</span></pre></td></tr><tr><td data-num="60"></td><td><pre>        <span class="token string">'120.83.49.90:9000'</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="61"></td><td><pre>        <span class="token string">'95.189.112.214:35508'</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="62"></td><td><pre>    <span class="token punctuation">]</span></pre></td></tr><tr><td data-num="63"></td><td><pre></pre></td></tr><tr><td data-num="64"></td><td><pre>    <span class="token comment"># 拦截请求</span></pre></td></tr><tr><td data-num="65"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">process_request</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> request<span class="token punctuation">,</span> spider<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="66"></td><td><pre>        <span class="token comment"># UA 伪装</span></pre></td></tr><tr><td data-num="67"></td><td><pre>        request<span class="token punctuation">.</span>headers<span class="token punctuation">[</span><span class="token string">'User-Agent'</span><span class="token punctuation">]</span> <span class="token operator">=</span> random<span class="token punctuation">.</span>choice<span class="token punctuation">(</span>self<span class="token punctuation">.</span>user_agent_list<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="68"></td><td><pre>        <span class="token keyword">return</span> <span class="token boolean">None</span></pre></td></tr><tr><td data-num="69"></td><td><pre></pre></td></tr><tr><td data-num="70"></td><td><pre>    <span class="token comment"># 拦截所有的响应</span></pre></td></tr><tr><td data-num="71"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">process_response</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> request<span class="token punctuation">,</span> response<span class="token punctuation">,</span> spider<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="72"></td><td><pre>        <span class="token comment"># Called with the response returned from the downloader.</span></pre></td></tr><tr><td data-num="73"></td><td><pre></pre></td></tr><tr><td data-num="74"></td><td><pre>        <span class="token comment"># Must either;</span></pre></td></tr><tr><td data-num="75"></td><td><pre>        <span class="token comment"># - return a Response object</span></pre></td></tr><tr><td data-num="76"></td><td><pre>        <span class="token comment"># - return a Request object</span></pre></td></tr><tr><td data-num="77"></td><td><pre>        <span class="token comment"># - or raise IgnoreRequest</span></pre></td></tr><tr><td data-num="78"></td><td><pre>        <span class="token keyword">return</span> response</pre></td></tr><tr><td data-num="79"></td><td><pre></pre></td></tr><tr><td data-num="80"></td><td><pre>    <span class="token comment"># 拦截发生异常的请求</span></pre></td></tr><tr><td data-num="81"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">process_exception</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> request<span class="token punctuation">,</span> exception<span class="token punctuation">,</span> spider<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="82"></td><td><pre>        <span class="token comment"># 发生请求异常后设置代理</span></pre></td></tr><tr><td data-num="83"></td><td><pre>        <span class="token comment"># 对拦截到请求的 url 进行判断（协议头到底是 http 还是 https）</span></pre></td></tr><tr><td data-num="84"></td><td><pre>        <span class="token comment"># request.url 返回值：http://www.xxx.com</span></pre></td></tr><tr><td data-num="85"></td><td><pre>        <span class="token keyword">if</span> request<span class="token punctuation">.</span>url<span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token string">':'</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token string">'https'</span><span class="token punctuation">:</span>  <span class="token comment"># 请求的协议头</span></pre></td></tr><tr><td data-num="86"></td><td><pre>            ip <span class="token operator">=</span> random<span class="token punctuation">.</span>choice<span class="token punctuation">(</span>self<span class="token punctuation">.</span>PROXY_https<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="87"></td><td><pre>            request<span class="token punctuation">.</span>meta<span class="token punctuation">[</span><span class="token string">'proxy'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">'https://'</span><span class="token operator">+</span>ip</pre></td></tr><tr><td data-num="88"></td><td><pre>        <span class="token keyword">else</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="89"></td><td><pre>            ip <span class="token operator">=</span> random<span class="token punctuation">.</span>choice<span class="token punctuation">(</span>self<span class="token punctuation">.</span>PROXY_http<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="90"></td><td><pre>            request<span class="token punctuation">.</span>meta<span class="token punctuation">[</span><span class="token string">'proxy'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">'http://'</span> <span class="token operator">+</span> ip</pre></td></tr><tr><td data-num="91"></td><td><pre>        <span class="token keyword">return</span> request  <span class="token comment"># 将修正之后的请求对象进行重新的请求发送</span></pre></td></tr></table></figure></li>
 <li>
 <p>在 <code>settings.py</code>  中开启下载中间件</p>
 </li>
 </ul>
-<pre><code>DOWNLOADER_MIDDLEWARES = &#123;
-   'qiubaiPro.middlewares.QiubaiproDownloaderMiddleware': 543,
-&#125;
-</code></pre>
-</li>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre>DOWNLOADER_MIDDLEWARES <span class="token operator">=</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>   <span class="token string">'qiubaiPro.middlewares.QiubaiproDownloaderMiddleware'</span><span class="token punctuation">:</span> <span class="token number">543</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure></li>
 <li>
 <p>需求：爬取网易新闻中的新闻数据 (标题和内容)</p>
 <ul>
@@ -683,165 +354,8 @@ class QiubaiproDownloaderMiddleware:
 </ul>
 </li>
 </ul>
-<pre><code>#settings.py
-#基本操作
-USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
-# Obey robots.txt rules
-ROBOTSTXT_OBEY = False
-LOG_LEVEL = 'ERROR'
-#开启中间件拦截
-DOWNLOADER_MIDDLEWARES = &#123;
-    'wangyiPro.middlewares.WangyiproDownloaderMiddleware': 543,
-&#125;
-#开启管道
-ITEM_PIPELINES = &#123;
-    'wangyiPro.pipelines.WangyiproPipeline': 300,
-&#125;
-</code></pre>
-<p></p>
-<pre><code>#wangyi.py
-
-import scrapy
-from selenium import webdriver
-from wangyiPro.items import WangyiproItem
-
-
-class WangyiSpider(scrapy.Spider):
-    name = 'wangyi'
-    # allowed_domains = ['https://news.163.com/']
-    start_urls = ['https://news.163.com/']
-    models_urls = []  # 存储五个板块对应详情页的url
-    # 解析五大板块对应详情页的url
-
-    # 实例化一个浏览器对象
-    def __init__(self):
-        # 后面是你的浏览器驱动位置，记得前面加r'','r'是防止字符转义的
-        self.bro = webdriver.Chrome(
-            executable_path=r'D:\Learning world\personal project\personal project\Python\爬虫\scrapy\wangyiPro\wangyiPro\chromedriver.exe')
-
-    def parse(self, response):
-        li_list = response.xpath('//div[@class=&quot;ns_area list&quot;]/ul/li')
-        alist = [3, 4, 6, 7, 8]
-        for index in alist:
-            model_url = li_list[index].xpath('./a/@href').extract_first()
-            self.models_urls.append(model_url)
-
-        # 依次对每一个板块对应的页面进行请求
-        for url in self.models_urls:  # 对每一个板块的url进行请求发送
-            yield scrapy.Request(url=url, callback=self.parse_model)
-
-    # 每一个板块对应的新闻标题相关的内容都是动态加载
-    def parse_model(self, response):  # 解析每一个板块页面中对应新闻的标题和新闻详情页的url
-        div_list = response.xpath('//div[@class=&quot;ndi_main&quot;]/div')
-        for div in div_list:
-            title = div.xpath('./div/div[1]/h3/a/text()').extract_first()
-            new_detail_url = div.xpath(
-                './div/div[1]/h3/a/@href').extract_first()
-            item = WangyiproItem()
-            item['title'] = title
-            # 对新闻详情页的url发起请求
-            yield scrapy.Request(url=new_detail_url, callback=self.parse_detail, meta=&#123;'item': item&#125;)
-
-    def parse_detail(self, response):
-        content = response.xpath(
-            '//div[@class=&quot;post_body&quot;]/p/text()').extract()
-        content = ''.join(content)
-        item = response.meta['item']
-        item['content'] = content
-        yield item
-
-    def closed(self, spider):
-        self.bro.quit()
-</code></pre>
-<pre><code>#middlewares.py
-
-
-# Define here the models for your spider middleware
-#
-# See documentation in:
-# https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-
-from scrapy import signals
-
-# useful for handling different item types with a single interface
-from itemadapter import is_item, ItemAdapter
-from scrapy.http import HtmlResponse
-from time import sleep
-
-
-class WangyiproDownloaderMiddleware:
-    def process_request(self, request, spider):
-        # Called for each request that goes through the downloader
-        # middleware.
-
-        # Must either:
-        # - return None: continue processing this request
-        # - or return a Response object
-        # - or return a Request object
-        # - or raise IgnoreRequest: process_exception() methods of
-        #   installed downloader middleware will be called
-        return None
-
-    # 通过该方法拦截五大板块对应的响应对象,进行篡改
-    def process_response(self, request, response, spider):  # spider表示的是爬虫对象
-        bro = spider.bro  # 获取了在爬虫类中定义的浏览器对象
-        # 挑选出指定的响应对象进行篡改
-        # 通过url指定request
-        # 通过request指定response
-        if request.url in spider.models_urls:
-            bro.get(request.url)  # 五个板块对应的url进行请求
-            sleep(2)
-            page_text = bro.page_source  # 包含了动态加载的新闻数据
-            # response  # 五大板块对应的响应对象
-            # 针对定位到的response进行篡改
-            # 实例化新的相应对象,符合需求:包含动态加载出的新闻数据,替代原来不满足需求的响应对象
-            # 如何获取动态加载出的新闻数据呢?
-            # 基于selenium便捷的获取动态加载数据
-            new_response = HtmlResponse(
-                url=request.url, body=page_text, encoding='utf-8', request=request)
-            return new_response
-        else:
-            # response  # 其他请求对应的响应对象
-            return response
-
-    def process_exception(self, request, exception, spider):
-        # Called when a download handler or a process_request()
-        # (from other downloader middleware) raises an exception.
-
-        # Must either:
-        # - return None: continue processing this exception
-        # - return a Response object: stops process_exception() chain
-        # - return a Request object: stops process_exception() chain
-        pass
-</code></pre>
-<pre><code>#items.py
-
-import scrapy
-
-
-class WangyiproItem(scrapy.Item):
-    # define the fields for your item here like:
-    title = scrapy.Field()
-    content = scrapy.Field()
-</code></pre>
-<pre><code>#pipelines.py
-
-
-# Define your item pipelines here
-#
-# Don't forget to add your pipeline to the ITEM_PIPELINES setting
-# See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-
-
-# useful for handling different item types with a single interface
-from itemadapter import ItemAdapter
-
-
-class WangyiproPipeline:
-    def process_item(self, item, spider):
-        print(item)
-</code></pre>
-<h3 id="crawlspider类"><a class="markdownIt-Anchor" href="#crawlspider类">#</a> CrawlSpider 类</h3>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">#settings.py</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token comment">#基本操作</span></pre></td></tr><tr><td data-num="3"></td><td><pre>USER_AGENT <span class="token operator">=</span> <span class="token string">'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token comment"># Obey robots.txt rules</span></pre></td></tr><tr><td data-num="5"></td><td><pre>ROBOTSTXT_OBEY <span class="token operator">=</span> <span class="token boolean">False</span></pre></td></tr><tr><td data-num="6"></td><td><pre>LOG_LEVEL <span class="token operator">=</span> <span class="token string">'ERROR'</span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token comment">#开启中间件拦截</span></pre></td></tr><tr><td data-num="8"></td><td><pre>DOWNLOADER_MIDDLEWARES <span class="token operator">=</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token string">'wangyiPro.middlewares.WangyiproDownloaderMiddleware'</span><span class="token punctuation">:</span> <span class="token number">543</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token comment">#开启管道</span></pre></td></tr><tr><td data-num="12"></td><td><pre>ITEM_PIPELINES <span class="token operator">=</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="13"></td><td><pre>    <span class="token string">'wangyiPro.pipelines.WangyiproPipeline'</span><span class="token punctuation">:</span> <span class="token number">300</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="14"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p></p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">#wangyi.py</span></pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token keyword">import</span> scrapy</pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token keyword">from</span> selenium <span class="token keyword">import</span> webdriver</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token keyword">from</span> wangyiPro<span class="token punctuation">.</span>items <span class="token keyword">import</span> WangyiproItem</pre></td></tr><tr><td data-num="6"></td><td><pre></pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token keyword">class</span> <span class="token class-name">WangyiSpider</span><span class="token punctuation">(</span>scrapy<span class="token punctuation">.</span>Spider<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    name <span class="token operator">=</span> <span class="token string">'wangyi'</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token comment"># allowed_domains = ['https://news.163.com/']</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    start_urls <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'https://news.163.com/'</span><span class="token punctuation">]</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    models_urls <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>  <span class="token comment"># 存储五个板块对应详情页的 url</span></pre></td></tr><tr><td data-num="13"></td><td><pre>    <span class="token comment"># 解析五大板块对应详情页的 url</span></pre></td></tr><tr><td data-num="14"></td><td><pre></pre></td></tr><tr><td data-num="15"></td><td><pre>    <span class="token comment"># 实例化一个浏览器对象</span></pre></td></tr><tr><td data-num="16"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="17"></td><td><pre>        <span class="token comment"># 后面是你的浏览器驱动位置，记得前面加 r'','r' 是防止字符转义的</span></pre></td></tr><tr><td data-num="18"></td><td><pre>        self<span class="token punctuation">.</span>bro <span class="token operator">=</span> webdriver<span class="token punctuation">.</span>Chrome<span class="token punctuation">(</span></pre></td></tr><tr><td data-num="19"></td><td><pre>            executable_path<span class="token operator">=</span><span class="token string">r'D:\Learning world\personal project\personal project\Python\爬虫\scrapy\wangyiPro\wangyiPro\chromedriver.exe'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="20"></td><td><pre></pre></td></tr><tr><td data-num="21"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">parse</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> response<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="22"></td><td><pre>        li_list <span class="token operator">=</span> response<span class="token punctuation">.</span>xpath<span class="token punctuation">(</span><span class="token string">'//div[@class="ns_area list"]/ul/li'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="23"></td><td><pre>        alist <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">]</span></pre></td></tr><tr><td data-num="24"></td><td><pre>        <span class="token keyword">for</span> index <span class="token keyword">in</span> alist<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="25"></td><td><pre>            model_url <span class="token operator">=</span> li_list<span class="token punctuation">[</span>index<span class="token punctuation">]</span><span class="token punctuation">.</span>xpath<span class="token punctuation">(</span><span class="token string">'./a/@href'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>extract_first<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="26"></td><td><pre>            self<span class="token punctuation">.</span>models_urls<span class="token punctuation">.</span>append<span class="token punctuation">(</span>model_url<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="27"></td><td><pre></pre></td></tr><tr><td data-num="28"></td><td><pre>        <span class="token comment"># 依次对每一个板块对应的页面进行请求</span></pre></td></tr><tr><td data-num="29"></td><td><pre>        <span class="token keyword">for</span> url <span class="token keyword">in</span> self<span class="token punctuation">.</span>models_urls<span class="token punctuation">:</span>  <span class="token comment"># 对每一个板块的 url 进行请求发送</span></pre></td></tr><tr><td data-num="30"></td><td><pre>            <span class="token keyword">yield</span> scrapy<span class="token punctuation">.</span>Request<span class="token punctuation">(</span>url<span class="token operator">=</span>url<span class="token punctuation">,</span> callback<span class="token operator">=</span>self<span class="token punctuation">.</span>parse_model<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="31"></td><td><pre></pre></td></tr><tr><td data-num="32"></td><td><pre>    <span class="token comment"># 每一个板块对应的新闻标题相关的内容都是动态加载</span></pre></td></tr><tr><td data-num="33"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">parse_model</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> response<span class="token punctuation">)</span><span class="token punctuation">:</span>  <span class="token comment"># 解析每一个板块页面中对应新闻的标题和新闻详情页的 url</span></pre></td></tr><tr><td data-num="34"></td><td><pre>        div_list <span class="token operator">=</span> response<span class="token punctuation">.</span>xpath<span class="token punctuation">(</span><span class="token string">'//div[@class="ndi_main"]/div'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="35"></td><td><pre>        <span class="token keyword">for</span> div <span class="token keyword">in</span> div_list<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="36"></td><td><pre>            title <span class="token operator">=</span> div<span class="token punctuation">.</span>xpath<span class="token punctuation">(</span><span class="token string">'./div/div[1]/h3/a/text()'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>extract_first<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="37"></td><td><pre>            new_detail_url <span class="token operator">=</span> div<span class="token punctuation">.</span>xpath<span class="token punctuation">(</span></pre></td></tr><tr><td data-num="38"></td><td><pre>                <span class="token string">'./div/div[1]/h3/a/@href'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>extract_first<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="39"></td><td><pre>            item <span class="token operator">=</span> WangyiproItem<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="40"></td><td><pre>            item<span class="token punctuation">[</span><span class="token string">'title'</span><span class="token punctuation">]</span> <span class="token operator">=</span> title</pre></td></tr><tr><td data-num="41"></td><td><pre>            <span class="token comment"># 对新闻详情页的 url 发起请求</span></pre></td></tr><tr><td data-num="42"></td><td><pre>            <span class="token keyword">yield</span> scrapy<span class="token punctuation">.</span>Request<span class="token punctuation">(</span>url<span class="token operator">=</span>new_detail_url<span class="token punctuation">,</span> callback<span class="token operator">=</span>self<span class="token punctuation">.</span>parse_detail<span class="token punctuation">,</span> meta<span class="token operator">=</span><span class="token punctuation">&#123;</span><span class="token string">'item'</span><span class="token punctuation">:</span> item<span class="token punctuation">&#125;</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="43"></td><td><pre></pre></td></tr><tr><td data-num="44"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">parse_detail</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> response<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="45"></td><td><pre>        content <span class="token operator">=</span> response<span class="token punctuation">.</span>xpath<span class="token punctuation">(</span></pre></td></tr><tr><td data-num="46"></td><td><pre>            <span class="token string">'//div[@class="post_body"]/p/text()'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>extract<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="47"></td><td><pre>        content <span class="token operator">=</span> <span class="token string">''</span><span class="token punctuation">.</span>join<span class="token punctuation">(</span>content<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="48"></td><td><pre>        item <span class="token operator">=</span> response<span class="token punctuation">.</span>meta<span class="token punctuation">[</span><span class="token string">'item'</span><span class="token punctuation">]</span></pre></td></tr><tr><td data-num="49"></td><td><pre>        item<span class="token punctuation">[</span><span class="token string">'content'</span><span class="token punctuation">]</span> <span class="token operator">=</span> content</pre></td></tr><tr><td data-num="50"></td><td><pre>        <span class="token keyword">yield</span> item</pre></td></tr><tr><td data-num="51"></td><td><pre></pre></td></tr><tr><td data-num="52"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">closed</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> spider<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="53"></td><td><pre>        self<span class="token punctuation">.</span>bro<span class="token punctuation">.</span>quit<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr></table></figure><figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">#middlewares.py</span></pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token comment"># Define here the models for your spider middleware</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token comment">#</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token comment"># See documentation in:</span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token comment"># https://docs.scrapy.org/en/latest/topics/spider-middleware.html</span></pre></td></tr><tr><td data-num="8"></td><td><pre></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token keyword">from</span> scrapy <span class="token keyword">import</span> signals</pre></td></tr><tr><td data-num="10"></td><td><pre></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token comment"># useful for handling different item types with a single interface</span></pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token keyword">from</span> itemadapter <span class="token keyword">import</span> is_item<span class="token punctuation">,</span> ItemAdapter</pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token keyword">from</span> scrapy<span class="token punctuation">.</span>http <span class="token keyword">import</span> HtmlResponse</pre></td></tr><tr><td data-num="14"></td><td><pre><span class="token keyword">from</span> time <span class="token keyword">import</span> sleep</pre></td></tr><tr><td data-num="15"></td><td><pre></pre></td></tr><tr><td data-num="16"></td><td><pre></pre></td></tr><tr><td data-num="17"></td><td><pre><span class="token keyword">class</span> <span class="token class-name">WangyiproDownloaderMiddleware</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="18"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">process_request</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> request<span class="token punctuation">,</span> spider<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="19"></td><td><pre>        <span class="token comment"># Called for each request that goes through the downloader</span></pre></td></tr><tr><td data-num="20"></td><td><pre>        <span class="token comment"># middleware.</span></pre></td></tr><tr><td data-num="21"></td><td><pre></pre></td></tr><tr><td data-num="22"></td><td><pre>        <span class="token comment"># Must either:</span></pre></td></tr><tr><td data-num="23"></td><td><pre>        <span class="token comment"># - return None: continue processing this request</span></pre></td></tr><tr><td data-num="24"></td><td><pre>        <span class="token comment"># - or return a Response object</span></pre></td></tr><tr><td data-num="25"></td><td><pre>        <span class="token comment"># - or return a Request object</span></pre></td></tr><tr><td data-num="26"></td><td><pre>        <span class="token comment"># - or raise IgnoreRequest: process_exception() methods of</span></pre></td></tr><tr><td data-num="27"></td><td><pre>        <span class="token comment">#   installed downloader middleware will be called</span></pre></td></tr><tr><td data-num="28"></td><td><pre>        <span class="token keyword">return</span> <span class="token boolean">None</span></pre></td></tr><tr><td data-num="29"></td><td><pre></pre></td></tr><tr><td data-num="30"></td><td><pre>    <span class="token comment"># 通过该方法拦截五大板块对应的响应对象，进行篡改</span></pre></td></tr><tr><td data-num="31"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">process_response</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> request<span class="token punctuation">,</span> response<span class="token punctuation">,</span> spider<span class="token punctuation">)</span><span class="token punctuation">:</span>  <span class="token comment"># spider 表示的是爬虫对象</span></pre></td></tr><tr><td data-num="32"></td><td><pre>        bro <span class="token operator">=</span> spider<span class="token punctuation">.</span>bro  <span class="token comment"># 获取了在爬虫类中定义的浏览器对象</span></pre></td></tr><tr><td data-num="33"></td><td><pre>        <span class="token comment"># 挑选出指定的响应对象进行篡改</span></pre></td></tr><tr><td data-num="34"></td><td><pre>        <span class="token comment"># 通过 url 指定 request</span></pre></td></tr><tr><td data-num="35"></td><td><pre>        <span class="token comment"># 通过 request 指定 response</span></pre></td></tr><tr><td data-num="36"></td><td><pre>        <span class="token keyword">if</span> request<span class="token punctuation">.</span>url <span class="token keyword">in</span> spider<span class="token punctuation">.</span>models_urls<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="37"></td><td><pre>            bro<span class="token punctuation">.</span>get<span class="token punctuation">(</span>request<span class="token punctuation">.</span>url<span class="token punctuation">)</span>  <span class="token comment"># 五个板块对应的 url 进行请求</span></pre></td></tr><tr><td data-num="38"></td><td><pre>            sleep<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="39"></td><td><pre>            page_text <span class="token operator">=</span> bro<span class="token punctuation">.</span>page_source  <span class="token comment"># 包含了动态加载的新闻数据</span></pre></td></tr><tr><td data-num="40"></td><td><pre>            <span class="token comment"># response  # 五大板块对应的响应对象</span></pre></td></tr><tr><td data-num="41"></td><td><pre>            <span class="token comment"># 针对定位到的 response 进行篡改</span></pre></td></tr><tr><td data-num="42"></td><td><pre>            <span class="token comment"># 实例化新的相应对象，符合需求：包含动态加载出的新闻数据，替代原来不满足需求的响应对象</span></pre></td></tr><tr><td data-num="43"></td><td><pre>            <span class="token comment"># 如何获取动态加载出的新闻数据呢？</span></pre></td></tr><tr><td data-num="44"></td><td><pre>            <span class="token comment"># 基于 selenium 便捷的获取动态加载数据</span></pre></td></tr><tr><td data-num="45"></td><td><pre>            new_response <span class="token operator">=</span> HtmlResponse<span class="token punctuation">(</span></pre></td></tr><tr><td data-num="46"></td><td><pre>                url<span class="token operator">=</span>request<span class="token punctuation">.</span>url<span class="token punctuation">,</span> body<span class="token operator">=</span>page_text<span class="token punctuation">,</span> encoding<span class="token operator">=</span><span class="token string">'utf-8'</span><span class="token punctuation">,</span> request<span class="token operator">=</span>request<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="47"></td><td><pre>            <span class="token keyword">return</span> new_response</pre></td></tr><tr><td data-num="48"></td><td><pre>        <span class="token keyword">else</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="49"></td><td><pre>            <span class="token comment"># response  # 其他请求对应的响应对象</span></pre></td></tr><tr><td data-num="50"></td><td><pre>            <span class="token keyword">return</span> response</pre></td></tr><tr><td data-num="51"></td><td><pre></pre></td></tr><tr><td data-num="52"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">process_exception</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> request<span class="token punctuation">,</span> exception<span class="token punctuation">,</span> spider<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="53"></td><td><pre>        <span class="token comment"># Called when a download handler or a process_request()</span></pre></td></tr><tr><td data-num="54"></td><td><pre>        <span class="token comment"># (from other downloader middleware) raises an exception.</span></pre></td></tr><tr><td data-num="55"></td><td><pre></pre></td></tr><tr><td data-num="56"></td><td><pre>        <span class="token comment"># Must either:</span></pre></td></tr><tr><td data-num="57"></td><td><pre>        <span class="token comment"># - return None: continue processing this exception</span></pre></td></tr><tr><td data-num="58"></td><td><pre>        <span class="token comment"># - return a Response object: stops process_exception() chain</span></pre></td></tr><tr><td data-num="59"></td><td><pre>        <span class="token comment"># - return a Request object: stops process_exception() chain</span></pre></td></tr><tr><td data-num="60"></td><td><pre>        <span class="token keyword">pass</span></pre></td></tr></table></figure><figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">#items.py</span></pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token keyword">import</span> scrapy</pre></td></tr><tr><td data-num="4"></td><td><pre></pre></td></tr><tr><td data-num="5"></td><td><pre></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token keyword">class</span> <span class="token class-name">WangyiproItem</span><span class="token punctuation">(</span>scrapy<span class="token punctuation">.</span>Item<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token comment"># define the fields for your item here like:</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    title <span class="token operator">=</span> scrapy<span class="token punctuation">.</span>Field<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    content <span class="token operator">=</span> scrapy<span class="token punctuation">.</span>Field<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr></table></figure><figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">#pipelines.py</span></pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token comment"># Define your item pipelines here</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token comment">#</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token comment"># Don't forget to add your pipeline to the ITEM_PIPELINES setting</span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token comment"># See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html</span></pre></td></tr><tr><td data-num="8"></td><td><pre></pre></td></tr><tr><td data-num="9"></td><td><pre></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token comment"># useful for handling different item types with a single interface</span></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token keyword">from</span> itemadapter <span class="token keyword">import</span> ItemAdapter</pre></td></tr><tr><td data-num="12"></td><td><pre></pre></td></tr><tr><td data-num="13"></td><td><pre></pre></td></tr><tr><td data-num="14"></td><td><pre><span class="token keyword">class</span> <span class="token class-name">WangyiproPipeline</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="15"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">process_item</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> item<span class="token punctuation">,</span> spider<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="16"></td><td><pre>        <span class="token keyword">print</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span></pre></td></tr></table></figure><h3 id="crawlspider类"><a class="markdownIt-Anchor" href="#crawlspider类">#</a> CrawlSpider 类</h3>
 <p><code>CrawlSpider类:Spider</code>  的一个子类</p>
 <ul>
 <li>全站数据爬取的方式
@@ -923,29 +437,13 @@ class WangyiproPipeline:
 <ul>
 <li>指定使用可以被共享的管道</li>
 </ul>
-<pre><code>ITEM_PIPELINES = &#123;
-    'scrapy_redis.pipelines.RedisPipeline':400
-&#125;
-</code></pre>
-<ul>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre>ITEM_PIPELINES <span class="token operator">=</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token string">'scrapy_redis.pipelines.RedisPipeline'</span><span class="token punctuation">:</span><span class="token number">400</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><ul>
 <li>指定调度器</li>
 </ul>
-<pre><code>#增加了一个去重容器类的配置,作用使用Redis的set集合来存储请求的指纹数据,从而实现请求去重的持久化
-DUPEFILTER_CLASS = &quot;scrapy_redis.dupefilter.RFPDupeFilter&quot;
-#使用scrapy-redis组件自己的调度器
-SCHEDULER=&quot;scrapy_redis.scheduler.Scheduler&quot;
-#配置调度器是否要持久化,也就是当爬虫结束了,要不要清空Redis中请求队列和去重指纹的set.True=保留，False=清空
-SCHEDULER_PERSIST=TRUE
-</code></pre>
-<ul>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">#增加了一个去重容器类的配置，作用使用 Redis 的 set 集合来存储请求的指纹数据，从而实现请求去重的持久化</span></pre></td></tr><tr><td data-num="2"></td><td><pre>DUPEFILTER_CLASS <span class="token operator">=</span> <span class="token string">"scrapy_redis.dupefilter.RFPDupeFilter"</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token comment">#使用 scrapy-redis 组件自己的调度器</span></pre></td></tr><tr><td data-num="4"></td><td><pre>SCHEDULER<span class="token operator">=</span><span class="token string">"scrapy_redis.scheduler.Scheduler"</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token comment">#配置调度器是否要持久化，也就是当爬虫结束了，要不要清空 Redis 中请求队列和去重指纹的 set.True = 保留，False = 清空</span></pre></td></tr><tr><td data-num="6"></td><td><pre>SCHEDULER_PERSIST<span class="token operator">=</span>TRUE</pre></td></tr></table></figure><ul>
 <li>指定 <code>redis</code>  服务器</li>
 </ul>
-<pre><code>#setting.py
-
-REDIS_HOST = 'redis服务器的ip地址'
-REDIS_PORT = 6379
-</code></pre>
-</li>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">#setting.py</span></pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre>REDIS_HOST <span class="token operator">=</span> <span class="token string">'redis服务器的ip地址'</span></pre></td></tr><tr><td data-num="4"></td><td><pre>REDIS_PORT <span class="token operator">=</span> <span class="token number">6379</span></pre></td></tr></table></figure></li>
 <li>
 <p><code>redis</code>  相关操作配置</p>
 <ul>
@@ -993,7 +491,7 @@ REDIS_PORT = 6379
       <i class="ic i-calendar-check"></i>
     </span>
     <span class="text">更新于</span>
-    <time title="修改时间：2022-09-14 11:00:25" itemprop="dateModified" datetime="2022-09-14T11:00:25+08:00">2022-09-14</time>
+    <time title="修改时间：2022-10-11 11:05:10" itemprop="dateModified" datetime="2022-10-11T11:05:10+08:00">2022-10-11</time>
   </span>
 </div>
 
@@ -1033,7 +531,7 @@ REDIS_PORT = 6379
     <div class="item left">
       
 
-  <a href="/category/ac0b6c1e594d.html" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva2.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipet4bz0yj20zk0m8e81.jpg" title="利用Python模糊查询批量修改文件名">
+  <a href="/category/ac0b6c1e594d.html" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva2.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giciundwu5j20zk0m8n9e.jpg" title="利用Python模糊查询批量修改文件名">
   <span class="type">上一篇</span>
   <span class="category"><i class="ic i-flag"></i> Python</span>
   <h3>利用Python模糊查询批量修改文件名</h3>
@@ -1043,7 +541,7 @@ REDIS_PORT = 6379
     <div class="item right">
       
 
-  <a href="/category/ed4a5683c147.html" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva2.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giclx6phq6j20zk0m8e36.jpg" title="Security+知识点">
+  <a href="/category/ed4a5683c147.html" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva2.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giclj9410cj20zk0m8h12.jpg" title="Security+知识点">
   <span class="type">下一篇</span>
   <span class="category"><i class="ic i-flag"></i> Security+</span>
   <h3>Security+知识点</h3>
@@ -1169,13 +667,13 @@ REDIS_PORT = 6379
     <span class="post-meta-item-icon">
       <i class="ic i-chart-area"></i>
     </span>
-    <span title="站点总字数">288k 字</span>
+    <span title="站点总字数">287k 字</span>
 
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="ic i-coffee"></i>
     </span>
-    <span title="站点阅读时长">4:22</span>
+    <span title="站点阅读时长">4:21</span>
   </div>
   <div class="powered-by">
     基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
