@@ -76,7 +76,7 @@ Linux-安装Lnmp - Linux - 安全运维 |
       <i class="ic i-pen"></i>
     </span>
     <span class="text">本文字数</span>
-    <span>2.7k</span>
+    <span>2.6k</span>
     <span class="text">字</span>
   </span>
   <span class="item" title="阅读时长">
@@ -117,12 +117,12 @@ Linux-安装Lnmp - Linux - 安全运维 |
       </div>
       <div id="imgs" class="pjax">
         <ul>
-          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gipetv6p75j20zk0m8x6p.jpg"></li>
-          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giph4baakhj20zk0m8h5q.jpg"></li>
-          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gipew28b65j20zk0m8hdt.jpg"></li>
-          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gicit31ffoj20zk0m8naf.jpg"></li>
-          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gipetlbztpj20zk0m84qp.jpg"></li>
-          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gipesx5fdwj20zk0m81kx.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gicit31ffoj20zk0m8naf.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1giclflwv2aj20zk0m84qp.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1giph4fomxoj20zk0m8axp.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gipex2cdtbj20zk0m8x6p.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gipeu1usa7j20zk0m8b29.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gipev1x5e4j20zk0m8b29.jpg"></li>
         </ul>
       </div>
     </header>
@@ -172,91 +172,10 @@ Linux-安装Lnmp - Linux - 安全运维 |
     
 
     <h2 id="安装php"><a class="markdownIt-Anchor" href="#安装php">#</a> 安装 PHP</h2>
-<pre><code>#安装epel源
-yum install epel-release
-#安装webtatic-releaseRPM包
-yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm
-#卸载旧版本PHP
-yum -y remove php*
-#安装PHP
-yum -y install php74 php74-php-common php74-php-devel php74-php-pecl-memcached php74-php-pecl-memcache php74-php-pecl-redis5 php74-php-embedded php74-php-opcache php74-php-xml php74-php-bcmath php74-php-gd php74-php-pdo php74-php-mbstring php74-php-cli php74-php-fpm php74-php-mysqlnd
-#设为开机自启 
-systemctl enable php74-php-fpm.service
-#启动Php-fpm 
-systemctl start php74-php-fpm.service
-#查看启动状态,红色启动失败绿色启动成功 
-systemctl status php74-php-fpm.service
-</code></pre>
-<h2 id="安装mariadb"><a class="markdownIt-Anchor" href="#安装mariadb">#</a> 安装 Mariadb</h2>
-<pre><code>#Yum安装Mariadb
-yum install mariadb mariadb-server -y
-#启动Mariadb
-systemctl start mariadb
-#设为开机自启
-systemctl enable mariadb
-#Mariadb初始化
-mysql_secure_installation
-#删除匿名用户?
-Remove anonymous users? [Y/n] y
-#禁止root远程登录
-Disallow root login remotely? [Y/n] n
-#删除测试数据库并访问它?
-Remove test database and access to it? [Y/n] y
-#现在重新加载特权表?
-Reload privilege tables now? [Y/n] y
-</code></pre>
-<h2 id="安装openresty"><a class="markdownIt-Anchor" href="#安装openresty">#</a> 安装 Openresty</h2>
-<pre><code>#进入opt目录
-cd /opt
-#下载Openresty二进制文件
-wget https://openresty.org/download/openresty-1.15.8.2.tar.gz
-#解压压缩包
-tar zxvf openresty-1.15.8.2.tar.gz
-#进入到openresty-1.15.8.2/目录
-cd openresty-1.15.8.2/
-#准备编译参数
-./configure --prefix=/usr/local/nginx --sbin-path=/usr/sbin/nginx --conf-path=/usr/local/nginx/nginx.conf --pid-path=/var/run/nginx.pid --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --lock-path=/var/lock/nginx.lock --with-luajit --with-http_gunzip_module --with-pcre --with-pcre-jit --with-http_perl_module --with-ld-opt=&quot;-Wl,-E&quot; --with-http_realip_module --with-http_secure_link_module --with-http_slice_module --with-http_ssl_module --with-http_stub_status_module --with-http_sub_module --with-http_v2_module --with-http_addition_module --with-http_xslt_module --with-http_image_filter_module --with-http_geoip_module --with-http_dav_module --with-http_flv_module --with-http_mp4_module --with-http_gzip_static_module --with-http_auth_request_module --with-http_random_index_module --with-select_module --with-poll_module --with-file-aio --with-http_degradation_module --with-libatomic --http-client-body-temp-path=/var/tmp/nginx/client_body --http-proxy-temp-path=/var/tmp/nginx/proxy --http-fastcgi-temp-path=/var/tmp/nginx/fastcgi --http-uwsgi-temp-path=/var/tmp/nginx/uwsgi --http-scgi-temp-path=/var/tmp/nginx/scgi
-#编译&amp;安装
-make&amp;&amp;make install
-</code></pre>
-<h2 id="准备工作"><a class="markdownIt-Anchor" href="#准备工作">#</a> 准备工作</h2>
-<pre><code>#编辑nginx.conf配置文件
-vim /usr/local/nginx/nginx.conf
-
-#nginx.conf配置项
- location / &#123;
-
-            root   html;
-
-            index  index.html index.htm index.php;
-
-        &#125;
-
- location ~ \.php$ &#123;
-
-            root           html;
-
-            fastcgi_pass   127.0.0.1:9000;
-
-            fastcgi_index  index.php;
-
-            fastcgi_param  SCRIPT_FILENAME  $document_root/$fastcgi_script_name;
-
-            include        fastcgi_params;
-
-        &#125;
-
-#创建目录
-mkdir -p /var/tmp/nginx/client_body
-mkdir -p /usr/local/nginx/nginx/logs/
-
-#检查nginx配置文件是否正确
-nginx -t
-
-#启动nginx
-nginx
-</code></pre>
-
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">#安装 epel 源</span></pre></td></tr><tr><td data-num="2"></td><td><pre>yum <span class="token function">install</span> epel-release</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token comment">#安装 webtatic-releaseRPM 包</span></pre></td></tr><tr><td data-num="4"></td><td><pre>yum <span class="token function">install</span> http://rpms.remirepo.net/enterprise/remi-release-7.rpm</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token comment">#卸载旧版本 PHP</span></pre></td></tr><tr><td data-num="6"></td><td><pre>yum <span class="token parameter variable">-y</span> remove php*</pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token comment">#安装 PHP</span></pre></td></tr><tr><td data-num="8"></td><td><pre>yum <span class="token parameter variable">-y</span> <span class="token function">install</span> php74 php74-php-common php74-php-devel php74-php-pecl-memcached php74-php-pecl-memcache php74-php-pecl-redis5 php74-php-embedded php74-php-opcache php74-php-xml php74-php-bcmath php74-php-gd php74-php-pdo php74-php-mbstring php74-php-cli php74-php-fpm php74-php-mysqlnd</pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token comment">#设为开机自启 </span></pre></td></tr><tr><td data-num="10"></td><td><pre>systemctl <span class="token builtin class-name">enable</span> php74-php-fpm.service</pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token comment">#启动 Php-fpm </span></pre></td></tr><tr><td data-num="12"></td><td><pre>systemctl start php74-php-fpm.service</pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token comment">#查看启动状态，红色启动失败绿色启动成功 </span></pre></td></tr><tr><td data-num="14"></td><td><pre>systemctl status php74-php-fpm.service</pre></td></tr></table></figure><h2 id="安装mariadb"><a class="markdownIt-Anchor" href="#安装mariadb">#</a> 安装 Mariadb</h2>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">#Yum 安装 Mariadb</span></pre></td></tr><tr><td data-num="2"></td><td><pre>yum <span class="token function">install</span> mariadb mariadb-server <span class="token parameter variable">-y</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token comment">#启动 Mariadb</span></pre></td></tr><tr><td data-num="4"></td><td><pre>systemctl start mariadb</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token comment">#设为开机自启</span></pre></td></tr><tr><td data-num="6"></td><td><pre>systemctl <span class="token builtin class-name">enable</span> mariadb</pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token comment">#Mariadb 初始化</span></pre></td></tr><tr><td data-num="8"></td><td><pre>mysql_secure_installation</pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token comment">#删除匿名用户？</span></pre></td></tr><tr><td data-num="10"></td><td><pre>Remove anonymous users? <span class="token punctuation">[</span>Y/n<span class="token punctuation">]</span> y</pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token comment">#禁止 root 远程登录</span></pre></td></tr><tr><td data-num="12"></td><td><pre>Disallow root login remotely? <span class="token punctuation">[</span>Y/n<span class="token punctuation">]</span> n</pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token comment">#删除测试数据库并访问它？</span></pre></td></tr><tr><td data-num="14"></td><td><pre>Remove <span class="token builtin class-name">test</span> database and access to it? <span class="token punctuation">[</span>Y/n<span class="token punctuation">]</span> y</pre></td></tr><tr><td data-num="15"></td><td><pre><span class="token comment">#现在重新加载特权表？</span></pre></td></tr><tr><td data-num="16"></td><td><pre>Reload privilege tables now? <span class="token punctuation">[</span>Y/n<span class="token punctuation">]</span> y</pre></td></tr></table></figure><h2 id="安装openresty"><a class="markdownIt-Anchor" href="#安装openresty">#</a> 安装 Openresty</h2>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">#进入 opt 目录</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token builtin class-name">cd</span> /opt</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token comment">#下载 Openresty 二进制文件</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token function">wget</span> https://openresty.org/download/openresty-1.15.8.2.tar.gz</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token comment">#解压压缩包</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token function">tar</span> zxvf openresty-1.15.8.2.tar.gz</pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token comment">#进入到 openresty-1.15.8.2 / 目录</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token builtin class-name">cd</span> openresty-1.15.8.2/</pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token comment">#准备编译参数</span></pre></td></tr><tr><td data-num="10"></td><td><pre>./configure <span class="token parameter variable">--prefix</span><span class="token operator">=</span>/usr/local/nginx --sbin-path<span class="token operator">=</span>/usr/sbin/nginx --conf-path<span class="token operator">=</span>/usr/local/nginx/nginx.conf --pid-path<span class="token operator">=</span>/var/run/nginx.pid --error-log-path<span class="token operator">=</span>/var/log/nginx/error.log --http-log-path<span class="token operator">=</span>/var/log/nginx/access.log --lock-path<span class="token operator">=</span>/var/lock/nginx.lock --with-luajit --with-http_gunzip_module --with-pcre --with-pcre-jit --with-http_perl_module --with-ld-opt<span class="token operator">=</span><span class="token string">"-Wl,-E"</span> --with-http_realip_module --with-http_secure_link_module --with-http_slice_module --with-http_ssl_module --with-http_stub_status_module --with-http_sub_module --with-http_v2_module --with-http_addition_module --with-http_xslt_module --with-http_image_filter_module --with-http_geoip_module --with-http_dav_module --with-http_flv_module --with-http_mp4_module --with-http_gzip_static_module --with-http_auth_request_module --with-http_random_index_module --with-select_module --with-poll_module --with-file-aio --with-http_degradation_module --with-libatomic --http-client-body-temp-path<span class="token operator">=</span>/var/tmp/nginx/client_body --http-proxy-temp-path<span class="token operator">=</span>/var/tmp/nginx/proxy --http-fastcgi-temp-path<span class="token operator">=</span>/var/tmp/nginx/fastcgi --http-uwsgi-temp-path<span class="token operator">=</span>/var/tmp/nginx/uwsgi --http-scgi-temp-path<span class="token operator">=</span>/var/tmp/nginx/scgi</pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token comment">#编译 & amp; 安装</span></pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token function">make</span><span class="token operator">&amp;&amp;</span><span class="token function">make</span> <span class="token function">install</span></pre></td></tr></table></figure><h2 id="准备工作"><a class="markdownIt-Anchor" href="#准备工作">#</a> 准备工作</h2>
+<figure class="highlight nginx"><figcaption data-lang="nginx"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">#编辑 nginx.conf 配置文件</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token directive"><span class="token keyword">vim</span> /usr/local/nginx/nginx.conf</pre></td></tr><tr><td data-num="3"></td><td><pre></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token comment">#nginx.conf 配置项</span></pre></td></tr><tr><td data-num="5"></td><td><pre> location /</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="6"></td><td><pre></pre></td></tr><tr><td data-num="7"></td><td><pre>            <span class="token directive"><span class="token keyword">root</span>   html</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre></pre></td></tr><tr><td data-num="9"></td><td><pre>            <span class="token directive"><span class="token keyword">index</span>  index.html index.htm index.php</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="10"></td><td><pre></pre></td></tr><tr><td data-num="11"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="12"></td><td><pre></pre></td></tr><tr><td data-num="13"></td><td><pre> <span class="token directive"><span class="token keyword">location</span> ~ \.php$</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="14"></td><td><pre></pre></td></tr><tr><td data-num="15"></td><td><pre>            <span class="token directive"><span class="token keyword">root</span>           html</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="16"></td><td><pre></pre></td></tr><tr><td data-num="17"></td><td><pre>            <span class="token directive"><span class="token keyword">fastcgi_pass</span>   127.0.0.1:9000</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="18"></td><td><pre></pre></td></tr><tr><td data-num="19"></td><td><pre>            <span class="token directive"><span class="token keyword">fastcgi_index</span>  index.php</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="20"></td><td><pre></pre></td></tr><tr><td data-num="21"></td><td><pre>            <span class="token directive"><span class="token keyword">fastcgi_param</span>  SCRIPT_FILENAME  <span class="token variable">$document_root/</span><span class="token variable">$fastcgi_script_name</span></span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="22"></td><td><pre></pre></td></tr><tr><td data-num="23"></td><td><pre>            <span class="token directive"><span class="token keyword">include</span>        fastcgi_params</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="24"></td><td><pre></pre></td></tr><tr><td data-num="25"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="26"></td><td><pre></pre></td></tr><tr><td data-num="27"></td><td><pre><span class="token comment">#创建目录</span></pre></td></tr><tr><td data-num="28"></td><td><pre>mkdir -p /var/tmp/nginx/client_body</pre></td></tr><tr><td data-num="29"></td><td><pre>mkdir -p /usr/local/nginx/nginx/logs/</pre></td></tr><tr><td data-num="30"></td><td><pre></pre></td></tr><tr><td data-num="31"></td><td><pre><span class="token comment">#检查 nginx 配置文件是否正确</span></pre></td></tr><tr><td data-num="32"></td><td><pre>nginx -t</pre></td></tr><tr><td data-num="33"></td><td><pre></pre></td></tr><tr><td data-num="34"></td><td><pre><span class="token comment">#启动 nginx</span></pre></td></tr><tr><td data-num="35"></td><td><pre>nginx</pre></td></tr></table></figure>
       <div class="tags">
           <a href="/tags/linux/" rel="tag"><i class="ic i-tag"></i> linux</a>
           <a href="/tags/mysql/" rel="tag"><i class="ic i-tag"></i> mysql</a>
@@ -275,7 +194,7 @@ nginx
       <i class="ic i-calendar-check"></i>
     </span>
     <span class="text">更新于</span>
-    <time title="修改时间：2022-09-05 16:10:42" itemprop="dateModified" datetime="2022-09-05T16:10:42+08:00">2022-09-05</time>
+    <time title="修改时间：2022-10-29 21:35:19" itemprop="dateModified" datetime="2022-10-29T21:35:19+08:00">2022-10-29</time>
   </span>
 </div>
 
@@ -315,7 +234,7 @@ nginx
     <div class="item left">
       
 
-  <a href="/category/5c37bcdf1660.html" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva2.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipeu7txpzj20zk0m81kx.jpg" title="Security-基本的认证和授权概念">
+  <a href="/category/5c37bcdf1660.html" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipeyvx1d4j20zk0m8hdt.jpg" title="Security-基本的认证和授权概念">
   <span class="type">上一篇</span>
   <span class="category"><i class="ic i-flag"></i> Security+</span>
   <h3>Security-基本的认证和授权概念</h3>
@@ -325,7 +244,7 @@ nginx
     <div class="item right">
       
 
-  <a href="/category/79bf3c2d498a.html" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva2.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giclxp31goj20zk0m8qv5.jpg" title="Linux-Mysql主主架构">
+  <a href="/category/79bf3c2d498a.html" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giclx6phq6j20zk0m8e36.jpg" title="Linux-Mysql主主架构">
   <span class="type">下一篇</span>
   <span class="category"><i class="ic i-flag"></i> 数据库</span>
   <h3>Linux-Mysql主主架构</h3>
