@@ -1,0 +1,346 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.26.3" theme-name="Stellar" theme-version="1.26.3">
+  
+  <meta name="generator" content="Hexo 5.4.2">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>Linux-定时备份网站数据文件到阿里云盘 - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="Aliyunpan介绍阿里云盘CLI.仿Linux shell文件处理命令的阿里云盘命令行客户 支持以下特色功能:    多平台支持,支持Windows,macOS,linux(x86&#x2F;x64&#x2F;arm)等   阿里云盘多用户支持   支持文件网盘,相册网盘无缝切换   支持导入&#x2F;导出功能,快速备份(导出)和恢复(导入)网盘的文件   下载网盘内文件,支持多个文件或目录下载,支持断点续传和单文件并行">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux-定时备份网站数据文件到阿里云盘">
+<meta property="og:url" content="https://jiangjiyue.github.io/2021/09/25/linux-%E5%AE%9A%E6%97%B6%E7%BD%91%E7%AB%99%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6%E5%88%B0%E9%98%BF%E9%87%8C%E7%BD%91%E7%9B%98/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="Aliyunpan介绍阿里云盘CLI.仿Linux shell文件处理命令的阿里云盘命令行客户 支持以下特色功能:    多平台支持,支持Windows,macOS,linux(x86&#x2F;x64&#x2F;arm)等   阿里云盘多用户支持   支持文件网盘,相册网盘无缝切换   支持导入&#x2F;导出功能,快速备份(导出)和恢复(导入)网盘的文件   下载网盘内文件,支持多个文件或目录下载,支持断点续传和单文件并行">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/aliyunpan..webp">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/refresh_token.webp">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/aliyunpan_login..webp">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/aliyunpan_exit..webp">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/aliyunpan_upload..webp">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/aliyunpan_content..webp">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/aliyunpan_download_file..webp">
+<meta property="article:published_time" content="2021-09-25T00:56:57.000Z">
+<meta property="article:modified_time" content="2024-01-25T08:00:40.656Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="mysql">
+<meta property="article:tag" content="安全管理">
+<meta property="article:tag" content="运维">
+<meta property="article:tag" content="数据库">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/aliyunpan..webp">
+  
+  
+  
+  <meta name="keywords" content="linux,mysql,安全管理,运维,数据库">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.26.3">
+
+  
+    <link rel="shortcut icon" href="https://jiangjiyue.github.io/images/favicon.ico">
+  
+
+  
+
+  
+  
+</head>
+<body>
+
+
+
+<div class="l_body content tech" id="start" layout="post" ><aside class="l_left"><div class="sidebar-container sidebar-blur">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://jiangjiyue.github.io/images/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">连自己喜欢的人都留不住</div><div class="sub hover cap" style="opacity:0"> 安全学的再好又有什么用</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" class="icon search-icon" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a></nav>
+</div>
+<div class="widgets">
+
+<widget class="widget-wrapper toc single" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Aliyunpan%E4%BB%8B%E7%BB%8D"><span class="toc-text">Aliyunpan介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%99%BB%E5%BD%95"><span class="toc-text">登录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E5%86%99%E8%84%9A%E6%9C%AC"><span class="toc-text">编写脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Crontab"><span class="toc-text">Crontab</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E9%98%BF%E9%87%8C%E7%BD%91%E7%9B%98%E6%96%87%E4%BB%B6-%E7%9B%AE%E5%BD%95"><span class="toc-text">下载阿里网盘文件&#x2F;目录</span></a></li></ol></div></div></widget>
+
+
+
+
+
+
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2023/03/06/%E6%94%BB%E9%98%B2%E6%BC%94%E7%BB%83%E4%BA%8B%E4%BB%B6%E7%A0%94%E5%88%A4%E7%AF%87/"><span class="title">攻防演练事件研判篇</span></a><a class="item title" href="/2022/09/14/PHP%E5%9F%BA%E7%A1%80/"><span class="title">PHP基础</span></a><a class="item title" href="/2023/03/06/PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"><span class="title">PHP反序列化</span></a><a class="item title" href="/2022/06/23/php-json-%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BD%AC%E4%B9%89%E9%97%AE%E9%A2%98/"><span class="title">PHP-JSON 字符串转义问题</span></a><a class="item title" href="/2021/09/09/opcache%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE%E4%BC%98%E5%8C%96-%E5%8A%A0%E9%80%9F%E7%BD%91%E7%AB%99%E8%AE%BF%E9%97%AE/"><span class="title">Linux-Opcache参数配置优化 加速网站访问</span></a></div></widget>
+</div>
+
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="bread-nav fs12"><div class="left"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/">安全运维</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/Linux/">Linux</a></div>
+<div id="post-meta"><span class="author">发布于：</span><span class="created"><time datetime="2021-09-25T00:56:57.000Z">2021-09-25</time></span><span class="updated">，更新于：<time datetime="2024-01-25T08:00:40.656Z">2024-01-25</time></span></div></div>
+</div>
+<article class="md-text content"><h1 class="article-title"><span>Linux-定时备份网站数据文件到阿里云盘</span></h1><h2 id="Aliyunpan介绍"><a href="#Aliyunpan介绍" class="headerlink" title="Aliyunpan介绍"></a>Aliyunpan介绍</h2><p><a target="_blank" rel="noopener" href="https://github.com/tickstep/aliyunpan">阿里云盘CLI</a>.仿Linux shell文件处理命令的阿里云盘命令行客户</p>
+<p>支持以下特色功能:</p>
+<ul>
+<li>  多平台支持,支持Windows,macOS,linux(x86/x64/arm)等</li>
+<li>  阿里云盘多用户支持</li>
+<li>  支持文件网盘,相册网盘无缝切换</li>
+<li>  支持导入/导出功能,快速备份(导出)和恢复(导入)网盘的文件</li>
+<li>  下载网盘内文件,支持多个文件或目录下载,支持断点续传和单文件并行下载</li>
+<li>  上传本地文件,支持多个文件或目录上传,支持排除指定文件夹/文件(正则表达式)功能</li>
+<li>  备份本地文件,支持备份本地文件夹到网盘中,保持本地文件和网盘文件同步.常用于嵌入式或者NAS等设备.</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### 以下有部分操作图片中没有,按照教程来就可以</span></span><br><span class="line"><span class="comment"># 进入opt目录</span></span><br><span class="line"><span class="built_in">cd</span> /opt</span><br><span class="line"><span class="comment"># 下载安装包</span></span><br><span class="line">wget https://download.fastgit.org/tickstep/aliyunpan/releases/download/v0.0.2/aliyunpan-v0.0.2-linux-amd64.zip</span><br><span class="line"><span class="comment"># 解压</span></span><br><span class="line">unzip aliyunpan-v0.0.2-linux-amd64.zip</span><br><span class="line"><span class="comment"># 重命名文件夹</span></span><br><span class="line"><span class="built_in">mv</span> aliyunpan-v0.0.2-linux-amd64/ aliyunpan/</span><br><span class="line"><span class="comment"># 进入aliyunpan目录</span></span><br><span class="line"><span class="built_in">cd</span> aliyunpan/</span><br><span class="line"><span class="comment"># 运行aliyunpan</span></span><br><span class="line">./aliyunpan</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/527.html/aliyunpan"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/aliyunpan..webp" title="aliyunpan."></a></p>
+<h2 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h2><p>首先,必须先登录.目前支持使用<code>RefreshToken</code>进行登录,<code>RefreshToken</code>可以参考以下步骤获取,以<code>Chrome</code>浏览器为例,其他浏览器类似.打开<a target="_blank" rel="noopener" href="https://www.aliyundrive.com/drive">阿里云盘网页</a>并进行登录,然后F12按键打开浏览器调试菜单,选择应用,在左边选择本地存储,找到<code>token</code></p>
+<p><a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/527.html/refresh_token"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/refresh_token.webp" title="refresh_token"></a></p>
+<p>使用<code>login -RefreshToken=你的RefreshToken值</code>登录</p>
+<p><a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/527.html/aliyunpan_login"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/aliyunpan_login..webp" title="aliyunpan_login."></a></p>
+<p>之后输入<code>exit</code>退出</p>
+<p><a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/527.html/aliyunpan_exit"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/aliyunpan_exit..webp" title="aliyunpan_exit."></a></p>
+<h2 id="编写脚本"><a href="#编写脚本" class="headerlink" title="编写脚本"></a>编写脚本</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">新建shell文件</span></span><br><span class="line">vim /opt/backup.sh</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-------------------------------------------------------------------------------</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">FileName:  backup.sh</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Describe:  用于备份网站相关数据</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Revision:  终极版</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Date:    2021/09/26</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Author:  江霁月的私人小屋</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">设置mysql的登录用户名和密码(根据实际情况填写)</span></span><br><span class="line">WEB_PATH=/home/wordpress-1258894728.cos.ap-beijing.myqcloud.com #网站根目录</span><br><span class="line">ALIYUNPAN_PATH=/backup         #阿里网盘内的文件夹路径</span><br><span class="line">MYSQL_USER=&quot;root&quot;                #数据库用户</span><br><span class="line">MYAQL_PASSWORD=&quot;&quot;       #数据库密码</span><br><span class="line">MYSQL_HOST=&quot;localhost&quot;           #数据库IP（本地）</span><br><span class="line">MYSQL_PORT=&quot;3306&quot;                #数据库端口</span><br><span class="line">BACKUP_DIR=/opt/wordpress/backup          #备份到哪个目录</span><br><span class="line">DATE=`date +%Y%m%d%H%M`          #时间</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">14天前的时间</span></span><br><span class="line">ALI_DATE=`date +%Y%m%d%H%M -d &#x27;-14 day&#x27;`</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">删除云端数据(14天以前的数据)</span></span><br><span class="line">MYSQL_ALI=&quot;mysql_backup_$ALI_DATE.sql&quot;</span><br><span class="line">WEB_ALI=&quot;WEB_$ALI_DATE.tar.gz&quot;</span><br><span class="line">/opt/aliyunpan/aliyunpan rm $ALIYUNPAN_PATH/$MYSQL_ALI $ALIYUNPAN_PATH/$WEB_ALI</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">删除本地备份数据(删除7天以前的备份数据)</span></span><br><span class="line">echo &quot;正在删除7天以前的本地备份数据!!!&quot;</span><br><span class="line">find $BACKUP_DIR -mtime +7 -type f -name &#x27;*.sql&#x27; -exec rm -rf &#123;&#125; \;</span><br><span class="line">find $BACKUP_DIR -mtime +7 -type f -name &#x27;*.tar.gz&#x27; -exec rm -rf &#123;&#125; \;</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">备份全部数据库</span></span><br><span class="line">mysqldump -h$MYSQL_HOST -u$MYSQL_USER -p$MYAQL_PASSWORD -P$MYSQL_PORT --all-databases &gt;$BACKUP_DIR/mysql_backup_$DATE.sql</span><br><span class="line">if [ $? -eq 0 ]; then</span><br><span class="line">    echo &quot;备份成功,时间:&quot; $(date +&quot;%Y-%m-%d %H:%M:%S&quot;)</span><br><span class="line">    #备份html文件</span><br><span class="line">    tar zcPf $BACKUP_DIR/WEB_$&#123;DATE&#125;.tar.gz $WEB_PATH</span><br><span class="line">    if [ $? -eq 0 ]; then</span><br><span class="line">        echo &quot;备份网站根目录成功,路径:$BACKUP_DIR/WEB_$&#123;DATE&#125;.tar.gz&quot;</span><br><span class="line">        if [ $? -eq 0 ]; then</span><br><span class="line">        # 调用aliyunpan上传备份的文件</span><br><span class="line">        /opt/aliyunpan/aliyunpan upload $BACKUP_DIR/mysql_backup_$DATE.sql $BACKUP_DIR/WEB_$&#123;DATE&#125;.tar.gz $ALIYUNPAN_PATH</span><br><span class="line">        else</span><br><span class="line">            echo &quot;上传文件出错,请检查日志!!!&quot;</span><br><span class="line">        fi</span><br><span class="line">    else</span><br><span class="line">        echo &quot;备份网站根目录出错,请检查日志!!!&quot;</span><br><span class="line">    fi</span><br><span class="line">else</span><br><span class="line">    echo &quot;备份数据库出错,请检查日志!!!&quot;</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">修改backup.sh文件权限</span></span><br><span class="line">chmod 755 /opt/backup.sh</span><br></pre></td></tr></table></figure>
+
+<h2 id="Crontab"><a href="#Crontab" class="headerlink" title="Crontab"></a>Crontab</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/crontab</span><br><span class="line"><span class="comment">#每天早上2点执行数据库和html备份脚本</span></span><br><span class="line">0 2 * * * root /opt/backup.sh &gt; /opt/backup.log 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/527.html/aliyunpan_upload"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/aliyunpan_upload..webp" title="aliyunpan_upload."></a></p>
+<p>查看阿里网盘上传是否成功.</p>
+<p>[c-alert type=”warning”]文件名对不上是因为这个脚本被我改版过很多次,图片截图时间也不一样略过就好[/c-alert]</p>
+<p><a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/?attachment_id=536"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/aliyunpan_content..webp" title="aliyunpan_content."></a></p>
+<h2 id="下载阿里网盘文件-目录"><a href="#下载阿里网盘文件-目录" class="headerlink" title="下载阿里网盘文件/目录"></a>下载阿里网盘文件/目录</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># aliyunpan download &lt;网盘文件或目录的路径1&gt; &lt;文件或目录2&gt; &lt;文件或目录3&gt; ...</span></span><br><span class="line"><span class="comment"># 将阿里云盘中2021-09-25 08:22的WEB和数据库文件下载到本地</span></span><br><span class="line">/opt/aliyunpan/aliyunpan download /backup/WEB_202109250813.tar.gz /backup/mysql_backup_202109250813.sql</span><br><span class="line"><span class="comment"># 下面这个和上面一样不过命令简短</span></span><br><span class="line"><span class="comment"># aliyunpan d &lt;网盘文件或目录的路径1&gt; &lt;文件或目录2&gt; &lt;文件或目录3&gt; ...</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>下载路径请看输出信息!!!</strong></p>
+<p><a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/527.html/aliyunpan_download_file"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/aliyunpan_download_file..webp" title="aliyunpan_download_file."></a></p>
+
+<div class="article-footer fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文由Kill3r编写，采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2021/09/25/linux-%E5%AE%9A%E6%97%B6%E7%BD%91%E7%AB%99%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6%E5%88%B0%E9%98%BF%E9%87%8C%E7%BD%91%E7%9B%98/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2021/09/25/linux-%E5%AE%9A%E6%97%B6%E7%BD%91%E7%AB%99%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6%E5%88%B0%E9%98%BF%E9%87%8C%E7%BD%91%E7%9B%98/&title=Linux-定时备份网站数据文件到阿里云盘 - SafeKiller Zone&pics=https://acgapi.shifeiti.com/api&summary=Aliyunpan介绍阿里云盘CLI.仿Linux shell文件处理命令的阿里云盘命令行客户
+支持以下特色功能:
+
+  多平台支持,支持Windows,macOS,linux(x86/x64/arm)等
+  阿里云盘多用户支持
+  ..."><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=Linux-定时备份网站数据文件到阿里云盘 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2021/09/25/linux-%E5%AE%9A%E6%97%B6%E7%BD%91%E7%AB%99%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6%E5%88%B0%E9%98%BF%E9%87%8C%E7%BD%91%E7%9B%98/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="visibility:hidden;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2021/09/25/linux-%E5%AE%9A%E6%97%B6%E7%BD%91%E7%AB%99%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6%E5%88%B0%E9%98%BF%E9%87%8C%E7%BD%91%E7%9B%98/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2021/09/26/corepress%E4%B8%BB%E9%A2%98%E4%BC%98%E5%8C%96/">CorePress主题优化</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2021/09/24/linux-mysql%E5%BC%80%E5%90%AF%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%97%A5%E5%BF%97/">Linux-MySQL开启慢查询日志</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\2021\09\24\linux-mysql开启慢查询日志\" title="Linux-MySQL开启慢查询日志"><span class="title">Linux-MySQL开启慢查询日志</span></a><a class="item" href="\2021\09\06\linux-安装lnmp\" title="Linux-安装Lnmp"><span class="title">Linux-安装Lnmp</span></a><a class="item" href="\2021\09\07\mysql主主架构\" title="Linux-Mysql主主架构"><span class="title">Linux-Mysql主主架构</span></a><a class="item" href="\2021\09\20\mysql基本操作\" title="Linux-Mysql基本操作"><span class="title">Linux-Mysql基本操作</span></a><a class="item" href="\2022\06\16\centos升级python3-x版本踩过的坑\" title="Centos升级Python3.x版本踩过的坑"><span class="title">Centos升级Python3.x版本踩过的坑</span></a></div></section></div>
+
+
+
+
+<footer class="page-footer fs12"><hr><div class="text"><p>本站由 <a href="/">Kill3r</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.26.3">Stellar 1.26.3</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+<div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg t="1705412886951" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8331" width="200" height="200"><path d="M638.72 970.666667h-256c-118.186667 0-198.272-25.002667-251.946667-78.72S52.053333 758.186667 52.053333 640V384c0-118.186667 25.002667-198.272 78.72-251.946667S264.533333 53.333333 382.72 53.333333h256c118.186667 0 198.272 25.002667 251.946667 78.72S969.386667 265.813333 969.386667 384v256c0 118.186667-25.002667 198.272-78.72 251.946667S756.906667 970.666667 638.72 970.666667z m-256-853.333334c-100.096 0-165.802667 19.2-206.72 59.946667S116.053333 283.904 116.053333 384v256c0 100.096 19.072 165.802667 59.946667 206.72S282.624 906.666667 382.72 906.666667h256c100.096 0 165.802667-19.072 206.72-59.946667S905.386667 740.096 905.386667 640V384c0-100.096-19.072-165.802667-59.946667-206.72S738.816 117.333333 638.72 117.333333z" p-id="8332"></path><path d="M638.72 970.666667a32 32 0 0 1-32-32V85.333333a32 32 0 0 1 32-32 32 32 0 0 1 32 32v853.333334a32 32 0 0 1-32 32zM340.053333 653.226667a31.914667 31.914667 0 0 1-22.613333-9.386667 32 32 0 0 1 0-45.269333L404.053333 512 317.44 425.386667a32 32 0 0 1 0-45.226667 32 32 0 0 1 45.226667 0l109.226666 109.226667a32 32 0 0 1 0 45.269333L362.666667 643.84a31.914667 31.914667 0 0 1-22.613334 9.386667z" p-id="8333"></path></svg>
+  </button>
+</div>
+<div class="main-mask" onclick="sidebar.toggle()"></div></div></div><div class="scripts">
+<script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.26.3';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.26.3';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js","memos":"/js/plugins/memos.js","marked":"/js/plugins/marked.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js","transition":"fade"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@10.3/swiper-bundle.min.css","js":"https://unpkg.com/swiper@10.3/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://cdn.bootcdn.net/ajax/libs/scrollReveal.js/4.0.9/scrollreveal.min.js","distance":"16px","duration":800,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","flying_pages":"https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js","css":"https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css","selector":null});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied","toast":"复制成功"});
+  }
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.26.3" async></script>
+
+<!-- optional -->
+
+
+
+
+
+
+<!-- inject -->
+
+</div></body></html>
