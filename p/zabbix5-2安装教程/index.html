@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.23.0" theme-name="Stellar" theme-version="1.23.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>zabbix6.2安装教程 - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="视频教程Zabbix+Grafana视频讲解 准备工作工作目录&#x2F;opt1cd &#x2F;opt  关闭防火墙1234# 关闭防火墙systemctl stop firewalld.service# 禁止开机自启systemctl disable firewalld.service  关闭selinux1234# 打开selinux的配置文件vim &#x2F;etc&#x2F;selinux&#x2F;config# 将第7">
+<meta property="og:type" content="article">
+<meta property="og:title" content="zabbix6.2安装教程">
+<meta property="og:url" content="https://jiangjiyue.github.io/p/zabbix5-2%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="视频教程Zabbix+Grafana视频讲解 准备工作工作目录&#x2F;opt1cd &#x2F;opt  关闭防火墙1234# 关闭防火墙systemctl stop firewalld.service# 禁止开机自启systemctl disable firewalld.service  关闭selinux1234# 打开selinux的配置文件vim &#x2F;etc&#x2F;selinux&#x2F;config# 将第7">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202302281536133.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202302281535044.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202302281546848.png">
+<meta property="article:published_time" content="2023-03-06T00:57:23.000Z">
+<meta property="article:modified_time" content="2024-01-25T12:41:09.314Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="Centos">
+<meta property="article:tag" content="监控">
+<meta property="article:tag" content="运维">
+<meta property="article:tag" content="Zabbix">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202302281536133.png">
+  
+  
+  
+  <meta name="keywords" content="Centos,监控,运维,Zabbix">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://jiangjiyue.github.io/images/favicon.ico">
+  
+
+  
+
+  
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://jiangjiyue.github.io/images/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub cap">连自己喜欢的人都留不住</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/"><i class="fa-solid fa-house-chimney"></i></a><a class="nav-item" href="/wiki/"><i class="fa-solid fa-book"></i></a><a class="nav-item" href="/bookmark/"><i class="fa-solid fa-icons"></i></a><a class="nav-item" href="/friends/"><i class="fa-brands fa-squarespace"></i></a><a class="nav-item" href="/about/"><i class="fa-solid fa-plus fa-flip"></i></a></nav>
+</header>
+
+
+<div class="widgets">
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+<widget class="widget-wrapper toc single" id="data-toc" collapse="false"><div class="widget-header cap dis-select"><span class="name">zabbix6.2安装教程</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E9%A2%91%E6%95%99%E7%A8%8B"><span class="toc-text">视频教程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="toc-text">准备工作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E7%9B%AE%E5%BD%95-opt"><span class="toc-text">工作目录&#x2F;opt</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%97%AD%E9%98%B2%E7%81%AB%E5%A2%99"><span class="toc-text">关闭防火墙</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%97%ADselinux"><span class="toc-text">关闭selinux</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Yum%E6%B8%85%E5%8D%8E%E6%BA%90"><span class="toc-text">Yum清华源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E4%BE%9D%E8%B5%96%E7%8E%AF%E5%A2%83"><span class="toc-text">下载依赖环境</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87LNMP"><span class="toc-text">准备LNMP</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85Mariadb"><span class="toc-text">安装Mariadb</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85Zabbix"><span class="toc-text">安装Zabbix</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BDzabbix-server"><span class="toc-text">下载zabbix-server</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BAzabbix%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-text">创建zabbix数据库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Centos%E5%87%86%E5%A4%87"><span class="toc-text">Centos准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#zabbix%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%89%E8%A3%85"><span class="toc-text">zabbix客户端安装</span></a></li></ol></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+<div class="bread-nav fs12"><div class="left"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/">安全运维</a></div><div id="post-meta"><span class="author">发布于</span>
+    <span class="created"><time datetime="2023-03-06T00:57:23.000Z">2023-03-06</time></span>
+    
+    <span class="updated">，更新于&nbsp;<time datetime="2024-01-25T12:41:09.314Z">2024-01-25</time></span>
+    </div></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>zabbix6.2安装教程</span></h1>
+<h2 id="视频教程"><a href="#视频教程" class="headerlink" title="视频教程"></a>视频教程</h2><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1VN411R7uX">Zabbix+Grafana视频讲解</a></p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><h3 id="工作目录-opt"><a href="#工作目录-opt" class="headerlink" title="工作目录&#x2F;opt"></a>工作目录&#x2F;opt</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt</span><br></pre></td></tr></table></figure>
+
+<h3 id="关闭防火墙"><a href="#关闭防火墙" class="headerlink" title="关闭防火墙"></a>关闭防火墙</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 关闭防火墙</span></span><br><span class="line">systemctl stop firewalld.service</span><br><span class="line"><span class="comment"># 禁止开机自启</span></span><br><span class="line">systemctl <span class="built_in">disable</span> firewalld.service</span><br></pre></td></tr></table></figure>
+
+<h3 id="关闭selinux"><a href="#关闭selinux" class="headerlink" title="关闭selinux"></a>关闭selinux</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打开selinux的配置文件</span></span><br><span class="line">vim /etc/selinux/config</span><br><span class="line"><span class="comment"># 将第7行的enforcing改为disabled</span></span><br><span class="line">SELINUX=disabled</span><br></pre></td></tr></table></figure>
+
+<h3 id="Yum清华源"><a href="#Yum清华源" class="headerlink" title="Yum清华源"></a>Yum清华源</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo sed -e <span class="string">&#x27;s|^mirrorlist=|#mirrorlist=|g&#x27;</span> \</span><br><span class="line">         -e <span class="string">&#x27;s|^#baseurl=http://mirror.centos.org/centos|baseurl=https://mirrors.tuna.tsinghua.edu.cn/centos|g&#x27;</span> \</span><br><span class="line">         -i.bak \</span><br><span class="line">         /etc/yum.repos.d/CentOS-*.repo</span><br><span class="line"><span class="comment"># 生成缓存</span></span><br><span class="line">sudo yum makecache</span><br></pre></td></tr></table></figure>
+
+<h3 id="下载依赖环境"><a href="#下载依赖环境" class="headerlink" title="下载依赖环境"></a>下载依赖环境</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y deltarpm gcc gcc-c++ unixODBC-devel httpd mysql-devel libcurl libcurl-devel libevent libevent-devel curl-devel libxml2  libxml2-devel  net-snmp-devel pcre-devel  java-devel openssl-devel perl-ExtUtils-Embed at python subversion gperf make rpm-build git bzip2-devel gd gd-devel t1lib t1lib-devel GeoIP-devel libatomic_ops-devel zlib-devel unzip libstdc++* net-snmp net-snmp* gmp gmp-devel openldap openldap-devel libpcap-devel glib2-devel GeoIP-devel vim wget git libtool make automake mlocate pam-devel unzip screen openssl iptables-services bash-completion*  libxslt*  curl net-tools libssh2-devel</span><br></pre></td></tr></table></figure>
+
+<h2 id="准备LNMP"><a href="#准备LNMP" class="headerlink" title="准备LNMP"></a>准备LNMP</h2><blockquote>
+<p>本博客其他文章有讲到(那篇文章是很久以前写的,现在版本的zabbix对mysql有要求,这里补充以下mysql的安装方法)</p>
+</blockquote>
+<h3 id="安装Mariadb"><a href="#安装Mariadb" class="headerlink" title="安装Mariadb"></a>安装Mariadb</h3><p>添加阿里云源<code>vim /etc/yum.repos.d/MariaDB.repo</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#内容如下</span></span><br><span class="line"><span class="comment"># MariaDB 10.1 CentOS repository list - created 2017-02-23 08:53 UTC</span></span><br><span class="line"><span class="comment"># http://downloads.mariadb.org/mariadb/repositories/</span></span><br><span class="line">[mariadb]</span><br><span class="line">name = MariaDB</span><br><span class="line">baseurl = http://yum.mariadb.org/10.8/centos7-amd64</span><br><span class="line">gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB</span><br><span class="line">gpgcheck=1</span><br></pre></td></tr></table></figure>
+
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202302281536133.png" alt="image-20230228153621095"></p>
+<p>下载mariadb<code>yum install -y MariaDB-server MariaDB-client</code></p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202302281535044.png" alt="image-20230228153549969"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#启动 Mariadb</span></span><br><span class="line">systemctl start mariadb</span><br><span class="line"><span class="comment">#设为开机自启</span></span><br><span class="line">systemctl <span class="built_in">enable</span> mariadb</span><br><span class="line"><span class="comment">#Mariadb 初始化</span></span><br><span class="line">mysql -uroot</span><br><span class="line">use mysql</span><br><span class="line">grant all privileges on *.* to <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;%&#x27;</span> identified by <span class="string">&#x27;123456qwer&#x27;</span>;</span><br><span class="line"><span class="comment"># mysql rootzabbix为:123456qwer</span></span><br><span class="line">delete from mysql.user <span class="built_in">where</span> User=<span class="string">&#x27;&#x27;</span>;</span><br><span class="line">FLUSH PRIVILEGES;</span><br><span class="line"><span class="comment"># 重启数据库</span></span><br><span class="line">systemctl restart mariadb</span><br></pre></td></tr></table></figure>
+
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202302281546848.png" alt="image-20230228154621801"></p>
+<h2 id="安装Zabbix"><a href="#安装Zabbix" class="headerlink" title="安装Zabbix"></a>安装Zabbix</h2><h3 id="下载zabbix-server"><a href="#下载zabbix-server" class="headerlink" title="下载zabbix-server"></a>下载zabbix-server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入到opt目录</span></span><br><span class="line"><span class="built_in">cd</span> /opt</span><br><span class="line"><span class="comment"># 下载二进制包</span></span><br><span class="line">wget https://cdn.zabbix.com/zabbix/sources/stable/6.2/zabbix-6.2.7.tar.gz</span><br><span class="line"><span class="comment"># 解压</span></span><br><span class="line">tar -zxvf zabbix-6.2.7.tar.gz</span><br><span class="line"><span class="comment"># 进入到zabbix目录</span></span><br><span class="line"><span class="built_in">cd</span> zabbix-6.2.7/</span><br><span class="line"><span class="comment"># 编译安装</span></span><br><span class="line">./configure --prefix=/usr/local/zabbix/zabbix-server --enable-server --enable-agent --with-mysql --with-net-snmp --with-libcurl --with-libxml2 --with-unixodbc --enable-java &amp;&amp; make CFLAGS=-std=gnu99 &amp;&amp; make install</span><br><span class="line"><span class="comment"># 参数说明</span></span><br><span class="line">--prefix              <span class="comment">#编译安装路径</span></span><br><span class="line">--enable-server       <span class="comment">#启动server端</span></span><br><span class="line">--enable-agent        <span class="comment">#启动agent端</span></span><br><span class="line">--with-mysql          <span class="comment">#编译连接mysql相关依赖包</span></span><br><span class="line">--with-net-snmp       <span class="comment">#启动snmp相关，用于snmp监控设备</span></span><br><span class="line">--with-libcurl        <span class="comment">#启动curl相关</span></span><br><span class="line">--with-libxml2        <span class="comment">#启动xml相关</span></span><br><span class="line">--with-unixodbc       <span class="comment">#启动odbc相关用于监控数据库</span></span><br><span class="line">--enable-java         <span class="comment">#启动java-agent 用于监控java类</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置环境变量</span></span><br><span class="line">vim /etc/profile</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/usr/local/zabbix/zabbix-server/sbin/:/usr/local/zabbix/zabbix-server/bin/</span><br><span class="line"></span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
+
+<h2 id="创建zabbix数据库"><a href="#创建zabbix数据库" class="headerlink" title="创建zabbix数据库"></a>创建zabbix数据库</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"># mariadb</span><br><span class="line">mysql -uroot -p</span><br><span class="line"></span><br><span class="line"># 创建用户</span><br><span class="line"># CREATE USER &#x27;用户名&#x27;@&#x27;localhost&#x27; IDENTIFIED BY &#x27;zabbix&#x27;;</span><br><span class="line">CREATE USER &#x27;zabbix&#x27;@&#x27;localhost&#x27; IDENTIFIED BY &#x27;zabbix&#x27;;</span><br><span class="line"># 创建数据库zabbix</span><br><span class="line"># CREATE DATABASE `数据库名` CHARACTER SET utf8 COLLATE utf8_bin;</span><br><span class="line">CREATE DATABASE `zabbix` CHARACTER SET utf8 COLLATE utf8_bin;</span><br><span class="line"># 赋予权限</span><br><span class="line"># grant all privileges on 数据库名.*to 用户名@&#x27;localhost&#x27; identified by &#x27;zabbix&#x27;;</span><br><span class="line">grant all privileges on zabbix.*to zabbix@&#x27;localhost&#x27; identified by &#x27;zabbix&#x27;;</span><br><span class="line"># 刷新权限</span><br><span class="line">flush privileges;</span><br><span class="line"></span><br><span class="line"># 设置编码</span><br><span class="line">set names utf8;</span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line"># 创建完导入zabbix 初始化数据</span><br><span class="line"># 如果databases下面的*.sql有缺失,可以重新解压</span><br><span class="line">mysql -uroot -pzabbix zabbix &lt; /opt/zabbix-6.2.7/database/mysql/schema.sql # 表结构</span><br><span class="line">mysql -uroot -pzabbix zabbix &lt; /opt/zabbix-6.2.7/database/mysql/images.sql # 图片相关数据</span><br><span class="line">mysql -uroot -pzabbix zabbix &lt; /opt/zabbix-6.2.7/database/mysql/data.sql   # 模版相关数据</span><br></pre></td></tr></table></figure>
+
+<h2 id="Centos准备"><a href="#Centos准备" class="headerlink" title="Centos准备"></a>Centos准备</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建用户</span></span><br><span class="line">useradd zabbix</span><br><span class="line">passwd  zabbix</span><br><span class="line"><span class="comment"># 赋予权限</span></span><br><span class="line"><span class="built_in">chown</span> -R zabbix:zabbix /usr/local/zabbix/zabbix-server/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改zabbix-server的配置文件</span></span><br><span class="line">vi /usr/local/zabbix/zabbix-server/etc/zabbix_server.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># 找到对应的属性修改</span></span><br><span class="line"><span class="comment">#数据库地址</span></span><br><span class="line">DBHost=localhost</span><br><span class="line"><span class="comment">#数据库名</span></span><br><span class="line">DBName=zabbix</span><br><span class="line"><span class="comment">#数据库用户名</span></span><br><span class="line">DBUser=zabbix</span><br><span class="line"><span class="comment">#数据库密码</span></span><br><span class="line">DBPassword=zabbix</span><br><span class="line"><span class="comment">#数据库端口</span></span><br><span class="line">DBPort=3306</span><br><span class="line">Timeout=30</span><br><span class="line">AlertScriptsPath=/usr/local/zabbix/zabbix-server/share/zabbix/alertscripts</span><br><span class="line">ExternalScripts=/usr/local/zabbix/zabbix-server/share/zabbix/externalscripts</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查端口</span></span><br><span class="line">ps auxf grep zabbix_server</span><br><span class="line">netstat -tulnp grep zabbix</span><br><span class="line"></span><br><span class="line"><span class="comment"># 清空html下的文件并剪切</span></span><br><span class="line"><span class="built_in">rm</span> -rf /usr/local/nginx/nginx/html/*</span><br><span class="line"><span class="built_in">cp</span> -a /opt/zabbix-6.2.7/ui/* /usr/local/nginx/nginx/html/</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># php.ini调整</span></span><br><span class="line">vim /etc/opt/remi/php74/php.ini</span><br><span class="line"></span><br><span class="line">post_max_size = 16M</span><br><span class="line">max_execution_time = 300</span><br><span class="line">max_input_time = 300</span><br><span class="line">date.timezone = Asia/Shanghai</span><br><span class="line"></span><br><span class="line"><span class="comment">#启动相关项目</span></span><br><span class="line">systemctl restart php74-php-fpm.service</span><br><span class="line">zabbix_server</span><br><span class="line"></span><br><span class="line"><span class="comment">##Zabbix默认用户名密码</span></span><br><span class="line">Admin</span><br><span class="line">zabbix</span><br></pre></td></tr></table></figure>
+
+<h2 id="zabbix客户端安装"><a href="#zabbix客户端安装" class="headerlink" title="zabbix客户端安装"></a>zabbix客户端安装</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建用户</span></span><br><span class="line">useradd zabbix</span><br><span class="line"><span class="comment"># 下载Zabbix_agent安装包</span></span><br><span class="line">wget https://nchc.dl.sourceforge.net/project/zabbix/ZABBIX%20Latest%20Stable/4.4.7/zabbix-4.4.7.tar.gz</span><br><span class="line"><span class="comment"># 解压</span></span><br><span class="line">tar -zxvf zabbix-3.4.15.tar.gz</span><br><span class="line"><span class="comment"># 进入目录</span></span><br><span class="line"><span class="built_in">cd</span> zabbix-3.4.15/</span><br><span class="line"><span class="comment"># 编译zabbix agent</span></span><br><span class="line">./configure --prefix=/usr/local/zabbix_agent --enable-agent</span><br><span class="line"><span class="comment"># 安装</span></span><br><span class="line">make &amp;&amp; make install</span><br><span class="line"><span class="comment"># 修改配置文件</span></span><br><span class="line">vim /usr/local/zabbix_agent/etc/zabbix_agentd.conf</span><br><span class="line"></span><br><span class="line">Server=服务端ip地址或域名</span><br><span class="line">ServerActive=服务端ip地址或域名</span><br><span class="line">Hostname=客户端主机名</span><br><span class="line">HostMetadata=自动注册的关键字</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动</span></span><br><span class="line">/usr/local/zabbix_agent/sbin/zabbix_agentd</span><br></pre></td></tr></table></figure>
+
+
+<div class="article-footer reveal fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/p/zabbix5-2%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/social/b32ef3da1162a.svg"/></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/p/zabbix5-2%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/&title=zabbix6.2安装教程 - SafeKiller Zone&summary=视频教程Zabbix+Grafana视频讲解
+准备工作工作目录&#x2F;opt1cd /opt
+
+关闭防火墙1234# 关闭防火墙systemctl stop firewalld.service# 禁止开机自启systemctl d..."><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/social/80c07e4dbb303.svg"/></a><a class="social share-item email" href="mailto:?subject=zabbix6.2安装教程 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/p/zabbix5-2%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/social/a1b00e20f425d.svg"/></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/social/8411ed322ced6.svg"/></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="visibility:hidden;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/p/zabbix5-2%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/p/%E6%94%BB%E9%98%B2%E6%BC%94%E7%BB%83%E4%BA%8B%E4%BB%B6%E7%A0%94%E5%88%A4%E7%AF%87/">攻防演练事件研判篇</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/p/PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">PHP反序列化</a></div></section></div>
+
+
+<div class="related-wrap reveal" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\p\grafana图形展示软件\" title="Zabbix-Grafana图形展示软件"><span class="title">Zabbix-Grafana图形展示软件</span></a><a class="item" href="\p\linux-安装lnmp\" title="Linux-安装Lnmp"><span class="title">Linux-安装Lnmp</span></a><a class="item" href="\p\mysql主主架构\" title="Linux-Mysql主主架构"><span class="title">Linux-Mysql主主架构</span></a><a class="item" href="\p\elk收集nginx日志并展示来源ip地图\" title="ELK收集nginx日志并展示来源IP地图"><span class="title">ELK收集nginx日志并展示来源IP地图</span></a><a class="item" href="\p\Docker安装LAMP\" title="Docker安装LAMP"><span class="title">Docker安装LAMP</span></a></div></section></div>
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs14">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a></div><div class="sitemap-group"><span class="fs14">笔记</span><a href="/wiki/vue/Vue%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.html#start">Vue学习笔记</a><a href="/wiki/django/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B.html">Django学习笔记</a><a href="/wiki/mysql/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B.html">MySQL学习笔记</a></div><div class="sitemap-group"><span class="fs14">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs14">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+<p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>  
+<!--不蒜子计数器-->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!--添加一个访问量-->
+<span>
+      本"<span style="color: hsl(192 98% 55%); font-weight: bold;">页面</ a></span>"访问 <span id="busuanzi_value_page_pv" style="color: hsl(192 98% 55%); font-weight: bold;"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv" style="color: hsl(192 98% 55%); font-weight: bold;"></span>       次 | 总访客 <span id="busuanzi_value_site_uv" style="color: hsl(192 98% 55%); font-weight: bold;"></span> 人
+</span>
+</br>
+<span id="runtime_span"></span>
+<script type="text/javascript">
+function show_runtime() {
+    window.setTimeout("show_runtime()", 1000);
+    X = new Date("2019/11/29 17:00:00");
+    Y = new Date();
+    T = (Y.getTime() - X.getTime());
+    M = 24 * 60 * 60 * 1000;
+    a = T / M;
+    A = Math.floor(a);
+    b = (a - A) * 24;
+    B = Math.floor(b);
+    c = (b - B) * 60;
+    C = Math.floor((b - B) * 60);
+    D = Math.floor((c - C) * 60);
+    runtime_span.innerHTML = "⏱️本站已运行 " + A + "天" + B + "小时" + C + "分" + D + "秒"
+}
+show_runtime();
+</script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+<a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" alt='全部都是博主用心学编写的啊！不是ai啊' style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+<a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" alt="只要保留原作者姓名并在基于原作创作的新作品适用同类型的许可协议，即可基于非商业目的对原作重新编排、改编或者再创作。" style="width:140px;height:50px"></a>
+</div>
+ 
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    
+<script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.23.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.23.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js","memos":"/js/plugins/memos.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@10.3/swiper-bundle.min.css","js":"https://unpkg.com/swiper@10.3/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img, .gallery img ,#waline_container .vcontent img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied","toast":"复制成功"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+
+  </div>
+</body>
+</html>
