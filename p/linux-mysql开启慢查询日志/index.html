@@ -23,25 +23,24 @@
     <meta name="description" content="前言MySQL的慢查询日志是MySQL提供的一种日志记录,它用来记录在MySQL中响应时间超过阀值(long_query_time,单位:秒)的SQL语句。默认情况下,MySQL不启动慢查询日志.本文简单介绍如何开启慢查询日志,如何用mysqldumpslow分析慢查询. 参数说明12345slow_query_log #慢查询开启状态，ON开启，OFF关闭slow_query_log_file">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux-MySQL开启慢查询日志">
-<meta property="og:url" content="https://jiangjiyue.github.io/p/linux-mysql%E5%BC%80%E5%90%AF%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%97%A5%E5%BF%97/index.html">
+<meta property="og:url" content="https://jiangjiyue.github.io/p/Linux-MySQL%E5%BC%80%E5%90%AF%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%97%A5%E5%BF%97/index.html">
 <meta property="og:site_name" content="SafeKiller Zone">
 <meta property="og:description" content="前言MySQL的慢查询日志是MySQL提供的一种日志记录,它用来记录在MySQL中响应时间超过阀值(long_query_time,单位:秒)的SQL语句。默认情况下,MySQL不启动慢查询日志.本文简单介绍如何开启慢查询日志,如何用mysqldumpslow分析慢查询. 参数说明12345slow_query_log #慢查询开启状态，ON开启，OFF关闭slow_query_log_file">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/mdb_version.png">
 <meta property="article:published_time" content="2021-09-24T10:55:00.000Z">
-<meta property="article:modified_time" content="2024-01-25T12:41:09.282Z">
+<meta property="article:modified_time" content="2024-01-27T02:19:01.028Z">
 <meta property="article:author" content="Kill3r">
-<meta property="article:tag" content="优化">
-<meta property="article:tag" content="linux">
+<meta property="article:tag" content="Centos">
 <meta property="article:tag" content="运维">
-<meta property="article:tag" content="mysql">
+<meta property="article:tag" content="Mysql">
 <meta property="article:tag" content="数据库">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/mdb_version.png">
   
   
   
-  <meta name="keywords" content="优化,linux,运维,mysql,数据库">
+  <meta name="keywords" content="Centos,运维,Mysql,数据库">
 
   <!-- feed -->
   
@@ -103,7 +102,7 @@
 <div class="bread-nav fs12"><div class="left"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/">安全运维</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></div><div id="post-meta"><span class="author">发布于</span>
     <span class="created"><time datetime="2021-09-24T10:55:00.000Z">2021-09-24</time></span>
     
-    <span class="updated">，更新于&nbsp;<time datetime="2024-01-25T12:41:09.282Z">2024-01-25</time></span>
+    <span class="updated">，更新于&nbsp;<time datetime="2024-01-27T02:19:01.028Z">2024-01-27</time></span>
     </div></div></div>
 
 <article class='md-text content post'>
@@ -123,8 +122,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@VM-8-7-centos ~]<span class="comment"># cat  /var/lib/mysql/slow_queries.log</span></span><br><span class="line">/usr/sbin/mysqld, Version: 5.7.34-<span class="built_in">log</span> (MySQL Community Server (GPL)). started with:</span><br><span class="line">Tcp port: 0  Unix socket: /var/lib/mysql/mysql.sock</span><br><span class="line">Time                 Id Command    Argument</span><br><span class="line"><span class="comment"># Time: 2021-08-20T10:01:18.841053Z</span></span><br><span class="line"><span class="comment"># User@Host: root[root] @ localhost []  Id:     3</span></span><br><span class="line"><span class="comment"># Query_time: 2.023306  Lock_time: 0.000000 Rows_sent: 1  Rows_examined: 0</span></span><br><span class="line">SET timestamp=1629453678;</span><br><span class="line"><span class="keyword">select</span> <span class="built_in">sleep</span>(2);</span><br></pre></td></tr></table></figure>
 
 <h2 id="删除慢查询日志"><a href="#删除慢查询日志" class="headerlink" title="删除慢查询日志"></a>删除慢查询日志</h2><p>慢查询日志的删除方法与通用日志的删除方法是一样的.可以使用<code>mysqladmin</code>命令来删除.也可以使用手工方式来删除.<code>mysqladmin</code> 命令的语法如下<code>mysqladmin -uroot -p flush-logs</code> 执行该命令后,命令行会提示输入密码.输入正确密码后,将执行删除操作.新的慢查询日志会直接覆盖旧的查询日志,不需要再手动删除. 数据库管理员也可以手工删除慢查询日志,删除之后需要重新启动<code>MySQL</code>服务. </p>
-<p><strong>注意:通用查询日志和慢查询日志都是使用这个命令,使用时一定要注意,一旦执行这个命令,通用查询日志和慢查询日志都只存在新的日志文件中.如果需要备份旧的慢查询日志文件,必须先将旧的日志改名,然后重启<code>MySQL</code>服务或执行<code>mysqladmin</code>命令</strong></p>
-
+<div class="tag-plugin colorful note" color="red"><div class="body"><p>通用查询日志和慢查询日志都是使用这个命令,使用时一定要注意,一旦执行这个命令,通用查询日志和慢查询日志都只存在新的日志文件中.如果需要备份旧的慢查询日志文件,必须先将旧的日志改名,然后重启<code>MySQL</code>服务或执行<code>mysqladmin</code>命令</p></div></div>
 
 
 <div class="article-footer reveal fs14">
@@ -137,11 +135,11 @@
     <section id="share">
       <div class="header"><span>分享文章</span></div>
       <div class="body">
-        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/p/linux-mysql%E5%BC%80%E5%90%AF%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%97%A5%E5%BF%97/" /></div>
-        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/social/b32ef3da1162a.svg"/></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/p/linux-mysql%E5%BC%80%E5%90%AF%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%97%A5%E5%BF%97/&title=Linux-MySQL开启慢查询日志 - SafeKiller Zone&pics=https://acgapi.shifeiti.com/api&summary=前言MySQL的慢查询日志是MySQL提供的一种日志记录,它用来记录在MySQL中响应时间超过阀值(long_query_time,单位:秒)的SQL语句。默认情况下,MySQL不启动慢查询日志.本文简单介绍如何开启慢查询日志,如何用..."><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/social/80c07e4dbb303.svg"/></a><a class="social share-item email" href="mailto:?subject=Linux-MySQL开启慢查询日志 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/p/linux-mysql%E5%BC%80%E5%90%AF%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%97%A5%E5%BF%97/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/social/a1b00e20f425d.svg"/></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/social/8411ed322ced6.svg"/></a></div>
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/p/Linux-MySQL%E5%BC%80%E5%90%AF%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%97%A5%E5%BF%97/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/social/b32ef3da1162a.svg"/></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/p/Linux-MySQL%E5%BC%80%E5%90%AF%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%97%A5%E5%BF%97/&title=Linux-MySQL开启慢查询日志 - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401271017435.png&summary=前言MySQL的慢查询日志是MySQL提供的一种日志记录,它用来记录在MySQL中响应时间超过阀值(long_query_time,单位:秒)的SQL语句。默认情况下,MySQL不启动慢查询日志.本文简单介绍如何开启慢查询日志,如何用..."><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/social/80c07e4dbb303.svg"/></a><a class="social share-item email" href="mailto:?subject=Linux-MySQL开启慢查询日志 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/p/Linux-MySQL%E5%BC%80%E5%90%AF%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%97%A5%E5%BF%97/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/social/a1b00e20f425d.svg"/></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/social/8411ed322ced6.svg"/></a></div>
         
         <div class="qrcode" id="qrcode-wechat" style="visibility:hidden;height:0">
-          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/p/linux-mysql%E5%BC%80%E5%90%AF%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%97%A5%E5%BF%97/"/>
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/p/Linux-MySQL%E5%BC%80%E5%90%AF%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%97%A5%E5%BF%97/"/>
         </div>
         
       </div>
@@ -150,7 +148,7 @@
 
 </article>
 
-<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/p/linux-%E5%AE%9A%E6%97%B6%E7%BD%91%E7%AB%99%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6%E5%88%B0%E9%98%BF%E9%87%8C%E7%BD%91%E7%9B%98/">Linux-定时备份网站数据文件到阿里云盘</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/p/linux%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83-%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/">Linux从入门到放弃-磁盘管理</a></div></section></div>
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/p/Linux-%E5%AE%9A%E6%97%B6%E5%A4%87%E4%BB%BD%E7%BD%91%E7%AB%99%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6%E5%88%B0%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98/">Linux-定时备份网站数据文件到阿里云盘</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/p/elk%E6%94%B6%E9%9B%86nginx%E6%97%A5%E5%BF%97%E5%B9%B6%E5%B1%95%E7%A4%BA%E6%9D%A5%E6%BA%90ip%E5%9C%B0%E5%9B%BE/">ELK收集nginx日志并展示来源IP地图</a></div></section></div>
 
 
 <div class="related-wrap reveal" id="related-posts">
@@ -158,7 +156,7 @@
       <div class='title cap theme'>您可能感兴趣的文章</div>
     </section>
     <section class='body'>
-    <div class="related-posts"><a class="item" href="\p\linux-定时网站数据文件到阿里网盘\" title="Linux-定时备份网站数据文件到阿里云盘"><span class="title">Linux-定时备份网站数据文件到阿里云盘</span></a><a class="item" href="\p\opcache参数配置优化-加速网站访问\" title="Linux-Opcache参数配置优化 加速网站访问"><span class="title">Linux-Opcache参数配置优化 加速网站访问</span></a><a class="item" href="\p\linux-安装lnmp\" title="Linux-安装Lnmp"><span class="title">Linux-安装Lnmp</span></a><a class="item" href="\p\mysql基本操作\" title="Linux-Mysql基本操作"><span class="title">Linux-Mysql基本操作</span></a><a class="item" href="\p\mysql主主架构\" title="Linux-Mysql主主架构"><span class="title">Linux-Mysql主主架构</span></a></div></section></div>
+    <div class="related-posts"><a class="item" href="\p\Linux-Mysql主主架构\" title="Linux-Mysql主主架构"><span class="title">Linux-Mysql主主架构</span></a><a class="item" href="\p\Linux-定时备份网站数据文件到阿里云盘\" title="Linux-定时备份网站数据文件到阿里云盘"><span class="title">Linux-定时备份网站数据文件到阿里云盘</span></a><a class="item" href="\p\Linux-Centos升级Python3.x版本踩过的坑\" title="Linux-Centos升级Python3.x版本踩过的坑"><span class="title">Linux-Centos升级Python3.x版本踩过的坑</span></a><a class="item" href="\p\Linux-FireWalld\" title="Linux-FireWalld"><span class="title">Linux-FireWalld</span></a></div></section></div>
 
 
 
