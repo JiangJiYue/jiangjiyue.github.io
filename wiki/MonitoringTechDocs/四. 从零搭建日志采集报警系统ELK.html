@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.23.0" theme-name="Stellar" theme-version="1.23.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>MonitoringTechDocs：四. 从零搭建日志采集报警系统ELK - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="系统选型Elastic 公司有一套免费开源的日志采集系统（ELK），所以我选择拿来即用。 日志流： 日志文件→FileBeat→Logstash→ElasticSearch→Kibana  FilebeatFilebeat是一款轻量级日志采集器，可用于转发和汇总日志与文件。Filebeat内置有多种模块（Nginx、MySQL、Redis、Elasticsearch、Logstash等），可针对常">
+<meta property="og:type" content="website">
+<meta property="og:title" content="四. 从零搭建日志采集报警系统ELK">
+<meta property="og:url" content="https://jiangjiyue.github.io/wiki/MonitoringTechDocs/%E5%9B%9B.%20%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E6%97%A5%E5%BF%97%E9%87%87%E9%9B%86%E6%8A%A5%E8%AD%A6%E7%B3%BB%E7%BB%9FELK.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="系统选型Elastic 公司有一套免费开源的日志采集系统（ELK），所以我选择拿来即用。 日志流： 日志文件→FileBeat→Logstash→ElasticSearch→Kibana  FilebeatFilebeat是一款轻量级日志采集器，可用于转发和汇总日志与文件。Filebeat内置有多种模块（Nginx、MySQL、Redis、Elasticsearch、Logstash等），可针对常">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/MindMap..webp">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/filebeat..webp">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/Logstash..webp">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/KibanaMap..webp">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/elsearch_logs..webp">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/elsearch_port..webp">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/elsearch..webp">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana_log..webp">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana..webp">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303061402607.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303061403303.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/logstash_logs..webp">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/elsearchHttp..webp">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana1..webp">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana2..webp">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana3..webp">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana4..webp">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana5..webp">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana6..webp">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana7..webp">
+<meta property="article:published_time" content="2023-04-01T07:40:10.000Z">
+<meta property="article:modified_time" content="2024-01-27T04:34:09.487Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="监控系统">
+<meta property="article:tag" content="ELK">
+<meta property="article:tag" content="NetOps">
+<meta property="article:tag" content="数据可视化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/MindMap..webp">
+  
+  
+  
+  <meta name="keywords" content=",,,">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='wiki'>
+    
+
+  
+
+
+
+
+<div class="widgets"><widget class="widget-wrapper logo-wrap wiki"><div class="widget-body"><a style="filter: grayscale(100%)" class="wiki-home cap" href="/"><svg aria-hidden="true" viewBox="0 0 16 16" width="1.2em" height="1.2em" fill="currentColor"><path fill-rule="evenodd" d="M7.78 12.53a.75.75 0 01-1.06 0L2.47 8.28a.75.75 0 010-1.06l4.25-4.25a.75.75 0 011.06 1.06L4.81 7h7.44a.75.75 0 010 1.5H4.81l2.97 2.97a.75.75 0 010 1.06z"></path></svg>所有项目</a><a class="title" href="/wiki/MonitoringTechDocs/%E4%B8%80.%20Zabbix%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.html"><div class="main" ff="title">MonitoringTechDocs</div><div class="sub normal cap">全方位监控</div><div class="sub hover cap" style="opacity:0"> 从理论到实践的监控解决方案</div></a></div></widget>
+
+<widget class="widget-wrapper toc multi" id="data-toc" collapse="false"><div class="widget-header cap dis-select"><span class="name">监控基础</span></div><div class="widget-body fs14"><div class="doc-tree"><a class="doc-tree-link" href="/wiki/MonitoringTechDocs/%E4%B8%80.%20Zabbix%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.html#start"><span class="toc-text">一. Zabbix快速入门</span></a></div></div><div class="widget-header cap dis-select"><span class="name">数据监控与报警</span></div><div class="widget-body fs14"><div class="doc-tree"><a class="doc-tree-link" href="/wiki/MonitoringTechDocs/%E4%BA%8C.%20Prometheus%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.html"><span class="toc-text">二. Prometheus快速入门</span></a></div></div><div class="widget-header cap dis-select"><span class="name">数据可视化</span></div><div class="widget-body fs14"><div class="doc-tree"><a class="doc-tree-link" href="/wiki/MonitoringTechDocs/%E4%B8%89.%20%E4%BD%BF%E7%94%A8Grafana%E5%88%9B%E5%BB%BA%E5%8F%AF%E8%A7%86%E5%8C%96%E9%9D%A2%E6%9D%BF.html"><span class="toc-text">三. 使用Grafana创建可视化面板</span></a></div></div><div class="widget-header cap dis-select"><span class="name">日志管理</span></div><div class="widget-body fs14"><div class="doc-tree active"><a class="doc-tree-link active" href="/wiki/MonitoringTechDocs/%E5%9B%9B.%20%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E6%97%A5%E5%BF%97%E9%87%87%E9%9B%86%E6%8A%A5%E8%AD%A6%E7%B3%BB%E7%BB%9FELK.html"><span class="toc-text">四. 从零搭建日志采集报警系统ELK</span></a><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E9%80%89%E5%9E%8B"><span class="toc-text">系统选型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Filebeat"><span class="toc-text">Filebeat</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Logstash"><span class="toc-text">Logstash</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ElasticSearch"><span class="toc-text">ElasticSearch</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Kibana"><span class="toc-text">Kibana</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E5%87%86%E5%A4%87"><span class="toc-text">系统准备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E8%AE%BE%E7%BD%AE"><span class="toc-text">系统设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#jdk%E5%AE%89%E8%A3%85"><span class="toc-text">jdk安装</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Elasticsearch%E9%83%A8%E7%BD%B2"><span class="toc-text">Elasticsearch部署</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kibana%E9%83%A8%E7%BD%B2"><span class="toc-text">Kibana部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%8F%E6%8A%80%E5%B7%A7"><span class="toc-text">小技巧</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Filebeat%E9%83%A8%E7%BD%B2-%E6%97%A5%E5%BF%97%E6%9C%BA"><span class="toc-text">Filebeat部署(日志机)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#logstash%E9%83%A8%E7%BD%B2-%E6%97%A5%E5%BF%97%E6%9C%BA"><span class="toc-text">logstash部署(日志机)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kibana%E9%85%8D%E7%BD%AE"><span class="toc-text">Kibana配置</span></a></li></ol></div></div></widget>
+
+<widget class="widget-wrapper related"><div class="widget-header cap theme dis-select"><span class="name">更多「NetOps」</span></div><div class="widget-body related-posts"><a class="item wiki" href="/wiki/API-Gateway/%E4%B8%80.%20%E6%BC%AB%E8%B0%88Nginx%E7%BD%91%E5%85%B3.html"><span class="title">微服务API网关框架</span><span class="excerpt">探索微服务API网关的世界 - 我的学习和实践笔记。一起学习如何设计、搭建并优化API网关。</span></a><a class="item wiki" href="/wiki/VirtDocs/%E4%B8%80.%20Esxi%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B.html"><span class="title">虚拟化技术框架</span><span class="excerpt">探索虚拟化技术的世界 - 我的学习和实践笔记。一起学习如何设计、部署并优化虚拟化环境。</span></a><a class="item wiki" href="/wiki/MiddlewareDocs/%E4%B8%80.%20Nginx%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A.html"><span class="title">Nginx, Apache, Tomcat 中间件文档集</span><span class="excerpt">深入了解MiddlewareDocs - Nginx, Apache, Tomcat的综合指南，包括从基础安装到高级配置的所有步骤。</span></a></div></widget>
+</div>
+
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+  
+  
+<div class="bread-nav fs12"><div class="left"><div id="breadcrumb"><a class="cap breadcrumb" id="home" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" id="menu" href="/wiki/"><i class="fa-solid fa-book"></i></a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/wiki/MonitoringTechDocs/%E4%B8%80.%20Zabbix%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.html">MonitoringTechDocs</a></div><div id="post-meta">
+    <span>更新于&nbsp;<time datetime="2024-01-27T04:34:09.487Z">2024-01-27</time></span>
+    </div></div></div>
+
+  <article class='md-text content wiki'>
+  <h1 class="article-title"><span>四. 从零搭建日志采集报警系统ELK</span></h1>
+  <h2 id="系统选型"><a href="#系统选型" class="headerlink" title="系统选型"></a>系统选型</h2><p>Elastic 公司有一套免费开源的日志采集系统（ELK），所以我选择拿来即用。 日志流： <code>日志文件</code>→<code>FileBeat</code>→<code>Logstash</code>→<code>ElasticSearch</code>→<code>Kibana</code></p>
+<p><a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/archives/465/mindmap"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/MindMap..webp"></a></p>
+<h3 id="Filebeat"><a href="#Filebeat" class="headerlink" title="Filebeat"></a>Filebeat</h3><p>Filebeat是一款轻量级日志采集器，可用于转发和汇总日志与文件。Filebeat内置有多种模块（Nginx、MySQL、Redis、Elasticsearch、Logstash等），可针对常见格式的日志大大简化收集、解析和可视化过程，只需一条命令即可。</p>
+<p><a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/archives/465/filebeat"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/filebeat..webp"></a></p>
+<h3 id="Logstash"><a href="#Logstash" class="headerlink" title="Logstash"></a>Logstash</h3><p>Logstash是一个分布式日志收集框架，开发语言是JRuby，经常与ElasticSearch，Kibana配合使用组成著名的ELK技术栈，所谓ELK就是ElasticSearch、Logstash、Kibana这三个组件。</p>
+<p><a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/archives/465/logstash"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/Logstash..webp"></a></p>
+<h3 id="ElasticSearch"><a href="#ElasticSearch" class="headerlink" title="ElasticSearch"></a>ElasticSearch</h3><p>Elasticsearch 是一个分布式、可扩展、实时的搜索与数据分析引擎。它提供了一个分布式多用户能力的全文搜索引擎，基于RESTful web接口。</p>
+<h3 id="Kibana"><a href="#Kibana" class="headerlink" title="Kibana"></a>Kibana</h3><p>Kibana 是一个免费且开放的用户界面，能够让您对 Elasticsearch 数据进行可视化。您可以进行各种操作，从跟踪查询负载，到理解请求如何流经您的整个应用，都能轻松完成。</p>
+<p><a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/archives/465/kibanamap"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/KibanaMap..webp"></a></p>
+<h2 id="系统准备"><a href="#系统准备" class="headerlink" title="系统准备"></a>系统准备</h2><h3 id="系统设置"><a href="#系统设置" class="headerlink" title="系统设置"></a>系统设置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 关闭防火墙（如果因为其他原因不能关闭防火墙，也请不要禁止80和9200端口）：</span></span><br><span class="line">systemctl stop firewalld.service</span><br><span class="line"><span class="comment"># 禁止防火墙自动启动:</span></span><br><span class="line">systemctl <span class="built_in">disable</span> firewalld.service</span><br><span class="line"><span class="comment"># 修改操作系统参数</span></span><br><span class="line">vi /etc/sysctl.conf</span><br><span class="line">vm.max_map_count=262144</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载sysctl配置，执行命令:</span></span><br><span class="line">sysctl -p</span><br><span class="line"></span><br><span class="line">vim /etc/security/limits.conf</span><br><span class="line"><span class="comment"># 在文件最后加入</span></span><br><span class="line">* soft nofile 65536</span><br><span class="line">* hard nofile 131072</span><br><span class="line">* soft <span class="built_in">nproc</span> 2048</span><br><span class="line">* hard <span class="built_in">nproc</span> 4096</span><br></pre></td></tr></table></figure>
+
+<h3 id="jdk安装"><a href="#jdk安装" class="headerlink" title="jdk安装"></a>jdk安装</h3><div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://www.openlogic.com/openjdk-downloads" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link fs12">https://www.openlogic.com/openjdk-downloads</span></div><div class="bottom"><span class="title">https://www.openlogic.com/openjdk-downloads</span><span class="cap desc fs12"></span></div></a></div>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入opt目录</span></span><br><span class="line"><span class="built_in">cd</span> /opt</span><br><span class="line"><span class="comment"># 下载JDK,推荐11系列</span></span><br><span class="line">wget https://builds.openlogic.com/downloadJDK/openlogic-openjdk/11.0.8%2B10/openlogic-openjdk-11.0.8%2B10-linux-x64.tar.gz</span><br><span class="line"><span class="comment"># 解压</span></span><br><span class="line">tar -zxvf openlogic-openjdk-11.0.8+10-linux-x64.tar.gz</span><br><span class="line"><span class="comment"># 修改文件夹名</span></span><br><span class="line"><span class="built_in">mv</span> openlogic-openjdk-11.0.8+10-linux-x64/ jdk/</span><br><span class="line"><span class="comment"># 定义环境变量</span></span><br><span class="line">sed -i.ori  <span class="string">&#x27;$a export ES_JAVA_HOME=/opt/jdk\nexport PATH=$ES_JAVA_HOME/bin:$ES_JAVA_HOME/jre/bin:$PATH\nexport CLASSPATH=.:$ES_JAVA_HOME/lib:$ES_JAVA_HOME/jre/lib:$ES_JAVA_HOME/lib/tools.jar&#x27;</span> /etc/profile</span><br><span class="line"><span class="comment"># 加载环境变量配置信息</span></span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br><span class="line"><span class="comment"># 确认检查jdk版本信息</span></span><br><span class="line">java -version</span><br><span class="line"></span><br><span class="line">openjdk version <span class="string">&quot;11.0.8&quot;</span> 2020-07-14</span><br><span class="line">OpenJDK Runtime Environment OpenLogic-OpenJDK (build 11.0.8+0-adhoc.centos.jdk11u)</span><br><span class="line">OpenJDK 64-Bit Server VM OpenLogic-OpenJDK (build 11.0.8+0-adhoc.centos.jdk11u, mixed mode)</span><br></pre></td></tr></table></figure>
+
+<h2 id="Elasticsearch部署"><a href="#Elasticsearch部署" class="headerlink" title="Elasticsearch部署"></a>Elasticsearch部署</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入opt目录</span></span><br><span class="line"><span class="built_in">cd</span> /opt</span><br><span class="line"><span class="comment"># 把tar包下载到opt目录下</span></span><br><span class="line">wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.14.1-linux-x86_64.tar.gz</span><br><span class="line"><span class="comment"># 解压tar包</span></span><br><span class="line">tar -zxvf elasticsearch-7.14.1-linux-x86_64.tar.gz</span><br><span class="line"><span class="comment"># 拷贝文件目录到/usr/local</span></span><br><span class="line"><span class="built_in">cp</span> -r elasticsearch-7.14.1/ /usr/local/elasticsearch</span><br><span class="line"><span class="comment"># 建立软连接</span></span><br><span class="line"><span class="built_in">ln</span> -s /usr/local/elasticsearch/ elasticsearch</span><br><span class="line"><span class="comment"># 修改配置文件</span></span><br><span class="line">vim /usr/local/elasticsearch/config/elasticsearch.yml</span><br><span class="line"></span><br><span class="line"><span class="comment"># 以下取消注释</span></span><br><span class="line"><span class="comment"># 集群名称，单机版使用默认即可</span></span><br><span class="line">cluster.name: my-application</span><br><span class="line"><span class="comment"># 节点名称，单机版使用默认即可</span></span><br><span class="line">node.name: node-1</span><br><span class="line"><span class="comment"># 数据存放的路径</span></span><br><span class="line">path.data: /usr/local/elasticsearch/data/</span><br><span class="line"><span class="comment"># 应用日志存放的路径</span></span><br><span class="line">path.logs: /usr/local/elasticsearch/logs/</span><br><span class="line"><span class="comment"># 服务绑定的IP地址</span></span><br><span class="line">network.host: 0.0.0.0</span><br><span class="line"><span class="comment"># 服务监听的端口</span></span><br><span class="line">http.port: 9200</span><br><span class="line"><span class="comment">#初始主节点</span></span><br><span class="line">cluster.initial_master_nodes: [<span class="string">&quot;node-1&quot;</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 跨域配置</span></span><br><span class="line">http.cors.enabled: <span class="literal">true</span></span><br><span class="line">http.cors.allow-origin: <span class="string">&quot;*&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>es不能以root用户身份运行，所以要创建新的用户组和用户名称</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建用户组</span></span><br><span class="line">groupadd elsearch</span><br><span class="line"><span class="comment"># 创建用户</span></span><br><span class="line">useradd elsearch -g elsearch -p elasticsearch</span><br><span class="line"></span><br><span class="line"><span class="comment"># 把es要用到的路径都设置成的文件组权限设置成新的用户组和用户</span></span><br><span class="line"><span class="built_in">chown</span> -R elsearch:elsearch /usr/local/elasticsearch</span><br></pre></td></tr></table></figure>
+
+<p>启动es  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 切换到es用户</span></span><br><span class="line">su elsearch</span><br><span class="line"><span class="comment"># 以后台服务运行</span></span><br><span class="line">/usr/local/elasticsearch/bin/elasticsearch -d </span><br></pre></td></tr></table></figure>
+
+<p>查看启动日志可执行命令<code>tail -f /usr/local/elasticsearch/logs/my-application.log</code>  </p>
+<p><a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/elsearch_logs"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/elsearch_logs..webp"></a></p>
+<p>通过<code>ss -lntup</code>查看端口号已经启动</p>
+<p><a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/elsearch_port"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/elsearch_port..webp"></a></p>
+<p>执行<code>curl</code>命令检查服务是否正常响应:<code>curl 127.0.0.1:9200</code>,收到响应如下：</p>
+<p><a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/elsearch"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/elsearch..webp"></a></p>
+<p>至此,ElasticSerach服务启动成功</p>
+<h2 id="Kibana部署"><a href="#Kibana部署" class="headerlink" title="Kibana部署"></a>Kibana部署</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入opt目录</span></span><br><span class="line"><span class="built_in">cd</span> /opt</span><br><span class="line"><span class="comment"># 把tar包下载到opt目录下</span></span><br><span class="line">wget https://artifacts.elastic.co/downloads/kibana/kibana-7.14.1-linux-x86_64.tar.gz</span><br><span class="line"><span class="comment"># 解压</span></span><br><span class="line">tar -zxvf kibana-7.14.1-linux-x86_64.tar.gz</span><br><span class="line"><span class="comment"># 拷贝文件目录到/usr/local</span></span><br><span class="line"><span class="built_in">cp</span> -r kibana-7.14.1-linux-x86_64 /usr/local/kibana</span><br><span class="line"><span class="comment"># 建立软连接</span></span><br><span class="line"><span class="built_in">ln</span> -s /usr/local/kibana/ kibana</span><br><span class="line"><span class="comment">#打开Kibana的配置文件</span></span><br><span class="line">vim /usr/local/kibana/config/kibana.yml</span><br><span class="line"></span><br><span class="line"><span class="comment"># 服务端口</span></span><br><span class="line">server.port: 80</span><br><span class="line"><span class="comment"># 服务器主机IP地址</span></span><br><span class="line">server.host: <span class="string">&quot;主机的IP地址&quot;</span></span><br><span class="line"><span class="comment"># es索引服务器地址与上一步配置es时的地址相同</span></span><br><span class="line">elasticsearch.hosts: [<span class="string">&quot;http://xxx.xxx.xxx.xxx:9200&quot;</span>]</span><br><span class="line">i18n.locale: <span class="string">&quot;zh-CN&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 按esc输入以下内容保存并退出</span></span><br><span class="line">:wq</span><br><span class="line"><span class="comment"># 这样其他电脑就能用浏览器访问Kibana服务了</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 不能以root用户运行</span></span><br><span class="line"><span class="comment"># 把es要用到的路径都设置成的文件组权限设置成新的用户组和用户</span></span><br><span class="line"><span class="built_in">chown</span> -R elsearch:elsearch /usr/local/kibana</span><br><span class="line"></span><br><span class="line"><span class="comment"># 切换到es用户</span></span><br><span class="line">su elsearch</span><br><span class="line"><span class="comment"># 先前台运行看有没有报错</span></span><br><span class="line">/usr/local/kibana/bin/kibana</span><br><span class="line"></span><br><span class="line"><span class="comment"># # 让服务在后台运行</span></span><br><span class="line"><span class="built_in">nohup</span> /usr/local/kibana/bin/kibana &amp;</span><br></pre></td></tr></table></figure>
+
+<p>查看启动日志:<code>tail -f /home/elsearch/nohup.out</code> 以下信息表示启动成功:  </p>
+<p><a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana_log"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana_log..webp"></a></p>
+<p>在浏览器访问http:&#x2F;&#x2F;主机IP:80;看到如下页面</p>
+<p><a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana..webp"></a></p>
+<h3 id="小技巧"><a href="#小技巧" class="headerlink" title="小技巧"></a>小技巧</h3><p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303061402607.png" alt="image-20230306140236552"></p>
+<p>linux对于非root权限用户不能使用1024以下的端口，为了能够绑定端口 80 或 443，我们需要为 kibana 的二进制文件设置一些新功能。这可以以 root 用户身份使用以下命令完成：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">setcap</span> cap_net_bind_service=+epi /usr/local/kibana/bin/kibana</span><br><span class="line"><span class="built_in">setcap</span> cap_net_bind_service=+epi /usr/local/kibana/bin/kibana-plugin</span><br><span class="line"><span class="built_in">setcap</span> cap_net_bind_service=+epi /usr/local/kibana/bin/kibana-keystore</span><br><span class="line"><span class="built_in">setcap</span> cap_net_bind_service=+epi /usr/local/kibana/node/bin/node</span><br></pre></td></tr></table></figure>
+
+<p>现在就可以了</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303061403303.png" alt="image-20230306140328175"></p>
+<h2 id="Filebeat部署-日志机"><a href="#Filebeat部署-日志机" class="headerlink" title="Filebeat部署(日志机)"></a>Filebeat部署(日志机)</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入opt目录</span></span><br><span class="line"><span class="string">cd</span> <span class="string">/opt</span></span><br><span class="line"><span class="comment"># 把tar包下载到opt目录下</span></span><br><span class="line"><span class="string">wget</span> <span class="string">https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.14.1-linux-x86_64.tar.gz</span></span><br><span class="line"><span class="string">tar</span> <span class="string">-zxvf</span> <span class="string">filebeat-7.14.1-linux-x86_64.tar.gz</span></span><br><span class="line"><span class="string">mkdir</span> <span class="string">/usr/local/elk</span></span><br><span class="line"><span class="string">cp</span> <span class="string">-r</span> <span class="string">filebeat-7.14.1-linux-x86_64</span> <span class="string">/usr/local/elk/filebeat</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改配置文件</span></span><br><span class="line"><span class="string">vim</span> <span class="string">/usr/local/elk/filebeat/filebeat.yml</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置输入插件，注意是yml格式</span></span><br><span class="line"><span class="attr">filebeat.inputs:</span></span><br><span class="line"><span class="comment"># 数据来源是log日志文件</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">type:</span> <span class="string">log</span></span><br><span class="line">  <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="comment"># 日志文件路径</span></span><br><span class="line">  <span class="attr">paths:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/usr/local/nginx/nginx/logs/access*.log</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 解释内容格式为json的日志</span></span><br><span class="line"><span class="comment">#  json.keys_under_root: true</span></span><br><span class="line"><span class="comment">#  json.add_error_key: true</span></span><br><span class="line"><span class="comment">#  json.message_key: log</span></span><br><span class="line"><span class="comment">#  json.overwrite_keys: true</span></span><br><span class="line"><span class="comment"># 额外的标识字段，可以于区分是来自于哪个应用</span></span><br><span class="line">  <span class="attr">fields:</span></span><br><span class="line">    <span class="attr">log_type:</span> <span class="string">logbackjson</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置多个log数据源</span></span><br><span class="line"><span class="comment"># - type: log</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># Change to true to enable this input configuration.</span></span><br><span class="line"><span class="comment">#  enabled: true</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># Paths that should be crawled and fetched. Glob based paths.</span></span><br><span class="line"><span class="comment">#  paths:</span></span><br><span class="line"><span class="comment">#    - /var/log/xhg/gateway/*.log</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#  json.keys_under_root: true</span></span><br><span class="line"><span class="comment">#  json.add_error_key: true</span></span><br><span class="line"><span class="comment">#  json.message_key: log</span></span><br><span class="line"><span class="comment">#  json.overwrite_keys: true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#  fields:</span></span><br><span class="line"><span class="comment">#    log_type: gateway</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 当输出插件中要使用自定义索引名称的时候配置这个</span></span><br><span class="line"><span class="comment"># setup.template.name: &quot;cobee&quot;</span></span><br><span class="line"><span class="comment"># setup.template.pattern: &quot;cobee-*&quot;</span></span><br><span class="line"><span class="comment"># 关闭ES配置</span></span><br><span class="line"><span class="comment"># 配置数据输出目标地</span></span><br><span class="line"><span class="comment"># output.elasticsearch:</span></span><br><span class="line">  <span class="comment"># Array of hosts to connect to.</span></span><br><span class="line">  <span class="comment"># hosts: [&quot;172.18.219.11:9200&quot;]</span></span><br><span class="line">  <span class="comment"># index: &quot;xhg-ms-%&#123;+yyyy.MM.dd&#125;&quot;</span></span><br><span class="line"><span class="comment"># 其它配置项保持默认即可</span></span><br><span class="line"></span><br><span class="line"><span class="attr">output.logstash:</span></span><br><span class="line">  <span class="comment"># The Logstash hosts</span></span><br><span class="line">  <span class="attr">hosts:</span> [<span class="string">&quot;localhost:5044&quot;</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 按esc输入以下内容保存并退出</span></span><br><span class="line"><span class="string">:wq</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 后台运行filebeat，filebeat是一个轻量级的数据采集引擎，不需要安装jdk，不像logstash那么笨重</span></span><br><span class="line"></span><br><span class="line"><span class="string">nohup</span> <span class="string">/usr/local/elk/filebeat/filebeat</span> <span class="string">-e</span> <span class="string">-c</span> <span class="string">/usr/local/elk/filebeat/filebeat.yml</span> <span class="string">-d</span> <span class="string">&quot;Publish&quot;</span> <span class="string">&amp;</span> <span class="string">&gt;</span> <span class="string">nohup.out</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#停止filebeat：</span></span><br><span class="line"><span class="string">ps</span> <span class="string">-ef</span> <span class="string">grep</span> <span class="string">filebeat</span> </span><br><span class="line"><span class="string">kill</span> <span class="number">-9</span> <span class="string">pid</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="logstash部署-日志机"><a href="#logstash部署-日志机" class="headerlink" title="logstash部署(日志机)"></a>logstash部署(日志机)</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">wget https://artifacts.elastic.co/downloads/logstash/logstash-7.14.1-linux-x86_64.tar.gz</span><br><span class="line">tar -zxvf logstash-7.14.1-linux-x86_64.tar.gz</span><br><span class="line"><span class="built_in">mkdir</span> /usr/local/elk</span><br><span class="line"><span class="built_in">cp</span> -r logstash-7.14.1 /usr/local/elk/logstash</span><br><span class="line"><span class="comment"># 在目录/usr/local/elk/logstash下创建文件</span></span><br><span class="line">vim /usr/local/elk/logstash/default.conf</span><br><span class="line"><span class="comment"># 内容如下:</span></span><br><span class="line"><span class="comment"># 监听5044端口作为输入</span></span><br><span class="line">input &#123;</span><br><span class="line">    beats &#123;</span><br><span class="line">        port =&gt; <span class="string">&quot;5044&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># 数据过滤</span></span><br><span class="line">filter &#123;</span><br><span class="line">    grok &#123;</span><br><span class="line">        match =&gt; &#123; <span class="string">&quot;message&quot;</span> =&gt; <span class="string">&quot;%&#123;COMBINEDAPACHELOG&#125;&quot;</span> &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    geoip &#123;</span><br><span class="line">        <span class="built_in">source</span> =&gt; <span class="string">&quot;clientip&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># 这是ElasticSerach服务的监听端口</span></span><br><span class="line">output &#123;</span><br><span class="line">    elasticsearch &#123;</span><br><span class="line">        hosts =&gt; [<span class="string">&quot;192.168.10.129:9200&quot;</span>]</span><br><span class="line">        index =&gt;  <span class="string">&quot;%&#123;appname&#125;-%&#123;+YYYY.MM.dd&#125;&quot;</span> <span class="comment">#根据项目名称动态创建索引</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动logstash</span></span><br><span class="line"><span class="built_in">nohup</span> /usr/local/elk/logstash/bin/logstash -f /usr/local/elk/logstash/default.conf --config.reload.automatic &amp;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果报错运行</span></span><br><span class="line"><span class="comment"># 报错内容:Error: missing `server&#x27; JVM at `/usr/local/elk/logstash/jdk/lib/server/libjvm.so&#x27;.</span></span><br><span class="line"><span class="comment"># Please install or use the JRE or JDK that contains these missing components</span></span><br><span class="line"><span class="built_in">cp</span> /usr/local/elk/logstash/logstash-7.14.1/jdk/lib/server/libjvm.so /usr/local/elk/logstash/jdk/lib/server/</span><br><span class="line"></span><br><span class="line"><span class="built_in">tail</span> -f /usr/local/elk/logstash/logs/logstash-plain.log</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/logstash_logs"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/logstash_logs..webp"></a></p>
+<h2 id="Kibana配置"><a href="#Kibana配置" class="headerlink" title="Kibana配置"></a>Kibana配置</h2><p>Chrome扩展程序下载ElasticSearch Head,查看ElasticSearch是否有数据</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/elsearchHttp..webp"> 配置Kibana <a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana1"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana1..webp"></a> <a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana2"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana2..webp"></a> <a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana3"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana3..webp"></a> <a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana4"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana4..webp"></a> <a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana5"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana5..webp"></a> <a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana6"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana6..webp"></a> <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/kibana7..webp"></p>
+
+  
+  
+<div class="article-footer reveal fs14"></div>
+
+  </article>
+  
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">回顾上一篇</div><a href="/wiki/MonitoringTechDocs/%E4%B8%89.%20%E4%BD%BF%E7%94%A8Grafana%E5%88%9B%E5%BB%BA%E5%8F%AF%E8%A7%86%E5%8C%96%E9%9D%A2%E6%9D%BF.html">三. 使用Grafana创建可视化面板</a></div><div class="item" id="next"></div></section></div>
+
+  
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs14">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a></div><div class="sitemap-group"><span class="fs14">笔记</span><a href="/wiki/vue/Vue%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.html#start">Vue学习笔记</a><a href="/wiki/django/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B.html">Django学习笔记</a><a href="/wiki/mysql/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B.html">MySQL学习笔记</a></div><div class="sitemap-group"><span class="fs14">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs14">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+<p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>  
+<!--不蒜子计数器-->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!--添加一个访问量-->
+<span>
+      本"<span style="color: hsl(192 98% 55%); font-weight: bold;">页面</ a></span>"访问 <span id="busuanzi_value_page_pv" style="color: hsl(192 98% 55%); font-weight: bold;"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv" style="color: hsl(192 98% 55%); font-weight: bold;"></span>       次 | 总访客 <span id="busuanzi_value_site_uv" style="color: hsl(192 98% 55%); font-weight: bold;"></span> 人
+</span>
+</br>
+<span id="runtime_span"></span>
+<script type="text/javascript">
+function show_runtime() {
+    window.setTimeout("show_runtime()", 1000);
+    X = new Date("2019/11/29 17:00:00");
+    Y = new Date();
+    T = (Y.getTime() - X.getTime());
+    M = 24 * 60 * 60 * 1000;
+    a = T / M;
+    A = Math.floor(a);
+    b = (a - A) * 24;
+    B = Math.floor(b);
+    c = (b - B) * 60;
+    C = Math.floor((b - B) * 60);
+    D = Math.floor((c - C) * 60);
+    runtime_span.innerHTML = "⏱️本站已运行 " + A + "天" + B + "小时" + C + "分" + D + "秒"
+}
+show_runtime();
+</script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+<a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" alt='全部都是博主用心学编写的啊！不是ai啊' style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+<a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" alt="只要保留原作者姓名并在基于原作创作的新作品适用同类型的许可协议，即可基于非商业目的对原作重新编排、改编或者再创作。" style="width:140px;height:50px"></a>
+</div>
+ 
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    
+<script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.23.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.23.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js","memos":"/js/plugins/memos.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@10.3/swiper-bundle.min.css","js":"https://unpkg.com/swiper@10.3/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img, .gallery img ,#waline_container .vcontent img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied","toast":"复制成功"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+
+  </div>
+</body>
+</html>
