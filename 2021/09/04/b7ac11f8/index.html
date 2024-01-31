@@ -28,7 +28,7 @@
 <meta property="og:description" content="安装libmemcached扩展12345wget https:&#x2F;&#x2F;launchpad.net&#x2F;libmemcached&#x2F;1.0&#x2F;1.0.18&#x2F;+download&#x2F;libmemcached-1.0.18.tar.gztar -xvzf libmemcached-1.0.18.tar.gzcd libmemcached-1.0.18.&#x2F;configure --with-memcached --dis">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-09-04T08:18:18.000Z">
-<meta property="article:modified_time" content="2024-01-27T02:45:29.382Z">
+<meta property="article:modified_time" content="2024-01-31T00:34:44.474Z">
 <meta property="article:author" content="Kill3r">
 <meta property="article:tag" content="优化">
 <meta property="article:tag" content="运维">
@@ -101,7 +101,7 @@
 <div class="bread-nav fs12"><div class="left"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/">安全运维</a></div><div id="post-meta"><span class="author">发布于</span>
     <span class="created"><time datetime="2021-09-04T08:18:18.000Z">2021-09-04</time></span>
     
-    <span class="updated">，更新于&nbsp;<time datetime="2024-01-27T02:45:29.382Z">2024-01-27</time></span>
+    <span class="updated">，更新于&nbsp;<time datetime="2024-01-31T00:34:44.474Z">2024-01-31</time></span>
     </div></div></div>
 
 <article class='md-text content post'>
@@ -110,7 +110,7 @@
 
 <h2 id="安装memcached扩展"><a href="#安装memcached扩展" class="headerlink" title="安装memcached扩展"></a>安装memcached扩展</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget http://pecl.php.net/get/memcached-3.1.3.tgz</span><br><span class="line">tar -zxvf memcached-3.1.3.tgz</span><br><span class="line"><span class="built_in">cd</span> memcached-3.1.3</span><br></pre></td></tr></table></figure>
 
-<p>首先使用phpize生成文件 如果php加了环境变量一般直接执行<code>phpize</code>就行了 如果找不到phpize使用查找命令<code>find / -name phpize</code> 搜索到文件，我的在<code>/usr/local/bin/phpize</code>目录，然后执行</p>
+<p>首先使用phpize生成文件 如果php加了环境变量一般直接执行<code>phpize</code>就行了 如果找不到phpize使用查找命令<code>find / -name phpize</code> 搜索到文件,我的在<code>/usr/local/bin/phpize</code>目录,然后执行</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/bin/phpize</span><br></pre></td></tr></table></figure>
 
 <p>不知道<code>php-config</code>在哪个目录 使用find方法</p>
@@ -129,26 +129,26 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php -igrep php.ini</span><br></pre></td></tr></table></figure>
 
 <p>执行<code>php -m</code>查看扩展是否成功安装</p>
-<h2 id="安装-Memcached"><a href="#安装-Memcached" class="headerlink" title="安装 Memcached"></a>安装 Memcached</h2><p>Linux系统安装memcached，首先要先安装libevent库。</p>
+<h2 id="安装-Memcached"><a href="#安装-Memcached" class="headerlink" title="安装 Memcached"></a>安装 Memcached</h2><p>Linux系统安装memcached,首先要先安装libevent库.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install libevent libevent-devel </span><br></pre></td></tr></table></figure>
 
 <h2 id="安装-Memcached-1"><a href="#安装-Memcached-1" class="headerlink" title="安装 Memcached"></a>安装 Memcached</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install memcached</span><br></pre></td></tr></table></figure>
 
-<p>Memcached 运行 Memcached命令的运行： 作为前台运行:</p>
+<p>Memcached 运行 Memcached命令的运行: 作为前台运行:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">memcached -p 11211 -m 64m -vv</span><br></pre></td></tr></table></figure>
 
-<p>作为后台服务运行：</p>
+<p>作为后台服务运行:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">memcached -d -m 64M -u root -l 127.0.0.1 -p 11211 -c 256 -P /tmp/memcached.pid</span><br></pre></td></tr></table></figure>
 
-<p>启动选项：</p>
+<p>启动选项:</p>
 <ol>
-<li>-d是启动一个守护进程；</li>
-<li>-m是分配给Memcache使用的内存数量，单位是MB；</li>
-<li>-u是运行Memcache的用户；</li>
-<li>-l是监听的服务器IP地址，可以有多个地址；</li>
-<li>-p是设置Memcache监听的端口，，最好是1024以上的端口；</li>
-<li>-c是最大运行的并发连接数，默认是1024；</li>
-<li>-P是设置保存Memcache的pid文件。</li>
+<li>-d是启动一个守护进程;</li>
+<li>-m是分配给Memcache使用的内存数量,单位是MB;</li>
+<li>-u是运行Memcache的用户;</li>
+<li>-l是监听的服务器IP地址,可以有多个地址;</li>
+<li>-p是设置Memcache监听的端口,,最好是1024以上的端口;</li>
+<li>-c是最大运行的并发连接数,默认是1024;</li>
+<li>-P是设置保存Memcache的pid文件.</li>
 </ol>
 <p>查找允许 memcached 的进程 id:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ps -efgrep memcached</span><br><span class="line">root      9662     1  0 10:13 ?        00:00:00 /usr/bin/memcached -d -m 1024 -u root -l 127.0.0.1 -p 11211 -c 1024 -P /tmp/memcached.pid</span><br><span class="line">root     10155  8703  0 10:14 pts/0    00:00:00 grep memcached</span><br></pre></td></tr></table></figure>
@@ -191,7 +191,7 @@
       <div class='title cap theme'>您可能感兴趣的文章</div>
     </section>
     <section class='body'>
-    <div class="related-posts"><a class="item" href="\2021\09\09\84bc0e75\" title="Linux-Opcache参数配置优化加速网站访问"><span class="title">Linux-Opcache参数配置优化加速网站访问</span></a><a class="item" href="\2024\01\27\81fbba05\" title="Linux-Web服务器的概念"><span class="title">Linux-Web服务器的概念</span></a><a class="item" href="\2024\01\28\afbfc1f7\" title="Linux-Web服务器搭建的艺术"><span class="title">Linux-Web服务器搭建的艺术</span></a><a class="item" href="\2021\09\26\1b012da8\" title="CorePress主题优化"><span class="title">CorePress主题优化</span></a></div></section></div>
+    <div class="related-posts"><a class="item" href="\2021\09\09\84bc0e75\" title="Linux-Opcache参数配置优化加速网站访问"><span class="title">Linux-Opcache参数配置优化加速网站访问</span></a><a class="item" href="\2024\01\28\afbfc1f7\" title="Linux-Web服务器搭建的艺术"><span class="title">Linux-Web服务器搭建的艺术</span></a><a class="item" href="\2024\01\27\81fbba05\" title="Linux-Web服务器的概念"><span class="title">Linux-Web服务器的概念</span></a><a class="item" href="\2021\09\26\1b012da8\" title="CorePress主题优化"><span class="title">CorePress主题优化</span></a></div></section></div>
 
 
 
