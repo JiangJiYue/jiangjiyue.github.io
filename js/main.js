@@ -197,13 +197,16 @@ init.registerTabsTag()
 // scrollreveal
 if (stellar.plugins.scrollreveal) {
   stellar.loadScript(stellar.plugins.scrollreveal.js).then(function () {
-    ScrollReveal().reveal("body .reveal", {
+    const slideUp = {
       distance: stellar.plugins.scrollreveal.distance,
       duration: stellar.plugins.scrollreveal.duration,
       interval: stellar.plugins.scrollreveal.interval,
       scale: stellar.plugins.scrollreveal.scale,
+      opacity: 0,
       easing: "ease-out"
-    });
+    }
+    ScrollReveal().reveal('.l_left .slide-up', slideUp)
+    ScrollReveal().reveal('.l_main .slide-up', slideUp)
   })
 }
 
@@ -242,7 +245,7 @@ if (stellar.plugins.stellar) {
       const els = document.getElementsByClassName('stellar-' + key + '-api');
       if (els != undefined && els.length > 0) {
         stellar.jQuery(() => {
-          if (key == 'timeline' || 'memos') {
+          if (key == 'timeline' || 'memos' || 'marked') {
             stellar.loadScript(stellar.plugins.marked).then(function () {
               stellar.loadScript(js, { defer: true });
             });
@@ -283,13 +286,7 @@ if (stellar.plugins.swiper) {
 
 // preload
 if (stellar.plugins.preload) {
-  if (stellar.plugins.preload.service == 'instant_page') {
-    stellar.loadScript(stellar.plugins.preload.instant_page, {
-      defer: true,
-      type: 'module',
-      integrity: 'sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1'
-    })
-  } else if (stellar.plugins.preload.service == 'flying_pages') {
+  if (stellar.plugins.preload.service == 'flying_pages') {
     window.FPConfig = {
       delay: 0,
       ignoreKeywords: [],
@@ -300,24 +297,9 @@ if (stellar.plugins.preload) {
   }
 }
 
-function loadFancybox() {
-  stellar.loadCSS(stellar.plugins.fancybox.css);
-  stellar.loadScript(stellar.plugins.fancybox.js, { defer: true }).then(function () {
-    Fancybox.bind(selector, {
-      groupAll: true,
-      hideScrollbar: false,
-      Thumbs: {
-        autoStart: false,
-      },
-      caption: function (fancybox, carousel, slide) {
-        return slide.$trigger.alt || null
-      }
-    });
-  })
-}
 // fancybox
 if (stellar.plugins.fancybox) {
-  let selector = 'img[fancybox]:not(.error)';
+  let selector = '[data-fancybox]:not(.error)';
   if (stellar.plugins.fancybox.selector) {
     selector += `, ${stellar.plugins.fancybox.selector}`
   }
@@ -332,13 +314,12 @@ if (stellar.plugins.fancybox) {
     stellar.loadCSS(stellar.plugins.fancybox.css);
     stellar.loadScript(stellar.plugins.fancybox.js, { defer: true }).then(function () {
       Fancybox.bind(selector, {
-        groupAll: true,
         hideScrollbar: false,
         Thumbs: {
           autoStart: false,
         },
-        caption: function (fancybox, carousel, slide) {
-          return slide.$trigger.alt || null
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || null
         }
       });
     })
@@ -362,7 +343,7 @@ if (stellar.search.service) {
           }
           path = stellar.config.root + path;
           const filter = $inputArea.attr('data-filter') || '';
-          searchFunc(path, filter, 'search-input', 'search-result');
+          searchFunc(path, filter, 'search-wrapper', 'search-input', 'search-result');
         });
         $inputArea.keydown(function(e) {
           if (e.which == 13) {

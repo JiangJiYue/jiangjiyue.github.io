@@ -38,7 +38,7 @@ const ThemeChange = (theme) => {
     const htmlElement = document.querySelector("html");
     let themeBtnIcon;
     try {
-        themeBtnIcon = document.querySelector("#start > aside > footer > div > a:last-child > i")
+        themeBtnIcon = document.querySelector("#start > aside > div > footer > div  > a:last-child > i")
     }
     catch {
         // 元素不存在
@@ -85,7 +85,7 @@ switch (window.localStorage.getItem('Theme_Mode')) {
  */
 // 绑定按钮点击事件
 try {
-    document.querySelector("#start > aside > footer > div > a:last-child").onclick = () => {
+    document.querySelector("#start > aside > div > footer > div  > a:last-child").onclick = () => {
         if (window.localStorage.getItem('Theme_Mode') === 'auto') {
             hud.toast('🌞白天模式');
             ThemeChange('light');
