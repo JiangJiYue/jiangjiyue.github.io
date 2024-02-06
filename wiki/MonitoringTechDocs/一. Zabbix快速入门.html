@@ -19,18 +19,18 @@
   <title>MonitoringTechDocs：一. Zabbix快速入门 - SafeKiller Zone</title>
 
   
-    <meta name="description" content="&#123;% video bilibili:BV1VN411R7uX width:100% autoplay:0 %&#125; 准备工作工作目录&#x2F;opt1cd &#x2F;opt  关闭防火墙1234# 关闭防火墙systemctl stop firewalld.service# 禁止开机自启systemctl disable firewalld.service  关闭selinux1234#">
+    <meta name="description" content="准备工作工作目录&#x2F;opt1cd &#x2F;opt  关闭防火墙1234# 关闭防火墙systemctl stop firewalld.service# 禁止开机自启systemctl disable firewalld.service  关闭selinux1234# 打开selinux的配置文件vim &#x2F;etc&#x2F;selinux&#x2F;config#">
 <meta property="og:type" content="website">
 <meta property="og:title" content="一. Zabbix快速入门">
 <meta property="og:url" content="https://jiangjiyue.github.io/wiki/MonitoringTechDocs/%E4%B8%80.%20Zabbix%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.html">
 <meta property="og:site_name" content="SafeKiller Zone">
-<meta property="og:description" content="&#123;% video bilibili:BV1VN411R7uX width:100% autoplay:0 %&#125; 准备工作工作目录&#x2F;opt1cd &#x2F;opt  关闭防火墙1234# 关闭防火墙systemctl stop firewalld.service# 禁止开机自启systemctl disable firewalld.service  关闭selinux1234#">
+<meta property="og:description" content="准备工作工作目录&#x2F;opt1cd &#x2F;opt  关闭防火墙1234# 关闭防火墙systemctl stop firewalld.service# 禁止开机自启systemctl disable firewalld.service  关闭selinux1234# 打开selinux的配置文件vim &#x2F;etc&#x2F;selinux&#x2F;config#">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202302281536133.png">
 <meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202302281535044.png">
 <meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202302281546848.png">
 <meta property="article:published_time" content="2023-04-01T04:19:06.000Z">
-<meta property="article:modified_time" content="2024-01-31T07:53:30.285Z">
+<meta property="article:modified_time" content="2024-02-06T00:37:55.608Z">
 <meta property="article:author" content="Kill3r">
 <meta property="article:tag" content="监控系统">
 <meta property="article:tag" content="Zabbix">
@@ -92,7 +92,7 @@
     
 <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
 <span class="sep"></span><a class="cap breadcrumb" id="menu" href="/wiki">文档</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/wiki/MonitoringTechDocs/%E4%B8%80.%20Zabbix%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.html">MonitoringTechDocs</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2024-01-31T07:53:30.285Z">2024-01-31</time></span></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2024-02-06T00:37:55.608Z">2024-02-06</time></span></div></div>
 </div>
 
     
@@ -103,7 +103,13 @@
     </div>
     
   </div>
-  </div><article class="md-text content"><p><code>&#123;% video bilibili:BV1VN411R7uX width:100% autoplay:0 %&#125;</code></p>
+  </div><article class="md-text content">
+    <div class="tag-plugin video" style="aspect-ratio:1.7777777777777777;max-width:100%;">
+    <iframe src="https://player.bilibili.com/player.html?bvid=BV1VN411R7uX&autoplay=0" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true">
+    </iframe>
+    </div>
+    
+
 <h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><h3 id="工作目录-opt"><a href="#工作目录-opt" class="headerlink" title="工作目录&#x2F;opt"></a>工作目录&#x2F;opt</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt</span><br></pre></td></tr></table></figure>
 
 <h3 id="关闭防火墙"><a href="#关闭防火墙" class="headerlink" title="关闭防火墙"></a>关闭防火墙</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 关闭防火墙</span></span><br><span class="line">systemctl stop firewalld.service</span><br><span class="line"><span class="comment"># 禁止开机自启</span></span><br><span class="line">systemctl <span class="built_in">disable</span> firewalld.service</span><br></pre></td></tr></table></figure>
@@ -128,7 +134,7 @@
 
 <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202302281546848.png" data-fancybox="true"/></div></div>
 
-<h2 id="安装Zabbix"><a href="#安装Zabbix" class="headerlink" title="安装Zabbix"></a>安装Zabbix</h2><div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://www.zabbix.com/download" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://www.zabbix.com/download</span></div><div class="bottom"><span class="title">https://www.zabbix.com/download</span><span class="cap desc footnote"></span></div></a></div>
+<h2 id="安装Zabbix"><a href="#安装Zabbix" class="headerlink" title="安装Zabbix"></a>安装Zabbix</h2><div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://www.zabbix.com/download" target="_blank" rel="external nofollow noopener noreferrer" cardlink api="https://site-info-api-five.vercel.app/api/v1?url=https://www.zabbix.com/download" autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://www.zabbix.com/download</span></div><div class="bottom"><span class="title">https://www.zabbix.com/download</span><span class="cap desc footnote"></span></div></a></div>
 
 <h3 id="下载zabbix-server"><a href="#下载zabbix-server" class="headerlink" title="下载zabbix-server"></a>下载zabbix-server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入到opt目录</span></span><br><span class="line"><span class="built_in">cd</span> /opt</span><br><span class="line"><span class="comment"># 下载二进制包</span></span><br><span class="line">wget https://cdn.zabbix.com/zabbix/sources/stable/6.4/zabbix-6.4.5.tar.gz</span><br><span class="line"><span class="comment"># 解压</span></span><br><span class="line">tar -zxvf zabbix-6.4.5.tar.gz</span><br><span class="line"><span class="comment"># 进入到zabbix目录</span></span><br><span class="line"><span class="built_in">cd</span> zabbix-6.4.5/</span><br><span class="line"><span class="comment"># 编译安装</span></span><br><span class="line">./configure --prefix=/usr/local/zabbix/zabbix-server --enable-server --enable-agent --with-mysql --with-net-snmp --with-libcurl --with-libxml2 --with-unixodbc --enable-java &amp;&amp; make CFLAGS=-std=gnu99 &amp;&amp; make install</span><br><span class="line"><span class="comment"># 参数说明</span></span><br><span class="line">--prefix              <span class="comment">#编译安装路径</span></span><br><span class="line">--enable-server       <span class="comment">#启动server端</span></span><br><span class="line">--enable-agent        <span class="comment">#启动agent端</span></span><br><span class="line">--with-mysql          <span class="comment">#编译连接mysql相关依赖包</span></span><br><span class="line">--with-net-snmp       <span class="comment">#启动snmp相关,用于snmp监控设备</span></span><br><span class="line">--with-libcurl        <span class="comment">#启动curl相关</span></span><br><span class="line">--with-libxml2        <span class="comment">#启动xml相关</span></span><br><span class="line">--with-unixodbc       <span class="comment">#启动odbc相关用于监控数据库</span></span><br><span class="line">--enable-java         <span class="comment">#启动java-agent 用于监控java类</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置环境变量</span></span><br><span class="line">vim /etc/profile</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/usr/local/zabbix/zabbix-server/sbin/:/usr/local/zabbix/zabbix-server/bin/</span><br><span class="line"></span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
 
