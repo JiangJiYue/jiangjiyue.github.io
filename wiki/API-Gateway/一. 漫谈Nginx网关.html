@@ -19,12 +19,12 @@
   <title>API-Gateway：一.漫谈Nginx网关 - SafeKiller Zone</title>
 
   
-    <meta name="description" content="什么是网关 在传统TCP&#x2F;IP术语中,网络设备只分成两种,一种为网关(gateway),另一种为主机(host).网关能在网络间转递数据包,但主机不能转送数据包.在主机(又称终端系统,end system)中,数据包需经过TCP&#x2F;IP四层协议处理,但是在网关(又称中介系统,intermediate system)只需要到达网际层(Internet layer),决定路径之后就可">
+    <meta name="description" content="总字符数: 4.18K                代码: 无, 文本: 2.05K               预计阅读时间: 9 分钟            什么是网关 在传统TCP&#x2F;IP术语中,网络设备只分成两种,一种为网关(gateway),另一种为主机(host).网关能在网络间转递数据包,但主机不能转送数据包.在主机(又称终端系统,end system)中,数据包">
 <meta property="og:type" content="website">
 <meta property="og:title" content="一.漫谈Nginx网关">
 <meta property="og:url" content="https://jiangjiyue.github.io/wiki/API-Gateway/%E4%B8%80.%20%E6%BC%AB%E8%B0%88Nginx%E7%BD%91%E5%85%B3.html">
 <meta property="og:site_name" content="SafeKiller Zone">
-<meta property="og:description" content="什么是网关 在传统TCP&#x2F;IP术语中,网络设备只分成两种,一种为网关(gateway),另一种为主机(host).网关能在网络间转递数据包,但主机不能转送数据包.在主机(又称终端系统,end system)中,数据包需经过TCP&#x2F;IP四层协议处理,但是在网关(又称中介系统,intermediate system)只需要到达网际层(Internet layer),决定路径之后就可">
+<meta property="og:description" content="总字符数: 4.18K                代码: 无, 文本: 2.05K               预计阅读时间: 9 分钟            什么是网关 在传统TCP&#x2F;IP术语中,网络设备只分成两种,一种为网关(gateway),另一种为主机(host).网关能在网络间转递数据包,但主机不能转送数据包.在主机(又称终端系统,end system)中,数据包">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/1.webp">
 <meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/2.webp">
@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/4.webp">
 <meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/wp-content/uploads/2021/09/5.webp">
 <meta property="article:published_time" content="2021-09-12T02:20:12.000Z">
-<meta property="article:modified_time" content="2024-01-31T07:53:28.466Z">
+<meta property="article:modified_time" content="2024-02-09T08:13:34.981Z">
 <meta property="article:author" content="Kill3r">
 <meta property="article:tag" content="Nginx">
 <meta property="article:tag" content="OpenResty">
@@ -82,7 +82,7 @@
 
 <widget class="widget-wrapper toc multi" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">API网关概述</span></div><div class="widget-body fs14"><div class="doc-tree active"><a class="doc-tree-link active" href="/wiki/API-Gateway/%E4%B8%80.%20%E6%BC%AB%E8%B0%88Nginx%E7%BD%91%E5%85%B3.html#start"><span class="toc-text">一.漫谈Nginx网关</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%BD%91%E5%85%B3"><span class="toc-text">什么是网关</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E8%8A%82%E7%82%B9%E5%9C%BA%E6%99%AF"><span class="toc-text">单节点场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E8%8A%82%E7%82%B9%E5%9C%BA%E6%99%AF"><span class="toc-text">多节点场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E5%85%B3%E4%BD%9C%E7%94%A8"><span class="toc-text">网关作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%B0%E6%9C%89%E6%A1%86%E6%9E%B6"><span class="toc-text">现有框架</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B"><span class="toc-text">技术选型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86"><span class="toc-text">正向代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86"><span class="toc-text">反向代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86%E4%B8%8E%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">正向代理与反向代理的区别</span></a></li></ol></div></div><div class="widget-header dis-select"><span class="name">Nginx入门</span></div><div class="widget-body fs14"><div class="doc-tree"><a class="doc-tree-link" href="/wiki/API-Gateway/%E4%BA%8C.%20Nginx%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86.html"><span class="toc-text">二.Nginx相关知识</span></a></div></div><div class="widget-header dis-select"><span class="name">Nginx高级配置</span></div><div class="widget-body fs14"><div class="doc-tree"><a class="doc-tree-link" href="/wiki/API-Gateway/%E4%B8%89.%20Nginx%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3.html"><span class="toc-text">三.Nginx配置文件详解</span></a></div></div><div class="widget-header dis-select"><span class="name">OpenResty实践</span></div><div class="widget-body fs14"><div class="doc-tree"><a class="doc-tree-link" href="/wiki/API-Gateway/%E5%9B%9B.%20OpenResty%E4%B8%AD%E4%BD%BF%E7%94%A8MySql.html"><span class="toc-text">四.OpenResty中使用mysql</span></a></div><div class="doc-tree"><a class="doc-tree-link" href="/wiki/API-Gateway/%E4%BA%94.%20Openresty%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B.html"><span class="toc-text">五.openresty执行流程</span></a></div></div></widget>
 
-<widget class="widget-wrapper post-card"><div class="widget-header dis-select"><span class="name">更多：DevOps</span></div><div class="widget-body"><a class="item wiki" href="/wiki/MonitoringTechDocs/%E4%B8%80.%20Zabbix%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.html"><span class="title">监控系统技术框架</span><span class="excerpt">探索监控系统技术的世界 - 学习和实践笔记。一起学习如何设计、部署并优化监控环境。</span></a><a class="item wiki" href="/wiki/VirtDocs/%E4%B8%80.%20Esxi%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B.html"><span class="title">虚拟化技术框架</span><span class="excerpt">探索虚拟化技术的世界 - 我的学习和实践笔记。一起学习如何设计、部署并优化虚拟化环境。</span></a><a class="item wiki" href="/wiki/MiddlewareDocs/%E4%B8%80.%20Nginx%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A(%E4%B8%8A).html"><span class="title">Nginx, Apache, Tomcat 中间件文档集</span><span class="excerpt">深入了解MiddlewareDocs - Nginx, Apache, Tomcat的综合指南，包括从基础安装到高级配置的所有步骤。</span></a></div></widget>
+<widget class="widget-wrapper post-card"><div class="widget-header dis-select"><span class="name">更多：DevOps</span></div><div class="widget-body"><a class="item wiki" href="/wiki/MiddlewareDocs/%E4%B8%80.%20Nginx%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A(%E4%B8%8A).html"><span class="title">Nginx, Apache, Tomcat 中间件文档集</span><span class="excerpt">深入了解MiddlewareDocs - Nginx, Apache, Tomcat的综合指南，包括从基础安装到高级配置的所有步骤。</span></a><a class="item wiki" href="/wiki/MonitoringTechDocs/%E4%B8%80.%20Zabbix%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.html"><span class="title">监控系统技术框架</span><span class="excerpt">探索监控系统技术的世界 - 学习和实践笔记。一起学习如何设计、部署并优化监控环境。</span></a><a class="item wiki" href="/wiki/VirtDocs/%E4%B8%80.%20Esxi%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B.html"><span class="title">虚拟化技术框架</span><span class="excerpt">探索虚拟化技术的世界 - 我的学习和实践笔记。一起学习如何设计、部署并优化虚拟化环境。</span></a></div></widget>
 </div>
 <footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
 </div></aside><div class="l_main" id="main">
@@ -96,7 +96,7 @@
     
 <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
 <span class="sep"></span><a class="cap breadcrumb" id="menu" href="/wiki">文档</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/wiki/API-Gateway/%E4%B8%80.%20%E6%BC%AB%E8%B0%88Nginx%E7%BD%91%E5%85%B3.html">API-Gateway</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2024-01-31T07:53:28.466Z">2024-01-31</time></span></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2024-02-09T08:13:34.981Z">2024-02-09</time></span></div></div>
 </div>
 
     
@@ -107,7 +107,18 @@
     </div>
     
   </div>
-  </div><article class="md-text content"><h3 id="什么是网关"><a href="#什么是网关" class="headerlink" title="什么是网关"></a>什么是网关</h3><blockquote>
+  </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
+    <p>总字符数: 4.18K </p>
+    </div>
+    <div class="cell" style="">
+    <p>代码: 无, 文本: 2.05K</p>
+    </div>
+    <div class="cell" style="">
+    <p>预计阅读时间: 9 分钟</p>
+    </div>
+    </div>
+
+<h3 id="什么是网关"><a href="#什么是网关" class="headerlink" title="什么是网关"></a>什么是网关</h3><blockquote>
 <p>在传统<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/TCP/IP">TCP&#x2F;IP</a>术语中,网络设备只分成两种,一种为网关(gateway),另一种为主机(host).网关能在网络间转递数据包,但主机不能转送数据包.在主机(又称终端系统,end system)中,数据包需经过TCP&#x2F;IP四层协议处理,但是在网关(又称中介系统,intermediate system)只需要到达<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/w/index.php?title=%E7%B6%B2%E9%9A%9B%E5%B1%A4&action=edit&redlink=1">网际层</a>(Internet layer),决定路径之后就可以转送.在当时,网关(gateway)与路由器(router)还没有区别.</p>
 <p>在现代网络术语中,网关(gateway)与路由器(router)的定义不同.网关(gateway)能在不同<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE">协议</a>间移动资料,而路由器(router)是在不同<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%B6%B2%E8%B7%AF">网络</a>间移动资料,相当于传统所说的IP网关(IP gateway).</p>
 <p><strong>网关</strong>顾名思义就是连接两个网络的设备,对于语音网关来说,他可以连接<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/PSTN">PSTN</a>和<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E4%BB%A5%E5%A4%AA%E7%BD%91">以太网</a>,这就相当于<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/VOIP">VOIP</a>,把不同电话中的模拟信号通过网关而转换成数字信号,而且加入协议再去传输.在到了接收端的时候再通过<strong>网关</strong>还原成模拟的电话信号,最后才能在电话机上听到.</p>
