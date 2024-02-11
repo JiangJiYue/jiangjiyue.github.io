@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/4.webp">
 <meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/5.webp">
 <meta property="article:published_time" content="2021-09-12T02:20:12.000Z">
-<meta property="article:modified_time" content="2024-02-10T12:50:17.396Z">
+<meta property="article:modified_time" content="2024-02-11T10:33:31.673Z">
 <meta property="article:author" content="Kill3r">
 <meta property="article:tag" content="Nginx">
 <meta property="article:tag" content="OpenResty">
@@ -96,7 +96,7 @@
     
 <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
 <span class="sep"></span><a class="cap breadcrumb" id="menu" href="/wiki">文档</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/wiki/API-Gateway/%E4%B8%80.%20%E6%BC%AB%E8%B0%88Nginx%E7%BD%91%E5%85%B3.html">API-Gateway</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2024-02-10T12:50:17.396Z">2024-02-10</time></span></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2024-02-11T10:33:31.673Z">2024-02-11</time></span></div></div>
 </div>
 
     
@@ -119,13 +119,15 @@
     </div>
 
 <h3 id="什么是网关"><a href="#什么是网关" class="headerlink" title="什么是网关"></a>什么是网关</h3><blockquote>
-<p>在传统<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/TCP/IP">TCP&#x2F;IP</a>术语中,网络设备只分成两种,一种为网关(gateway),另一种为主机(host).网关能在网络间转递数据包,但主机不能转送数据包.在主机(又称终端系统,end system)中,数据包需经过TCP&#x2F;IP四层协议处理,但是在网关(又称中介系统,intermediate system)只需要到达<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/w/index.php?title=%E7%B6%B2%E9%9A%9B%E5%B1%A4&action=edit&redlink=1">网际层</a>(Internet layer),决定路径之后就可以转送.在当时,网关(gateway)与路由器(router)还没有区别.</p>
+<p>在传统<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/TCP/IP">TCP&#x2F;IP</a>术语中,网络设备只分成两种,一种为网关(gateway),另一种为主机(host).网关能在网络间转递数据包,但主机不能转送数据包.在主机(又称终端系统,end system)中,数据包需经过TCP&#x2F;IP四层协议处理,但是在网关(又称中介系统,intermediate system)只需要到达网际层,决定路径之后就可以转送.在当时,网关(gateway)与路由器(router)还没有区别.</p>
 <p>在现代网络术语中,网关(gateway)与路由器(router)的定义不同.网关(gateway)能在不同<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE">协议</a>间移动资料,而路由器(router)是在不同<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%B6%B2%E8%B7%AF">网络</a>间移动资料,相当于传统所说的IP网关(IP gateway).</p>
 <p><strong>网关</strong>顾名思义就是连接两个网络的设备,对于语音网关来说,他可以连接<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/PSTN">PSTN</a>和<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E4%BB%A5%E5%A4%AA%E7%BD%91">以太网</a>,这就相当于<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/VOIP">VOIP</a>,把不同电话中的模拟信号通过网关而转换成数字信号,而且加入协议再去传输.在到了接收端的时候再通过<strong>网关</strong>还原成模拟的电话信号,最后才能在电话机上听到.</p>
 <p>对于以太网中的<strong>网关</strong>只能转发三层以上数据包,这一点和路由是一样的.而不同的是<strong>网关</strong>中并没有<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E8%B7%AF%E7%94%B1%E8%A1%A8">路由表</a>,他只能按照预先设定的不同网段来进行转发.网关最重要的一点就是端口映射,子网内用户在外网看来只是外网的IP地址对应着不同的端口,这样看来就会保护子网内的用户.</p>
 </blockquote>
-<h3 id="单节点场景"><a href="#单节点场景" class="headerlink" title="单节点场景"></a>单节点场景</h3><p><a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/archives/422/attachment/1"><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/1.webp" data-fancybox="true"/></div></div></a></p>
-<h3 id="多节点场景"><a href="#多节点场景" class="headerlink" title="多节点场景"></a>多节点场景</h3><p><a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/archives/422/attachment/2"><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/2.webp" data-fancybox="true"/></div></div></a></p>
+<h3 id="单节点场景"><a href="#单节点场景" class="headerlink" title="单节点场景"></a>单节点场景</h3><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/1.webp" data-fancybox="true"/></div></div>
+
+<h3 id="多节点场景"><a href="#多节点场景" class="headerlink" title="多节点场景"></a>多节点场景</h3><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/2.webp" data-fancybox="true"/></div></div>
+
 <h3 id="网关作用"><a href="#网关作用" class="headerlink" title="网关作用"></a>网关作用</h3><ul>
 <li>统一入口</li>
 <li>安全:黑名单、权限身份认证</li>
@@ -144,20 +146,23 @@
 <li>apiaxle: Nodejs实现的一个API 网关.</li>
 <li>api-umbrella: Ruby 实现的一个API网关.</li>
 </ul>
-<h3 id="技术选型"><a href="#技术选型" class="headerlink" title="技术选型"></a>技术选型</h3><p><a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/archives/422/3-3"><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/3-1.webp" data-fancybox="true"/></div></div></a></p>
+<h3 id="技术选型"><a href="#技术选型" class="headerlink" title="技术选型"></a>技术选型</h3><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/3-1.webp" data-fancybox="true"/></div></div>
+
 <h3 id="正向代理"><a href="#正向代理" class="headerlink" title="正向代理"></a>正向代理</h3><blockquote>
 <p>代理(英语:Proxy),也称网络代理,是一种特殊的网络服务,允许一个网络终端(一般为客户端)通过这个服务与另一个网络终端(一般为服务器)进行非直接的连接.一些网关、路由器等网络设备具备网络代理功能.一般认为代理服务有利于保障网络终端的隐私或安全,防止攻击.</p>
 </blockquote>
-<p><a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/archives/422/attachment/4"><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/4.webp" data-fancybox="true"/></div></div></a></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/4.webp" data-fancybox="true"/></div></div>
+
 <h3 id="反向代理"><a href="#反向代理" class="headerlink" title="反向代理"></a>反向代理</h3><blockquote>
 <p><strong>反向代理</strong>在<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%94%B5%E8%84%91%E7%BD%91%E7%BB%9C">电脑网络</a>中是<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E4%BB%A3%E7%90%86%E4%BC%BA%E6%9C%8D%E5%99%A8">代理服务器</a>的一种.服务器根据客户端的请求,从其关系的一组或多组后端<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%9C%8D%E5%8A%A1%E5%99%A8">服务器</a>(如<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/Web%E6%9C%8D%E5%8A%A1%E5%99%A8">Web服务器</a>)上获取资源,然后再将这些资源返回给客户端,客户端只会得知反向代理的IP地址,而不知道在代理服务器后面的服务器集群的存在[<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86#cite_note-1">1]</a>.</p>
 <p>与<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%89%8D%E5%90%91%E4%BB%A3%E7%90%86">前向代理</a>不同,前向代理作为客户端的代理,将从互联网上获取的资源返回给一个或多个的客户端,服务端(如Web服务器)只知道代理的IP地址而不知道客户端的IP地址;而反向代理是作为服务器端(如Web服务器)的代理使用,而不是客户端.客户端借由前向代理可以间接访问很多不同互联网服务器(集群)的资源,而反向代理是供很多客户端都通过它间接访问不同后端服务器上的资源,而不需要知道这些后端服务器的存在,而以为所有资源都来自于这个反向代理服务器.</p>
 <p>反向代理在现时的互联网中并不少见,而另一些例子,像是<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%85%A7%E5%AE%B9%E5%82%B3%E9%81%9E%E7%B6%B2%E8%B7%AF">CDN</a>、SNI代理等,是反向代理结合<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/DNS">DNS</a>的一类延伸应用.</p>
 </blockquote>
-<p><a target="_blank" rel="noopener" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/archives/422/attachment/5"><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/5.webp" data-fancybox="true"/></div></div></a></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/5.webp" data-fancybox="true"/></div></div>
+
 <h3 id="正向代理与反向代理的区别"><a href="#正向代理与反向代理的区别" class="headerlink" title="正向代理与反向代理的区别"></a>正向代理与反向代理的区别</h3><ol>
 <li>正向代理是需要在用户的电脑上配置正向代理服务器的;而反向代理不需要,因为用户是直接访问的反向代理服务器</li>
-<li>正向代理的应用场景是用户是知道目标服务器的地址,如:<a href="www.google.com">www.google.com</a>,但不能直接访问,那么就需要在用户电脑配置一个正向代理服务器,用户再次访问<a href="www.google.com">www.google.com</a>就可以正常访问了;而反向代理的应用场景是用户本来就不知道目标服务器的地址.而是由平台方提供一个反向代理服务器的地址,用户直接访问反向代理服务器的地址就行如<a href="wordpress-1258894728.cos.ap-beijing.myqcloud.com">wordpress-1258894728.cos.ap-beijing.myqcloud.com</a>不管目标服务器有多少,用户不需要关心,只要访问反向代理服务器就ok;由反向代理服务器去解析访问目标服务器</li>
+<li>正向代理的应用场景是用户是知道目标服务器的地址,如:<a href="www.google.com">www.google.com</a>,但不能直接访问,那么就需要在用户电脑配置一个正向代理服务器,用户再次访问<a href="www.google.com">www.google.com</a>就可以正常访问了;而反向代理的应用场景是用户本来就不知道目标服务器的地址.而是由平台方提供一个反向代理服务器的地址,用户直接访问反向代理服务器的地址就行.不管目标服务器有多少,用户不需要关心,只要访问反向代理服务器就ok;由反向代理服务器去解析访问目标服务器</li>
 <li>反向代理极大的保护了应用的安全性,而且此结构可以很好的搭建负载均衡</li>
 </ol>
 </article>
