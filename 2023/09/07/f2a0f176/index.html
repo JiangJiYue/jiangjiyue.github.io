@@ -1,560 +1,62 @@
-
-<!DOCTYPE html><html lang="zh-CN">
-
-<head>
-  <meta charset="utf-8">
-  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.26.8" theme-name="Stellar" theme-version="1.26.8">
-  
-  <meta name="generator" content="Hexo 7.1.1">
-  <meta http-equiv='x-dns-prefetch-control' content='on' />
-  
-  <meta name="renderer" content="webkit">
-  <meta name="force-rendering" content="webkit">
-  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-  <meta name="HandheldFriendly" content="True" >
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="theme-color" content="#f8f8f8">
-  
-  <title>PHP-MySQL - SafeKiller Zone</title>
-
-  
-    <meta name="description" content="总字符数: 11.24K                代码: 7.08K, 文本: 2.06K               预计阅读时间: 40 分钟            一、PHP连接MySQL数据库PHP 编程语言要想操作 MySQL,执行 SQL 语句,进行增删改查,首先必须要与 MYSQL 数据库建立连接,才能进行数据的存储与查询读取.PHP 要想连接 MYSQL 数据库,需">
-<meta property="og:type" content="article">
-<meta property="og:title" content="PHP-MySQL">
-<meta property="og:url" content="https://jiangjiyue.github.io/2023/09/07/f2a0f176/index.html">
-<meta property="og:site_name" content="SafeKiller Zone">
-<meta property="og:description" content="总字符数: 11.24K                代码: 7.08K, 文本: 2.06K               预计阅读时间: 40 分钟            一、PHP连接MySQL数据库PHP 编程语言要想操作 MySQL,执行 SQL 语句,进行增删改查,首先必须要与 MYSQL 数据库建立连接,才能进行数据的存储与查询读取.PHP 要想连接 MYSQL 数据库,需">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071854145.PNG">
-<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071854512.PNG">
-<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071855285.PNG">
-<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071855560.PNG">
-<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071855876.PNG">
-<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071855792.PNG">
-<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071855173.PNG">
-<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071856704.PNG">
-<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071856092.PNG">
-<meta property="article:published_time" content="2023-09-07T13:01:08.000Z">
-<meta property="article:modified_time" content="2024-02-09T08:13:34.850Z">
-<meta property="article:author" content="Kill3r">
-<meta property="article:tag" content="PHP">
-<meta property="article:tag" content="编程语言">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071854145.PNG">
-  
-  
-  
-  <meta name="keywords" content="PHP,编程语言">
-
-  <!-- feed -->
-  
-    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
-  
-
-  <link rel="stylesheet" href="/css/main.css?v=1.26.8">
-
-  
-    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
-  
-
-  
-
-  
-  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/newYear.css"><link rel="stylesheet" href="/css/darkmode.css">
-</head>
-<body>
-
-<div class="l_body content tech" id="start" layout="post" ><aside class="l_left"><div class="sidebar-container">
-
-
-<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div></header>
-
-<div class="nav-area">
-<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
-
-
-<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="探索" href="/notes/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/about/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
-</div>
-<div class="widgets">
-
-<widget class="widget-wrapper toc single" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81PHP%E8%BF%9E%E6%8E%A5MySQL%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-text">一、PHP连接MySQL数据库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E6%88%98-PHP-%E8%BF%9E%E6%8E%A5-MySQL-%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-text">实战-PHP 连接 MySQL 数据库</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1"><span class="toc-text">面向对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B"><span class="toc-text">面向过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%92%8C%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">面向对象和面向过程的区别</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A5%BD%E7%94%A8%E7%AE%80%E6%B4%81%E4%BB%A3%E7%A0%81-%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B"><span class="toc-text">连接数据库好用简洁代码(面向过程)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mysqli-connect-error-%E5%87%BD%E6%95%B0"><span class="toc-text">mysqli_connect_error() 函数</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81MySQL-%E8%AF%AD%E5%8F%A5%E7%9A%84%E6%89%A7%E8%A1%8C"><span class="toc-text">二、MySQL 语句的执行</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#mysqli-query-%E5%87%BD%E6%95%B0"><span class="toc-text">mysqli_query() 函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81SQL%E8%AF%AD%E5%8F%A5%E6%9F%A5%E8%AF%A2%E7%BB%93%E6%9E%9C%E7%9A%84%E8%BE%93%E5%87%BA"><span class="toc-text">三、SQL语句查询结果的输出</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#mysqli-fetch-array-%E5%87%BD%E6%95%B0"><span class="toc-text">mysqli_fetch_array() 函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mysqli-fetch-all-%E5%87%BD%E6%95%B0"><span class="toc-text">mysqli_fetch_all() 函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81SQL%E8%AF%AD%E5%8F%A5%E6%9F%A5%E8%AF%A2%E7%BB%93%E6%9E%9C%E7%9A%84%E8%A1%8C%E6%95%B0"><span class="toc-text">四、SQL语句查询结果的行数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#mysqli-num-rows-%E5%87%BD%E6%95%B0"><span class="toc-text">mysqli_num_rows() 函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81PHP-MySQL-%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-text">五、PHP MySQL 创建数据库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-text">面向过程创建数据库</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81PHP-%E5%88%9B%E5%BB%BA-MySQL-%E8%A1%A8"><span class="toc-text">六、PHP 创建 MySQL 表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#sql%E8%AF%AD%E5%8F%A5%E8%AE%BE%E8%AE%A1"><span class="toc-text">sql语句设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQLi-%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E8%A1%A8"><span class="toc-text">MySQLi - 面向过程创建数据表</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81PHP-MySQL-%E6%8F%92%E5%85%A5%E6%95%B0%E6%8D%AE"><span class="toc-text">七、PHP MySQL 插入数据</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BE%8B%E5%AD%90-%E5%90%91-%E2%80%9Cuser%E2%80%9D-%E8%A1%A8%E6%B7%BB%E5%8A%A0%E4%BA%86%E6%96%B0%E7%9A%84%E8%AE%B0%E5%BD%95"><span class="toc-text">例子:向 “user” 表添加了新的记录</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81PHP-MySQL-Delete"><span class="toc-text">八、PHP MySQL Delete</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="toc-text">删除数据库中的数据</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95"><span class="toc-text">语法</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%9D%E3%80%81PHP-MySQL-Update"><span class="toc-text">九、PHP MySQL Update</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="toc-text">更新数据库中的数据</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95-1"><span class="toc-text">语法</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E3%80%81PHP-MySQL-%E6%9F%A5%E8%AF%A2%E6%95%B0%E6%8D%AE"><span class="toc-text">十、PHP MySQL 查询数据</span></a></li></ol></div></div></widget>
-
-<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">专栏：PHP</span></div><div class="widget-body"><a class="item" href="/2023/09/02/20d7e033/"><span class="title">PHP-从入门到精通(上)</span></a><a class="item" href="/2023/09/03/39ccd172/"><span class="title">PHP-从入门到精通(下)</span></a><a class="item" href="/2023/09/04/258025d3/"><span class="title">PHP-算法初识~</span></a><a class="item" href="/2023/09/05/5a76691e/"><span class="title">PHP-表单</span></a><a class="item" href="/2023/09/06/d0324d08/"><span class="title">PHP-文件上传</span></a><a class="item active" href="/2023/09/07/f2a0f176/"><span class="title">PHP-MySQL</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a><a class="item" href="/2023/09/08/c3682c7d/"><span class="title">PHP-留言板项目</span></a></div></widget>
-
-
-
-
-
-<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2024/02/12/7564e3ff/"><span class="title">Security-全方位探索网络安全</span></a><a class="item title" href="/2024/02/10/c44eef61/"><span class="title">Security-网安专业术语篇</span></a><a class="item title" href="/2020/06/02/5fa17f4e/"><span class="title">二. Linux从入门到精通(上)</span></a><a class="item title" href="/2024/02/19/693474ed/"><span class="title">Linux-Shell编程从0到1</span></a><a class="item title" href="/2021/09/25/29286f5a/"><span class="title">Linux-定时备份网站数据文件到阿里云盘</span></a></div></widget>
-</div>
-<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
-</div></aside><div class="l_main" id="main">
-
-
-
-
-
-<div class="article banner top">
-  <div class="content">
-    
-<div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
-<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/topic">专栏</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/2023/09/02/20d7e033/">PHP</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2023-09-07T13:01:08.000Z">2023-09-07</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-02-09T08:13:34.850Z">2024-02-09</time></span></div></div>
-</div>
-
-    
-    <div class="bottom">
-      <div class="text-area">
-        <h1 class="text title"><span>PHP-MySQL</span></h1>
-      </div>
-    </div>
-    
-  </div>
-  </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
-    <p>总字符数: 11.24K </p>
-    </div>
-    <div class="cell" style="">
-    <p>代码: 7.08K, 文本: 2.06K</p>
-    </div>
-    <div class="cell" style="">
-    <p>预计阅读时间: 40 分钟</p>
-    </div>
-    </div>
-
-<h2 id="一、PHP连接MySQL数据库"><a href="#一、PHP连接MySQL数据库" class="headerlink" title="一、PHP连接MySQL数据库"></a>一、PHP连接MySQL数据库</h2><p><strong>PHP 编程语言要想操作 MySQL,执行 SQL 语句,进行增删改查,首先必须要与 MYSQL 数据库建立连接,才能进行数据的存储与查询读取.PHP 要想连接 MYSQL 数据库,需要 MySQL 服务器地址、用户名、密码和数据库名称.</strong></p>
-<h3 id="实战-PHP-连接-MySQL-数据库"><a href="#实战-PHP-连接-MySQL-数据库" class="headerlink" title="实战-PHP 连接 MySQL 数据库"></a>实战-PHP 连接 MySQL 数据库</h3><h4 id="面向对象"><a href="#面向对象" class="headerlink" title="面向对象"></a>面向对象</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//面向对象</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$servername</span> = <span class="string">&quot;localhost&quot;</span>; <span class="comment">// Replace with your database server name</span></span><br><span class="line"><span class="variable">$username</span> = <span class="string">&quot;root&quot;</span>; <span class="comment">// Replace with your database username</span></span><br><span class="line"><span class="variable">$password</span> = <span class="string">&quot;root123&quot;</span>; <span class="comment">// Replace with your database password</span></span><br><span class="line"><span class="variable">$dbname</span> = <span class="string">&quot;ksxt&quot;</span>; <span class="comment">// Replace with your database name</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Create connection</span></span><br><span class="line"><span class="variable">$conn</span> = <span class="keyword">new</span> <span class="title function_ invoke__">mysqli</span>(<span class="variable">$servername</span>, <span class="variable">$username</span>, <span class="variable">$password</span>, <span class="variable">$dbname</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Check connection</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$conn</span>-&gt;connect_error) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&quot;Connection failed: &quot;</span> . <span class="variable">$conn</span>-&gt;connect_error);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;Connected successfully&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Close connection</span></span><br><span class="line"><span class="variable">$conn</span>-&gt;<span class="title function_ invoke__">close</span>();<span class="comment">//面向对象关闭连接</span></span><br><span class="line"><span class="meta">?&gt;</span>   </span><br></pre></td></tr></table></figure>
-<h4 id="面向过程"><a href="#面向过程" class="headerlink" title="面向过程"></a>面向过程</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$servername</span> = <span class="string">&quot;localhost&quot;</span>;</span><br><span class="line"><span class="variable">$username</span> = <span class="string">&quot;root&quot;</span>;</span><br><span class="line"><span class="variable">$password</span> = <span class="string">&quot;root123&quot;</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 创建连接</span></span><br><span class="line"><span class="variable">$conn</span> = <span class="title function_ invoke__">mysqli_connect</span>(<span class="variable">$servername</span>, <span class="variable">$username</span>, <span class="variable">$password</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 检测连接</span></span><br><span class="line">	<span class="keyword">if</span> (!<span class="variable">$conn</span>) &#123;</span><br><span class="line">    	<span class="keyword">die</span>(<span class="string">&quot;Connection failed: &quot;</span> . <span class="title function_ invoke__">mysqli_connect_error</span>());</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">echo</span> <span class="string">&quot;连接成功&quot;</span>;</span><br><span class="line"><span class="comment">//关闭连接</span></span><br><span class="line"><span class="title function_ invoke__">mysqli_close</span>(<span class="variable">$conn</span>);<span class="comment">//面向过程</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="面向对象和面向过程的区别"><a href="#面向对象和面向过程的区别" class="headerlink" title="面向对象和面向过程的区别"></a>面向对象和面向过程的区别</h4><ul>
-<li><p>面向对象和面向过程是两种不同的编程范式,用于组织和设计代码.</p>
-</li>
-<li><p>在面向过程的编程中,代码主要以过程或函数为中心,通过一系列的函数调用来完成任务.在PHP中,面向过程的方式使用mysqli或PDO扩展来连接和操作MySQL数据库.你需要手动编写连接、查询和关闭连接等功能的代码.</p>
-</li>
-<li><p>而在面向对象的编程中,代码主要以对象为中心,通过定义和使用类、对象、方法和属性来组织和实现功能.在PHP中,使用面向对象的方式连接MySQL数据库可以使用mysqli或PDO扩展的面向对象接口.你可以创建一个数据库连接对象,通过调用该对象的方法来执行查询、插入、更新等操作.这种方式更加灵活和易于维护,也更符合现代软件开发的需求.</p>
-</li>
-</ul>
-<h4 id="连接数据库好用简洁代码-面向过程"><a href="#连接数据库好用简洁代码-面向过程" class="headerlink" title="连接数据库好用简洁代码(面向过程)"></a>连接数据库好用简洁代码(面向过程)</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">	<span class="variable">$servername</span>=<span class="string">&quot;127.0.0.1&quot;</span>;</span><br><span class="line">	<span class="variable">$username</span>=<span class="string">&quot;root&quot;</span>;</span><br><span class="line">	<span class="variable">$password</span>=<span class="string">&quot;root123&quot;</span>;</span><br><span class="line">	<span class="variable">$db_name</span>=<span class="string">&quot;ksxt&quot;</span>;</span><br><span class="line">	<span class="variable">$conn</span> = <span class="title function_ invoke__">mysqli_connect</span>(<span class="variable">$servername</span>,<span class="variable">$username</span>,<span class="variable">$password</span>,<span class="variable">$db_name</span>);</span><br><span class="line">	<span class="keyword">if</span>(!<span class="variable">$conn</span>)&#123;</span><br><span class="line">		<span class="keyword">die</span>(<span class="string">&#x27;数据库连接失败&#x27;</span>.<span class="title function_ invoke__">mysql_connect_error</span>());</span><br><span class="line">	&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="mysqli-connect-error-函数"><a href="#mysqli-connect-error-函数" class="headerlink" title="mysqli_connect_error() 函数"></a>mysqli_connect_error() 函数</h4><p>mysqli_connect_error() 函数返回上一次连接错误的错误描述.</p>
-<p>返回值:返回一个描述错误的字符串.如果没有错误发生则返回 NULL.</p>
-<h2 id="二、MySQL-语句的执行"><a href="#二、MySQL-语句的执行" class="headerlink" title="二、MySQL 语句的执行"></a>二、MySQL 语句的执行</h2><h3 id="mysqli-query-函数"><a href="#mysqli-query-函数" class="headerlink" title="mysqli_query() 函数"></a>mysqli_query() 函数</h3><p>mysqli_query() 函数执行某个针对数据库的查询.</p>
-<p><strong>语法:</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqli_query(connection,query);</span><br></pre></td></tr></table></figure>
-
-<p><strong>参数:</strong></p>
-<ul>
-<li>connection: 必需.规定要使用的 MySQL 连接.</li>
-<li>query: 必需,规定查询字符串.</li>
-</ul>
-<p><strong>返回值:</strong><br>针对成功的 SELECT、SHOW、DESCRIBE 或 EXPLAIN 查询,将返回一个 mysqli_result 对象.针对其他成功的查询,将返回 TRUE.如果失败,则返回 FALSE.</p>
-<p><strong>例</strong>:如下例子将执行从<code>ksxt</code>数据库中 <code>user</code> 表中选取<code>user_name=&quot;admin&quot;</code>的内容的<code>SQL语句</code>:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$con</span>=<span class="title function_ invoke__">mysqli_connect</span>(<span class="string">&quot;127.0.0.1&quot;</span>,<span class="string">&quot;root&quot;</span>,<span class="string">&quot;root123&quot;</span>,<span class="string">&quot;ksxt&quot;</span>);</span><br><span class="line"><span class="comment">// 检测连接</span></span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">mysqli_connect_errno</span>())</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;连接失败: &quot;</span> . <span class="title function_ invoke__">mysqli_connect_error</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$sql</span>=<span class="string">&quot;select * from sys_user where username=&#x27;admin&#x27;&quot;</span>;</span><br><span class="line"><span class="variable">$result</span> = <span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$con</span>,<span class="variable">$sql</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="三、SQL语句查询结果的输出"><a href="#三、SQL语句查询结果的输出" class="headerlink" title="三、SQL语句查询结果的输出"></a>三、SQL语句查询结果的输出</h2><h3 id="mysqli-fetch-array-函数"><a href="#mysqli-fetch-array-函数" class="headerlink" title="mysqli_fetch_array() 函数"></a>mysqli_fetch_array() 函数</h3><p>mysqli_fetch_array()函数从结果集中取得一行作为关联数组,或数字数组,或二者兼有.</p>
-<hr>
-<p><strong>注意</strong>:该函数返回的字段名是区分大小写的.</p>
-<p>用法:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqli_fetch_array(result,resulttype);</span><br></pre></td></tr></table></figure>
-
-<p><strong>参数:</strong></p>
-<ul>
-<li>result<br>必需.规定由 mysqli_query()、mysqli_store_result() 或 mysqli_use_result() 返回的结果集标识符.</li>
-<li>resulttype<br>可选.规定应该产生哪种类型的数组.可以是以下值中的一个:<ul>
-<li>MYSQLI_ASSOC</li>
-<li>MYSQLI_NUM</li>
-<li>MYSQLI_BOTH</li>
-</ul>
-</li>
-</ul>
-<p><strong>返回值</strong>:<br>返回与读取行匹配的字符串数组.如果结果集中没有更多的行则返回 NULL.</p>
-<p><strong>例</strong>:如下例子将从<code>ksxt</code>数据库中 <code>sys_user</code> 表中选取<code>username=&quot;admin&quot;</code> 的<code>password</code>数据:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$con</span>=<span class="title function_ invoke__">mysqli_connect</span>(<span class="string">&quot;127.0.0.1&quot;</span>,<span class="string">&quot;root&quot;</span>,<span class="string">&quot;root123&quot;</span>,<span class="string">&quot;ksxt&quot;</span>);</span><br><span class="line"><span class="comment">// 检测连接</span></span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">mysqli_connect_error</span>())</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;连接失败: &quot;</span> . <span class="title function_ invoke__">mysqli_connect_error</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$sql</span>=<span class="string">&quot;select * from sys_user where user_name=&#x27;admin&#x27;&quot;</span>;</span><br><span class="line"><span class="variable">$result</span> = <span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$con</span>,<span class="variable">$sql</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span>(<span class="variable">$row</span> = <span class="title function_ invoke__">mysqli_fetch_array</span>(<span class="variable">$result</span>))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="variable">$row</span>[<span class="string">&#x27;user_name&#x27;</span>] . <span class="string">&quot; &quot;</span> . <span class="variable">$row</span>[<span class="string">&#x27;password&#x27;</span>];</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;br&gt;&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>注</strong>:由于<code>mysqli_fetch_array()</code>函数只从结果集中取得<code>一行</code>作为关联数组,那么当查询结果为多行的情况时,便可以结合一个<code>while</code>循环将数据逐行输出,想要输出所有的多行关联数组数据,除了可以<code>mysqli_fetch_array()</code>函数结合<code>while</code>循环,还可以使用<code>mysqli_fetch_all() 函数</code>.</p>
-<p>显示结果:</p>
-<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071854145.PNG" data-fancybox="true"/></div></div>
-
-<h3 id="mysqli-fetch-all-函数"><a href="#mysqli-fetch-all-函数" class="headerlink" title="mysqli_fetch_all() 函数"></a>mysqli_fetch_all() 函数</h3><p>mysqli_fetch_all()函数从结果集中取得所有行作为关联数组,或数字数组,或二者兼有.</p>
-<hr>
-<p><strong>注意</strong>:该函数返回的字段名是区分大小写的.</p>
-<p><strong>用法:</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqli_fetch_all(result,resulttype);</span><br></pre></td></tr></table></figure>
-
-<p><strong>参数:</strong></p>
-<ul>
-<li>result<br>必需.规定由 mysqli_query()、mysqli_store_result() 或 mysqli_use_result() 返回的结果集标识符.</li>
-<li>resulttype<br>可选.规定应该产生哪种类型的数组.可以是以下值中的一个:<ul>
-<li>MYSQLI_ASSOC</li>
-<li>MYSQLI_NUM</li>
-<li>MYSQLI_BOTH</li>
-</ul>
-</li>
-</ul>
-<p><strong>返回值</strong>:<br>返回包含结果行的关联数组或数字数组.</p>
-<p><strong>例</strong>:如下例子将从<code>ksxt</code>数据库中 <code>sys_user</code> 表中选取并输出所有<code>username</code>和<code>password</code>:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$con</span>=<span class="title function_ invoke__">mysqli_connect</span>(<span class="string">&quot;127.0.0.1&quot;</span>,<span class="string">&quot;root&quot;</span>,<span class="string">&quot;root123&quot;</span>,<span class="string">&quot;ksxt&quot;</span>);</span><br><span class="line"><span class="comment">// 检测连接</span></span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">mysqli_connect_error</span>())</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;连接失败: &quot;</span> . <span class="title function_ invoke__">mysqli_connect_error</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$sql</span>=<span class="string">&quot;select * from sys_user&quot;</span>;</span><br><span class="line"><span class="variable">$result</span> = <span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$con</span>,<span class="variable">$sql</span>);</span><br><span class="line"><span class="variable">$array</span>=<span class="title function_ invoke__">mysqli_fetch_all</span>(<span class="variable">$result</span>,MYSQLI_ASSOC);</span><br><span class="line"><span class="keyword">foreach</span> (<span class="variable">$array</span> <span class="keyword">as</span> <span class="variable">$key</span> =&gt; <span class="variable">$row</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="variable">$row</span>[<span class="string">&#x27;user_name&#x27;</span>] . <span class="string">&quot; &quot;</span> . <span class="variable">$row</span>[<span class="string">&#x27;password&#x27;</span>];</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;br&gt;&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="四、SQL语句查询结果的行数"><a href="#四、SQL语句查询结果的行数" class="headerlink" title="四、SQL语句查询结果的行数"></a>四、SQL语句查询结果的行数</h2><h3 id="mysqli-num-rows-函数"><a href="#mysqli-num-rows-函数" class="headerlink" title="mysqli_num_rows() 函数"></a>mysqli_num_rows() 函数</h3><p>mysqli_num_rows() 函数返回结果集中行的数量.</p>
-<hr>
-<p><strong>语法:</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mmysqli_num_rows(result);</span><br></pre></td></tr></table></figure>
-
-<p><strong>参数:</strong></p>
-<ul>
-<li>result<br>必需.规定由 mysqli_query()、mysqli_store_result() 或 mysqli_use_result() 返回的结果集标识符.</li>
-</ul>
-<p><strong>返回值:</strong><br>结果集中行的数量.<br><strong>例</strong>:如下例子将sql语句的结果集行数输出:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$con</span>=<span class="title function_ invoke__">mysqli_connect</span>(<span class="string">&quot;127.0.0.1&quot;</span>,<span class="string">&quot;root&quot;</span>,<span class="string">&quot;root123&quot;</span>,<span class="string">&quot;ksxt&quot;</span>);</span><br><span class="line"><span class="comment">// 检测连接</span></span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">mysqli_connect_error</span>())</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;连接失败: &quot;</span> . <span class="title function_ invoke__">mysqli_connect_error</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$sql</span>=<span class="string">&quot;select * from sys_user where user_name=&#x27;康维&#x27;&quot;</span>;</span><br><span class="line"><span class="variable">$result</span> = <span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$con</span>,<span class="variable">$sql</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;查询结果的行数为:&quot;</span>.<span class="title function_ invoke__">mysqli_num_rows</span>(<span class="variable">$result</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071854512.PNG" data-fancybox="true"/></div></div>
-
-
-
-<h2 id="五、PHP-MySQL-创建数据库"><a href="#五、PHP-MySQL-创建数据库" class="headerlink" title="五、PHP MySQL 创建数据库"></a>五、PHP MySQL 创建数据库</h2><p>数据库存有一个或多个表.</p>
-<p>你需要 CREATE 权限来创建或删除 MySQL 数据库.</p>
-<p>接下来都将以面向过程的方式来执行sql语句.</p>
-<h3 id="面向过程创建数据库"><a href="#面向过程创建数据库" class="headerlink" title="面向过程创建数据库"></a>面向过程创建数据库</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$servername</span> = <span class="string">&quot;localhost&quot;</span>;</span><br><span class="line"><span class="variable">$username</span> = <span class="string">&quot;root&quot;</span>;</span><br><span class="line"><span class="variable">$password</span> = <span class="string">&quot;root123&quot;</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 创建连接</span></span><br><span class="line"><span class="variable">$conn</span> = <span class="title function_ invoke__">mysqli_connect</span>(<span class="variable">$servername</span>, <span class="variable">$username</span>, <span class="variable">$password</span>);</span><br><span class="line"><span class="comment">// 检测连接</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="variable">$conn</span>) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&quot;连接失败: &quot;</span> . <span class="title function_ invoke__">mysqli_connect_error</span>());</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 创建数据库</span></span><br><span class="line"><span class="variable">$sql</span> = <span class="string">&quot;CREATE DATABASE myDB&quot;</span>;</span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$conn</span>, <span class="variable">$sql</span>)) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;数据库创建成功&quot;</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;Error creating database: &quot;</span> . <span class="title function_ invoke__">mysqli_error</span>(<span class="variable">$conn</span>);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="title function_ invoke__">mysqli_close</span>(<span class="variable">$conn</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="六、PHP-创建-MySQL-表"><a href="#六、PHP-创建-MySQL-表" class="headerlink" title="六、PHP 创建 MySQL 表"></a>六、PHP 创建 MySQL 表</h2><p>一个数据表有一个唯一名称,并有行和列组成.</p>
-<h3 id="sql语句设计"><a href="#sql语句设计" class="headerlink" title="sql语句设计"></a>sql语句设计</h3><p>CREATE TABLE 语句用于创建 MySQL 表.</p>
-<p>创建表前,我们需要使用 <strong>use test</strong> 来选择要操作的数据库”test”:</p>
-<p>我们将创建一个名为 “user” 的表,有 9个列: “id”, “username”, “password”, “email” ,”phone”,”touxiang”,”address”,”sex”,”addtime”:</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> <span class="keyword">user</span>(</span><br><span class="line">   `id` <span class="type">int</span> <span class="keyword">not</span> <span class="keyword">null</span> auto_increment,</span><br><span class="line">   `username` <span class="type">varchar</span>(<span class="number">20</span>) <span class="keyword">not</span> <span class="keyword">null</span> <span class="keyword">unique</span>,</span><br><span class="line">   `password` <span class="type">varchar</span>(<span class="number">36</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">   `email` <span class="type">varchar</span>(<span class="number">50</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">   `phone` <span class="type">varchar</span>(<span class="number">15</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">   `touxiang` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">default</span> <span class="string">&#x27;./images/default.jpg&#x27;</span>,</span><br><span class="line">   `address` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">   `sex` <span class="type">varchar</span>(<span class="number">5</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">   `addtime` <span class="type">varchar</span>(<span class="number">100</span>) <span class="keyword">not</span> <span class="keyword">null</span>,</span><br><span class="line">   <span class="keyword">primary</span> key (id)</span><br><span class="line">   )ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8;</span><br></pre></td></tr></table></figure>
-
-<p>在设置了数据类型后,你可以为每个列指定其他选项的属性:</p>
-<ul>
-<li>NOT NULL - 每一行都必须含有值(不能为空),null 值是不允许的.</li>
-<li>DEFAULT value - 设置默认值</li>
-<li>UNSIGNED - 使用无符号数值类型,0 及正数</li>
-<li>AUTO INCREMENT - 设置 MySQL 字段的值在新增记录时每次自动增长 1</li>
-<li>PRIMARY KEY - 设置数据表中每条记录的唯一标识. 通常列的 PRIMARY KEY 设置为 ID 数值,与 AUTO_INCREMENT 一起使用.</li>
-</ul>
-<p>每个表都应该有一个主键(本列为 “id” 列),主键必须包含唯一的值.</p>
-<p>下面是两种创建数据库方式:</p>
-<h3 id="MySQLi-面向过程创建数据表"><a href="#MySQLi-面向过程创建数据表" class="headerlink" title="MySQLi - 面向过程创建数据表"></a>MySQLi - 面向过程创建数据表</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$servername</span> = <span class="string">&quot;localhost&quot;</span>;</span><br><span class="line"><span class="variable">$username</span> = <span class="string">&quot;root&quot;</span>;</span><br><span class="line"><span class="variable">$password</span> = <span class="string">&quot;root123&quot;</span>;</span><br><span class="line"><span class="variable">$dbname</span> = <span class="string">&quot;myDB&quot;</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 创建连接</span></span><br><span class="line"><span class="variable">$conn</span> = <span class="title function_ invoke__">mysqli_connect</span>(<span class="variable">$servername</span>, <span class="variable">$username</span>, <span class="variable">$password</span>, <span class="variable">$dbname</span>);</span><br><span class="line"><span class="comment">// 检测连接</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="variable">$conn</span>) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&quot;连接失败: &quot;</span> . <span class="title function_ invoke__">mysqli_connect_error</span>());</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 使用 sql 创建数据表</span></span><br><span class="line"><span class="variable">$sql</span> = <span class="string">&quot;create table user(</span></span><br><span class="line"><span class="string">   `id` int not null auto_increment,</span></span><br><span class="line"><span class="string">   `username` varchar(20) not null unique,</span></span><br><span class="line"><span class="string">   `password` varchar(36) not null,</span></span><br><span class="line"><span class="string">   `email` varchar(50) not null,</span></span><br><span class="line"><span class="string">   `phone` varchar(15) not null,</span></span><br><span class="line"><span class="string">   `touxiang` varchar(255) default &#x27;./images/default.jpg&#x27;,</span></span><br><span class="line"><span class="string">   `address` varchar(255) not null,</span></span><br><span class="line"><span class="string">   `sex` varchar(5) not null,</span></span><br><span class="line"><span class="string">   `addtime` varchar(100) not null,</span></span><br><span class="line"><span class="string">   primary key (id)</span></span><br><span class="line"><span class="string">   )ENGINE=InnoDB DEFAULT CHARSET=utf8;&quot;</span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$conn</span>, <span class="variable">$sql</span>)) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;数据表 user 创建成功&quot;</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;创建数据表错误: &quot;</span> . <span class="title function_ invoke__">mysqli_error</span>(<span class="variable">$conn</span>);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="title function_ invoke__">mysqli_close</span>(<span class="variable">$conn</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="七、PHP-MySQL-插入数据"><a href="#七、PHP-MySQL-插入数据" class="headerlink" title="七、PHP MySQL 插入数据"></a>七、PHP MySQL 插入数据</h2><p>在创建完数据库和表后,我们可以向表中添加数据.</p>
-<p>以下为一些语法规则:</p>
-<ul>
-<li>PHP 中 SQL 查询语句必须使用引号</li>
-<li>在 SQL 查询语句中的字符串值必须加引号</li>
-<li>数值的值不需要引号</li>
-<li>NULL 值不需要引号</li>
-</ul>
-<p>INSERT INTO 语句通常用于向 MySQL 表添加新的记录:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">INSERT INTO table_name (column1, column2, column3,...)</span><br><span class="line">VALUES (value1, value2, value3,...)</span><br></pre></td></tr></table></figure>
-
-<p>本地test数据库已经创建了表 “user”,表字段有: “id”, “username”, “password” ,”email”,”phone”,”touxiang”,”address”,”sex”,”addtime”. 现在,让我们开始向表填充数据.</p>
-<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071855285.PNG" data-fancybox="true"/></div></div>
-
-<h3 id="例子-向-“user”-表添加了新的记录"><a href="#例子-向-“user”-表添加了新的记录" class="headerlink" title="例子:向 “user” 表添加了新的记录"></a>例子:向 “user” 表添加了新的记录</h3><p>MySQLi - 面向过程:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$servername</span> = <span class="string">&quot;localhost&quot;</span>;</span><br><span class="line"><span class="variable">$username</span> = <span class="string">&quot;root&quot;</span>;</span><br><span class="line"><span class="variable">$password</span> = <span class="string">&quot;root123&quot;</span>;</span><br><span class="line"><span class="variable">$dbname</span> = <span class="string">&quot;myDB&quot;</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 创建连接</span></span><br><span class="line"><span class="variable">$conn</span> = <span class="title function_ invoke__">mysqli_connect</span>(<span class="variable">$servername</span>, <span class="variable">$username</span>, <span class="variable">$password</span>, <span class="variable">$dbname</span>);</span><br><span class="line"><span class="comment">// 检测连接</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="variable">$conn</span>) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&quot;Connection failed: &quot;</span> . <span class="title function_ invoke__">mysqli_connect_error</span>());</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="variable">$sql</span> = <span class="string">&quot;insert into user(username, password,email,phone,address,sex,addtime) values(&#x27;zhangsan&#x27;,&#x27;984556&#x27;,&#x27;182@qq.com&#x27;,&#x27;16521131154&#x27;,&#x27;赛客路100号&#x27;,&#x27;nan&#x27;,&#x27;2023-1-1&#x27;);&quot;</span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$conn</span>, <span class="variable">$sql</span>)) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;新记录插入成功&quot;</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;Error: &quot;</span> . <span class="variable">$sql</span> . <span class="string">&quot;&lt;br&gt;&quot;</span> . <span class="title function_ invoke__">mysqli_error</span>(<span class="variable">$conn</span>);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="title function_ invoke__">mysqli_close</span>(<span class="variable">$conn</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071855560.PNG" data-fancybox="true"/></div></div>
-
-<h2 id="八、PHP-MySQL-Delete"><a href="#八、PHP-MySQL-Delete" class="headerlink" title="八、PHP MySQL Delete"></a>八、PHP MySQL Delete</h2><hr>
-<p>DELETE 语句用于从数据库表中删除行.</p>
-<h3 id="删除数据库中的数据"><a href="#删除数据库中的数据" class="headerlink" title="删除数据库中的数据"></a>删除数据库中的数据</h3><p>DELETE FROM 语句用于从数据库表中删除记录.</p>
-<h4 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">DELETE FROM table_name</span><br><span class="line">WHERE some_column = some_value</span><br></pre></td></tr></table></figure>
-
-<p>如下删除实例</p>
-<p>数据库myDB中user表:</p>
-<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071855876.PNG" data-fancybox="true"/></div></div>
-
-<p>下面的实例删除 “user” 表中username&#x3D;’lisi’ 的记录:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$con</span>=<span class="title function_ invoke__">mysqli_connect</span>(<span class="string">&quot;127.0.0.1&quot;</span>,<span class="string">&quot;root&quot;</span>,<span class="string">&quot;root123&quot;</span>,<span class="string">&quot;myDB&quot;</span>);</span><br><span class="line"><span class="comment">// 检测连接</span></span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">mysqli_connect_errno</span>())</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;连接失败: &quot;</span> . <span class="title function_ invoke__">mysqli_connect_error</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$con</span>,<span class="string">&quot;delete from user where username=&#x27;lisi&#x27; &quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">mysqli_close</span>(<span class="variable">$con</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>结果:</p>
-<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071855792.PNG" data-fancybox="true"/></div></div>
-
-<h2 id="九、PHP-MySQL-Update"><a href="#九、PHP-MySQL-Update" class="headerlink" title="九、PHP MySQL Update"></a>九、PHP MySQL Update</h2><p>UPDATE 语句用于中修改数据库表中的数据.</p>
-<h3 id="更新数据库中的数据"><a href="#更新数据库中的数据" class="headerlink" title="更新数据库中的数据"></a>更新数据库中的数据</h3><p>UPDATE 语句用于更新数据库表中已存在的记录.</p>
-<h4 id="语法-1"><a href="#语法-1" class="headerlink" title="语法"></a>语法</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">UPDATE table_name</span><br><span class="line">SET column1=value, column2=value2,...</span><br><span class="line">WHERE some_column=some_value</span><br></pre></td></tr></table></figure>
-
-<p>如下更改实例,数据库myDB中user表:</p>
-<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071855173.PNG" data-fancybox="true"/></div></div>
-
-<p>这里更改 “user” 表中username&#x3D;’wangwu’改成’奥特曼’:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">// 连接到 MySQL 数据库</span></span><br><span class="line"><span class="variable">$servername</span> = <span class="string">&quot;localhost&quot;</span>;</span><br><span class="line"><span class="variable">$username</span> = <span class="string">&quot;root&quot;</span>;</span><br><span class="line"><span class="variable">$password</span> = <span class="string">&quot;root123&quot;</span>;</span><br><span class="line"><span class="variable">$dbname</span> = <span class="string">&quot;myDB&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable">$conn</span> = <span class="title function_ invoke__">mysqli_connect</span>(<span class="variable">$servername</span>, <span class="variable">$username</span>, <span class="variable">$password</span>, <span class="variable">$dbname</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 检查连接是否成功</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="variable">$conn</span>) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&quot;连接失败: &quot;</span> . <span class="title function_ invoke__">mysqli_connect_error</span>());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 执行更新操作</span></span><br><span class="line"><span class="variable">$sql</span> = <span class="string">&quot;UPDATE user SET username = &#x27;奥特曼&#x27; WHERE username=&#x27;wangwu&#x27;&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$conn</span>, <span class="variable">$sql</span>)) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;记录更新成功&quot;</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;更新失败: &quot;</span> . <span class="title function_ invoke__">mysqli_error</span>(<span class="variable">$conn</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 关闭连接</span></span><br><span class="line"><span class="title function_ invoke__">mysqli_close</span>(<span class="variable">$conn</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>结果:</p>
-<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071856704.PNG" data-fancybox="true"/></div></div>
-
-<h2 id="十、PHP-MySQL-查询数据"><a href="#十、PHP-MySQL-查询数据" class="headerlink" title="十、PHP MySQL 查询数据"></a>十、PHP MySQL 查询数据</h2><p><strong>语法:select 字段或表达式列表 [from 子句] [where 子句] [order by 子句] [limit 子句];</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--字段或表达式列表</span></span><br><span class="line"><span class="number">1</span>)字段,自然是来源于&quot;表&quot;,则其必然依赖于 <span class="keyword">from</span> 子句;</span><br><span class="line"><span class="number">2</span>)表达式是类似这样一个内容:<span class="number">8</span>, <span class="number">8</span><span class="operator">+</span><span class="number">3</span>, now(),concat()函数是 mysql 中的系统函数,用于&quot;连接&quot;多个字符串;</span><br><span class="line"><span class="number">3</span>)每个&quot;输出项&quot;(字段或表达式结果),都可以给其设定一个&quot;别名&quot;(字段别名)形式为:</span><br><span class="line">字段或表达式 <span class="keyword">as</span> 别名;设置别名,实际上,表的字段并没有改变,而只是改变了&quot;结果集&quot;的字段名;</span><br><span class="line"><span class="comment">--from 子句</span></span><br><span class="line"><span class="keyword">from</span> 子句表示 <span class="keyword">select</span> 部分从中&quot;取得&quot;数据的数据源<span class="comment">--其实就是表.</span></span><br><span class="line"><span class="comment">--where 子句</span></span><br><span class="line">说明:</span><br><span class="line"><span class="number">1</span>)<span class="keyword">where</span> 子句就是对 <span class="keyword">from</span> 子句中的&quot;数据源&quot;中的数据进行筛选的条件设定,筛选的机制是</span><br><span class="line">&quot;一行一行进行判断&quot;,其作用,几乎就跟各种语言中 if 语句的作用一样.</span><br><span class="line"><span class="number">2</span>)<span class="keyword">where</span> 子句依赖于 <span class="keyword">from</span> 子句;</span><br><span class="line"><span class="number">3</span>)<span class="keyword">where</span> 子句中,通常都需要使用各种&quot;运算符&quot;;</span><br><span class="line"> 算术运算符: <span class="operator">+</span> <span class="operator">-</span> <span class="operator">*</span> <span class="operator">/</span> <span class="operator">%</span></span><br><span class="line"> 比较运算符: <span class="operator">&gt;</span> <span class="operator">&gt;=</span> <span class="operator">&lt;</span> <span class="operator">&lt;=</span> <span class="operator">=</span>(等于) <span class="operator">&lt;</span> <span class="operator">&gt;</span>(不等于) <span class="operator">=</span><span class="operator">=</span>(等于) <span class="operator">!=</span>(不等于)</span><br><span class="line"> 逻辑运算符: <span class="keyword">and</span> <span class="keyword">or</span> <span class="keyword">not</span> </span><br><span class="line"><span class="number">4</span>)对 <span class="keyword">where</span> 子句的更进一步理解:</span><br><span class="line"><span class="keyword">where</span> <span class="literal">true</span> 取出全部记录</span><br><span class="line"><span class="keyword">where</span> <span class="literal">false</span> 不取出任何记录</span><br><span class="line"><span class="comment">--order by 子句</span></span><br><span class="line">它用于将前面&quot;取得&quot;的数据以设定的标准(字段)来进行排序以输出结果.</span><br><span class="line">形式:</span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> 字段 <span class="number">1</span> [<span class="keyword">asc</span><span class="operator">|</span><span class="keyword">desc</span>], 字段 <span class="number">2</span> [<span class="keyword">asc</span><span class="operator">|</span><span class="keyword">desc</span>],......</span><br><span class="line">说明:</span><br><span class="line"><span class="number">1</span>)对前面的结果数据以指定的一个或多个字段排序;</span><br><span class="line"><span class="number">2</span>)排序可以指定正序(<span class="keyword">asc</span>,默认值)或倒序(<span class="keyword">desc</span>);</span><br><span class="line"><span class="number">3</span>)多个字段的排序,都是在前一个字段排序基础上,如果还有&quot;相等值&quot;,才继续以后续字段排序;</span><br><span class="line"><span class="comment">--limit 子句</span></span><br><span class="line">含义:</span><br><span class="line">它用于将&quot;前述取得的数据&quot;,按指定的行取出来:从第几行开始取出多少行;</span><br><span class="line">形式:limit 起始行号,要取出的行数;</span><br><span class="line">说明:</span><br><span class="line"><span class="number">1.</span>起始行号都是从 <span class="number">0</span> 开始算起的;</span><br><span class="line"><span class="number">2.</span>起始行号跟数据中的任何一个字段(比如 id)没有关系;</span><br><span class="line"><span class="number">3.</span>要取出的行数也是一个数字,自然应该是大于 <span class="number">0</span> 的;</span><br><span class="line"><span class="number">4.</span>有一个简略形式:limit 行数; 表示直接从第 <span class="number">0</span> 行开始取出指定的行数,它相当于limit <span class="number">0</span>, 行数;</span><br></pre></td></tr></table></figure>
-
-<p>下面的实例读取 “user” 表中存储的所有数据,并根据 “username” 列对结果进行排序:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$con</span>=<span class="title function_ invoke__">mysqli_connect</span>(<span class="string">&quot;127.0.0.1&quot;</span>,<span class="string">&quot;root&quot;</span>,<span class="string">&quot;root123&quot;</span>,<span class="string">&quot;myDB&quot;</span>);</span><br><span class="line"><span class="comment">// 检测连接</span></span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">mysqli_connect_errno</span>())</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;连接失败: &quot;</span> . <span class="title function_ invoke__">mysqli_connect_error</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$result</span> = <span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$con</span>,<span class="string">&quot;select * from user order by username&quot;</span>);</span><br><span class="line"><span class="keyword">while</span>(<span class="variable">$row</span> = <span class="title function_ invoke__">mysqli_fetch_array</span>(<span class="variable">$result</span>))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="variable">$row</span>[<span class="string">&#x27;username&#x27;</span>];</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot; 密码:&quot;</span> . <span class="variable">$row</span>[<span class="string">&#x27;password&#x27;</span>];</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot; 邮箱:&quot;</span> . <span class="variable">$row</span>[<span class="string">&#x27;email&#x27;</span>];</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot; 手机号:&quot;</span> . <span class="variable">$row</span>[<span class="string">&#x27;phone&#x27;</span>];</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot; 性别:&quot;</span> . <span class="variable">$row</span>[<span class="string">&#x27;sex&#x27;</span>];</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;br&gt;&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">mysqli_close</span>(<span class="variable">$con</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>结果显示:</p>
-<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071856092.PNG" data-fancybox="true"/></div></div>
-
-
-<div class="article-footer fs14">
-    <section id="license">
-      <div class="header"><span>许可协议</span></div>
-      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
-</div>
-    </section>
-    
-    <section id="share">
-      <div class="header"><span>分享文章</span></div>
-      <div class="body">
-        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2023/09/07/f2a0f176/" /></div>
-        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2023/09/07/f2a0f176/&title=PHP-MySQL - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071857086.png&summary=
-    总字符数: 11.24K 
-    
-    
-    代码: 7.08K, 文本: 2.06K
-    
-    
-    预计阅读时间: 40 分钟
-    
-    
-
-一、PHP连接MySQL数据库PHP 编程语言要..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=PHP-MySQL - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2023/09/07/f2a0f176/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
-        
-        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
-          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2023/09/07/f2a0f176/"/>
-        </div>
-        
-      </div>
-    </section>
-    </div>
-</article>
-<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/08/c3682c7d/">PHP-留言板项目</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/06/d0324d08/">PHP-文件上传</a></div></section></div>
-
-<div class="related-wrap" id="related-posts">
-    <section class='header'>
-      <div class='title cap theme'>您可能感兴趣的文章</div>
-    </section>
-    <section class='body'>
-    <div class="related-posts"><a class="item" href="\2022\06\23\92579896\" title="PHP-JSON 字符串转义问题"><span class="title">PHP-JSON 字符串转义问题</span></a><a class="item" href="\2023\09\06\d0324d08\" title="PHP-文件上传"><span class="title">PHP-文件上传</span></a><a class="item" href="\2023\09\05\5a76691e\" title="PHP-表单"><span class="title">PHP-表单</span></a><a class="item" href="\2023\09\02\20d7e033\" title="PHP-从入门到精通(上)"><span class="title">PHP-从入门到精通(上)</span></a><a class="item" href="\2021\09\26\1b012da8\" title="CorePress主题优化"><span class="title">CorePress主题优化</span></a></div></section></div>
-
-
-  <div class="related-wrap md-text" id="comments">
-    <section class='header cmt-title cap theme'>
-      快来参与讨论吧
-    </section>
-    <section class='body cmt-body waline'>
-      
-
-<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
-
-    </section>
-  </div>
-
-
-
-<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
-  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
-  <!--不蒜子计数器-->
-  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
-  <br>
-  <span id="runtime_span"></span>
-  <script type="text/javascript">
-    // JavaScript for showing runtime here
-  </script>
-</center>
-<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
-  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
-  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
-</div>
-<div class="NewYear"></div>
-</div></footer>
-<div class='float-panel mobile-only blur' style='display:none'>
-  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
-    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
-  </button>
-</div>
-<div class="main-mask" onclick="sidebar.toggle()"></div></div></div><div class="scripts">
-<script type="text/javascript">
-  const stellar = {
-    // 懒加载 css https://github.com/filamentgroup/loadCSS
-    loadCSS: (href, before, media, attributes) => {
-      var doc = window.document;
-      var ss = doc.createElement("link");
-      var ref;
-      if (before) {
-        ref = before;
-      } else {
-        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
-        ref = refs[refs.length - 1];
-      }
-      var sheets = doc.styleSheets;
-      if (attributes) {
-        for (var attributeName in attributes) {
-          if (attributes.hasOwnProperty(attributeName)) {
-            ss.setAttribute(attributeName, attributes[attributeName]);
-          }
-        }
-      }
-      ss.rel = "stylesheet";
-      ss.href = href;
-      ss.media = "only x";
-      function ready(cb) {
-        if (doc.body) {
-          return cb();
-        }
-        setTimeout(function () {
-          ready(cb);
-        });
-      }
-      ready(function () {
-        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
-      });
-      var onloadcssdefined = function (cb) {
-        var resolvedHref = ss.href;
-        var i = sheets.length;
-        while (i--) {
-          if (sheets[i].href === resolvedHref) {
-            return cb();
-          }
-        }
-        setTimeout(function () {
-          onloadcssdefined(cb);
-        });
-      };
-      function loadCB() {
-        if (ss.addEventListener) {
-          ss.removeEventListener("load", loadCB);
-        }
-        ss.media = media || "all";
-      }
-      if (ss.addEventListener) {
-        ss.addEventListener("load", loadCB);
-      }
-      ss.onloadcssdefined = onloadcssdefined;
-      onloadcssdefined(loadCB);
-      return ss;
-    },
-
-    // 从 butterfly 和 volantis 获得灵感
-    loadScript: (src, opt) => new Promise((resolve, reject) => {
-      var script = document.createElement('script');
-      if (src.startsWith('/')){
-        src = stellar.config.root + src.substring(1);
-      }
-      script.src = src;
-      if (opt) {
-        for (let key of Object.keys(opt)) {
-          script[key] = opt[key]
-        }
-      } else {
-        // 默认异步，如果需要同步，第二个参数传入 {} 即可
-        script.async = true
-      }
-      script.onerror = reject
-      script.onload = script.onreadystatechange = function() {
-        const loadState = this.readyState
-        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
-        script.onload = script.onreadystatechange = null
-        resolve()
-      }
-      document.head.appendChild(script)
-    }),
-
-    // https://github.com/jerryc127/hexo-theme-butterfly
-    jQuery: (fn) => {
-      if (typeof jQuery === 'undefined') {
-        stellar.loadScript(stellar.plugins.jQuery).then(fn)
-      } else {
-        fn()
-      }
-    }
-  };
-  stellar.version = '1.26.8';
-  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.26.8';
-  stellar.config = {
-    date_suffix: {
-      just: '刚刚',
-      min: '分钟前',
-      hour: '小时前',
-      day: '天前',
-      month: '个月前',
-    },
-    root : '/',
-  };
-
-  // required plugins (only load if needs)
-  stellar.plugins = {
-    jQuery: 'https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js'
-  };
-
-  if ('local_search') {
-    stellar.search = {};
-    stellar.search.service = 'local_search';
-    if (stellar.search.service == 'local_search') {
-      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"});
-      stellar.search[stellar.search.service] = service_obj;
-    }
+.l_body {
+  display: flex;
+  margin: auto;
+  padding: 0 var(--gap-l);
+  justify-content: center;
+  font-size: var(--fsp);
+}
+.l_body .l_left {
+  z-index: 8;
+  width: var(--width-left);
+  flex-shrink: 0;
+  position: sticky;
+  position: -webkit-sticky;
+  top: 8px;
+}
+.l_body .l_main {
+  flex-shrink: 1;
+  flex-grow: 1;
+  width: 320px;
+  max-width: var(--width-main);
+}
+.main-mask {
+  position: fixed;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.2);
+  z-index: 9;
+  opacity: 0;
+  trans1: opacity;
+}
+@media screen and (max-width: $device-mobile-max) {
+  .mobile-only {
+    display: block !important;
   }
-
-  // stellar js
-  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js","memos":"/js/plugins/memos.js","marked":"/js/plugins/marked.js"});
-
-  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
-  // optional plugins
-  if ('true' == 'true') {
-    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js","transition":"fade"});
+  .l_body {
+    padding: 0;
   }
-  if ('true' == 'true') {
-    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@10.3/swiper-bundle.min.css","js":"https://unpkg.com/swiper@10.3/swiper-bundle.min.js"});
+  .l_body .l_left {
+    position: fixed;
+    transform: translateX(-320px);
+    margin: 0;
+    left: 8px;
+    box-shadow: $boxshadow-card-float;
+    z-index: 10;
   }
-  if ('' == 'true') {
-    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://cdn.bootcdn.net/ajax/libs/scrollReveal.js/4.0.9/scrollreveal.min.js","distance":"16px","duration":800,"interval":100,"scale":1});
+  .l_body .l_main {
+    max-width: 100%;
   }
-  if ('true' == 'true') {
-    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","flying_pages":"https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"});
+  .l_body.mobile .l_left {
+    transition: transform 0.38s ease-out;
   }
-  if ('true' == 'true') {
-    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js","css":"https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css","selector":".swiper-slide img, .gallery img ,#waline_container .vcontent img"});
+  .l_body.mobile.sidebar .l_left {
+    transform: translateX(0px);
   }
-  if ('false' == 'true') {
-    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  .l_body.mobile.sidebar .main-mask {
+    opacity: 1;
+    pointer-events: inherit;
   }
-  if ('true' == 'true') {
-    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied","toast":"复制成功"});
-  }
-</script>
-
-<!-- required -->
-<script src="/js/main.js?v=1.26.8" async></script>
-
-<!-- optional -->
-
-  <script>
-  function load_comment(){
-    if(!document.getElementById("waline_container"))return;
-    stellar.loadCSS('https://unpkg.com/@waline/client@2.14.1/dist/waline.css');
-    stellar.loadScript('https://unpkg.com/@waline/client@2.14.1/dist/waline.js', {defer:true}).then(function () {
-      const el = document.getElementById("waline_container");
-      var path = el.getAttribute('comment_id');
-      if (!path) {
-        path = decodeURI(window.location.pathname);
-      }
-      Waline.init(Object.assign({"js":"https://unpkg.com/@waline/client@2.14.1/dist/waline.js","css":"https://unpkg.com/@waline/client@2.14.1/dist/waline.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"meta":["nick","mail","link"],"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
-        el: '#waline_container',
-        path: path,
-        
-      }));
-    });
-  }
-  window.addEventListener('DOMContentLoaded', (event) => {
-    console.log('DOM fully loaded and parsed');
-    load_comment();
-  });
-
-</script>
-
-
-
-
-
-
-
-<!-- inject -->
-<script type="text/javascript" src="/js/darkmode.js"></script>
-</div></body></html>
+}

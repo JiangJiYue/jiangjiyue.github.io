@@ -1,430 +1,62 @@
-
-<!DOCTYPE html><html lang="zh-CN">
-
-<head>
-  <meta charset="utf-8">
-  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.26.8" theme-name="Stellar" theme-version="1.26.8">
-  
-  <meta name="generator" content="Hexo 7.1.1">
-  <meta http-equiv='x-dns-prefetch-control' content='on' />
-  
-  <meta name="renderer" content="webkit">
-  <meta name="force-rendering" content="webkit">
-  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-  <meta name="HandheldFriendly" content="True" >
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="theme-color" content="#f8f8f8">
-  
-  <title>ELK收集nginx日志并展示来源IP地图 - SafeKiller Zone</title>
-
-  
-    <meta name="description" content="总字符数: 4.91K                代码: 3.39K, 文本: 0.33K               预计阅读时间: 16 分钟            修改Nginx配置文件1234567891011121314151617181920# 修改日志模式 # json 为规则名字 escape&#x3D;json 设置日志文件格式为json     log_format jso">
-<meta property="og:type" content="article">
-<meta property="og:title" content="ELK收集nginx日志并展示来源IP地图">
-<meta property="og:url" content="https://jiangjiyue.github.io/2021/09/19/2dd5e334/index.html">
-<meta property="og:site_name" content="SafeKiller Zone">
-<meta property="og:description" content="总字符数: 4.91K                代码: 3.39K, 文本: 0.33K               预计阅读时间: 16 分钟            修改Nginx配置文件1234567891011121314151617181920# 修改日志模式 # json 为规则名字 escape&#x3D;json 设置日志文件格式为json     log_format jso">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://github-readme-stats.xaoxuu.com/api/pin/?username=texnikru&repo=GeoLite2-Database&theme=dark&show_owner=true">
-<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/geoiptype..webp">
-<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana1.-1.webp">
-<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana2.-1.webp">
-<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana3.-1.webp">
-<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana4.-1.webp">
-<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana5.-1.webp">
-<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana6.-1.webp">
-<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana7.-1.webp">
-<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana8..webp">
-<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana9..webp">
-<meta property="article:published_time" content="2021-09-19T03:50:41.000Z">
-<meta property="article:modified_time" content="2024-02-10T12:50:17.389Z">
-<meta property="article:author" content="Kill3r">
-<meta property="article:tag" content="应急响应">
-<meta property="article:tag" content="日志分析">
-<meta property="article:tag" content="ELK">
-<meta property="article:tag" content="数据可视化">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://github-readme-stats.xaoxuu.com/api/pin/?username=texnikru&repo=GeoLite2-Database&theme=dark&show_owner=true">
-  
-  
-  
-  <meta name="keywords" content="应急响应,日志分析,ELK,数据可视化">
-
-  <!-- feed -->
-  
-    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
-  
-
-  <link rel="stylesheet" href="/css/main.css?v=1.26.8">
-
-  
-    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
-  
-
-  
-
-  
-  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/newYear.css"><link rel="stylesheet" href="/css/darkmode.css">
-</head>
-<body>
-
-<div class="l_body content tech" id="start" layout="post" ><aside class="l_left"><div class="sidebar-container">
-
-
-<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div></header>
-
-<div class="nav-area">
-<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
-
-
-<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="探索" href="/notes/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/about/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
-</div>
-<div class="widgets">
-
-<widget class="widget-wrapper toc single" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9Nginx%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-text">修改Nginx配置文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E9%AB%98%E5%BE%B7%E5%9C%B0%E5%9B%BE"><span class="toc-text">添加高德地图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AElogstash"><span class="toc-text">配置logstash</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#geoip"><span class="toc-text">geoip</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kibana%E5%8A%A0%E8%BD%BD%E5%9C%B0%E5%9B%BE"><span class="toc-text">Kibana加载地图</span></a></li></ol></div></div></widget>
-
-
-
-
-
-
-
-<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2024/02/12/7564e3ff/"><span class="title">Security-全方位探索网络安全</span></a><a class="item title" href="/2024/02/10/c44eef61/"><span class="title">Security-网安专业术语篇</span></a><a class="item title" href="/2020/06/02/5fa17f4e/"><span class="title">二. Linux从入门到精通(上)</span></a><a class="item title" href="/2024/02/19/693474ed/"><span class="title">Linux-Shell编程从0到1</span></a><a class="item title" href="/2021/09/25/29286f5a/"><span class="title">Linux-定时备份网站数据文件到阿里云盘</span></a></div></widget>
-</div>
-<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
-</div></aside><div class="l_main" id="main">
-
-
-
-
-
-<div class="article banner top">
-  <div class="content">
-    
-<div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
-<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/">应急响应</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/">日志分析</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2021-09-19T03:50:41.000Z">2021-09-19</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-02-10T12:50:17.389Z">2024-02-10</time></span></div></div>
-</div>
-
-    
-    <div class="bottom">
-      <div class="text-area">
-        <h1 class="text title"><span>ELK收集nginx日志并展示来源IP地图</span></h1>
-      </div>
-    </div>
-    
-  </div>
-  </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
-    <p>总字符数: 4.91K </p>
-    </div>
-    <div class="cell" style="">
-    <p>代码: 3.39K, 文本: 0.33K</p>
-    </div>
-    <div class="cell" style="">
-    <p>预计阅读时间: 16 分钟</p>
-    </div>
-    </div>
-
-<h2 id="修改Nginx配置文件"><a href="#修改Nginx配置文件" class="headerlink" title="修改Nginx配置文件"></a>修改Nginx配置文件</h2><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 修改日志模式</span></span><br><span class="line"> <span class="comment"># json 为规则名字 escape=json 设置日志文件格式为json</span></span><br><span class="line">     <span class="attribute">log_format</span> json escape=json <span class="string">&#x27;&#123;&quot;<span class="variable">@timestamp</span>&quot;:&quot;<span class="variable">$time_iso8601</span>&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;domain&quot;:&quot;<span class="variable">$host</span>&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;host&quot;:&quot;<span class="variable">$server_addr</span>&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;clientip&quot;:&quot;<span class="variable">$remote_addr</span>&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;remote_user&quot;:&quot;<span class="variable">$remote_user</span>&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;request&quot;:&quot;<span class="variable">$request</span>&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;request_method&quot;:&quot;<span class="variable">$request_method</span>&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;uri&quot;:&quot;<span class="variable">$uri</span>&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;request_time&quot;:&quot;<span class="variable">$request_time</span>&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;status&quot;:&quot;<span class="variable">$status</span>&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;http_referrer&quot;:&quot;<span class="variable">$http_referer</span>&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;body_bytes_sent&quot;:&quot;<span class="variable">$body_bytes_sent</span>&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;xff&quot;:&quot;<span class="variable">$http_x_forwarded_for</span>&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;http_user_agent&quot;:&quot;<span class="variable">$http_user_agent</span>&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;upstream_addr&quot;:&quot;<span class="variable">$upstream_addr</span>&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;upstream_response_time&quot;:&quot;<span class="variable">$upstream_response_time</span>&quot;&#125;&#x27;</span>;</span><br><span class="line"> <span class="comment"># 将上方的规则名称写到最后</span></span><br><span class="line"> <span class="attribute">access_log</span> /var/log/nginx/access.log json;</span><br></pre></td></tr></table></figure>
-
-<h2 id="添加高德地图"><a href="#添加高德地图" class="headerlink" title="添加高德地图"></a>添加高德地图</h2><p>1.编辑kibana配置文件kibana.yml,最后面添加</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认情况下kibana使用&quot;Elastic Maps Service&quot;显示地图模块,要使用其他服务提供商的模块可以通过修改&quot;map.tilemap.url&quot;实现,下面是修改为高德地图</span></span><br><span class="line"> <span class="attr">map.tilemap.url:</span> <span class="string">&#x27;http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=7&amp;x=&#123;x&#125;&amp;y=&#123;y&#125;&amp;z=&#123;z&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="配置logstash"><a href="#配置logstash" class="headerlink" title="配置logstash"></a>配置logstash</h2><div class="tag-plugin ghcard"><a class="ghcard" rel="external nofollow noopener noreferrer noopener" target="_blank" href="https://github.com/texnikru/GeoLite2-Database"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://github-readme-stats.xaoxuu.com/api/pin/?username=texnikru&repo=GeoLite2-Database&theme=dark&show_owner=true"/></a></div>
-
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入工作目录</span></span><br><span class="line"><span class="attribute">cd</span> /opt</span><br><span class="line"><span class="comment"># 下载GeoLite2数据库</span></span><br><span class="line">wget https://raw.githubusercontent.com/texnikru/GeoLite2-Database/master/GeoLite2-City.mmdb.gz</span><br><span class="line"><span class="comment"># 解压文件</span></span><br><span class="line">gunzip GeoLite2-City.mmdb.gz</span><br><span class="line"><span class="comment"># 将GeoLite2移动到logstash目录下</span></span><br><span class="line">mv GeoLite2-City.mmdb /usr/local/elk/logstash/config/</span><br><span class="line"><span class="comment"># 修改logstash配置文件</span></span><br><span class="line">vim /usr/local/elk/logstash/default.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># 监听5044端口作为输入</span></span><br><span class="line">input &#123;</span><br><span class="line"> <span class="section">beats</span> &#123;</span><br><span class="line">   <span class="attribute">port</span> =&gt; <span class="string">&quot;5044&quot;</span></span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># 数据过滤</span></span><br><span class="line">filter &#123;</span><br><span class="line"> <span class="section">json</span> &#123;</span><br><span class="line">   <span class="attribute">source</span> =&gt; <span class="string">&quot;message&quot;</span></span><br><span class="line">    remove_field =&gt; [ <span class="string">&quot;message&quot;</span> ]</span><br><span class="line">   <span class="comment">#删除重复的message收集.</span></span><br><span class="line"> &#125;</span><br><span class="line"> mutate &#123;</span><br><span class="line">     <span class="attribute">split</span> =&gt; &#123; &quot;request&quot; =&gt; &quot; &quot; &#125;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="section">mutate</span> &#123;</span><br><span class="line">   <span class="attribute">add_field</span> =&gt; &#123;</span><br><span class="line">  &quot;httpversion&quot; =&gt; &quot;%&#123;[request][2]&#125;&quot;</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="section">mutate</span> &#123;                           <span class="comment">#这里应该是选取xff,这里没有可以删掉,</span></span><br><span class="line">     <span class="attribute">split</span> =&gt; &#123; &quot;xff&quot; =&gt; &quot;,&quot; &#125;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="section">mutate</span> &#123;</span><br><span class="line">   <span class="attribute">add_field</span> =&gt; &#123;</span><br><span class="line">        &quot;realip&quot; =&gt; &quot;%&#123;[xff][0]&#125;&quot;</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="section">geoip</span> &#123;</span><br><span class="line">    <span class="attribute">source</span> =&gt; <span class="string">&quot;clientip&quot;</span></span><br><span class="line">    target =&gt; <span class="string">&quot;geoip&quot;</span></span><br><span class="line">    <span class="comment">#填写自己的GeoLite2数据库目录</span></span><br><span class="line">     database =&gt; <span class="string">&quot;/usr/local/elk/logstash/config/GeoLite2-City.mmdb&quot;</span></span><br><span class="line">    <span class="comment">#获取经纬度</span></span><br><span class="line">    add_field =&gt; [<span class="string">&quot;[geoip][coordinates]&quot;</span>,<span class="string">&quot;%&#123;[geoip][longitude]&#125;&quot;</span>]</span><br><span class="line">    add_field =&gt; [<span class="string">&quot;[geoip][coordinates]&quot;</span>,<span class="string">&quot;%&#123;[geoip][latitude]&#125;&quot;</span>]</span><br><span class="line"> &#125;</span><br><span class="line"> mutate &#123;</span><br><span class="line">   <span class="attribute">convert</span> =&gt; [ <span class="string">&quot;[geoip][coordinates]&quot;</span>, <span class="string">&quot;float&quot;</span> ]</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># 这是ElasticSerach服务的监听端口</span></span><br><span class="line">output &#123;</span><br><span class="line"> <span class="section">elasticsearch</span> &#123;</span><br><span class="line">   <span class="attribute">hosts</span> =&gt; [<span class="string">&quot;192.168.10.129:9200&quot;</span>]</span><br><span class="line">   index =&gt;  <span class="string">&quot;nginx-%&#123;+YYYY.MM.dd&#125;&quot;</span></span><br><span class="line">   <span class="comment">#根据项目名称动态创建索引</span></span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="geoip"><a href="#geoip" class="headerlink" title="geoip"></a>geoip</h2><p>geoip 是 object 类型,它有几个子字段,含义如下:</p>
-<ul>
-<li>geoip.city_name:城市</li>
-<li>geoip.continent_name:大陆名称</li>
-<li>geoip.country_iso_code:国家编码</li>
-<li>geoip.location:经纬度坐标,必须是:geo_point 类型</li>
-<li>geoip.region_iso_code:地域编码</li>
-<li>geoip.region_name:地域名称</li>
-</ul>
-<p>扩展程序是谷歌的</p>
-<div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://chrome.google.com/webstore/detail/elasticsearch-head/ffmkiejjmecolpfloofpjologoblkegm?utm_source=chrome-ntp-icon" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://chrome.google.com/webstore/detail/elasticsearch-head/ffmkiejjmecolpfloofpjologoblkegm?utm_source=chrome-ntp-icon</span></div><div class="bottom"><span class="title">https://chrome.google.com/webstore/detail/elasticsearch-head/ffmkiejjmecolpfloofpjologoblkegm?utm_source=chrome-ntp-icon</span><span class="cap desc footnote"></span></div></a></div>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建一个名为geoip的模板</span></span><br><span class="line">http://192.168.10.129:9200/_template/geoip/</span><br><span class="line"></span><br><span class="line"><span class="comment"># index_patterns:索引名称</span></span><br><span class="line"><span class="comment">#  ignore_malformed 如果true,格式错误的地理位置被忽略.如果false(默认),格式错误的地理位置引发异常并拒绝整个文档</span></span><br><span class="line">此字段需要配置成<span class="literal">true</span>,以防地理格式错误导致文档被拒绝</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;index_patterns&quot;</span>: [</span><br><span class="line">    <span class="string">&quot;nginx*&quot;</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="string">&quot;order&quot;</span>: 10,</span><br><span class="line">  <span class="string">&quot;mappings&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;properties&quot;</span>: &#123;</span><br><span class="line">      <span class="string">&quot;clientip&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;type&quot;</span>: <span class="string">&quot;ip&quot;</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="string">&quot;geoip&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;dynamic&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&quot;type&quot;</span>: <span class="string">&quot;object&quot;</span>,</span><br><span class="line">        <span class="string">&quot;properties&quot;</span>: &#123;</span><br><span class="line">          <span class="string">&quot;location&quot;</span>: &#123;</span><br><span class="line">            <span class="string">&quot;type&quot;</span>: <span class="string">&quot;geo_point&quot;</span>,</span><br><span class="line">            <span class="string">&quot;ignore_malformed&quot;</span>: <span class="string">&quot;true&quot;</span></span><br><span class="line">          &#125;,</span><br><span class="line">          <span class="string">&quot;coordinates&quot;</span>: &#123;</span><br><span class="line">            <span class="string">&quot;type&quot;</span>: <span class="string">&quot;geo_point&quot;</span>,</span><br><span class="line">            <span class="string">&quot;ignore_malformed&quot;</span>: <span class="string">&quot;true&quot;</span></span><br><span class="line">          &#125;,</span><br><span class="line">          <span class="string">&quot;ip&quot;</span>: &#123;</span><br><span class="line">            <span class="string">&quot;type&quot;</span>: <span class="string">&quot;ip&quot;</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">&quot;aliases&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;nginx&quot;</span>: &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>以下就代表模板创建成功</p>
-<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/geoiptype..webp" data-fancybox="true"/></div></div>
-
-<h2 id="Kibana加载地图"><a href="#Kibana加载地图" class="headerlink" title="Kibana加载地图"></a>Kibana加载地图</h2><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana1.-1.webp" data-fancybox="true"/></div></div>
-<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana2.-1.webp" data-fancybox="true"/></div></div>
-<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana3.-1.webp" data-fancybox="true"/></div></div>
-<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana4.-1.webp" data-fancybox="true"/></div></div>
-<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana5.-1.webp" data-fancybox="true"/></div></div>
-<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana6.-1.webp" data-fancybox="true"/></div></div>
-<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana7.-1.webp" data-fancybox="true"/></div></div>
-<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana8..webp" data-fancybox="true"/></div></div>
-<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/kibana9..webp" data-fancybox="true"/></div></div>
-<div class="article-footer fs14">
-    <section id="license">
-      <div class="header"><span>许可协议</span></div>
-      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
-</div>
-    </section>
-    
-    <section id="share">
-      <div class="header"><span>分享文章</span></div>
-      <div class="body">
-        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2021/09/19/2dd5e334/" /></div>
-        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2021/09/19/2dd5e334/&title=ELK收集nginx日志并展示来源IP地图 - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401271204570.png&summary=
-    总字符数: 4.91K 
-    
-    
-    代码: 3.39K, 文本: 0.33K
-    
-    
-    预计阅读时间: 16 分钟
-    
-    
-
-修改Nginx配置文件12345678910111..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=ELK收集nginx日志并展示来源IP地图 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2021/09/19/2dd5e334/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
-        
-        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
-          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2021/09/19/2dd5e334/"/>
-        </div>
-        
-      </div>
-    </section>
-    </div>
-</article>
-<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2021/09/24/bee72ce8/">Linux-MySQL开启慢查询日志</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2021/09/13/a68cee5c/">救护概论</a></div></section></div>
-
-<div class="related-wrap" id="related-posts">
-    <section class='header'>
-      <div class='title cap theme'>您可能感兴趣的文章</div>
-    </section>
-    <section class='body'>
-    <div class="related-posts"><a class="item" href="\2022\09\06\6e6b1513\" title="基于Awstats的Apache日志分析"><span class="title">基于Awstats的Apache日志分析</span></a><a class="item" href="\2023\07\13\d9d69399\" title="攻防演练事件研判篇"><span class="title">攻防演练事件研判篇</span></a><a class="item" href="\2021\05\24\f21126ec\" title="Python-数据分析及可视化"><span class="title">Python-数据分析及可视化</span></a></div></section></div>
-
-
-  <div class="related-wrap md-text" id="comments">
-    <section class='header cmt-title cap theme'>
-      快来参与讨论吧
-    </section>
-    <section class='body cmt-body waline'>
-      
-
-<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
-
-    </section>
-  </div>
-
-
-
-<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
-  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
-  <!--不蒜子计数器-->
-  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
-  <br>
-  <span id="runtime_span"></span>
-  <script type="text/javascript">
-    // JavaScript for showing runtime here
-  </script>
-</center>
-<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
-  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
-  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
-</div>
-<div class="NewYear"></div>
-</div></footer>
-<div class='float-panel mobile-only blur' style='display:none'>
-  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
-    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
-  </button>
-</div>
-<div class="main-mask" onclick="sidebar.toggle()"></div></div></div><div class="scripts">
-<script type="text/javascript">
-  const stellar = {
-    // 懒加载 css https://github.com/filamentgroup/loadCSS
-    loadCSS: (href, before, media, attributes) => {
-      var doc = window.document;
-      var ss = doc.createElement("link");
-      var ref;
-      if (before) {
-        ref = before;
-      } else {
-        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
-        ref = refs[refs.length - 1];
-      }
-      var sheets = doc.styleSheets;
-      if (attributes) {
-        for (var attributeName in attributes) {
-          if (attributes.hasOwnProperty(attributeName)) {
-            ss.setAttribute(attributeName, attributes[attributeName]);
-          }
-        }
-      }
-      ss.rel = "stylesheet";
-      ss.href = href;
-      ss.media = "only x";
-      function ready(cb) {
-        if (doc.body) {
-          return cb();
-        }
-        setTimeout(function () {
-          ready(cb);
-        });
-      }
-      ready(function () {
-        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
-      });
-      var onloadcssdefined = function (cb) {
-        var resolvedHref = ss.href;
-        var i = sheets.length;
-        while (i--) {
-          if (sheets[i].href === resolvedHref) {
-            return cb();
-          }
-        }
-        setTimeout(function () {
-          onloadcssdefined(cb);
-        });
-      };
-      function loadCB() {
-        if (ss.addEventListener) {
-          ss.removeEventListener("load", loadCB);
-        }
-        ss.media = media || "all";
-      }
-      if (ss.addEventListener) {
-        ss.addEventListener("load", loadCB);
-      }
-      ss.onloadcssdefined = onloadcssdefined;
-      onloadcssdefined(loadCB);
-      return ss;
-    },
-
-    // 从 butterfly 和 volantis 获得灵感
-    loadScript: (src, opt) => new Promise((resolve, reject) => {
-      var script = document.createElement('script');
-      if (src.startsWith('/')){
-        src = stellar.config.root + src.substring(1);
-      }
-      script.src = src;
-      if (opt) {
-        for (let key of Object.keys(opt)) {
-          script[key] = opt[key]
-        }
-      } else {
-        // 默认异步，如果需要同步，第二个参数传入 {} 即可
-        script.async = true
-      }
-      script.onerror = reject
-      script.onload = script.onreadystatechange = function() {
-        const loadState = this.readyState
-        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
-        script.onload = script.onreadystatechange = null
-        resolve()
-      }
-      document.head.appendChild(script)
-    }),
-
-    // https://github.com/jerryc127/hexo-theme-butterfly
-    jQuery: (fn) => {
-      if (typeof jQuery === 'undefined') {
-        stellar.loadScript(stellar.plugins.jQuery).then(fn)
-      } else {
-        fn()
-      }
-    }
-  };
-  stellar.version = '1.26.8';
-  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.26.8';
-  stellar.config = {
-    date_suffix: {
-      just: '刚刚',
-      min: '分钟前',
-      hour: '小时前',
-      day: '天前',
-      month: '个月前',
-    },
-    root : '/',
-  };
-
-  // required plugins (only load if needs)
-  stellar.plugins = {
-    jQuery: 'https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js'
-  };
-
-  if ('local_search') {
-    stellar.search = {};
-    stellar.search.service = 'local_search';
-    if (stellar.search.service == 'local_search') {
-      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"});
-      stellar.search[stellar.search.service] = service_obj;
-    }
+.l_body {
+  display: flex;
+  margin: auto;
+  padding: 0 var(--gap-l);
+  justify-content: center;
+  font-size: var(--fsp);
+}
+.l_body .l_left {
+  z-index: 8;
+  width: var(--width-left);
+  flex-shrink: 0;
+  position: sticky;
+  position: -webkit-sticky;
+  top: 8px;
+}
+.l_body .l_main {
+  flex-shrink: 1;
+  flex-grow: 1;
+  width: 320px;
+  max-width: var(--width-main);
+}
+.main-mask {
+  position: fixed;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.2);
+  z-index: 9;
+  opacity: 0;
+  trans1: opacity;
+}
+@media screen and (max-width: $device-mobile-max) {
+  .mobile-only {
+    display: block !important;
   }
-
-  // stellar js
-  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js","memos":"/js/plugins/memos.js","marked":"/js/plugins/marked.js"});
-
-  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
-  // optional plugins
-  if ('true' == 'true') {
-    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js","transition":"fade"});
+  .l_body {
+    padding: 0;
   }
-  if ('true' == 'true') {
-    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@10.3/swiper-bundle.min.css","js":"https://unpkg.com/swiper@10.3/swiper-bundle.min.js"});
+  .l_body .l_left {
+    position: fixed;
+    transform: translateX(-320px);
+    margin: 0;
+    left: 8px;
+    box-shadow: $boxshadow-card-float;
+    z-index: 10;
   }
-  if ('' == 'true') {
-    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://cdn.bootcdn.net/ajax/libs/scrollReveal.js/4.0.9/scrollreveal.min.js","distance":"16px","duration":800,"interval":100,"scale":1});
+  .l_body .l_main {
+    max-width: 100%;
   }
-  if ('true' == 'true') {
-    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","flying_pages":"https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"});
+  .l_body.mobile .l_left {
+    transition: transform 0.38s ease-out;
   }
-  if ('true' == 'true') {
-    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js","css":"https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css","selector":".swiper-slide img, .gallery img ,#waline_container .vcontent img"});
+  .l_body.mobile.sidebar .l_left {
+    transform: translateX(0px);
   }
-  if ('false' == 'true') {
-    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  .l_body.mobile.sidebar .main-mask {
+    opacity: 1;
+    pointer-events: inherit;
   }
-  if ('true' == 'true') {
-    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied","toast":"复制成功"});
-  }
-</script>
-
-<!-- required -->
-<script src="/js/main.js?v=1.26.8" async></script>
-
-<!-- optional -->
-
-  <script>
-  function load_comment(){
-    if(!document.getElementById("waline_container"))return;
-    stellar.loadCSS('https://unpkg.com/@waline/client@2.14.1/dist/waline.css');
-    stellar.loadScript('https://unpkg.com/@waline/client@2.14.1/dist/waline.js', {defer:true}).then(function () {
-      const el = document.getElementById("waline_container");
-      var path = el.getAttribute('comment_id');
-      if (!path) {
-        path = decodeURI(window.location.pathname);
-      }
-      Waline.init(Object.assign({"js":"https://unpkg.com/@waline/client@2.14.1/dist/waline.js","css":"https://unpkg.com/@waline/client@2.14.1/dist/waline.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"meta":["nick","mail","link"],"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
-        el: '#waline_container',
-        path: path,
-        
-      }));
-    });
-  }
-  window.addEventListener('DOMContentLoaded', (event) => {
-    console.log('DOM fully loaded and parsed');
-    load_comment();
-  });
-
-</script>
-
-
-
-
-
-
-
-<!-- inject -->
-<script type="text/javascript" src="/js/darkmode.js"></script>
-</div></body></html>
+}
