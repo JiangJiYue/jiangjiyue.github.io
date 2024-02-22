@@ -1,62 +1,746 @@
-.l_body {
-  display: flex;
-  margin: auto;
-  padding: 0 var(--gap-l);
-  justify-content: center;
-  font-size: var(--fsp);
-}
-.l_body .l_left {
-  z-index: 8;
-  width: var(--width-left);
-  flex-shrink: 0;
-  position: sticky;
-  position: -webkit-sticky;
-  top: 8px;
-}
-.l_body .l_main {
-  flex-shrink: 1;
-  flex-grow: 1;
-  width: 320px;
-  max-width: var(--width-main);
-}
-.main-mask {
-  position: fixed;
-  pointer-events: none;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.2);
-  z-index: 9;
-  opacity: 0;
-  trans1: opacity;
-}
-@media screen and (max-width: $device-mobile-max) {
-  .mobile-only {
-    display: block !important;
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.26.8" theme-name="Stellar" theme-version="1.26.8">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>Linux-Web服务器的概念 - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="总字符数: 12.32K                代码: 无, 文本: 7.25K               预计阅读时间: 32 分钟            Web服务概念 ​	Web服务器,也称为WWW(World Wide Web,万维网)服务器,其主要功能是提供网上信息浏览服务,使用户能够通过互联网访问网页内容.它处理用户的请求,并将网页内容(如HTML文档、图片等)发送">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux-Web服务器的概念">
+<meta property="og:url" content="https://jiangjiyue.github.io/2024/01/27/81fbba05/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="总字符数: 12.32K                代码: 无, 文本: 7.25K               预计阅读时间: 32 分钟            Web服务概念 ​	Web服务器,也称为WWW(World Wide Web,万维网)服务器,其主要功能是提供网上信息浏览服务,使用户能够通过互联网访问网页内容.它处理用户的请求,并将网页内容(如HTML文档、图片等)发送">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401271338344.PNG">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401271338442.PNG">
+<meta property="article:published_time" content="2024-01-27T05:48:22.000Z">
+<meta property="article:modified_time" content="2024-02-09T08:13:34.845Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="Centos">
+<meta property="article:tag" content="Mysql">
+<meta property="article:tag" content="数据库">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="PHP">
+<meta property="article:tag" content="Apache">
+<meta property="article:tag" content="OpenResty">
+<meta property="article:tag" content="SSL">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401271338344.PNG">
+  
+  
+  
+  <meta name="keywords" content="Centos,Mysql,数据库,Linux,PHP,Apache,OpenResty,SSL">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.26.8">
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/newYear.css"><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+
+<div class="l_body content tech" id="start" layout="post" ><aside class="l_left"><div class="sidebar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="探索" href="/notes/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/tools/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
+</div>
+<div class="widgets">
+
+<widget class="widget-wrapper toc single" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Web%E6%9C%8D%E5%8A%A1%E6%A6%82%E5%BF%B5"><span class="toc-text">Web服务概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81Web%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BD%AF%E4%BB%B6"><span class="toc-text">常见Web服务器软件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%A6%E7%BB%86%E8%AF%B4%E6%98%8E"><span class="toc-text">详细说明</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%B5%8F%E8%A7%88%E5%99%A8"><span class="toc-text">客户端浏览器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFPHP"><span class="toc-text">什么是PHP</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFPHP%E6%96%87%E4%BB%B6"><span class="toc-text">什么是PHP文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP-%E5%8F%AF%E4%BB%A5%E5%81%9A%E4%BB%80%E4%B9%88"><span class="toc-text">PHP 可以做什么?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="toc-text">PHP的优势</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFApache"><span class="toc-text">什么是Apache</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFNginx"><span class="toc-text">什么是Nginx</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E7%9B%B4%E6%8E%A5%E4%BD%BF%E7%94%A8PHP"><span class="toc-text">为什么不直接使用PHP?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFMySQL"><span class="toc-text">什么是MySQL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LAMP%E7%9A%84%E9%87%8D%E8%A6%81%E6%80%A7"><span class="toc-text">LAMP的重要性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LAMP%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-text">LAMP工作原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Web%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F"><span class="toc-text">Web服务器的工作模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99"><span class="toc-text">静态网站</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E7%BD%91%E7%AB%99"><span class="toc-text">动态网站</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%AA%E9%9D%99%E6%80%81"><span class="toc-text">伪静态</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%AA%E9%9D%99%E6%80%81%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-text">伪静态的工作原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%AA%E9%9D%99%E6%80%81%E7%9A%84%E8%A1%A8%E7%8E%B0%E5%BD%A2%E5%BC%8F"><span class="toc-text">伪静态的表现形式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%AA%E9%9D%99%E6%80%81%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F"><span class="toc-text">伪静态的实现方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E7%82%B9"><span class="toc-text">优点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%BA%E7%82%B9"><span class="toc-text">缺点</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%84%9A%E6%9C%AC%E8%AF%AD%E8%A8%80%E4%B8%8E%E7%BD%91%E7%BB%9C%E6%9E%B6%E6%9E%84%E5%8F%8A%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AF%B9%E5%BA%94%E5%85%B3%E7%B3%BB"><span class="toc-text">脚本语言与网络架构及数据库对应关系</span></a></li></ol></div></div></widget>
+
+
+
+
+
+
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2024/02/26/7e189a50/"><span class="title">VulnHub-Kioptrix Level 2 简单的命令注入 + 内核提权</span></a><a class="item title" href="/2024/02/24/e36a7018/"><span class="title">VulnHub-Kioptrix Level 1 古老的 Apache Vuln</span></a><a class="item title" href="/2022/03/10/8c8446e0/"><span class="title">VulnHub-脏牛提权复现</span></a><a class="item title" href="/2022/11/02/735afd67/"><span class="title">VulnHub-DC系列</span></a><a class="item title" href="/2024/02/08/c44eef61/"><span class="title">Security-会话授权</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    
+<div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/">安全运维</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/Web%E6%9C%8D%E5%8A%A1%E5%99%A8/">Web服务器</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2024-01-27T05:48:22.000Z">2024-01-27</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-02-09T08:13:34.845Z">2024-02-09</time></span></div></div>
+</div>
+
+    
+    <div class="bottom">
+      <div class="text-area">
+        <h1 class="text title"><span>Linux-Web服务器的概念</span></h1>
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
+    <p>总字符数: 12.32K </p>
+    </div>
+    <div class="cell" style="">
+    <p>代码: 无, 文本: 7.25K</p>
+    </div>
+    <div class="cell" style="">
+    <p>预计阅读时间: 32 分钟</p>
+    </div>
+    </div>
+
+<h2 id="Web服务概念"><a href="#Web服务概念" class="headerlink" title="Web服务概念"></a>Web服务概念</h2><blockquote>
+<p>​	Web服务器,也称为WWW(World Wide Web,万维网)服务器,其主要功能是提供网上信息浏览服务,使用户能够通过互联网访问网页内容.它处理用户的请求,并将网页内容(如HTML文档、图片等)发送到用户的浏览器中.</p>
+</blockquote>
+<h3 id="常见Web服务器软件"><a href="#常见Web服务器软件" class="headerlink" title="常见Web服务器软件"></a>常见Web服务器软件</h3><p>以下是一些流行的 Web 服务器软件及其特点:</p>
+<table>
+<thead>
+<tr>
+<th>Web服务软件</th>
+<th>支持的语言</th>
+<th>适用操作系统</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Apache HTTP Server</td>
+<td>PHP</td>
+<td>多平台(常用于Linux)</td>
+</tr>
+<tr>
+<td>Nginx</td>
+<td>PHP</td>
+<td>多平台(常用于Linux)</td>
+</tr>
+<tr>
+<td>Tomcat</td>
+<td>Java(JSP + HTML)</td>
+<td>多平台</td>
+</tr>
+<tr>
+<td>Microsoft IIS</td>
+<td>ASP.NET</td>
+<td>Windows</td>
+</tr>
+</tbody></table>
+<h4 id="详细说明"><a href="#详细说明" class="headerlink" title="详细说明"></a>详细说明</h4><ul>
+<li><strong>Apache HTTP Server</strong>:广泛应用于多种操作系统,通过模块化的方式可以扩展功能,支持包括PHP在内的多种编程语言.</li>
+<li><strong>Nginx</strong>:以其高性能、高并发处理能力著称,适用于各种操作系统,并常被用作反向代理服务器.</li>
+<li><strong>Tomcat</strong>:是Apache软件基金会的一个开源项目,主要运行Java Servlet和JavaServer Pages.</li>
+<li><strong>Microsoft IIS</strong>:适用于Windows操作系统,与Microsoft的其他产品如Windows Server紧密结合,常用于ASP.NET应用.</li>
+</ul>
+<h3 id="客户端浏览器"><a href="#客户端浏览器" class="headerlink" title="客户端浏览器"></a>客户端浏览器</h3><p>用户通过客户端浏览器发起网页请求,常见的浏览器包括:</p>
+<ul>
+<li>Internet Explorer (IE)</li>
+<li>Firefox</li>
+<li>Chrome</li>
+<li>Safari</li>
+<li>各种手机浏览器</li>
+</ul>
+<h2 id="什么是PHP"><a href="#什么是PHP" class="headerlink" title="什么是PHP"></a>什么是PHP</h2><blockquote>
+<p>​	PHP(PHP: Hypertext Preprocessor,即”超文本预处理器”)是一种通用开源服务器端脚本语言,广泛用于Web开发,并可以嵌入HTML代码中.PHP以其高效率、跨平台和开放源码的特性成为众多流行网站的开发选择,例如WordPress、Digg和Facebook都采用了PHP作为开发语言.PHP的语法借鉴了C、Java和Perl,易于上手,是初学者和专业开发者广泛使用的语言之一.PHP主要执行在Web服务器上,通过执行PHP代码生成用户浏览器中的Web页面.它几乎可以在所有的服务器和操作系统上运行,且完全免费.</p>
+</blockquote>
+<h3 id="什么是PHP文件"><a href="#什么是PHP文件" class="headerlink" title="什么是PHP文件"></a>什么是PHP文件</h3><p>PHP文件通常是纯文本文件,包含了用PHP编程语言编写的代码.这些代码在服务器端执行,由服务器上的PHP解释引擎处理,并转换为客户端理解的HTML.PHP文件可能包含文本、HTML标记、CSS样式和PHP代码.当用户请求一个PHP页面时,服务器上的PHP引擎将执行PHP代码,生成HTML输出,并将其与文件中的其它内容合并,然后发送到用户的浏览器中.在浏览器中查看PHP页面的源代码时,不会显示原始的PHP代码,因为它在发送到客户端之前已经在服务器上被解析和执行了.</p>
+<h3 id="PHP-可以做什么"><a href="#PHP-可以做什么" class="headerlink" title="PHP 可以做什么?"></a>PHP 可以做什么?</h3><ol>
+<li>生成动态页面内容.</li>
+<li>创建、打开、读取、写入、删除以及关闭服务器上的文件.</li>
+<li>接收表单数据.</li>
+<li>发送和管理cookies.</li>
+<li>在数据库中添加、删除、修改数据.</li>
+<li>限制用户访问网站中的特定页面.</li>
+<li>加密数据以保护敏感信息.</li>
+<li>生成图像、PDF文件和Flash影片,以及输出XHTML和XML等各种文本格式.</li>
+</ol>
+<h3 id="PHP的优势"><a href="#PHP的优势" class="headerlink" title="PHP的优势"></a>PHP的优势</h3><ol>
+<li>跨平台性,PHP支持大多数操作系统,包括Windows, Linux, Unix, Mac OS X等.</li>
+<li>与众多Web服务器兼容,如Apache、Nginx、IIS等.</li>
+<li>能够与多种数据库系统互操作,使其成为动态Web应用开发的理想选择.</li>
+<li>学习成本低,尤其对于有C语言或C++基础的开发者更是易于掌握.</li>
+</ol>
+<h2 id="什么是Apache"><a href="#什么是Apache" class="headerlink" title="什么是Apache"></a>什么是Apache</h2><blockquote>
+<p>​	Apache HTTP Server,通常简称为Apache,是由Apache软件基金会(ASF)开发的一款开源网页服务器软件.它可以运行在几乎所有的计算机操作系统上,尤其是在Unix-like系统(如Linux)和Windows系统上.Apache因其跨平台性和安全性而被广泛使用,长期以来一直是世界上最流行的Web服务器软件之一.</p>
+</blockquote>
+<p>Apache软件基金会(ASF)是一个非营利组织,负责支持Apache开源软件项目的一个集体.除了Apache HTTP Server,基金会还管理着多个开源项目,如:</p>
+<ul>
+<li><strong>Ant</strong>:一个Java库和命令行工具,用于自动化构建过程.</li>
+<li><strong>DB</strong>:多个数据库项目的集合,包括CouchDB和Derby.</li>
+<li><strong>iBATIS</strong>:一个数据映射器框架,可以简化数据库与Java应用的集成.</li>
+<li><strong>Jakarta</strong>:现已重命名为Apache Jakarta,是一系列相关的开源Java解决方案.</li>
+<li><strong>Logging</strong>:提供日志记录的工具和库.</li>
+<li><strong>Maven</strong>:一个项目管理和构建自动化工具.</li>
+<li><strong>Struts</strong>:一个流行的开源MVC框架,用于构建Java Web应用程序.</li>
+<li><strong>Tomcat</strong>:一个实现Java Servlet和JavaServer Pages技术的Web容器.</li>
+<li><strong>Tapestry</strong>:一个用于创建复杂和高性能的Web应用程序的框架.</li>
+<li><strong>Hadoop</strong>:一个用于分布式存储和处理大数据的平台.</li>
+</ul>
+<p>尽管Apache软件基金会有多个项目,但”Apache”这个名字通常被用来指Apache HTTP Server,这是由于Apache HTTP Server的高知名度和广泛的应用.</p>
+<p>可以访问官方网站了解更多信息和下载软件:</p>
+<div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://www.apache.org/" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://www.apache.org/</span></div><div class="bottom"><span class="title">https://www.apache.org/</span><span class="cap desc footnote"></span></div></a></div>
+
+<div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://httpd.apache.org/" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://httpd.apache.org/</span></div><div class="bottom"><span class="title">https://httpd.apache.org/</span><span class="cap desc footnote"></span></div></a></div>
+
+<p>​	Apache是一种领先的开源Web服务器软件,极其擅长处理来自用户浏览器的HTTP请求,并以高效和可靠的方式,将网页、图片、脚本等静态资源传输给用户.它的设计注重性能,能够管理大量的网络连接和并发请求,确保用户获得快速的服务体验.Apache之所以受到青睐,不仅在于其性能上的优化,更在于其提供的安全性、扩展性与灵活的管理选项.通过其强大的模块系统,管理员可以轻松增加新的功能,比如URL重写、用户认证,以及SSL加密通信,来提升网站的安全性和功能性.</p>
+<p>​	在现代Web应用的开发中,Apache往往与PHP这样的脚本语言结合使用.PHP专注于服务端逻辑和生成动态内容,如根据用户的请求和数据库交互来创建个性化页面.Apache则负责处理更基础的HTTP请求和分发静态内容,它们的结合为开发带来了极大的灵活性和高效率.此外,Apache可以用作反向代理,将请求转发至PHP处理器,并由此实现更高效的资源使用和响应速度.尽管PHP内置的服务器对于开发和测试来说很便捷,但在性能优化、安全性保障和错误处理方面,它不适合生产环境.与之相对,专业的Web服务器如Apache,以其对静态资源的高效处理、复杂请求的认证、SSL加密的执行能力以及对DDoS攻击的防御措施,确保了Web应用在生产环境中的稳定和安全运行.这些特点让Apache成为了构建高性能和安全网站的首选基础设施.</p>
+<h2 id="什么是Nginx"><a href="#什么是Nginx" class="headerlink" title="什么是Nginx"></a>什么是Nginx</h2><blockquote>
+<p>​	NGINX(发音为”engine-x”)是一款高性能的HTTP和反向代理服务器,同时也是一个IMAP&#x2F;POP3&#x2F;SMTP代理服务器.由俄罗斯程序员Igor Sysoev开发,最初旨在解决C10K问题,即同时处理大量(万级别)客户端连接的挑战.NGINX以其高稳定性、丰富的功能集、低内存占用及出色的并发处理能力而闻名,在提供Web服务的同时,也经常用于负载均衡和HTTP缓存.</p>
+</blockquote>
+<p>​	NGINX的设计着重于高并发、高性能和低内存使用.此外,它的模块化设计让用户能够灵活地扩展功能,例如,它支持URL重写和重定向、故障转移、SSL和TLS协议、WebSocket以及流媒体传输等.NGINX同时提供了丰富的配置选项,使其能够精细地控制网络连接、请求处理和数据流.</p>
+<p>​	在Web开发中,NGINX常常作为Apache的一种更轻量级的替代品使用.它能够高效地作为静态资源服务器并且处理PHP等动态脚本的请求,因此,它可以和PHP-FPM(FastCGI Process Manager)等技术配合使用,以提高处理PHP动态内容的能力.</p>
+<p>​	NGINX的性能在处理静态内容方面尤其出色,它能够快速为用户提供静态文件,如图片和HTML页面,实现高吞吐量和低延迟.NGINX也被广泛用作负载均衡器,通过分发流量到后端的多个服务器上,来提高大型应用和服务的可伸缩性和可靠性.</p>
+<p>​	由于NGINX的高性能和稳定性,它被很多高流量的网站采用,包括Netflix、Airbnb和Dropbox等.这些网站需要稳定的服务器来保证用户访问的速度和质量,而NGINX提供了必要的功能来满足这些需求.</p>
+<p>​	尽管NGINX在某些方面与Apache相似,但它们各有特点,在不同的场景和需求中各有优势.NGINX在异步事件处理方面的性能,尤其对于现代Web应用的实时通信和高并发连接,提供了必要的支持,这使得它成为构建高效、可伸缩Web应用架构的理想选择.</p>
+<div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://nginx.org/" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://nginx.org/</span></div><div class="bottom"><span class="title">https://nginx.org/</span><span class="cap desc footnote"></span></div></a></div>
+
+<div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://openresty.com.cn/cn/" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://openresty.com.cn/cn/</span></div><div class="bottom"><span class="title">https://openresty.com.cn/cn/</span><span class="cap desc footnote"></span></div></a></div>
+
+<h2 id="为什么不直接使用PHP"><a href="#为什么不直接使用PHP" class="headerlink" title="为什么不直接使用PHP?"></a>为什么不直接使用PHP?</h2><p>在Web开发中,Apache或Nginx通常作为Web服务器,而PHP是一种服务器端脚本语言.在处理Web请求的上下文中,Apache&#x2F;Nginx和PHP通常协同工作,但它们的职责有所区别.以下是为什么要使用Apache&#x2F;Nginx来处理Web请求,而不是直接使用PHP的一些原因:</p>
+<ol>
+<li><p><strong>性能和效率</strong>:</p>
+<ul>
+<li>Apache&#x2F;Nginx是为了处理大量的并发连接而优化的,它们可以高效地管理网络连接和HTTP请求,而PHP则是用来执行程序代码的.</li>
+<li>Nginx特别擅长处理静态资源,如图片、CSS、JavaScript文件等,并且在反向代理和负载平衡方面也非常高效.</li>
+</ul>
+</li>
+<li><p><strong>安全性</strong>:</p>
+<ul>
+<li>Web服务器提供了一个安全层,可以配置各种安全措施,如SSL&#x2F;TLS加密、防止DDoS攻击等.</li>
+<li>使用Apache&#x2F;Nginx可以限制对特定资源的访问,比如可以通过配置文件实现访问控制.</li>
+</ul>
+</li>
+<li><p><strong>模块和插件系统</strong>:</p>
+<ul>
+<li>Apache和Nginx都有模块和插件系统,可以扩展其功能,这些模块可以进行URL重写、缓存、认证等.</li>
+</ul>
+</li>
+<li><p><strong>负载分配</strong>:</p>
+<ul>
+<li>Web服务器可以作为负载均衡器,把请求分配到不同的PHP处理进程或服务器,这样可以提高大规模应用的性能和可靠性.</li>
+</ul>
+</li>
+<li><p><strong>PHP是解释型语言</strong>:</p>
+<ul>
+<li>PHP脚本需要被解释器编译和执行,这是一个相对较慢的过程.如果没有Web服务器来处理静态内容,那么所有内容都将通过PHP处理,增加了不必要的开销.</li>
+</ul>
+</li>
+<li><p><strong>功能分离</strong>:</p>
+<ul>
+<li>将Web服务器和应用服务器(PHP)分开可以让开发人员和系统管理员在配置、优化和故障排除时更加专注.</li>
+</ul>
+</li>
+<li><p><strong>易于管理</strong>:</p>
+<ul>
+<li>Apache&#x2F;Nginx可以处理错误页面、重定向和其他HTTP级别的需求,这样程序员就可以专注于业务逻辑的编写.</li>
+</ul>
+</li>
+</ol>
+<p>直接使用PHP内置的服务器(如通过PHP的CLI版本运行 <code>php -S localhost:8000</code>)主要适用于开发和测试目的,并不适合生产环境,因为它不具备为生产环境设计的Web服务器的性能、安全性和灵活性.</p>
+<h2 id="什么是MySQL"><a href="#什么是MySQL" class="headerlink" title="什么是MySQL"></a>什么是MySQL</h2><blockquote>
+<p>​	MySQL是一个广泛使用的关系型数据库管理系统(RDBMS),由瑞典MySQL AB公司开发,并在其后被甲骨文公司(Oracle)所收购.作为一个开源系统,MySQL以其高性能、可靠性、简易性和易于使用性而受到认可,在互联网和企业环境中尤其流行.MySQL使用标准的SQL数据语言来组织、管理和检索数据,这使得它成为了开发各种应用程序,特别是Web应用程序的首选数据库.</p>
+</blockquote>
+<p>在MySQL中,数据存储在不同的表中,这些表通过关系(即外键)连接起来,通过这种方式,它为数据的存储和查询提供了极大的灵活性和效率.MySQL支持包括ACID事务(原子性、一致性、隔离性、持久性)、分区、复制和热备份等多种先进的数据库功能.</p>
+<div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://www.mysql.com/" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://www.mysql.com/</span></div><div class="bottom"><span class="title">https://www.mysql.com/</span><span class="cap desc footnote"></span></div></a></div>
+
+<div class="tag-plugin colorful note" color="red"><div class="body"><p>MariaDB是MySQL的一个分支,CentOS-6之前默认使用MySQL,之后版本默认使用MariaDB。Kali-Linux中的MySQL数据库实际上也是MariaDB</p></div></div>
+
+<h2 id="LAMP的重要性"><a href="#LAMP的重要性" class="headerlink" title="LAMP的重要性"></a>LAMP的重要性</h2><p>LAMP是一个缩写词,代表Linux、Apache、MySQL、PHP&#x2F;Python&#x2F;Perl这四个开源软件的组合.这个组合构成了一个强大的、可靠的、高性能的平台,用于构建和部署动态网站和Web应用程序.LAMP的重要性主要体现在以下几个方面:</p>
+<ol>
+<li><p><strong>成本效益</strong>:作为开源软件,LAMP堆栈的组件都是免费可用的,这降低了开发和部署Web应用程序的成本.企业和开发人员可以使用LAMP而无需支付昂贵的许可费用.</p>
+</li>
+<li><p><strong>灵活性和自由</strong>:由于LAMP组件都是开源的,开发者可以根据他们的具体需求自由地定制每个组件.无论是修改Apache的配置,优化MySQL数据库,还是编写PHP脚本,LAMP为用户提供了完全的控制权.</p>
+</li>
+<li><p><strong>社区支持</strong>:每个LAMP组件都有一个活跃的社区,他们持续提供支持、更新和安全性改进.这些庞大的社区是知识共享的宝库,为开发者和系统管理员提供了广泛的资源和支持.</p>
+</li>
+<li><p><strong>跨平台性</strong>:虽然LAMP最初是为Linux操作系统设计的,但是这些技术现在也都支持其他操作系统,这使得LAMP可以更广泛地应用于各种不同的环境和平台.</p>
+</li>
+<li><p><strong>性能和稳定性</strong>:LAMP组件都是为了提供高性能、稳定性和可靠性而精心设计的.比如,Apache是一个经过时间验证的Web服务器,能够处理大量并发请求;MySQL是一个强大的关系型数据库管理系统,适合处理大型数据集合;PHP是一个脚本语言,可以用来创建动态生成的网页内容.</p>
+</li>
+<li><p><strong>易于学习</strong>:有大量的文档、论坛、书籍和在线资源,提供有关LAMP组件的学习材料.这使得新开发者能够快速地学习和应用LAMP技术.</p>
+</li>
+<li><p><strong>适应性和可扩展性</strong>:LAMP架构能够适应各种大小的项目,从小型个人网站到大型企业级应用程序.同时,它可以通过负载均衡、缓存等技术进行扩展,以应对日益增长的用户和数据量.</p>
+</li>
+<li><p><strong>快速开发</strong>:利用LAMP环境,开发者可以快速搭建原型和开发应用程序,这对于快速迭代和敏捷开发至关重要.</p>
+</li>
+</ol>
+<p>总之,LAMP的重要性在于其为开发者提供了一个成熟的、全面的、易于部署的Web应用栈,它为开发和运行Web应用程序提供了一种成本效益、高效率和高度可定制的方法.</p>
+<h2 id="LAMP工作原理"><a href="#LAMP工作原理" class="headerlink" title="LAMP工作原理"></a>LAMP工作原理</h2><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401271338344.PNG" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401271338442.PNG" data-fancybox="true"/></div></div>
+
+<h2 id="Web服务器的工作模式"><a href="#Web服务器的工作模式" class="headerlink" title="Web服务器的工作模式"></a>Web服务器的工作模式</h2><div class="tag-plugin quot"><p class="content" type="text"><span class="empty"></span><span class="text">工作模式:B/S模式,也即浏览器/服务器模式（Browser/Server mode)</span><span class="empty"></span></p></div>
+
+<blockquote>
+<p>​	B&#x2F;S模式,也即浏览器&#x2F;服务器模式(Browser&#x2F;Server mode),是现代网络应用中常见的一种客户端与服务端交互的架构模式.在这种模式下,用户通过Web浏览器(Browser)作为客户端,访问服务器(Server)上的资源和服务.服务器通常负责数据处理和存储工作,而浏览器则负责呈现界面和接收用户输入.</p>
+<p>​	在B&#x2F;S模式中,LAMP堆栈(Linux, Apache, MySQL, PHP&#x2F;Python&#x2F;Perl)常常被用作服务端的软件组合.服务器托管着Web应用程序,处理来自浏览器的请求,执行应用逻辑,访问数据库,并将结果返回给浏览器呈现.这种模式已经成为现代Web应用开发的主流架构.</p>
+</blockquote>
+<h3 id="静态网站"><a href="#静态网站" class="headerlink" title="静态网站"></a>静态网站</h3><blockquote>
+<p>静态网站是最基础的网站类型,其创建简单,不要求开发者具备网络编程或数据库设计的专业技能.这类网站的内容是静态的,意味着网页上显示的信息是不会自动更新或改变的.每一个静态页面都是用HTML(HyperText Markup Language)语言编写,其中的代码对于每个访问者来说都是相同的.</p>
+</blockquote>
+<p>每个HTML文件都存储在服务器的硬盘上,当用户发起请求访问网站时,服务器将这些文件从存储中检索出来,通过网络发送给用户的浏览器.浏览器接收到这些HTML文件后,解析并显示成网页供用户浏览.由于页面是预先编写好的,它们在视觉上类似于印刷品页面,显示固定的内容.</p>
+<p>静态网站的HTML文件通常以<code>.htm</code>或<code>.html</code>作为文件扩展名,每个文件对应网站的一个页面.因为内容不会改变,<div class="tag-plugin colorful note" color="red"><div class="body"><p>这种类型的网站不适用于需要显示实时信息或交互的场合。</p></div></div>然而,它们对于需要展示固定信息的网站来说是理想的选择,比如个人简历、营销宣传页面或项目文档等.静态网站也具有加载速度快、托管成本低、易于优化和维护的优势.</p>
+<h3 id="动态网站"><a href="#动态网站" class="headerlink" title="动态网站"></a>动态网站</h3><blockquote>
+<p>动态网站是由能够生成和管理动态内容的网页组成的网站.不同于静态网站,</p>
+<p>动态网站包含后台和前台两个部分:</p>
+<ol>
+<li>后台是用于维护前台数据的管理界面</li>
+<li>前台则是用户实际看到和交互的界面</li>
+</ol>
+</blockquote>
+<p>在动态网站中,我们经常在浏览器地址栏看到包含<code>news.php?id=38</code>的较长链接,这是动态URL的典型特征.</p>
+<p>动态URL通常意味着网页内容是实时生成的.这些动态页面不会作为实际文件存储在服务器中,而是通过如ASP、PHP、JSP、ASP.NET、Perl或CGI等编程语言在服务器上实时生成.</p>
+<div class="tag-plugin quot"><p class="content" type="text"><span class="empty"></span><span class="text">那么他们在生成的时候又分为不同的生成模式</span><span class="empty"></span></p></div>
+
+<div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://www.cnblogs.com/ranyonsue/p/12090647.html" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://www.cnblogs.com/ranyonsue/p/12090647.html</span></div><div class="bottom"><span class="title">https://www.cnblogs.com/ranyonsue/p/12090647.html</span><span class="cap desc footnote"></span></div></a></div>
+
+<p>动态页面的内容通常存储在数据库中.当用户发出请求时,服务器会根据请求的不同,从数据库中检索内容,并返回相应的网页.这样的设计使网站维护工作量大幅减少,并允许网页内容根据用户需求动态变更.</p>
+<p>动态网站提供了许多与用户交互的功能,如用户注册、登录、管理、购买、在线调查和投票等.这些功能是静态网页无法提供的.动态页面的文件扩展名通常为.php、.asp、.jsp等.</p>
+<p>这种动态内容的管理往往通过内容管理系统(CMS)来实施.CMS是一种软件系统,位于WEB前端(Web服务器)和后端流程(内容创作、编辑)之间,允许内容创作人员、编辑人员、发布人员提交、修改、审批、发布内容.CMS的强大之处在于,它可以处理文件、表格、图片、数据库数据、视频等各种信息,方便用户将这些内容发布到Internet、Intranet或Extranet网站上.</p>
+<p>像DedeCms和WordPress这样的系统是CMS的具体实例,它们支持动态内容的创建、编辑和发布,并且可以通过各种模块来扩展网站的功能.CMS还可以通过内容抓取工具来自动从第三方信息来源获取内容,并将其存储在自己的内容库中,从而实现内容的自动更新和管理.</p>
+<div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://www.dedecms.com/" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://www.dedecms.com/</span></div><div class="bottom"><span class="title">https://www.dedecms.com/</span><span class="cap desc footnote"></span></div></a></div>
+
+<div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://wordpress.org/" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://wordpress.org/</span></div><div class="bottom"><span class="title">https://wordpress.org/</span><span class="cap desc footnote"></span></div></a></div>
+
+<h3 id="伪静态"><a href="#伪静态" class="headerlink" title="伪静态"></a>伪静态</h3><blockquote>
+<p>伪静态是一种服务器端技术,用于将动态网页的URL重写成看似静态的URL格式.这种技术的目的是为了提高搜索引擎优化(SEO)并提升用户体验,因为静态URL通常更加简洁、清晰,并且对于用户和搜索引擎更友好.</p>
+</blockquote>
+<div class="tag-plugin quot"><p class="content" type="text"><span class="empty"></span><span class="text">SEO(Search Engine Optimization):汉译为搜索引擎优化。是一种方式:利用搜索引擎的规则提高网站在有关搜索引擎内的自然排名。目的是让其在行业内占据领先地位,获得品牌收益。很大程度上是网站经营者的一种商业行为,将自己或自己公司的排名前移。</span><span class="empty"></span></p></div>
+
+<div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://baike.baidu.com/item/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E4%BC%98%E5%8C%96/3132" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://baike.baidu.com/item/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E4%BC%98%E5%8C%96/3132</span></div><div class="bottom"><span class="title">https://baike.baidu.com/item/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E4%BC%98%E5%8C%96/3132</span><span class="cap desc footnote"></span></div></a></div>
+
+<h4 id="伪静态的工作原理"><a href="#伪静态的工作原理" class="headerlink" title="伪静态的工作原理"></a>伪静态的工作原理</h4><p>当服务器收到一个伪静态的URL请求时,它会根据预设的规则将这个URL重新解析,映射到相应的动态脚本(如PHP、ASP等)上.这个过程对于访问者来说是透明的,他们看到的是一个静态的URL,但实际上服务器在背后执行的是动态页面的生成.</p>
+<h4 id="伪静态的表现形式"><a href="#伪静态的表现形式" class="headerlink" title="伪静态的表现形式"></a>伪静态的表现形式</h4><ul>
+<li><p><strong>URL结构</strong>:一个典型的动态URL可能包含问号和多个参数,例如:<code>www.example.com/products.php?id=1&amp;category=2</code>.而使用伪静态技术后,这个URL可能看上去像这样:<code>www.example.com/products/1-2.html</code>.</p>
+</li>
+<li><p><strong>文件扩展名</strong>:虽然伪静态URL看上去好像是以<code>.html</code>、<code>.htm</code>或其他静态页面的扩展名结尾,但实际上它们背后是由动态脚本处理的.</p>
+</li>
+</ul>
+<h4 id="伪静态的实现方式"><a href="#伪静态的实现方式" class="headerlink" title="伪静态的实现方式"></a>伪静态的实现方式</h4><ul>
+<li><strong>Apache服务器</strong>:可以通过<code>mod_rewrite</code>模块和<code>.htaccess</code>文件来设置URL重写规则.</li>
+<li><strong>Nginx服务器</strong>:通过配置文件中的<code>rewrite</code>指令来实现URL的重写.</li>
+</ul>
+<h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><ul>
+<li>改善用户体验,因为URL简洁明了,更容易记忆.</li>
+<li>对搜索引擎更加友好,有助于提升网页的SEO排名.</li>
+<li>可以隐藏底层技术,提高网站的安全性.</li>
+</ul>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><ul>
+<li>需要服务器处理额外的URL重写逻辑,可能会增加CPU负担.</li>
+<li>URL重写规则可能变得复杂,需要技术人员进行维护和更新.</li>
+</ul>
+<p>下表整合了静态网站、动态网站以及伪静态的特点,并展示了它们之间的比较:</p>
+<table>
+<thead>
+<tr>
+<th>特性&#x2F;类型</th>
+<th>静态网站</th>
+<th>动态网站</th>
+<th>伪静态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>页面内容</td>
+<td>预建且不变,除非手动更新文件</td>
+<td>实时生成,内容随用户请求或数据库更新而变化</td>
+<td>动态生成但以静态文件格式呈现,不生成实体静态文件</td>
+</tr>
+<tr>
+<td>编码方式</td>
+<td>HTML</td>
+<td>服务器端语言如PHP,JSP,ASP.NET等</td>
+<td>同动态网站,使用服务器端语言如PHP,但结合URL重写技术</td>
+</tr>
+<tr>
+<td>响应类型</td>
+<td>对每个请求发送完全相同的响应</td>
+<td>根据请求和服务器端代码生成定制化HTML</td>
+<td>看似静态的相同响应,实际上是动态生成的内容</td>
+</tr>
+<tr>
+<td>内容更新</td>
+<td>仅当手动发布和更新文件时内容才变更</td>
+<td>服务器端代码允许内容根据数据库或用户输入实时更新</td>
+<td>通过动态脚本实现内容的实时更新,但对用户和搜索引擎展示为静态页面</td>
+</tr>
+<tr>
+<td>优势</td>
+<td>服务器压力小,对搜索引擎友好</td>
+<td>强大的CMS,能够实现复杂交互功能</td>
+<td>结合了静态和动态的优点,即时更新内容而保持URL对搜索引擎友好</td>
+</tr>
+<tr>
+<td>缺点</td>
+<td>内容更新不实时,需要重新生成页面,可能占用更多空间和服务器资源</td>
+<td>页面生成可能增加服务器负担</td>
+<td>增加服务器CPU负担,复杂的URL重写规则可能需要技术性维护</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>简单网站,内容更新不频繁的网站</td>
+<td>需要用户交互,内容频繁更新的网站</td>
+<td>需要动态内容但同时想保持URL静态化以优化搜索引擎排名的网站</td>
+</tr>
+<tr>
+<td>搜索引擎优化(SEO)</td>
+<td>友好,因为内容是固定的</td>
+<td>取决于实施方式,但通常可以通过适当的URL结构和内容管理进行优化</td>
+<td>对搜索引擎友好,因为URL是静态的,易于爬虫索引</td>
+</tr>
+<tr>
+<td>示例</td>
+<td>个人简历网站、小型公司展示网站</td>
+<td>电子商务网站、新闻门户网站</td>
+<td>博客平台、论坛、商业网站,需要动态内容但希望URL静态化的网站</td>
+</tr>
+</tbody></table>
+<div class="tag-plugin quot"><p class="content" type="text"><span class="empty"></span><span class="text">伪静态的实现通常是通过服务器软件（如Apache的mod_rewrite模块或Nginx的URL重写规则)来将动态URL重写为静态URL的形式。这样,用户和搜索引擎看到的是静态URL,但实际上服务器在后台执行的是动态页面处理。这样做的好处是对搜索引擎更为友好,因为静态URL通常更易于索引,同时用户看到的地址更加清晰易懂。然而,这种方法增加了服务器负担,特别是CPU资源的使用,因为服务器必须处理额外的URL重写逻辑。</span><span class="empty"></span></p></div>
+
+
+<h2 id="脚本语言与网络架构及数据库对应关系"><a href="#脚本语言与网络架构及数据库对应关系" class="headerlink" title="脚本语言与网络架构及数据库对应关系"></a>脚本语言与网络架构及数据库对应关系</h2><ul>
+<li><p><strong>ASP (Active Server Pages)</strong></p>
+<ul>
+<li>常用数据库: Access, MSSQL</li>
+<li>运行环境: Windows, IIS (Internet Information Services)</li>
+</ul>
+</li>
+<li><p><strong>ASP.NET (.aspx)</strong></p>
+<ul>
+<li>常用数据库: MSSQL</li>
+<li>运行环境: Windows, IIS</li>
+</ul>
+</li>
+<li><p><strong>PHP (Hypertext Preprocessor)</strong></p>
+<ul>
+<li>常用数据库: MySQL (大部分), 但也可与其他数据库如PostgreSQL, Oracle, MSSQL等配合使用</li>
+<li>运行环境: 主要Linux, 也可在Windows; 通常搭配Apache&#x2F;HTTPd, Nginx, 亦可在Windows IIS中运行</li>
+</ul>
+</li>
+<li><p><strong>JSP (JavaServer Pages)</strong></p>
+<ul>
+<li>常用数据库: Oracle, MSSQL, MySQL</li>
+<li>运行环境: 跨平台,可以在任何支持Java的服务器上运行,包括但不限于Tomcat, Jetty, WebSphere, JBoss,WebLogic等</li>
+</ul>
+</li>
+</ul>
+<p><strong>数据库默认端口</strong></p>
+<ul>
+<li><strong>MySQL</strong>: <code>3306</code></li>
+<li><strong>MSSQL</strong>: <code>1433</code></li>
+<li><strong>Oracle</strong>: <code>1521</code></li>
+<li><strong>PostgreSQL</strong>: <code>5432</code></li>
+<li><strong>MongoDB</strong>: <code>27017</code>, <code>27018</code></li>
+<li><strong>Redis</strong>: <code>6379</code></li>
+<li><strong>Sybase&#x2F;DB2</strong>: <code>5000</code></li>
+<li><strong>Access数据库</strong>: 不使用端口(基于文件的数据库)</li>
+</ul>
+<p><strong>常见HTTP默认端口</strong></p>
+<ul>
+<li><strong>HTTP (Hypertext Transfer Protocol)</strong>: <code>80</code></li>
+<li><strong>HTTPS (HTTP Secure)</strong>: <code>443</code></li>
+</ul>
+<p><strong>常见自定义HTTP端口</strong></p>
+<ul>
+<li><code>8080</code></li>
+<li><code>8888</code></li>
+<li><code>8000</code></li>
+<li>….</li>
+</ul>
+<div class="tag-plugin colorful note" color="red"><div class="body"><p>端口号可以被配置成任何其他可用的数字,上面列出的是标准的、最常见的配置。在实际部署时,某些端口可能会根据具体的安全策略、系统架构或个人喜好进行调整</p></div></div>
+
+<div class="article-footer fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2024/01/27/81fbba05/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2024/01/27/81fbba05/&title=Linux-Web服务器的概念 - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401271349565.png&summary=
+    总字符数: 12.32K 
+    
+    
+    代码: 无, 文本: 7.25K
+    
+    
+    预计阅读时间: 32 分钟
+    
+    
+
+Web服务概念
+​	Web服务器,也称为WWW(Worl..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=Linux-Web服务器的概念 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2024/01/27/81fbba05/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2024/01/27/81fbba05/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2024/01/28/afbfc1f7/">Linux-Web服务器搭建的艺术</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/08/c3682c7d/">PHP-留言板项目</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\2024\01\28\afbfc1f7\" title="Linux-Web服务器搭建的艺术"><span class="title">Linux-Web服务器搭建的艺术</span></a><a class="item" href="\2024\01\29\2e455f59\" title="Linux-MySQL从入门到精通(上)"><span class="title">Linux-MySQL从入门到精通(上)</span></a><a class="item" href="\2024\01\31\375e6e18\" title="Linux-MySQL从入门到精通(下)"><span class="title">Linux-MySQL从入门到精通(下)</span></a><a class="item" href="\2021\09\24\bee72ce8\" title="Linux-MySQL开启慢查询日志"><span class="title">Linux-MySQL开启慢查询日志</span></a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      快来参与讨论吧
+    </section>
+    <section class='body cmt-body waline'>
+      
+
+<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/tools/">工具</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+<div class="NewYear"></div>
+</div></footer>
+<div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+<div class="main-mask" onclick="sidebar.toggle()"></div></div></div><div class="scripts">
+<script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.26.8';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.26.8';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
   }
-  .l_body {
-    padding: 0;
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js","memos":"/js/plugins/memos.js","marked":"/js/plugins/marked.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js","transition":"fade"});
   }
-  .l_body .l_left {
-    position: fixed;
-    transform: translateX(-320px);
-    margin: 0;
-    left: 8px;
-    box-shadow: $boxshadow-card-float;
-    z-index: 10;
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@10.3/swiper-bundle.min.css","js":"https://unpkg.com/swiper@10.3/swiper-bundle.min.js"});
   }
-  .l_body .l_main {
-    max-width: 100%;
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://cdn.bootcdn.net/ajax/libs/scrollReveal.js/4.0.9/scrollreveal.min.js","distance":"16px","duration":800,"interval":100,"scale":1});
   }
-  .l_body.mobile .l_left {
-    transition: transform 0.38s ease-out;
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","flying_pages":"https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"});
   }
-  .l_body.mobile.sidebar .l_left {
-    transform: translateX(0px);
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js","css":"https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css","selector":".swiper-slide img, .gallery img ,#waline_container .vcontent img"});
   }
-  .l_body.mobile.sidebar .main-mask {
-    opacity: 1;
-    pointer-events: inherit;
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
   }
-}
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied","toast":"复制成功"});
+  }
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.26.8" async></script>
+
+<!-- optional -->
+
+  <script>
+  function load_comment(){
+    if(!document.getElementById("waline_container"))return;
+    stellar.loadCSS('https://unpkg.com/@waline/client@2.14.1/dist/waline.css');
+    stellar.loadScript('https://unpkg.com/@waline/client@2.14.1/dist/waline.js', {defer:true}).then(function () {
+      const el = document.getElementById("waline_container");
+      var path = el.getAttribute('comment_id');
+      if (!path) {
+        path = decodeURI(window.location.pathname);
+      }
+      Waline.init(Object.assign({"js":"https://unpkg.com/@waline/client@2.14.1/dist/waline.js","css":"https://unpkg.com/@waline/client@2.14.1/dist/waline.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"meta":["nick","mail","link"],"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+        el: '#waline_container',
+        path: path,
+        
+      }));
+    });
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    console.log('DOM fully loaded and parsed');
+    load_comment();
+  });
+
+</script>
+
+
+
+
+
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+</div></body></html>
