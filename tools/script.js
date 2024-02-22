@@ -144,6 +144,35 @@ function formatThreats() {
     textarea1.value = descriptions.join('、');
 }
 
+function parseIpAndOutput() {
+    var textarea = document.getElementsByClassName('tarea1')[0];
+    var textarea1 = document.getElementsByClassName('tarea')[0];
+    
+    // 定义输出文本区域
+    var outputText = '';
+  
+    // 分割输入文本为多行
+    var lines = textarea.split('\n');
+  
+    // 遍历每一行
+    lines.forEach(function(line) {
+      // 使用正则表达式匹配IP地址和端口号
+      var match = line.match(/([\d.]+)\s+(\d+)/);
+      if (match) {
+        // 获取IP地址和端口号
+        var ip = match[1];
+        var port = match[2];
+        // 格式化为'IP:端口'的形式
+        var result = ip + ':' + port;
+        // 添加到输出文本
+        outputText += result + '\n';
+      }
+    });
+  
+    // 将结果写入输出文本区域
+    textarea1.value = outputText;
+  }
+
 $(document).ready(function () {
     // 使用事件委托简化代码
     $('.button-group').on('click', 'button.insert-btn', function () {
@@ -181,5 +210,6 @@ $(document).ready(function () {
     $('.removeDuplicates').click(removeDuplicates);
     $('.sumOccurrencesByCountry').click(sumOccurrencesByCountry);
     $('.formatThreats').click(formatThreats);
+    $('.parseIpAndOutput').click(parseIpAndOutput);
 });
 
