@@ -152,7 +152,7 @@ function parseIpAndOutput() {
     var outputText = '';
   
     // 分割输入文本为多行
-    var lines = textarea.split('\n');
+    var lines = textarea.value.split('\n');
   
     // 遍历每一行
     lines.forEach(function(line) {
