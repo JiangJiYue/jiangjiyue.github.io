@@ -1,74 +1,29 @@
-function onMatch() {
-    // 获取用户输入的正则表达式
-    var pattern = $('.tarea').val();
-    // 检查全局搜索和忽略大小写复选框是否选中
-    var globalSearch = $('#optionGlobal').is(':checked');
-    var ignoreCase = $('#optionIgnoreCase').is(':checked');
-    // 构建正则表达式的标志字符串
-    var flags = '';
-    if (globalSearch) {
-        flags += 'g';
-    }
-    if (ignoreCase) {
-        flags += 'i';
-    }
-
-    // 创建正则表达式对象
-    var regex = new RegExp(pattern, flags);
-    // 获取可编辑div里的文本内容
-    var content = $('.tarea1').val();
-    var newContent = content.replace(regex, function (match) {
-        return '<span class="highlight">' + match + '</span>';
-    });
-    console.log(newContent);
-    // 将新内容设置回div
-
-    // 将新内容设置回div，以便可以显示HTML格式（包括span标签）
-    $('.output').html(newContent);
-
-    // 阻止a标签默认行为
-    return false;
-}
-
-
 function removeDuplicates() {
-    // 从 textarea 获取内容
-    var textarea = document.getElementsByClassName('tarea1')[0];
-    var textarea1 = document.getElementsByClassName('tarea')[0];
-    var content = textarea.value.trim();  // 移除内容前后的空白
-
-    // 假设内容为逗号分隔的值，先将其分割成数组
-    var contentArray = content.split('\n').map(item => item.trim());  // 移除每个元素前后的空白
-
+    // 从 input框 获取内容
+    var input = document.getElementsByClassName('input')[0];
+    var output = document.getElementsByClassName('output')[0];
+    var content = input.value.trim(); // 移除内容前后的空白
+    // 假设内容为逐行分隔的值，先将其分割成数组，并移除空行
+    var contentArray = content.split('\n').filter(item => item.trim() !== '');
+    // 移除非IP行，使用正则表达式匹配标准的IPv4地址
+    var ipRegex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+    var validContentArray = contentArray.filter(item => ipRegex.test(item));
     // 计算去重前的数据量
-    var beforeCount = contentArray.length;
-
+    var beforeCount = validContentArray.length;
     // 使用 Set 去除数组中的重复项
-    var uniqueContentArray = [...new Set(contentArray)];
-
+    var uniqueContentArray = [...new Set(validContentArray)];
     // 计算去重后的数据量
     var afterCount = uniqueContentArray.length;
-
     // 计算去重的数据量
     var removedCount = beforeCount - afterCount;
-
     // 生成更新信息
     var updateInfo = `去重前的数据量: ${beforeCount}\n去重后的数据量: ${afterCount}\n去重的数据量: ${removedCount}\n\n`;
-
-    // 将去重后的数组内容再次转换为逗号分隔的字符串
+    // 将去重后的数组内容再次转换为逐行分隔的字符串
     var uniqueContent = uniqueContentArray.join('\n');
-
-    // 更新 textarea 的内容，加上去重信息
-    textarea1.value = updateInfo + uniqueContent;
+    // 更新 output 的内容，加上去重信息
+    output.value = updateInfo + uniqueContent;
 }
-
 function sumOccurrencesByCountry() {
-    var textarea = document.getElementsByClassName('tarea1')[0];
-    var textarea1 = document.getElementsByClassName('tarea')[0];
-    // 分割输入成单行
-    var content = textarea.value.trim();  // 移除内容前后的空白
-    var lines = content.split('\n').map(item => item.trim());  // 移除每个元素前后的空白
-
     const countryList = [
         '阿富汗', '阿尔巴尼亚', '阿尔及利亚', '安道尔', '安哥拉', '安提瓜和巴布达', '阿根廷', '亚美尼亚', '澳大利亚', '奥地利', '阿塞拜疆',
         '巴哈马', '巴林', '孟加拉国', '巴巴多斯', '白俄罗斯', '比利时', '伯利兹', '贝宁', '不丹', '玻利维亚', '波黑', '博茨瓦纳', '巴西', '文莱',
@@ -87,44 +42,53 @@ function sumOccurrencesByCountry() {
         '英国', '美国', '乌拉圭', '乌兹别克斯坦', '瓦努阿图', '梵蒂冈', '委内瑞拉', '越南', '也门', '赞比亚', '津巴布韦', '亚太地区', '欧盟'
     ];
 
-    const countryOccurrences = { '其他': 0 };
 
+    const countryOccurrences = {};
+
+    // 获取输入文本框
+    var input = document.getElementsByClassName('input')[0];
+
+    // 处理输入内容
+    var content = input.value.trim();
+    var lines = content.split('\n').map(item => item.trim()); // 将输入文本按行分割并移除每行前后的空白
+    lines = lines.filter(line => line !== ''); // 去除空行
+    lines.shift(); // 删除第一行
+    // 遍历每行数据
     lines.forEach(line => {
-        var parts = line.split('\t'); // 假设每行是由制表符分隔的两部分
-        var place = parts[0].trim();
-        var count = parseInt(parts[1], 10);
-
-        // 查找与当前行匹配的国家名
-        var matchingCountry = countryList.find(country => place.startsWith(country));
+        var matchingCountry = countryList.find(country => line.includes(country)); // 在国家列表中查找与国家名称匹配的国家
 
         if (matchingCountry) {
             if (!countryOccurrences[matchingCountry]) {
                 countryOccurrences[matchingCountry] = 0;
             }
-            countryOccurrences[matchingCountry] += count;
+            countryOccurrences[matchingCountry]++; // 统计国家出现的次数
         } else {
-            // 无法识别的地名累加到“其他”类别
-            countryOccurrences['其他'] += count;
+            // 如果没有匹配到任何国家，那么将其归类到'其他'
+            var otherKey = '其他';
+            if (!countryOccurrences[otherKey]) {
+                countryOccurrences[otherKey] = 0;
+            }
+            countryOccurrences[otherKey]++;
         }
     });
 
-    // 将结果对象转换为一个数组，以便排序
-    var sortedCountryOccurrences = Object.keys(countryOccurrences)
-        .map(key => [key, countryOccurrences[key]])
-        .sort((a, b) => b[1] - a[1]); // 降序排序
-
-    var resultString = sortedCountryOccurrences
+    // 将结果转换成字符串形式并显示
+    var output = Object.entries(countryOccurrences)
+        .sort((a, b) => b[1] - a[1]) // 按出现次数降序排序
         .map(([country, count]) => `${country}\t${count}`)
         .join('\n');
 
-    textarea1.value = resultString;
+    // 获取输出文本框并将结果赋值
+    var resultOutput = document.getElementsByClassName('output')[0];
+    resultOutput.value = output;
 }
 function formatThreats() {
-    var textarea = document.getElementsByClassName('tarea1')[0];
-    var textarea1 = document.getElementsByClassName('tarea')[0];
+    var input = document.getElementsByClassName('input')[0];
+    var output = document.getElementsByClassName('output')[0];
     // 分割输入成单行
-    var content = textarea.value.trim(); // 移除内容前后的空白
+    var content = input.value.trim(); // 移除内容前后的空白
     var lines = content.split('\n').map(item => item.trim()); // 移除每个元素前后的空白
+    lines = lines.filter(line => line !== ''); // 去除空行
     // 移除总计行
     lines.pop();
 
@@ -141,37 +105,67 @@ function formatThreats() {
     });
 
     // 加入描述文本间的连接词
-    textarea1.value = descriptions.join('、');
+    output.value = descriptions.join('、');
 }
-
 function parseIpAndOutput() {
-    var textarea = document.getElementsByClassName('tarea1')[0];
-    var textarea1 = document.getElementsByClassName('tarea')[0];
-    
+    var input = document.getElementsByClassName('input')[0];
+    var output = document.getElementsByClassName('output')[0];
+
     // 定义输出文本区域
     var outputText = '';
-  
+
     // 分割输入文本为多行
-    var lines = textarea.value.split('\n');
-  
+    var lines = input.value.split('\n');
+
     // 遍历每一行
-    lines.forEach(function(line) {
-      // 使用正则表达式匹配IP地址和端口号
-      var match = line.match(/([\d.]+)\s+(\d+)/);
-      if (match) {
-        // 获取IP地址和端口号
-        var ip = match[1];
-        var port = match[2];
-        // 格式化为'IP:端口'的形式
-        var result = ip + ':' + port;
-        // 添加到输出文本
-        outputText += result + '\n';
-      }
+    lines.forEach(function (line) {
+        // 使用正则表达式匹配IP地址和端口号
+        var match = line.match(/([\d.]+)\s+(\d+)/);
+        if (match) {
+            // 获取IP地址和端口号
+            var ip = match[1];
+            var port = match[2];
+            // 格式化为'IP:端口'的形式
+            var result = ip + ':' + port;
+            // 添加到输出文本
+            outputText += result + '\n';
+        }
     });
-  
+
     // 将结果写入输出文本区域
-    textarea1.value = outputText;
-  }
+    output.value = outputText;
+}
+function generateTable() {
+    var input = document.getElementsByClassName('input')[0];
+    var output = document.getElementsByClassName('output')[0];
+    // 解析JSON数据
+    var jsonData = JSON.parse(input.value);
+    // 获取日期数据
+    var dates = jsonData.data.dataName;
+    // 获取外部攻击数据
+    var externalAttacks = jsonData.data.dataValue[0].value;
+    // 获取入侵主机数据
+    var intrusionHosts = jsonData.data.dataValue[1].value;
+    // 创建表格头部
+    var table = "时间\t外部攻击\t入侵主机\n";
+    // 遍历日期数据并生成表格内容
+    for (var i = 0; i < dates.length; i++) {
+        var row = dates[i] + "\t" + externalAttacks[i] + "\t" + intrusionHosts[i] + "\n";
+        table += row;
+    }
+    output.value = table;
+}
+
+
+
+
+
+
+
+
+
+
+
 
 $(document).ready(function () {
     // 使用事件委托简化代码
@@ -182,7 +176,7 @@ $(document).ready(function () {
 
     // 将插入文本的逻辑抽象到一个函数中
     function insertText(text) {
-        var textarea = $('.tarea')[0]; // 选择第一个匹配的textarea元素
+        var textarea = $('.output')[0]; // 选择第一个匹配的textarea元素
         // 标准浏览器及IE9+
         if (textarea.selectionStart || textarea.selectionStart === '0') {
             var startPos = textarea.selectionStart;
@@ -206,10 +200,15 @@ $(document).ready(function () {
     }
 
     // 绑定测试匹配按钮的点击事件
-    $('.btn-primary').click(onMatch);
-    $('.removeDuplicates').click(removeDuplicates);
+    $('.parseIpAndOutput').click(parseIpAndOutput);
+
+
+    // 周报
+    $('.generateTable').click(generateTable);
     $('.sumOccurrencesByCountry').click(sumOccurrencesByCountry);
     $('.formatThreats').click(formatThreats);
-    $('.parseIpAndOutput').click(parseIpAndOutput);
+    $('.removeDuplicates').click(removeDuplicates);
+
+
 });
 
