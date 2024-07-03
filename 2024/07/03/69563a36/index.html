@@ -1,0 +1,1480 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.27.0" theme-name="Stellar" theme-version="1.27.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>应急响应靶机训练-Web1 - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="总字符数: 23.16K                代码: 7.40K, 文本: 3.64K               预计阅读时间: 48 分钟            背景小李在值守的过程中,发现有CPU占用飙升,出于胆子小,就立刻将服务器关机,并找来正在吃苕皮的hxd帮他分析,这是他的服务器系统,请你找出以下内容:  攻击者的shell密码:rebeyond  攻击者的IP地址">
+<meta property="og:type" content="article">
+<meta property="og:title" content="应急响应靶机训练-Web1">
+<meta property="og:url" content="https://jiangjiyue.github.io/2024/07/03/69563a36/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="总字符数: 23.16K                代码: 7.40K, 文本: 3.64K               预计阅读时间: 48 分钟            背景小李在值守的过程中,发现有CPU占用飙升,出于胆子小,就立刻将服务器关机,并找来正在吃苕皮的hxd帮他分析,这是他的服务器系统,请你找出以下内容:  攻击者的shell密码:rebeyond  攻击者的IP地址">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031837719.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031837728.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031837412.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031837883.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031837283.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031837654.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031838577.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031838590.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031838548.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031838889.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031838670.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031838560.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031838736.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031838543.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031838425.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031838239.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031838936.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031838914.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031838269.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031839736.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031839343.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031839071.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031839779.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031839364.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031843997.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031839370.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031839011.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051919583.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051921594.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051923051.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051924129.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051929117.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051925983.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051930847.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051930958.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051935147.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051937925.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051937269.png">
+<meta property="article:published_time" content="2024-07-03T10:34:49.000Z">
+<meta property="article:modified_time" content="2024-07-03T10:59:16.316Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="应急响应">
+<meta property="article:tag" content="Windows">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031837719.png">
+  
+  
+  
+  <meta name="keywords" content="应急响应,Windows">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.27.0">
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="探索" href="/notes/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/tools/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
+</div>
+<div class="widgets">
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">专栏：EmergencyResponse</span></div><div class="widget-body"><a class="item active" href="/2024/07/03/69563a36/"><span class="title">应急响应靶机训练-Web1</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a></div></widget>
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2024/07/03/69563a36/"><span class="title">应急响应靶机训练-Web1</span></a><a class="item title" href="/2023/07/13/d9d69399/"><span class="title">攻防演练事件研判篇</span></a><a class="item title" href="/2024/03/01/70eef621/"><span class="title">VulnHub-Kioptrix Level 4 受限 Shell 越狱 + Mysql UDF 提权</span></a><a class="item title" href="/2024/02/28/aba73427/"><span class="title">VulnHub-Kioptrix Level 3 SQL 注入 + sudo 提权</span></a><a class="item title" href="/2024/02/24/e36a7018/"><span class="title">VulnHub-Kioptrix Level 1 古老的 Apache Vuln</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/topic">专栏</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/2024/07/03/69563a36/">EmergencyResponse</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2024-07-03T10:34:49.000Z">2024-07-03</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-07-03T10:59:16.316Z">2024-07-03</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>应急响应靶机训练-Web1</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
+    <p>总字符数: 23.16K </p>
+    </div>
+    <div class="cell" style="">
+    <p>代码: 7.40K, 文本: 3.64K</p>
+    </div>
+    <div class="cell" style="">
+    <p>预计阅读时间: 48 分钟</p>
+    </div>
+    </div>
+
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>小李在值守的过程中,发现有CPU占用飙升,出于胆子小,就立刻将服务器关机,并找来正在吃苕皮的hxd帮他分析,这是他的服务器系统,请你找出以下内容:</p>
+<ol>
+<li><p>攻击者的shell密码:rebeyond</p>
+</li>
+<li><p>攻击者的IP地址:192.168.126.1</p>
+</li>
+<li><p>攻击者的隐藏账户名称: hack168$</p>
+</li>
+<li><p>攻击者挖矿程序的矿池域名(仅域名):<a target="_blank" rel="noopener" href="http://wakuang.zhigongshanfang.top/">http://wakuang.zhigongshanfang.top</a></p>
+</li>
+<li><p>修复漏洞</p>
+</li>
+</ol>
+<h2 id="靶机环境"><a href="#靶机环境" class="headerlink" title="靶机环境"></a>靶机环境</h2><p>使用Vmware启动即可,如启动错误,请升级至Vmware17.5以上</p>
+<p>靶机环境：</p>
+<ol>
+<li><p>Windows Server 2022</p>
+</li>
+<li><p>phpstudy(小皮面板)</p>
+</li>
+</ol>
+<p>相关账户密码:</p>
+<ol>
+<li><p>用户:administrator</p>
+</li>
+<li><p>密码:<a href="mailto:&#x5a;&#103;&#x73;&#x66;&#64;&#97;&#100;&#x6d;&#x69;&#110;&#46;&#x63;&#x6f;&#x6d;">&#x5a;&#103;&#x73;&#x66;&#64;&#97;&#100;&#x6d;&#x69;&#110;&#46;&#x63;&#x6f;&#x6d;</a></p>
+</li>
+</ol>
+<h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><h3 id="查看端口"><a href="#查看端口" class="headerlink" title="查看端口"></a>查看端口</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看运行了哪些服务,有无外联端口</span></span><br><span class="line">netstat-ano</span><br><span class="line"></span><br><span class="line"><span class="comment"># TCP 连接</span></span><br><span class="line"><span class="comment"># 监听端口 (LISTENING)</span></span><br><span class="line">135端口：通常用于 Windows RPC(远程过程调用)服务,PID 为 884.</span><br><span class="line">445端口：用于 SMB(Server Message Block)协议,通常用于文件和打印机共享,PID 为 4.</span><br><span class="line">3389端口：用于 RDP(远程桌面协议),PID 为 1012.</span><br><span class="line">5357端口：通常用于 Web Services <span class="keyword">for</span> Devices (WSDAPI),PID 为 4.</span><br><span class="line">5985端口：用于 WinRM (Windows Remote Management) over HTTP,PID 为 4.</span><br><span class="line">47001端口：通常用于 Windows 的自动发现服务,PID 为 4.</span><br><span class="line">49664-49671端口：这些是动态或私有端口,用于各种系统服务,PID 分别为 672, 512, 1132, 1656, 2084, 2428, 648, 2308.</span><br><span class="line"></span><br><span class="line"><span class="comment"># 已建立连接 (ESTABLISHED)</span></span><br><span class="line">49809和49810端口：与 124.152.197.78 的 80 端口建立连接,PID 为 7512.</span><br><span class="line">49850和49851端口：与 40.126.35.80 和 119.167.147.35 的 443 端口建立连接,PID 为 3652.</span><br><span class="line">等待关闭连接 (TIME_WAIT)</span><br><span class="line"></span><br><span class="line">49802, 49808, 49849, 49853, 49855, 49856, 49858, 49859端口：这些连接正在等待关闭,PID 为 0.</span><br><span class="line"><span class="comment"># UDP 连接</span></span><br><span class="line"><span class="comment"># 监听端口</span></span><br><span class="line">123端口：用于 NTP(网络时间协议),PID 为 2860.</span><br><span class="line">500端口：用于 IPSec 的 ISAKMP(Internet Security Association and Key Management Protocol),PID 为 2300.</span><br><span class="line">3389端口：用于 RDP 的 UDP 通信,PID 为 1012.</span><br><span class="line">3702端口：用于 Web Services Discovery,PID 为 7032.</span><br><span class="line">4500端口：用于 NAT-T(Network Address Translation - Traversal),PID 为 2300.</span><br><span class="line">5353端口：用于 mDNS(Multicast DNS),PID 为 1764.</span><br><span class="line">5355端口：用于 LLMNR(Link-Local Multicast Name Resolution),PID 为 1764.</span><br><span class="line">58668和58669端口：动态端口,PID 为 7032.</span><br><span class="line">127.0.0.1:59524：本地回环地址上的通信,PID 为 2560.</span><br><span class="line">192.168.150.176:137和138端口：用于 NetBIOS 名称和数据报服务,PID 为 4.</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031837719.png" data-fancybox="true"/></div></div>
+
+<h3 id="查看服务"><a href="#查看服务" class="headerlink" title="查看服务"></a>查看服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\Administrator&gt;tasklist /svc</span><br><span class="line"></span><br><span class="line">映像名称                       PID 服务</span><br><span class="line">========================= ======== ============================================</span><br><span class="line">System Idle Process              0 暂缺</span><br><span class="line">System                           4 暂缺</span><br><span class="line">Registry                       100 暂缺</span><br><span class="line">smss.exe                       300 暂缺</span><br><span class="line">csrss.exe                      416 暂缺</span><br><span class="line">wininit.exe                    512 暂缺</span><br><span class="line">csrss.exe                      520 暂缺</span><br><span class="line">winlogon.exe                   576 暂缺</span><br><span class="line">services.exe                   648 暂缺</span><br><span class="line">lsass.exe                      672 KeyIso, SamSs</span><br><span class="line">svchost.exe                    768 BrokerInfrastructure, DcomLaunch, PlugPlay,</span><br><span class="line">                                   Power, SystemEventsBroker</span><br><span class="line">fontdrvhost.exe                784 暂缺</span><br><span class="line">fontdrvhost.exe                792 暂缺</span><br><span class="line">svchost.exe                    884 RpcEptMapper, RpcSs</span><br><span class="line">svchost.exe                    944 LSM</span><br><span class="line">svchost.exe                   1012 TermService</span><br><span class="line">dwm.exe                        380 暂缺</span><br><span class="line">svchost.exe                    692 NcbService</span><br><span class="line">svchost.exe                    936 lmhosts</span><br><span class="line">svchost.exe                    352 TimeBrokerSvc</span><br><span class="line">svchost.exe                   1132 EventLog</span><br><span class="line">svchost.exe                   1140 CoreMessagingRegistrar</span><br><span class="line">svchost.exe                   1296 nsi</span><br><span class="line">svchost.exe                   1308 gpsvc</span><br><span class="line">svchost.exe                   1336 ProfSvc</span><br><span class="line">svchost.exe                   1344 FontCache</span><br><span class="line">svchost.exe                   1380 EventSystem</span><br><span class="line">svchost.exe                   1396 UmRdpService</span><br><span class="line">svchost.exe                   1412 Themes</span><br><span class="line">svchost.exe                   1420 DispBrokerDesktopSvc</span><br><span class="line">svchost.exe                   1528 Dhcp</span><br><span class="line">svchost.exe                   1632 SENS</span><br><span class="line">svchost.exe                   1656 Schedule</span><br><span class="line">svchost.exe                   1764 Dnscache</span><br><span class="line">svchost.exe                   1772 Wcmsvc</span><br><span class="line">svchost.exe                   1856 NlaSvc</span><br><span class="line">svchost.exe                   1872 ShellHWDetection</span><br><span class="line">svchost.exe                   1884 CertPropSvc</span><br><span class="line">svchost.exe                   1956 BFE, mpssvc</span><br><span class="line">svchost.exe                   1976 LanmanWorkstation</span><br><span class="line">svchost.exe                   1988 WinHttpAutoProxySvc</span><br><span class="line">svchost.exe                   2084 SessionEnv</span><br><span class="line">svchost.exe                   2100 netprofm</span><br><span class="line">svchost.exe                   2220 UserManager</span><br><span class="line">svchost.exe                   2300 IKEEXT</span><br><span class="line">svchost.exe                   2308 PolicyAgent</span><br><span class="line">spoolsv.exe                   2428 Spooler</span><br><span class="line">svchost.exe                   2512 CryptSvc</span><br><span class="line">svchost.exe                   2524 DiagTrack</span><br><span class="line">svchost.exe                   2560 iphlpsvc</span><br><span class="line">svchost.exe                   2608 LanmanServer</span><br><span class="line">phpStudyServer.exe            2624 phpStudySrv</span><br><span class="line">svchost.exe                   2640 SstpSvc</span><br><span class="line">svchost.exe                   2680 StateRepository</span><br><span class="line">svchost.exe                   2688 SysMain</span><br><span class="line">svchost.exe                   2744 TrkWks</span><br><span class="line">VGAuthService.exe             2768 VGAuthService</span><br><span class="line">vm3dservice.exe               2804 vm3dservice</span><br><span class="line">vmtoolsd.exe                  2848 VMTools</span><br><span class="line">svchost.exe                   2860 W32Time</span><br><span class="line">MsMpEng.exe                   2868 WinDefend</span><br><span class="line">svchost.exe                   2884 Winmgmt</span><br><span class="line">svchost.exe                   2908 WinRM</span><br><span class="line">svchost.exe                   2940 WpnService</span><br><span class="line">vm3dservice.exe               2592 暂缺</span><br><span class="line">svchost.exe                   3356 RasMan</span><br><span class="line">AggregatorHost.exe            3668 暂缺</span><br><span class="line">dllhost.exe                   3696 COMSysApp</span><br><span class="line">WmiPrvSE.exe                  4132 暂缺</span><br><span class="line">sihost.exe                    4212 暂缺</span><br><span class="line">svchost.exe                   4224 CDPUserSvc_37c8d</span><br><span class="line">svchost.exe                   4256 WpnUserService_37c8d</span><br><span class="line">taskhostw.exe                 4360 暂缺</span><br><span class="line">svchost.exe                   4472 TokenBroker</span><br><span class="line">svchost.exe                   4540 TabletInputService</span><br><span class="line">ctfmon.exe                    4628 暂缺</span><br><span class="line">svchost.exe                   4668 AppXSvc</span><br><span class="line">svchost.exe                   4748 camsvc</span><br><span class="line">svchost.exe                   4792 CDPSvc</span><br><span class="line">NisSrv.exe                    3616 WdNisSvc</span><br><span class="line">explorer.exe                  1092 暂缺</span><br><span class="line">ChsIME.exe                    4588 暂缺</span><br><span class="line">svchost.exe                   5180 wuauserv</span><br><span class="line">msdtc.exe                     5188 MSDTC</span><br><span class="line">TextInputHost.exe             5500 暂缺</span><br><span class="line">StartMenuExperienceHost.e     5524 暂缺</span><br><span class="line">RuntimeBroker.exe             5700 暂缺</span><br><span class="line">SearchApp.exe                 5944 暂缺</span><br><span class="line">RuntimeBroker.exe             6128 暂缺</span><br><span class="line">RuntimeBroker.exe             6308 暂缺</span><br><span class="line">svchost.exe                   6384 LicenseManager</span><br><span class="line">vmtoolsd.exe                  4376 暂缺</span><br><span class="line">WmiPrvSE.exe                  5928 暂缺</span><br><span class="line">svchost.exe                   1244 Appinfo</span><br><span class="line">svchost.exe                   1408 fdPHost</span><br><span class="line">svchost.exe                   7032 FDResPub</span><br><span class="line">MicrosoftEdgeUpdate.exe       8060 暂缺</span><br><span class="line">MicrosoftEdgeUpdate.exe       8096 暂缺</span><br><span class="line">svchost.exe                   7016 DPS</span><br><span class="line">svchost.exe                   6620 WdiSystemHost</span><br><span class="line">taskhostw.exe                 6960 暂缺</span><br><span class="line">svchost.exe                   7308 PcaSvc</span><br><span class="line">svchost.exe                   6064 StorSvc</span><br><span class="line">svchost.exe                   7252 UALSVC</span><br><span class="line">MicrosoftEdgeUpdate.exe       5172 edgeupdate</span><br><span class="line">svchost.exe                   3084 cbdhsvc_37c8d</span><br><span class="line">svchost.exe                   7512 DoSvc</span><br><span class="line">svchost.exe                   7692 UsoSvc</span><br><span class="line">phpstudy_pro.exe              7880 暂缺</span><br><span class="line">svchost.exe                   4504 ClipSVC</span><br><span class="line">svchost.exe                   3652 DsSvc</span><br><span class="line">svchost.exe                   1644 smphost</span><br><span class="line">WinSAT.exe                    8088 暂缺</span><br><span class="line">conhost.exe                   5480 暂缺</span><br><span class="line">smartscreen.exe               7368 暂缺</span><br><span class="line">cmd.exe                       2776 暂缺</span><br><span class="line">conhost.exe                   2280 暂缺</span><br><span class="line">tasklist.exe                  2656 暂缺</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看账号"><a href="#查看账号" class="headerlink" title="查看账号"></a>查看账号</h3><p><code>win+r</code>:<code>lusrmgr.msc</code>发现一个影子账户:<code>hack168$</code>或<code>net localgroup administrators</code>只能查看通过<code>$</code>符号隐藏的账户</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031837728.png" data-fancybox="true"/></div></div>
+
+<p>在该用户下发现执行程序一个,提取出后上传到微步在线分析一下,由于此程序是模拟出来的恶意软件所以微步并判断出是否为恶意程序</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031837412.png" data-fancybox="true"/></div></div>
+
+<p>以下反编译内容来自题解:<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?biz=MzkxMTUwOTY1MA==&mid=2247485188&idx=2&sn=54b8962a88b9da74a3db436f515b815b&chksm=c11a56f9f66ddfefd0ca7402617e4c5665033b0305a5f66a1434630b9795b09fa23fc63d3c12&scene=21#wechat_redirect">https://mp.weixin.qq.com/s?biz=MzkxMTUwOTY1MA==&amp;mid=2247485188&amp;idx=2&amp;sn=54b8962a88b9da74a3db436f515b815b&amp;chksm=c11a56f9f66ddfefd0ca7402617e4c5665033b0305a5f66a1434630b9795b09fa23fc63d3c12&amp;scene=21#wechat_redirect</a></p>
+<p>在桌面处找到位置程序,运行后cpu飙升,判别为挖矿程序,分析该文件</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031837883.png" data-fancybox="true"/></div></div>
+
+<p>该图标为pyinstaller打包<strong>通过Google识图也可以找到这是什么打包的,如何反编译</strong>,使用pyinstxtractor进行反编译:<a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_37552052/article/details/88093427">https://blog.csdn.net/m0_37552052/article/details/88093427</a></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031837283.png" data-fancybox="true"/></div></div>
+
+<p><a target="_blank" rel="noopener" href="https://github.com/extremecoders-re/pyinstxtractor">https://github.com/extremecoders-re/pyinstxtractor</a></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031837654.png" data-fancybox="true"/></div></div>
+
+<p>得到pyc文件</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031838577.png" data-fancybox="true"/></div></div>
+
+<p>使用在线pyc反编译工具,得到源码<a target="_blank" rel="noopener" href="https://tool.lu/pyc/">https://tool.lu/pyc/</a></p>
+<p><a target="_blank" rel="noopener" href="http://wakuang.zhigongshanfang.top/">http://wakuang.zhigongshanfang.top</a></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031838590.png" data-fancybox="true"/></div></div>
+
+<h3 id="分析开机自启程序"><a href="#分析开机自启程序" class="headerlink" title="分析开机自启程序"></a>分析开机自启程序</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run</span><br><span class="line">HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Runonce</span><br><span class="line">HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\RunServices</span><br><span class="line">HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\RunServicesOnce</span><br><span class="line">HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\policies\Explorer\Run</span><br><span class="line">HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run</span><br><span class="line">HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\RunOnce</span><br><span class="line">HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\RunServices</span><br><span class="line">HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\RunServicesOnce</span><br><span class="line">(ProfilePath)\Start Menu\Programs\Startup 启动项</span><br><span class="line">msconfig 启动选项卡</span><br><span class="line">gpedit.msc 组策略编辑器</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看计划或定时任务"><a href="#查看计划或定时任务" class="headerlink" title="查看计划或定时任务"></a>查看计划或定时任务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">C:\Windows\System32\Tasks\</span><br><span class="line">C:\Windows\SysWOW64\Tasks\</span><br><span class="line">C:\Windows\tasks\</span><br><span class="line">schtasks</span><br><span class="line">taskschd.msc</span><br><span class="line">compmgmt.msc</span><br></pre></td></tr></table></figure>
+
+<h2 id="Web应急响应"><a href="#Web应急响应" class="headerlink" title="Web应急响应"></a>Web应急响应</h2><p>开着PHPStudy那估计就会有web服务器,虽然背景中也说了,进入网站根目录,查找是否存在Webshell,或通过<code>%UserProfile%\Recent</code>查找最近修改的文件记录</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031838548.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031838889.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031838670.png" data-fancybox="true"/></div></div>
+
+<p>没有发现可疑文件,也可换其他工具,这里查找中间件日志文件快速浏览</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031838560.png" data-fancybox="true"/></div></div>
+
+<p>相关中间件日志都要快速过一遍,在<code>access.log</code>中发现可疑路径<code>192.168.126.1 - - [26/Feb/2024:22:46:23 +0800] &quot;GET /content/plugins/tips/shell.php HTTP/1.1&quot; 200 -</code></p>
+<p>查看该文件内容,发现是个冰蝎马</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031838736.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031838543.png" data-fancybox="true"/></div></div>
+
+<p>密码为默认密码:rebeyond攻击IP为:192.168.126.1</p>
+<p>继续查看日志寻找shell前后请求,发现了大量的POST请求同一页面并且状态码为302,猜测可能存在弱口令,联系运维人员确认是否为弱口令或者查看全流量设备</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031838425.png" data-fancybox="true"/></div></div>
+
+<p>通过弱口令:<code>admin 123456</code>登录到后台查看CMS框架及版本号<code>emlog pro2.2.0</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031838239.png" data-fancybox="true"/></div></div>
+
+<p>搜索<code>emlog pro2.2.0 历史漏洞</code>得到<code>/admin/plugin.php</code>存在任意文件上传,并且和日志中的攻击路径吻合</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031838936.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031838914.png" data-fancybox="true"/></div></div>
+
+<h2 id="系统应急响应"><a href="#系统应急响应" class="headerlink" title="系统应急响应"></a>系统应急响应</h2><p>通过eventvwr查看用户创建日志,发现是直接通过administrator管理员用户创建的影子账户.由于没用pcap包无法判断是否通过冰蝎马创建</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031838269.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031839736.png" data-fancybox="true"/></div></div>
+
+<p>powershell无异常</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031839343.png" data-fancybox="true"/></div></div>
+
+<p>发现此用户通过RDP远程登陆了此机器</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031839071.png" data-fancybox="true"/></div></div>
+
+<h2 id="Windows事件ID-番外篇"><a href="#Windows事件ID-番外篇" class="headerlink" title="Windows事件ID-番外篇"></a>Windows事件ID-番外篇</h2><h3 id="审核策略更改"><a href="#审核策略更改" class="headerlink" title="审核策略更改"></a>审核策略更改</h3><blockquote>
+<p>此安全设置确定 OS 是否对尝试更改用户权限分 配策略、审核策略、帐户策略或信任策略的每 一个实例进行审核.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th align="center">类别</th>
+<th align="center">子类别</th>
+<th align="center">默认状态</th>
+<th align="center">对应高级审核策略配置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">审核策略更改</td>
+<td align="center">审核审核策略更改</td>
+<td align="center">成功</td>
+<td align="center">策略更改</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核身份验证策略更改</td>
+<td align="center">成功</td>
+<td align="center">策略更改</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核授权策略更改</td>
+<td align="center">无审核</td>
+<td align="center">策略更改</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核筛选平台策略更改</td>
+<td align="center">无审核</td>
+<td align="center">策略更改</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核 MPSSVC 规则级策略更改</td>
+<td align="center">无审核</td>
+<td align="center">策略更改</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核其他策略更改事件</td>
+<td align="center">无审核</td>
+<td align="center">策略更改</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="center"><strong>子类别</strong></th>
+<th align="center"><strong>默认状态</strong></th>
+<th align="center"><strong>事件ID</strong></th>
+<th align="center"><strong>事件说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">审核审核策略更改</td>
+<td align="center">成功</td>
+<td align="center">4715</td>
+<td align="center">对象的审核策略 (SACL) 已更改.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">4719</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">系统审核策略已更改.</mark></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4817</td>
+<td align="center">对象的审核设置已更改.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4902</td>
+<td align="center">创建了每用户审核策略表.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4904</td>
+<td align="center">已尝试注册安全事件源.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4905</td>
+<td align="center">已尝试取消注册安全事件源.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4906</td>
+<td align="center">CrashOnAuditFail 值已更改.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4907</td>
+<td align="center">对象的审核设置已更改.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4908</td>
+<td align="center">特殊组登录表已修改.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4912</td>
+<td align="center">每用户审核策略已更改.</td>
+</tr>
+<tr>
+<td align="center">审核身份验证策略更改</td>
+<td align="center">成功</td>
+<td align="center">4713</td>
+<td align="center">Kerberos 策略已更改.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4716</td>
+<td align="center">可信域信息已修改.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4717</td>
+<td align="center">系统安全访问被授予一个帐户.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4718</td>
+<td align="center">系统安全访问权限已从帐户中删除</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4739</td>
+<td align="center">域策略已更改.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4864</td>
+<td align="center">检测到命名空间冲突.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4865</td>
+<td align="center">添加了受信任的林信息条目.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4866</td>
+<td align="center">删除了受信任的林信息条目.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4867</td>
+<td align="center">受信任的林信息条目已修改.</td>
+</tr>
+</tbody></table>
+<h3 id="审核登录事件"><a href="#审核登录事件" class="headerlink" title="审核登录事件"></a>审核登录事件</h3><blockquote>
+<p>此安全设置确定 OS 是否对尝试登录此计算机 或从中注销的用户的每个实例进行审核.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th align="center"><strong>类别</strong></th>
+<th align="center"><strong>子类别</strong></th>
+<th align="center"><strong>默认状态</strong></th>
+<th align="center">对应高级审核策略配置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">审核登录事件</td>
+<td align="center">审核账户锁定</td>
+<td align="center">成功</td>
+<td align="center">登录&#x2F;注销</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核 IPsec 扩展模式</td>
+<td align="center">无审核</td>
+<td align="center">登录&#x2F;注销</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核 IPsec 主模式</td>
+<td align="center">无审核</td>
+<td align="center">登录&#x2F;注销</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核 IPsec 快速模式</td>
+<td align="center">无审核</td>
+<td align="center">登录&#x2F;注销</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核注销</td>
+<td align="center">成功</td>
+<td align="center">登录&#x2F;注销</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核登录</td>
+<td align="center">客户端:成功<br />服务器:成功和失败</td>
+<td align="center">登录&#x2F;注销</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核网络策略服务器</td>
+<td align="center">成功和失败</td>
+<td align="center">登录&#x2F;注销</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核其他登录&#x2F;注销事件</td>
+<td align="center">无审核</td>
+<td align="center">登录&#x2F;注销</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核特别登录</td>
+<td align="center">成功</td>
+<td align="center">登录&#x2F;注销</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="center">子类别</th>
+<th align="center">默认状态</th>
+<th align="center">事件ID</th>
+<th align="center">事件说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">审核账户锁定</td>
+<td align="center">成功</td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">4625</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">帐户登录失败.</mark></td>
+</tr>
+<tr>
+<td align="center">审核注销</td>
+<td align="center">成功</td>
+<td align="center">4634</td>
+<td align="center">帐户已注销.</td>
+</tr>
+<tr>
+<td align="center">审核注销</td>
+<td align="center">成功</td>
+<td align="center">4647</td>
+<td align="center">用户发起的注销.</td>
+</tr>
+<tr>
+<td align="center">审核登录</td>
+<td align="center">客户端PC: 成功<br />服务器: 成功和失败</td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">4624</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">一个帐户已成功登录.</mark></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">4625</mark></td>
+<td align="center">一个帐户登录失败</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4648</td>
+<td align="center">尝试使用显式凭据登录.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4675</td>
+<td align="center">SID 被过滤.</td>
+</tr>
+<tr>
+<td align="center">审核网络策略服务器</td>
+<td align="center">成功和失败</td>
+<td align="center"></td>
+<td align="center">网络策略服务器授予用户访问权限.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">6273</td>
+<td align="center">网络策略服务器拒绝访问用户.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">6274</td>
+<td align="center">网络策略服务器放弃了对用户的请求.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">6275</td>
+<td align="center">网络策略服务器丢弃了用户的计费请求.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">6276</td>
+<td align="center">网络策略服务器隔离了一个用户.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">6277</td>
+<td align="center">网络策略服务器授予用户访问权限,但由于主机不符合定义的健康策略而使其处于试用状态.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">6278</td>
+<td align="center">网络策略服务器授予用户完全访问权限,因为主机符合定义的健康策略.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">6279</td>
+<td align="center">由于多次失败的身份验证尝试,网络策略服务器锁定了用户帐户.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">6280</td>
+<td align="center">网络策略服务器解锁了用户帐户.</td>
+</tr>
+<tr>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">审核特别登录</mark></td>
+<td align="center">成功</td>
+<td align="center">4964</td>
+<td align="center">已将特殊组分配给新登录</td>
+</tr>
+</tbody></table>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031839779.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031839364.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031843997.png" data-fancybox="true"/></div></div>
+
+<table>
+<thead>
+<tr>
+<th><strong>登录类型</strong></th>
+<th><strong>描述</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><mark class="tag-plugin colorful mark" color="red">2</mark></td>
+<td><mark class="tag-plugin colorful mark" color="red">交互式登录(Interactive)</mark></td>
+<td><mark class="tag-plugin colorful mark" color="red">用户在本地进行登录.</mark></td>
+</tr>
+<tr>
+<td><mark class="tag-plugin colorful mark" color="red">3</mark></td>
+<td><mark class="tag-plugin colorful mark" color="red">网络(Network)</mark></td>
+<td><mark class="tag-plugin colorful mark" color="red">最常见的情况就是连接到共享文件夹或共享打印机时.</mark></td>
+</tr>
+<tr>
+<td>4</td>
+<td>批处理(Batch)</td>
+<td>通常表明某计划任 务启动.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>服务(Service)</td>
+<td>每种服务都被配置 在某个特定的用户 账号下运行.</td>
+</tr>
+<tr>
+<td>7</td>
+<td>解锁(Unlock)</td>
+<td>屏保解锁.</td>
+</tr>
+<tr>
+<td>8</td>
+<td>网络明文(NetworkCleartext)</td>
+<td>登录的密码在网络 上是通过明文传输 的,如FTP.</td>
+</tr>
+<tr>
+<td>9</td>
+<td>新凭证(NewCredentials)</td>
+<td>使用带&#x2F;Netonly参数 的RUNAS命令运行一 个程序.</td>
+</tr>
+<tr>
+<td><mark class="tag-plugin colorful mark" color="red">10</mark></td>
+<td><mark class="tag-plugin colorful mark" color="red">远程交互(RemoteInteractive)</mark></td>
+<td><mark class="tag-plugin colorful mark" color="red">通过终端服务、远程桌面或远程协助访问计算机.</mark></td>
+</tr>
+<tr>
+<td>11</td>
+<td>缓存交互(CachedInteractive)</td>
+<td>以一个域用户登录而又没有域控制器可用</td>
+</tr>
+</tbody></table>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031839370.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031839011.png" data-fancybox="true"/></div></div>
+
+<table>
+<thead>
+<tr>
+<th align="center">地位和子状态码</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">0xc0000064</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">用户名不存在</mark></td>
+</tr>
+<tr>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">0xc000006a</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">用户名是正确的,但密码是错误的</mark></td>
+</tr>
+<tr>
+<td align="center">0xc0000234</td>
+<td align="center">用户当前锁定</td>
+</tr>
+<tr>
+<td align="center">0xc0000072</td>
+<td align="center">帐户目前禁用</td>
+</tr>
+<tr>
+<td align="center">0xc000006f</td>
+<td align="center">用户试图登录天的外周或时间限制</td>
+</tr>
+<tr>
+<td align="center">0xc0000070</td>
+<td align="center">工作站的限制</td>
+</tr>
+<tr>
+<td align="center">0xc0000193</td>
+<td align="center">帐号过期</td>
+</tr>
+<tr>
+<td align="center">0xc0000071</td>
+<td align="center">过期的密码</td>
+</tr>
+<tr>
+<td align="center">0xc0000133</td>
+<td align="center">时钟之间的直流和其他电脑太不同步</td>
+</tr>
+<tr>
+<td align="center">0xc0000224</td>
+<td align="center">在下次登录用户需要更改密码</td>
+</tr>
+<tr>
+<td align="center">0xc0000225</td>
+<td align="center">显然一个缺陷在Windows和不是一个风险</td>
+</tr>
+<tr>
+<td align="center">0xc000015b</td>
+<td align="center">没有被授予该用户请求登录类型(又名登录 正确的)在这台机器</td>
+</tr>
+<tr>
+<td align="center">0xc000006d</td>
+<td align="center">似乎是由于系统问题和不安全</td>
+</tr>
+</tbody></table>
+<h3 id="审核账户管理"><a href="#审核账户管理" class="headerlink" title="审核账户管理"></a>审核账户管理</h3><blockquote>
+<p>此安全设置确定是否审核计算机上的每个帐户管理事件.帐户管理事件示例包括:</p>
+<ul>
+<li>创建、更改或删除用户帐户或组.</li>
+<li>重命名、禁用或启用用户帐户.</li>
+<li>设置或更改密码.</li>
+</ul>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th align="center">类别</th>
+<th align="center">子类别</th>
+<th align="center">默认状态</th>
+<th align="center">对应本地审核策略</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">帐户管理</td>
+<td align="center">审核应用组程序管理</td>
+<td align="center">无审核</td>
+<td align="center">审核账户管理</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核计算机帐户管理</td>
+<td align="center">无审核</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核通讯组管理</td>
+<td align="center">无审核</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核其他账户管理事件</td>
+<td align="center">无审核</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核安全组管理</td>
+<td align="center">成功</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核用户账户管理</td>
+<td align="center">成功</td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="center"><strong>子类别</strong></th>
+<th align="center"><strong>默认状态</strong></th>
+<th align="center"><strong>事件ID</strong></th>
+<th align="center"><strong>事件</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">审核安全组管理</td>
+<td align="center">成功</td>
+<td align="center">4727</td>
+<td align="center">已创建启用安全性的全局组.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">4728</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">一个成员被添加到启用安全的全局组中.</mark></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">4729</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">成员已从启用安全的全局组中删除.</mark></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4730</td>
+<td align="center">已删除启用安全的全局组.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4731</td>
+<td align="center">已创建启用安全性的本地组.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">4732</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">一个成员被添加到启用安全的本地组.</mark></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">4733</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">成员已从启用安全的本地组中删除.</mark></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4734</td>
+<td align="center">已删除启用安全的本地组.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4735</td>
+<td align="center">已更改启用安全的本地组.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4737</td>
+<td align="center">已更改启用安全的全局组.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4754</td>
+<td align="center">已创建启用安全的通用组.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4755</td>
+<td align="center">已更改启用安全的通用组.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">4756</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">一个成员被添加到启用安全的通用组.</mark></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">4757</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">成员已从启用安全的通用组中删除.</mark></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4758</td>
+<td align="center">已删除启用安全的通用组.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4764</td>
+<td align="center">组的类型已更改.</td>
+</tr>
+<tr>
+<td align="center">审核用户账户管理</td>
+<td align="center">成功</td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">4720</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">已创建用户帐户.</mark></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">4722</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">已启用用户帐户.</mark></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4723</td>
+<td align="center">试图更改帐户的密码.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">4724</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">已尝试重置帐户密码.</mark></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4725</td>
+<td align="center">用户帐户被禁用.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">4726</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">用户帐户被删除.</mark></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4738</td>
+<td align="center">用户帐户已更改.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4740</td>
+<td align="center">用户帐户被锁定.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4765</td>
+<td align="center">SID 历史记录已添加到帐户</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4766</td>
+<td align="center">尝试向帐户添加 SID 历史记录失败.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4767</td>
+<td align="center">用户帐户已解锁.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4780</td>
+<td align="center">ACL 是在作为管理员组成员的帐户上设置的.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4781</td>
+<td align="center">帐户名称已更改：</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4794</td>
+<td align="center">已尝试设置目录服务还原模式.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">5376</td>
+<td align="center">凭据管理器凭据已备份.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">5377</td>
+<td align="center">凭据管理器凭据是从备份中恢复的.</td>
+</tr>
+</tbody></table>
+<h2 id="隐藏账号-番外篇"><a href="#隐藏账号-番外篇" class="headerlink" title="隐藏账号-番外篇"></a>隐藏账号-番外篇</h2><p>window 隐藏系统用户操作,CMD命令行下,建立了一个用户名为<code>youzi$</code>,密码为<code>youzi$</code>的简单隐藏账户,并且把该隐藏账户提升为了管理员权限.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051919583.png" data-fancybox="true"/></div></div>
+<div class="tag-plugin colorful note" color="red"><div class="title">CMD命令行使用`net</div><div class="body"><p>user<code>,看不到</code>test$&#96;这个账号,但在控制面板和本地用户和组是可以显示此用户</p></div></div>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051921594.png" data-fancybox="true"/></div></div>
+<p><strong>克隆账号制作过程:</strong><br>1、“开始”→“运行”,输入<code>regedit</code>后回车,需要到<code>HKEY_LOCAL_MACHINE\SAM\SAM</code>,单机右建权限,把名叫:<code>administrator</code>的用户给予:完全控制以及读取的权限,在后面打勾就行,然后关闭注册表编辑器,再次打开即可</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051923051.png" data-fancybox="true"/></div></div>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051924129.png" data-fancybox="true"/></div></div>
+<p>2、来到注册表编辑器的<code>HKEY_LOCAL_MACHINE\SAM\SAM\Domains\Account\Users\Names</code>处,点击<code>youzi$</code>用户,得到在右边显示的键值中的”类型”一项显示为<code>0x3F9</code>,找到箭头所指目录.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051929117.png" data-fancybox="true"/></div></div>
+<p>3、找到<code>administrator</code>所对应的的项为<code>000001F4</code>,将<code>00001F4</code>的F值复制到<code>000003F9</code>的F值中,保存.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051925983.png" data-fancybox="true"/></div></div>
+<p>4、分别<code>youzi$</code>和<code>000003F9</code>导出到桌面,删除<code>youzi$</code>用户<code>net user youzi$ /del</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051930847.png" data-fancybox="true"/></div></div>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051930958.png" data-fancybox="true"/></div></div>
+<p>5、将刚才导出的两个后缀为.reg的注册表项导入注册表中.这样所谓的隐藏账户就创建好了.</p>
+<div class="tag-plugin colorful note" color="red"><div class="title">PS:不管你是在命令提示符下输入net</div><div class="body"><p>user 或者在系统用户管理界面都是看不到test$这个账户的,只有在注册表中才能看得到</p></div></div>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051935147.png" data-fancybox="true"/></div></div>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051937925.png" data-fancybox="true"/></div></div>
+<p>检测和清理方法:<br>使用D盾_web查杀工具,使用克隆账号检测功能进行查看,可检测出隐藏、克隆账号.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051937269.png" data-fancybox="true"/></div></div>
+
+
+<div class="article-footer fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2024/07/03/69563a36/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2024/07/03/69563a36/&title=应急响应靶机训练-Web1 - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031832827.png&summary=
+    总字符数: 23.16K 
+    
+    
+    代码: 7.40K, 文本: 3.64K
+    
+    
+    预计阅读时间: 48 分钟
+    
+    
+
+背景小李在值守的过程中,发现有CPU占用飙升,出..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=应急响应靶机训练-Web1 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2024/07/03/69563a36/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2024/07/03/69563a36/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2024/03/01/70eef621/">VulnHub-Kioptrix Level 4 受限 Shell 越狱 + Mysql UDF 提权</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\2021\09\19\2dd5e334\" title="ELK收集nginx日志并展示来源IP地图"><span class="title">ELK收集nginx日志并展示来源IP地图</span></a><a class="item" href="\2022\09\06\6e6b1513\" title="基于Awstats的Apache日志分析"><span class="title">基于Awstats的Apache日志分析</span></a><a class="item" href="\2023\07\13\d9d69399\" title="攻防演练事件研判篇"><span class="title">攻防演练事件研判篇</span></a><a class="item" href="\2021\09\26\1b012da8\" title="CorePress主题优化"><span class="title">CorePress主题优化</span></a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body waline'>
+      
+
+<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/tools/">工具</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%B6%E6%9C%BA%E7%8E%AF%E5%A2%83"><span class="toc-text">靶机环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-text">信息收集</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E7%AB%AF%E5%8F%A3"><span class="toc-text">查看端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%9C%8D%E5%8A%A1"><span class="toc-text">查看服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E8%B4%A6%E5%8F%B7"><span class="toc-text">查看账号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E7%A8%8B%E5%BA%8F"><span class="toc-text">分析开机自启程序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E8%AE%A1%E5%88%92%E6%88%96%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1"><span class="toc-text">查看计划或定时任务</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Web%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94"><span class="toc-text">Web应急响应</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94"><span class="toc-text">系统应急响应</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Windows%E4%BA%8B%E4%BB%B6ID-%E7%95%AA%E5%A4%96%E7%AF%87"><span class="toc-text">Windows事件ID-番外篇</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%A1%E6%A0%B8%E7%AD%96%E7%95%A5%E6%9B%B4%E6%94%B9"><span class="toc-text">审核策略更改</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%A1%E6%A0%B8%E7%99%BB%E5%BD%95%E4%BA%8B%E4%BB%B6"><span class="toc-text">审核登录事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%A1%E6%A0%B8%E8%B4%A6%E6%88%B7%E7%AE%A1%E7%90%86"><span class="toc-text">审核账户管理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9A%90%E8%97%8F%E8%B4%A6%E5%8F%B7-%E7%95%AA%E5%A4%96%E7%AF%87"><span class="toc-text">隐藏账号-番外篇</span></a></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js`,
+    marked: `https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.27.0" async></script>
+
+<!-- optional -->
+
+  <script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@2.14.1/dist/waline.js'
+
+  function load_comment(){
+    if(!document.getElementById("waline_container"))return;
+
+    utils.css('https://unpkg.com/@waline/client@2.14.1/dist/waline.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css');
+
+    const el = document.getElementById("waline_container");
+    var path = el.getAttribute('comment_id');
+    if (!path) {
+      path = decodeURI(window.location.pathname);
+    }
+
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@2.14.1/dist/waline.js","css":"https://unpkg.com/@waline/client@2.14.1/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"meta":["nick","mail","link"],"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+      el: '#waline_container',
+      path: path,
+      
+    }));
+
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    load_comment();
+  });
+
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"></script><script defer src="https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.swiper-slide img, .gallery img ,#waline_container .vcontent img`,
+    css: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css`,
+    js: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || null
+        }
+      });
+    })
+  }
+</script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          loop: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+</div></body></html>
