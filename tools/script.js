@@ -89,9 +89,7 @@ function formatThreats() {
     var content = input.value.trim(); // 移除内容前后的空白
     var lines = content.split('\n').map(item => item.trim()); // 移除每个元素前后的空白
     lines = lines.filter(line => line !== ''); // 去除空行
-    // 移除总计行
-    lines.pop();
-
+    console.log(lines)
     // 将每行数据转换为描述文本
     var descriptions = lines.map((line, index) => {
         // 分割行为事件和次数
@@ -99,14 +97,19 @@ function formatThreats() {
         var threat = parts[0].trim();
         var count = parseInt(parts[1], 10);
 
-        // 格式化描述，最后一个事件后面不加逗号
-        // 移除了事件和次数之间的空格
-        return `${threat}${index === lines.length - 1 ? '' : ''}${count}次`;
+        // 格式化描述，最后一个事件后面不加顿号
+        return `${threat} ${count}次${index < lines.length - 1 ? '、' : ''}`;
     });
 
     // 加入描述文本间的连接词
     output.value = descriptions.join('、');
+    // 移除最后一个顿号
+    if (output.value.endsWith('、')) {
+        output.value = output.value.slice(0, -1);
+    }
 }
+
+
 function parseIpAndOutput() {
     var input = document.getElementsByClassName('input')[0];
     var output = document.getElementsByClassName('output')[0];
