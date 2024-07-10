@@ -100,13 +100,12 @@ function formatThreats() {
         // 格式化描述，最后一个事件后面不加顿号
         return `${threat} ${count}次${index < lines.length - 1 ? '、' : ''}`;
     });
-
-    // 加入描述文本间的连接词
-    output.value = descriptions.join('、');
     // 移除最后一个顿号
-    if (output.value.endsWith('、')) {
-        output.value = output.value.slice(0, -1);
+    var result = descriptions.join('');
+    if (result.endsWith('、')) {
+        result = result.slice(0, -1);
     }
+    output.value = result; // 将结果输出到输出框
 }
 
 
