@@ -158,6 +158,21 @@ function generateTable() {
     output.value = table;
 }
 
+function WhitelistDeduplication(){
+    var input = document.getElementsByClassName('input')[0].value.split('\n');
+    var output = document.getElementsByClassName('output')[0].value.split('\n');
+
+    var duplicatesCount = 0;
+    var uniqueOutput = output.filter(function(ip) {
+        if (input.includes(ip)) {
+            duplicatesCount++;
+            return false;
+        }
+        return true;
+    });
+
+    document.getElementsByClassName('output')[0].value = "白名单数量:" + duplicatesCount + '\n' + uniqueOutput.join('\n');
+}
 
 
 
@@ -203,6 +218,7 @@ $(document).ready(function () {
 
     // 绑定测试匹配按钮的点击事件
     $('.parseIpAndOutput').click(parseIpAndOutput);
+    $('.WhitelistDeduplication').click(WhitelistDeduplication);
 
 
     // 周报
