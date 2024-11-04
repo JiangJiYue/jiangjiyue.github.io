@@ -1,0 +1,676 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.27.0" theme-name="Stellar" theme-version="1.27.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>MiddlewareDocs：三. Nginx-Examples使用说明 - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="总字符数: 4.63K                代码: 0.51K, 文本: 1.76K               预计阅读时间: 10 分钟            Nginx 示例教程Nginx-Examples在以下GitHub中   教程说明环境要求 Maven JDK8 Nginx-1.14.0(内置)  Maven安装解压 maven 压缩包.  解压apache-ma">
+<meta property="og:type" content="website">
+<meta property="og:title" content="三. Nginx-Examples使用说明">
+<meta property="og:url" content="https://jiangjiyue.github.io/wiki/MiddlewareDocs/%E4%B8%89.%20Nginx-Examples%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="总字符数: 4.63K                代码: 0.51K, 文本: 1.76K               预计阅读时间: 10 分钟            Nginx 示例教程Nginx-Examples在以下GitHub中   教程说明环境要求 Maven JDK8 Nginx-1.14.0(内置)  Maven安装解压 maven 压缩包.  解压apache-ma">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://github-readme-stats.xaoxuu.com/api/pin/?username=JiangJiYue&repo=yunwei&theme=dark&show_owner=true">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307111011149.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307101946718.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402102139112.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402102139458.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402102140939.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402102140316.png">
+<meta property="article:published_time" content="2024-01-26T10:40:45.000Z">
+<meta property="article:modified_time" content="2024-02-10T13:40:56.000Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="安全运维">
+<meta property="article:tag" content="中间件">
+<meta property="article:tag" content="NetOps">
+<meta property="article:tag" content="Nginx">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://github-readme-stats.xaoxuu.com/api/pin/?username=JiangJiYue&repo=yunwei&theme=dark&show_owner=true">
+  
+  
+  
+  <meta name="keywords" content=",,,">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.27.0">
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+
+
+
+<div class="l_body s:aa content tech" id="start" layout="wiki" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><div class="icon"><img no-lazy class="icon" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260737265.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></div><a class="title" href="/wiki/MiddlewareDocs/%E4%B8%80.%20Nginx%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A(%E4%B8%8A).html"><div class="main" ff="title">MiddlewareDocs</div><div class="sub normal cap">专业篇</div><div class="sub hover cap" style="opacity:0"> 涵盖安装、配置、优化和管理</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" data-filter="/wiki/MiddlewareDocs" placeholder="搜索中间件文档..."></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item active" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="导航" href="/sites/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/tools/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
+</div>
+<div class="widgets">
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">Nginx</span></div><div class="widget-body fs14"><a class="link" href="/wiki/MiddlewareDocs/%E4%B8%80.%20Nginx%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A(%E4%B8%8A).html#start"><span class="toc-text">一. Nginx从入门到精通(上)</span></a><a class="link" href="/wiki/MiddlewareDocs/%E4%B8%80.%20Nginx%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A(%E4%B8%8B).html"><span class="toc-text">一. Nginx从入门到精通(下)</span></a><a class="link" href="/wiki/MiddlewareDocs/%E4%BA%8C.%20Nginx%20%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3.html"><span class="toc-text">二. Nginx 配置文件详解</span></a><a class="link active" href="/wiki/MiddlewareDocs/%E4%B8%89.%20Nginx-Examples%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E.html"><span class="toc-text">三. Nginx-Examples使用说明</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a></div><div class="widget-header dis-select"><span class="name">Apache</span></div><div class="widget-body fs14"><a class="link" href="/wiki/MiddlewareDocs/%E5%9B%9B.%20Apache%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A.html"><span class="toc-text">四. Apache从入门到精通</span></a></div><div class="widget-header dis-select"><span class="name">Tomcat</span></div><div class="widget-body fs14"><a class="link" href="/wiki/MiddlewareDocs/%E4%BA%94.%20Tomcat%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A.html"><span class="toc-text">五. Tomcat从入门到精通</span></a></div></widget>
+
+<widget class="widget-wrapper post-card"><div class="widget-header dis-select"><span class="name">更多：DevOps</span></div><div class="widget-body"><a class="item wiki" href="/wiki/API-Gateway/%E4%B8%80.%20%E6%BC%AB%E8%B0%88Nginx%E7%BD%91%E5%85%B3.html"><span class="title">微服务API网关框架</span><span class="excerpt">探索微服务API网关的世界 - 我的学习和实践笔记。一起学习如何设计、搭建并优化API网关。</span></a><a class="item wiki" href="/wiki/MonitoringTechDocs/%E4%B8%80.%20Zabbix%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.html"><span class="title">监控系统技术框架</span><span class="excerpt">探索监控系统技术的世界 - 学习和实践笔记。一起学习如何设计、部署并优化监控环境。</span></a><a class="item wiki" href="/wiki/VirtDocs/%E4%B8%80.%20Esxi%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B.html"><span class="title">虚拟化技术框架</span><span class="excerpt">探索虚拟化技术的世界 - 我的学习和实践笔记。一起学习如何设计、部署并优化虚拟化环境。</span></a></div></widget>
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/wiki/VirtDocs/%E4%B8%89.%20%E5%A4%A7%E5%9E%8B%E5%88%86%E5%B8%83%E5%BC%8Fk8s%E9%9B%86%E7%BE%A4%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A.html"><span class="title"><strong>VirtDocs</strong><span class="dot"></span>三. 大型分布式k8s集群从入门到精通</span></a><a class="item title" href="/wiki/VulnerabilityInsightDocs/%E4%BA%94.%20XSS%E8%B7%A8%E7%AB%99%E8%84%9A%E6%9C%AC.html"><span class="title"><strong>VulnerabilityInsightDocs</strong><span class="dot"></span>五. XSS跨站脚本</span></a><a class="item title" href="/wiki/VirtDocs/%E4%BA%8C.%20Docker%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A.html"><span class="title"><strong>VirtDocs</strong><span class="dot"></span>二. Docker从入门到精通</span></a><a class="item title" href="/wiki/VulnerabilityInsightDocs/%E4%BA%8C.%20%E5%9C%A8%E7%BA%BF%E5%AF%86%E7%A0%81%E7%A0%B4%E8%A7%A3.html"><span class="title"><strong>VulnerabilityInsightDocs</strong><span class="dot"></span>二. 在线密码破解</span></a><a class="item title" href="/wiki/VulnerabilityInsightDocs/%E5%8D%81%E5%9B%9B.%20%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E.html"><span class="title"><strong>VulnerabilityInsightDocs</strong><span class="dot"></span>十四. 逻辑漏洞</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/wiki">文档</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/wiki/MiddlewareDocs/%E4%B8%80.%20Nginx%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A(%E4%B8%8A).html">MiddlewareDocs</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2024-02-10T13:40:56.000Z">2024-02-10</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>三. Nginx-Examples使用说明</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
+    <p>总字符数: 4.63K </p>
+    </div>
+    <div class="cell" style="">
+    <p>代码: 0.51K, 文本: 1.76K</p>
+    </div>
+    <div class="cell" style="">
+    <p>预计阅读时间: 10 分钟</p>
+    </div>
+    </div>
+
+<h1 id="Nginx-示例教程"><a href="#Nginx-示例教程" class="headerlink" title="Nginx 示例教程"></a>Nginx 示例教程</h1><div class="tag-plugin colorful note" color="red"><div class="body"><p>Nginx-Examples在以下GitHub中</p></div></div>
+<div class="tag-plugin ghcard"><a class="ghcard" rel="external nofollow noopener noreferrer noopener" target="_blank" href="https://github.com/JiangJiYue/yunwei"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://github-readme-stats.xaoxuu.com/api/pin/?username=JiangJiYue&repo=yunwei&theme=dark&show_owner=true"/></a></div>
+
+<h2 id="教程说明"><a href="#教程说明" class="headerlink" title="教程说明"></a>教程说明</h2><h3 id="环境要求"><a href="#环境要求" class="headerlink" title="环境要求"></a>环境要求</h3><ul>
+<li>Maven</li>
+<li>JDK8</li>
+<li>Nginx-1.14.0(内置)</li>
+</ul>
+<h3 id="Maven安装"><a href="#Maven安装" class="headerlink" title="Maven安装"></a>Maven安装</h3><p><strong>解压 maven 压缩包.</strong> </p>
+<p>解压apache-maven-3.9.3-bin.tar.gz,并把解压后的文件夹下的apache-maven-3.9.3文件夹移动到D:\下并重命名为maven.</p>
+<p><strong>配置maven 的环境变量</strong></p>
+<p>右键”计算机”,选择”属性”,之后点击”高级系统设置”,点击”环境变量”,来设置环境变量,有以下系统变量需要配置:</p>
+<p>新建系统变量<code>MAVEN_HOME</code>变量值:<code>D:\Software\maven</code></p>
+<p>编辑系统变量<code>Path</code>添加变量值<code>%MAVEN_HOME%\bin</code></p>
+<h4 id="本地仓库的配置-默认在C盘"><a href="#本地仓库的配置-默认在C盘" class="headerlink" title="本地仓库的配置(默认在C盘)"></a>本地仓库的配置(默认在C盘)</h4><p>这个配置文件:maven安装路径下\conf\settings.xml文件中</p>
+<h3 id="换源-配置中央仓库的镜像"><a href="#换源-配置中央仓库的镜像" class="headerlink" title="换源:配置中央仓库的镜像"></a>换源:配置中央仓库的镜像</h3><p>还是在settings.xml文件中,在mirrors标签中添加子标签如下</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mirror</span>&gt;</span>  </span><br><span class="line">	<span class="tag">&lt;<span class="name">id</span>&gt;</span>alimaven<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>aliyun maven<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/groups/public/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307111011149.png" data-fancybox="true"/></div></div>
+
+<h3 id="javaapp"><a href="#javaapp" class="headerlink" title="javaapp"></a>javaapp</h3><p>我写了一个嵌入式 Tomcat 的 Java 服务,代码在 javaapp 目录,基于 maven 管理.这个服务可以通过在启动时指定 <code>-Dtomcat.connector.port</code> 和 <code>-Dtomcat.context.path</code> 来分别指定服务启动时的端口号和 context.这样可以很方便的模拟多个服务器的场景.</p>
+<p>例如:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -Dtomcat.connector.port=9030 -Dtomcat.context.path=/app -<span class="built_in">cp</span> <span class="string">&quot;JavaWebApp/WEB-INF/classes;JavaWebApp/WEB-INF/lib/*&quot;</span> io.github.dunwu.app.Main</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>io.github.dunwu.app.Main</code> 是这个 Java 服务的启动类.</li>
+<li><code>JavaWebApp/WEB-INF/classes;JavaWebApp/WEB-INF/lib/*</code> 是 class 路径和 lib 路径,必须指定,否则无法识别启动类.</li>
+</ul>
+<p>如上的配置参数,可以启动一个端口号为 9030,上下文为 <code>/app</code> 的服务.访问路径为:<a target="_blank" rel="noopener" href="http://localhost:9030/app">http://localhost:9030/app</a>.</p>
+<h3 id="nginx-1-14-0"><a href="#nginx-1-14-0" class="headerlink" title="nginx-1.14.0"></a>nginx-1.14.0</h3><p>nginx-1.14.0 是 Nginx 的 windows 环境的 1.14.0 官方版本.之所以把它完整的放入本项目中也是为了方便演示.</p>
+<p>我添加了两个 bat 脚本,可以启动和关闭 nginx 服务.</p>
+<ul>
+<li><a href="nginx-1.14.0/nginx-start.bat">nginx-start.bat</a></li>
+<li><a href="nginx-1.14.0/nginx-stop.bat">nginx-stop.bat</a></li>
+</ul>
+<p>在 Nginx 默认配置文件 <a href="nginx-1.14.0/conf/nginx.conf">nginx.conf</a> 中我通过配置 <code>include demos/*.conf;</code> 将 <a href="nginx-1.14.0/conf/conf.d">Nginx&#x2F;demos&#x2F;nginx-1.14.0&#x2F;conf&#x2F;demos</a> 目录中所有 Nginx 配置示例都引入.</p>
+<h3 id="scripts"><a href="#scripts" class="headerlink" title="scripts"></a>scripts</h3><p><code>scripts</code> 中包含了运行示例的启动脚本.目前只支持 windows 下运行,当然想基于此教程改造为在 Linux 下运行也不难,将 nginx-1.14.0 替换为 Linux 版本,bat 脚本修改为 shell 即可.</p>
+<p>运行步骤:</p>
+<ol>
+<li>首先必须执行 <a href="scripts/build-javaapp.bat">build-javaapp.bat</a> 构建 javaapp<strong>右键以管理员运行</strong>	<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307101946718.png" data-fancybox="true"/></div></div></li>
+<li>想运行哪个 demo,就执行对应的 demoxx-start.bat 脚本.</li>
+</ol>
+<h3 id="添加-hosts"><a href="#添加-hosts" class="headerlink" title="添加 hosts"></a>添加 hosts</h3><p>因为示例中使用的不是公网域名,域名服务器不能识别.所以,要演示示例,还需要修改本地 hosts.</p>
+<ul>
+<li>windows 的 host 路径一般在:<code>C:\Windows\System32\drivers\etc\hosts</code></li>
+<li>linxu 的 host 路径一般在:<code>/etc/hosts</code></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1 www.demo01.com</span><br><span class="line">127.0.0.1 www.demo02.com</span><br><span class="line">127.0.0.1 www.demo03.com</span><br><span class="line">127.0.0.1 www.demo04.com</span><br><span class="line">127.0.0.1 www.demo05.com</span><br><span class="line">127.0.0.1 www.demo06.com</span><br><span class="line"><span class="comment"># 以上是所有的hosts,如果所有服务都看就一次性添加吧,一个一个加太麻烦了</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="示例说明"><a href="#示例说明" class="headerlink" title="示例说明"></a>示例说明</h2><h3 id="Demo01-简单的反向代理示例"><a href="#Demo01-简单的反向代理示例" class="headerlink" title="Demo01 - 简单的反向代理示例"></a>Demo01 - 简单的反向代理示例</h3><p>本示例启动一个 JavaApp,访问地址为:localhost:9010.<br>在 Nginx 中配置它的反向代理 host 为 <a target="_blank" rel="noopener" href="http://www.demo01.com.nginx/">www.demo01.com.Nginx</a> 配置文件:<a href="nginx-1.14.0/conf/conf.d/demo01.conf">demo01.conf</a></p>
+<p>运行步骤:</p>
+<ol>
+<li>执行 <a href="scripts/demo01-start.bat">demo01-start.bat</a> 脚本.</li>
+<li>配置 hosts:<code>127.0.0.1 www.demo01.com</code></li>
+<li>在浏览器中访问:<a target="_blank" rel="noopener" href="http://www.demo01.com/">www.demo01.com</a></li>
+</ol>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402102139112.png" data-fancybox="true"/></div></div>
+
+<h3 id="Demo02-负载均衡示例"><a href="#Demo02-负载均衡示例" class="headerlink" title="Demo02 - 负载均衡示例"></a>Demo02 - 负载均衡示例</h3><p>本示例启动三个 JavaApp,访问地址分别为:</p>
+<ul>
+<li>localhost:9021</li>
+<li>localhost:9022</li>
+<li>localhost:9023</li>
+</ul>
+<p>在 Nginx 中统一配置它们的反向代理 host 为 <a target="_blank" rel="noopener" href="http://www.demo02.com,并设置相应权重,以便做负载均衡.nginx/">www.demo02.com,并设置相应权重,以便做负载均衡.Nginx</a> 配置文件:<a href="nginx-1.14.0/conf/conf.d/demo02.conf">demo02.conf</a></p>
+<p>运行步骤:</p>
+<ol>
+<li>执行 <a href="scripts/demo02-start.bat">demo02-start.bat</a> 脚本.</li>
+<li>配置 hosts:<code>127.0.0.1 www.demo02.com</code></li>
+<li>在浏览器中访问:<a target="_blank" rel="noopener" href="http://www.demo02.com/">www.demo02.com</a></li>
+</ol>
+<p>如图所示:三次访问的端口号各不相同,说明三个服务器各自均有不同机率(基于权重)被访问.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402102139458.png" data-fancybox="true"/></div></div>
+
+<h3 id="Demo03-多-webapp-示例"><a href="#Demo03-多-webapp-示例" class="headerlink" title="Demo03 - 多 webapp 示例"></a>Demo03 - 多 webapp 示例</h3><p>当一个网站功能越来越丰富时,往往需要将一些功能相对独立的模块剥离出来,独立维护.这样的话,通常,会有多个 webapp.</p>
+<p>http 的默认端口号是 80,如果在一台服务器上同时启动这 3 个 webapp 应用,都用 80 端口,肯定是不成的.所以,这三个应用需要分别绑定不同的端口号.</p>
+<p>本示例启动三个 JavaApp,访问地址分别为:</p>
+<ul>
+<li>localhost:9030&#x2F;</li>
+<li>localhost:9031&#x2F;product</li>
+<li>localhost:9032&#x2F;user</li>
+</ul>
+<p>Nginx 中的配置要点就是为每个 server 配置一个 upstream.并在 server 配置下的 location 中指定 context 对应的 upstream.</p>
+<p>Nginx 配置文件:<a href="nginx-1.14.0/conf/conf.d/demo03.conf">demo03.conf</a></p>
+<p>运行步骤:</p>
+<ol>
+<li>执行 <a href="scripts/demo03-start.bat">demo03-start.bat</a> 脚本.</li>
+<li>配置 hosts:<code>127.0.0.1 www.demo03.com</code></li>
+<li>在浏览器中访问:<a target="_blank" rel="noopener" href="http://www.demo03.com/">www.demo03.com</a></li>
+</ol>
+<p>如图所示:三次访问的 context 和端口号各不相同.说明 Nginx 根据不同的 context 将请求分发到指定的服务器上.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402102140939.png" data-fancybox="true"/></div></div>
+
+<h3 id="Demo04-配置文件服务器示例"><a href="#Demo04-配置文件服务器示例" class="headerlink" title="Demo04 - 配置文件服务器示例"></a>Demo04 - 配置文件服务器示例</h3><p>有时候,团队需要归档一些数据或资料,那么文件服务器必不可少.使用 Nginx 可以非常快速便捷的搭建一个简易的文件服务.</p>
+<p>Nginx 中的配置要点:</p>
+<ul>
+<li>将 autoindex 开启可以显示目录,默认不开启.</li>
+<li>将 autoindex_exact_size 开启可以显示文件的大小.</li>
+<li>将 autoindex_localtime 开启可以显示文件的修改时间.</li>
+<li>root 用来设置开放为文件服务的根路径.</li>
+<li>charset 设置为 <code>charset utf-8,gbk;</code>,可以避免中文乱码问题(windows 服务器下设置后,依然乱码,本人暂时没有找到解决方法).</li>
+</ul>
+<p>Nginx 配置文件:<a href="nginx-1.14.0/conf/conf.d/demo05.conf">demo05.conf</a></p>
+<p>运行准备:由于我的配置中设置 root 的路径为我自己机器中的绝对路径,所以,各位在运行本例的时候要根据自己的实际情况替换.</p>
+<p>运行步骤:</p>
+<ol>
+<li>执行 <a href="scripts/demo05-start.bat">demo05-start.bat</a> 脚本.</li>
+<li>配置 hosts:<code>127.0.0.1 www.demo05.com</code></li>
+<li>在浏览器中访问:<a target="_blank" rel="noopener" href="http://www.demo05.com/">www.demo05.com</a></li>
+</ol>
+<p>效果图如下:</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402102140316.png" data-fancybox="true"/></div></div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">回顾上一篇</div><a href="/wiki/MiddlewareDocs/%E4%BA%8C.%20Nginx%20%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3.html">二. Nginx 配置文件详解</a></div><div class="item" id="next"><div class="note">接下来阅读</div><a href="/wiki/MiddlewareDocs/%E5%9B%9B.%20Apache%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A.html">四. Apache从入门到精通</a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body waline'>
+      
+
+<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/tools/">工具</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%99%E7%A8%8B%E8%AF%B4%E6%98%8E"><span class="toc-text">教程说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E8%A6%81%E6%B1%82"><span class="toc-text">环境要求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Maven%E5%AE%89%E8%A3%85"><span class="toc-text">Maven安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E4%BB%93%E5%BA%93%E7%9A%84%E9%85%8D%E7%BD%AE-%E9%BB%98%E8%AE%A4%E5%9C%A8C%E7%9B%98"><span class="toc-text">本地仓库的配置(默认在C盘)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8D%A2%E6%BA%90-%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%A4%AE%E4%BB%93%E5%BA%93%E7%9A%84%E9%95%9C%E5%83%8F"><span class="toc-text">换源:配置中央仓库的镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#javaapp"><span class="toc-text">javaapp</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nginx-1-14-0"><span class="toc-text">nginx-1.14.0</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#scripts"><span class="toc-text">scripts</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0-hosts"><span class="toc-text">添加 hosts</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E8%AF%B4%E6%98%8E"><span class="toc-text">示例说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Demo01-%E7%AE%80%E5%8D%95%E7%9A%84%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E7%A4%BA%E4%BE%8B"><span class="toc-text">Demo01 - 简单的反向代理示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Demo02-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%A4%BA%E4%BE%8B"><span class="toc-text">Demo02 - 负载均衡示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Demo03-%E5%A4%9A-webapp-%E7%A4%BA%E4%BE%8B"><span class="toc-text">Demo03 - 多 webapp 示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Demo04-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%A4%BA%E4%BE%8B"><span class="toc-text">Demo04 - 配置文件服务器示例</span></a></li></ol></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js`,
+    marked: `https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.27.0" async></script>
+
+<!-- optional -->
+
+  <script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js'
+
+  function load_comment(){
+    if(!document.getElementById("waline_container"))return;
+
+    utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css');
+
+    const el = document.getElementById("waline_container");
+    var path = el.getAttribute('comment_id');
+    if (!path) {
+      path = decodeURI(window.location.pathname);
+    }
+
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+      el: '#waline_container',
+      path: path,
+      
+    }));
+
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    load_comment();
+  });
+
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"></script><script defer src="https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.swiper-slide img, .gallery img ,#waline_container .vcontent img`,
+    css: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css`,
+    js: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || null
+        }
+      });
+    })
+  }
+</script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          loop: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+</div></body></html>

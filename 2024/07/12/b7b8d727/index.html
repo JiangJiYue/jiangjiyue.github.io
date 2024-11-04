@@ -1,0 +1,878 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.27.0" theme-name="Stellar" theme-version="1.27.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>应急响应之Linux - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="总字符数: 21.15K                代码: 18.27K, 文本: 1.28K               预计阅读时间: 1.42 小时              入侵排查思路系统基本信息 lscpu查看cpu信息    12345678910111213141516171819202122232425[root@localhost ~]# lscpuArchite">
+<meta property="og:type" content="article">
+<meta property="og:title" content="应急响应之Linux">
+<meta property="og:url" content="https://jiangjiyue.github.io/2024/07/12/b7b8d727/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="总字符数: 21.15K                代码: 18.27K, 文本: 1.28K               预计阅读时间: 1.42 小时              入侵排查思路系统基本信息 lscpu查看cpu信息    12345678910111213141516171819202122232425[root@localhost ~]# lscpuArchite">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202302161452524.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407301458025.png">
+<meta property="og:image" content="https://github-readme-stats.xaoxuu.com/api/pin/?username=grayddq&repo=GScan&theme=dark&show_owner=true">
+<meta property="og:image" content="https://github-readme-stats.xaoxuu.com/api/pin/?username=ppabc&repo=security_check&theme=dark&show_owner=true">
+<meta property="og:image" content="https://github-readme-stats.xaoxuu.com/api/pin/?username=T0xst&repo=linux&theme=dark&show_owner=true">
+<meta property="article:published_time" content="2024-07-11T17:08:49.000Z">
+<meta property="article:modified_time" content="2024-07-30T07:01:36.000Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="应急响应">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202302161452524.png">
+  
+  
+  
+  <meta name="keywords" content="应急响应,Linux">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.27.0">
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="导航" href="/sites/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/tools/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
+</div>
+<div class="widgets">
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">专栏：EmergencyResponse</span></div><div class="widget-body"><a class="item" href="/2024/07/03/ac635236/"><span class="title">应急响应-从攻击谈防守</span></a><a class="item" href="/2024/07/04/dd58c5ed/"><span class="title">应急响应之Wireshark流量分析</span></a><a class="item" href="/2024/07/05/dd58c5ed/"><span class="title">应急响应之Webshell流量分析</span></a><a class="item" href="/2024/07/06/9e820566/"><span class="title">应急响应之日志分析</span></a><a class="item" href="/2024/07/07/4677b70c/"><span class="title">应急响应之Splunk</span></a><a class="item" href="/2024/07/08/b7b8d727/"><span class="title">应急响应之Windows</span></a><a class="item" href="/2024/07/09/69563a36/"><span class="title">应急响应靶机训练-Web1</span></a><a class="item" href="/2024/07/10/f05f6b8c/"><span class="title">应急响应靶机训练-Web2</span></a><a class="item" href="/2024/07/11/87585b1a/"><span class="title">应急响应靶机训练-Web3</span></a><a class="item active" href="/2024/07/12/b7b8d727/"><span class="title">应急响应之Linux</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a><a class="item" href="/2024/07/16/29554557/"><span class="title">应急响应靶机训练-Linux1</span></a><a class="item" href="/2024/07/17/b05c14ed/"><span class="title">应急响应靶机训练-Linux2</span></a></div></widget>
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2024/11/04/fe2980d6/"><span class="title">CS-ShellCode加载器</span></a><a class="item title" href="/2023/03/11/247b757/"><span class="title">VulHub-Fastjson漏洞复现</span></a><a class="item title" href="/2023/04/28/76971e68/"><span class="title">VulHub-Tomcat漏洞复现</span></a><a class="item title" href="/2024/07/05/dd58c5ed/"><span class="title">应急响应之Webshell流量分析</span></a><a class="item title" href="/2024/10/27/77c80f0f/"><span class="title">CS-C语言总结</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/topic">专栏</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/2024/07/03/ac635236/">EmergencyResponse</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2024-07-11T17:08:49.000Z">2024-07-12</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-07-30T07:01:36.000Z">2024-07-30</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>应急响应之Linux</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
+    <p>总字符数: 21.15K </p>
+    </div>
+    <div class="cell" style="">
+    <p>代码: 18.27K, 文本: 1.28K</p>
+    </div>
+    <div class="cell" style="">
+    <p>预计阅读时间: 1.42 小时</p>
+    </div>
+    </div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202302161452524.png" data-fancybox="true"/></div></div>
+
+<h2 id="入侵排查思路"><a href="#入侵排查思路" class="headerlink" title="入侵排查思路"></a>入侵排查思路</h2><h3 id="系统基本信息"><a href="#系统基本信息" class="headerlink" title="系统基本信息"></a>系统基本信息</h3><ol>
+<li>lscpu查看cpu信息</li>
+</ol>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># lscpu</span></span><br><span class="line">Architecture:          x86_64</span><br><span class="line">CPU op-mode(s):        32-bit, 64-bit</span><br><span class="line">Byte Order:            Little Endian</span><br><span class="line">CPU(s):                4</span><br><span class="line">On-line CPU(s) list:   0-3</span><br><span class="line">Thread(s) per core:    1</span><br><span class="line">Core(s) per socket:    1</span><br><span class="line">座：                 4</span><br><span class="line">NUMA 节点：         1</span><br><span class="line">厂商 ID：           GenuineIntel</span><br><span class="line">CPU 系列：          6</span><br><span class="line">型号：              158</span><br><span class="line">型号名称：        Intel(R) Core(TM) i5-7300HQ CPU @ 2.50GHz</span><br><span class="line">步进：              9</span><br><span class="line">CPU MHz：             2496.004</span><br><span class="line">BogoMIPS：            4992.00</span><br><span class="line">超管理器厂商：  VMware</span><br><span class="line">虚拟化类型：     完全</span><br><span class="line">L1d 缓存：          32K</span><br><span class="line">L1i 缓存：          32K</span><br><span class="line">L2 缓存：           256K</span><br><span class="line">L3 缓存：           6144K</span><br><span class="line">NUMA 节点0 CPU：    0-3</span><br><span class="line">Flags:                 fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon nopl xtopology tsc_reliable nonstop_tsc eagerfpu pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch invpcid_single ssbd ibrs ibpb stibp fsgsbase tsc_adjust bmi1 avx2 smep bmi2 invpcid rdseed adx smap clflushopt xsaveopt xsavec xgetbv1 arat md_clear spec_ctrl intel_stibp flush_l1d arch_capabilities</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>操作系统信息</li>
+</ol>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># uname -a</span></span><br><span class="line">Linux localhost.localdomain 3.10.0-1160.el7.x86_64 <span class="comment">#1 SMP Mon Oct 19 16:18:59 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux</span></span><br><span class="line"></span><br><span class="line">[root@localhost ~]<span class="comment"># cat /etc/*release</span></span><br><span class="line">CentOS Linux release 7.9.2009 (Core)</span><br><span class="line">NAME=<span class="string">&quot;CentOS Linux&quot;</span></span><br><span class="line">VERSION=<span class="string">&quot;7 (Core)&quot;</span></span><br><span class="line">ID=<span class="string">&quot;centos&quot;</span></span><br><span class="line">ID_LIKE=<span class="string">&quot;rhel fedora&quot;</span></span><br><span class="line">VERSION_ID=<span class="string">&quot;7&quot;</span></span><br><span class="line">PRETTY_NAME=<span class="string">&quot;CentOS Linux 7 (Core)&quot;</span></span><br><span class="line">ANSI_COLOR=<span class="string">&quot;0;31&quot;</span></span><br><span class="line">CPE_NAME=<span class="string">&quot;cpe:/o:centos:centos:7&quot;</span></span><br><span class="line">HOME_URL=<span class="string">&quot;https://www.centos.org/&quot;</span></span><br><span class="line">BUG_REPORT_URL=<span class="string">&quot;https://bugs.centos.org/&quot;</span></span><br><span class="line"></span><br><span class="line">CENTOS_MANTISBT_PROJECT=<span class="string">&quot;CentOS-7&quot;</span></span><br><span class="line">CENTOS_MANTISBT_PROJECT_VERSION=<span class="string">&quot;7&quot;</span></span><br><span class="line">REDHAT_SUPPORT_PRODUCT=<span class="string">&quot;centos&quot;</span></span><br><span class="line">REDHAT_SUPPORT_PRODUCT_VERSION=<span class="string">&quot;7&quot;</span></span><br><span class="line"></span><br><span class="line">CentOS Linux release 7.9.2009 (Core)</span><br><span class="line">CentOS Linux release 7.9.2009 (Core)</span><br><span class="line"></span><br><span class="line">[root@localhost ~]<span class="comment"># lsb_release -a</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="账号安全"><a href="#账号安全" class="headerlink" title="账号安全"></a>账号安全</h3><h4 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h4><ol>
+<li><p>用户信息文件<code>/etc/passwd</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">account:password:UID:GID:GECOS:directory:shell</span><br><span class="line"></span><br><span class="line"><span class="comment"># 用户名:密码:用户ID:组ID:用户说明:家目录:登陆之后shell</span></span><br><span class="line"><span class="comment"># 注意:无密码只允许本机登陆,远程不允许登陆</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>影子文件<code>/etc/shadow</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root:$6$oGs1PqhL2p3ZetrE<span class="variable">$X7o7bzoouHQVSEmSgsYN5UD4</span>.kMHx6qgbTqwNVC5oOAouXvcjQSt.Ft7ql1WpkopY0UV9ajBwUt1DpYxTCVvI/:16809:0:99999:7:::</span><br><span class="line"><span class="comment"># 用户名:加密密码:密码最后一次修改日期:两次密码的修改时间间隔:密码有效期:密码修改到期到的警告天数:密码过期之后的宽限天数:账号失效时间:保留</span></span><br><span class="line"><span class="comment"># 可以用john碰撞解密</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>/etc/sudoers</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[loneferret@localhost ~]$ sudo -l</span><br><span class="line">User loneferret may run the following commands on this host:</span><br><span class="line">    (root) NOPASSWD: !/usr/bin/su</span><br><span class="line">    (root) NOPASSWD: /usr/local/bin/ht</span><br><span class="line"></span><br><span class="line"><span class="comment"># 用户 loneferret 在这个系统上有以下权限：</span></span><br><span class="line"><span class="comment"># 可以以 root 权限运行 /usr/local/bin/ht 命令，而无需输入密码。</span></span><br><span class="line"><span class="comment"># 不能以 root 权限运行 /usr/bin/su 命令。</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>几个常用命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># who 命令用于查看当前登录的用户。输出显示当前用户的会话类型（tty 表示本地登录，pts 表示远程登录）。</span></span><br><span class="line"><span class="built_in">who</span></span><br><span class="line"><span class="comment"># 输出示例：</span></span><br><span class="line"><span class="comment"># loneferret tty7         2023-10-01 08:45 (:0)</span></span><br><span class="line"><span class="comment"># user2      pts/1        2023-10-01 09:00 (192.168.1.100)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># w 命令用于查看系统信息和用户在做什么。输出包括用户、TTY、远程主机、登录时间、空闲时间、JCPU、PCPU 和当前正在执行的命令。</span></span><br><span class="line">w</span><br><span class="line"><span class="comment"># 输出示例：</span></span><br><span class="line"><span class="comment"># 10:30:45 up  2:15,  2 users,  load average: 0.00, 0.01, 0.05</span></span><br><span class="line"><span class="comment"># USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT</span></span><br><span class="line"><span class="comment"># loneferret tty7     :0               08:45   2:15m  0.10s  0.10s /usr/bin/X</span></span><br><span class="line"><span class="comment"># user2      pts/1    192.168.1.100    09:00   1:30   0.20s  0.15s /bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># uptime 命令用于查看系统已运行时间、当前登录用户数及系统负载平均值。</span></span><br><span class="line"><span class="built_in">uptime</span></span><br><span class="line"><span class="comment"># 输出示例：</span></span><br><span class="line"><span class="comment"># 10:30:45 up  2:15,  2 users,  load average: 0.00, 0.01, 0.05</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="入侵排查"><a href="#入侵排查" class="headerlink" title="入侵排查"></a>入侵排查</h4><ol>
+<li><p>查询特权用户特权用户<code>(uid为0)</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 该 awk 命令用于从 /etc/passwd 文件中找出 UID 为 0 的账户名。</span></span><br><span class="line">awk -F: <span class="string">&#x27;&#123;if($3==0) print $1&#125;&#x27;</span> /etc/passwd</span><br><span class="line"><span class="comment"># 代码含义：</span></span><br><span class="line"><span class="comment"># 使用 awk 命令 -F 指定分割符为冒号，读取 /etc/passwd 文件</span></span><br><span class="line"><span class="comment"># 如果第三列（UID）的值恒等于 0，则输出第一列的值（账户名）</span></span><br><span class="line"><span class="comment"># 在 Linux 系统中，UID 为 0 的账户通常只有 root 用户才有</span></span><br><span class="line"><span class="comment"># 如果出现别的账户 UID 为 0，则需要特别关注，可能存在安全风险</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 用户 ID (UID) 在 Linux 系统中有几种类型：</span></span><br><span class="line"><span class="comment"># 1. 超级用户 (root) UID: 0</span></span><br><span class="line"><span class="comment">#    - root 用户拥有最高权限，可以执行任何操作</span></span><br><span class="line"><span class="comment"># 2. 系统用户 UID: 1-999 (某些系统为 1-1000)</span></span><br><span class="line"><span class="comment">#    - 系统用户用于系统服务和守护进程</span></span><br><span class="line"><span class="comment">#    - 例如：daemon、bin、sys 等</span></span><br><span class="line"><span class="comment"># 3. 普通用户 UID: 1000 及以上</span></span><br><span class="line"><span class="comment">#    - 普通用户用于实际登录和操作系统的用户</span></span><br><span class="line"><span class="comment">#    - 例如：用户创建的账户，如 alice、bob</span></span><br><span class="line"></span><br><span class="line">[root@localhost ~]<span class="comment"># awk -F: &#x27;&#123;if($3==0) print $1&#125;&#x27; /etc/passwd</span></span><br><span class="line">root</span><br><span class="line">defend</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查询可以远程登录的帐号信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># cat /etc/passwd | grep -v &quot;nologin&quot;</span></span><br><span class="line"></span><br><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line"><span class="built_in">sync</span>:x:5:0:<span class="built_in">sync</span>:/sbin:/bin/sync</span><br><span class="line">shutdown:x:6:0:shutdown:/sbin:/sbin/shutdown</span><br><span class="line">halt:x:7:0:halt:/sbin:/sbin/halt</span><br><span class="line">defend:x:0:0:defend:/home/defend:/bin/bash</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>除root帐号外,其他帐号是否存在sudo权限.如非管理需要,普通帐号应删除sudo权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># more /etc/sudoers | grep -v &quot;^#|^$&quot; | grep &quot;ALL=(ALL)&quot;</span></span><br><span class="line">root	ALL=(ALL) 	ALL</span><br><span class="line">%wheel	ALL=(ALL)	ALL</span><br><span class="line"><span class="comment"># %wheel	ALL=(ALL)	NOPASSWD: ALL</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>禁用或删除多余及可疑的帐号</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">usermod -L user   <span class="comment"># 禁用帐号,帐号无法登录,/etc/shadow 第二栏为!开头</span></span><br><span class="line">userdel user      <span class="comment"># 删除 user 用户</span></span><br><span class="line">userdel -r user   <span class="comment"># 将删除user用户,并且将/home目录下的user目录一并删除</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看空口令账户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># awk -F : &#x27;($2 == &quot;!!&quot;) &#123;print $1&#125;&#x27; /etc/shadow</span></span><br><span class="line"></span><br><span class="line">[root@localhost ~]<span class="comment"># awk -F : &#x27;$2==&quot;x&quot; &#123;print $1,$7&#125;&#x27; /etc/passwd | grep -v nologin</span></span><br><span class="line">root /bin/bash</span><br><span class="line"><span class="built_in">sync</span> /bin/sync</span><br><span class="line">shutdown /sbin/shutdown</span><br><span class="line">halt /sbin/halt</span><br><span class="line">defend /bin/bash</span><br><span class="line">shell_exec /bin/bash</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看用户错误的登录信息:<code>lastb</code></p>
+</li>
+<li><p>查看所有用户最后的登录信息:<code>lastlog</code></p>
+</li>
+<li><p>查看用户最近登录信息:<code>last</code></p>
+</li>
+</ol>
+<h3 id="历史命令"><a href="#历史命令" class="headerlink" title="历史命令"></a>历史命令</h3><p>通过<code>.bash_history</code>查看帐号执行过的系统命令</p>
+<ol>
+<li><p>root的历史命令<code>histroy</code></p>
+</li>
+<li><p>打开<code>/home</code>各帐号目录下的<code>.bash_history</code>,查看普通帐号的历史命令</p>
+<ol>
+<li><p>为历史的命令增加登录的IP地址、执行命令时间等信息:</p>
+</li>
+<li><p>保存 1 万条命令<code>sed -i &#39;s/^HISTSIZE=1000/HISTSIZE=10000/g&#39; /etc/profile</code></p>
+</li>
+<li><p>在<code>/etc/profile</code>的文件尾部添加如下行数配置信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">######jiagu history xianshi#########</span></span><br><span class="line">USER_IP=$(<span class="built_in">who</span> -u am i 2&gt;/dev/null | awk <span class="string">&#x27;&#123;print $NF&#125;&#x27;</span> | sed -e <span class="string">&#x27;s/[()]//g&#x27;</span>)</span><br><span class="line"><span class="keyword">if</span> [ -z <span class="string">&quot;<span class="variable">$USER_IP</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">  USER_IP=$(hostname)</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="built_in">export</span> HISTTIMEFORMAT=<span class="string">&quot;%F %T <span class="variable">$USER_IP</span> <span class="subst">$(whoami)</span> &quot;</span></span><br><span class="line"><span class="built_in">shopt</span> -s histappend</span><br><span class="line"><span class="built_in">export</span> PROMPT_COMMAND=<span class="string">&quot;history -a&quot;</span></span><br><span class="line"><span class="comment">######### jiagu history xianshi ##########</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>source /etc/profile</code>让配置生效,效果为:<code>2018-07-10 19:45:39 192.168.204.1 root source /etc/profile</code></p>
+</li>
+</ol>
+</li>
+<li><p>历史操作命令的清除:<code>history -c</code>但此命令并不会清除保存在文件中的记录,因此需要手动删除<code>.bash_profile</code>文件中的记录.</p>
+</li>
+</ol>
+<h3 id="端口"><a href="#端口" class="headerlink" title="端口"></a>端口</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># netstat分析可疑端口，可以ip地址，可以PID及程序进程</span></span><br><span class="line">-a all显示所有的选项</span><br><span class="line">-t tcp仅显示tcp连接</span><br><span class="line">-u 仅显示udp连接</span><br><span class="line">-p 显示对应的程序名</span><br><span class="line">[root@localhost ~]<span class="comment"># netstat -atup</span></span><br><span class="line">Active Internet connections (servers and established)</span><br><span class="line">Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    </span><br><span class="line">tcp        0      0 0.0.0.0:sunrpc          0.0.0.0:*               LISTEN      760/rpcbind         </span><br><span class="line">tcp        0      0 localhost.locald:domain 0.0.0.0:*               LISTEN      1633/dnsmasq        </span><br><span class="line">tcp        0      0 0.0.0.0:ssh             0.0.0.0:*               LISTEN      1094/sshd           </span><br><span class="line">tcp        0      0 localhost:ipp           0.0.0.0:*               LISTEN      1092/cupsd          </span><br><span class="line">tcp        0      0 localhost:smtp          0.0.0.0:*               LISTEN      1335/master         </span><br><span class="line">tcp6       0      0 [::]:sunrpc             [::]:*                  LISTEN      760/rpcbind         </span><br><span class="line">tcp6       0      0 [::]:ssh                [::]:*                  LISTEN      1094/sshd           </span><br><span class="line">tcp6       0      0 localhost:ipp           [::]:*                  LISTEN      1092/cupsd          </span><br><span class="line">tcp6       0      0 localhost:smtp          [::]:*                  LISTEN      1335/master         </span><br><span class="line">udp        0      0 0.0.0.0:923             0.0.0.0:*                           760/rpcbind         </span><br><span class="line">udp        0      0 0.0.0.0:mdns            0.0.0.0:*                           789/avahi-daemon: r </span><br><span class="line">udp        0      0 0.0.0.0:38280           0.0.0.0:*                           789/avahi-daemon: r </span><br><span class="line">udp        0      0 localhost.locald:domain 0.0.0.0:*                           1633/dnsmasq        </span><br><span class="line">udp        0      0 0.0.0.0:bootps          0.0.0.0:*                           1633/dnsmasq        </span><br><span class="line">udp        0      0 0.0.0.0:sunrpc          0.0.0.0:*                           760/rpcbind         </span><br><span class="line">udp        0      0 localhost:323           0.0.0.0:*                           800/chronyd         </span><br><span class="line">udp6       0      0 [::]:923                [::]:*                              760/rpcbind         </span><br><span class="line">udp6       0      0 [::]:sunrpc             [::]:*                              760/rpcbind         </span><br><span class="line">udp6       0      0 localhost:323           [::]:*                              800/chronyd         </span><br></pre></td></tr></table></figure>
+
+<h3 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h3><blockquote>
+<p>进程是系统进行资源分配和调度的基本单位，是操作系统结构的基础</p>
+<p>无论是Windows还是Linux，主机在感染恶意程序后，恶意程序都会启动相应的进程，来完成相关恶意操作，有的进程为了不为查杀，还会启动守护进程对恶意进程进行守护</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 根据PID的值,可查看其对应的可执行程序.</span></span><br><span class="line"><span class="comment"># -a：显示所有文件，包括以.开头的隐藏文件。</span></span><br><span class="line"><span class="comment"># -l：使用长格式列出文件信息，包括权限、所有者、大小和修改时间等。</span></span><br><span class="line"><span class="comment"># -t：按修改时间排序，最近修改的文件显示在最前面。</span></span><br><span class="line">[root@localhost ~]<span class="comment"># ls -alt /proc/1094</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过lsof -p PID，查看进程所打开的文件</span></span><br><span class="line">[root@localhost ~]<span class="comment"># lsof -p 1094</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看进程树</span></span><br><span class="line">pstree</span><br><span class="line"><span class="comment"># 查看进程</span></span><br><span class="line">ps -aux</span><br><span class="line">top</span><br><span class="line"></span><br><span class="line"><span class="comment"># 隐藏进程</span></span><br><span class="line">1. 列出所有进程并保存到文件1</span><br><span class="line">ps -ef | awk <span class="string">&#x27;&#123;print&#125;&#x27;</span> | <span class="built_in">sort</span> -n | <span class="built_in">uniq</span> &gt; 1</span><br><span class="line"><span class="comment"># 这条命令使用 ps -ef 列出所有进程，然后通过 awk &#x27;&#123;print&#125;&#x27; 打印每一行，再通过 sort -n 按数字排序，最后通过 uniq 去除重复行，并将结果保存到文件 1。</span></span><br><span class="line"></span><br><span class="line">2. 列出/proc目录下的所有进程ID并保存到文件2</span><br><span class="line"><span class="built_in">ls</span> /proc | <span class="built_in">sort</span> -n | <span class="built_in">uniq</span> &gt; 2</span><br><span class="line"><span class="comment"># 这条命令使用 ls /proc 列出 /proc 目录下的所有子目录（这些子目录通常是进程ID），然后通过 sort -n 按数字排序，最后通过 uniq 去除重复行，并将结果保存到文件 2。</span></span><br><span class="line"></span><br><span class="line">3. 比较两个文件，找出隐藏的进程：</span><br><span class="line">diff 1 2</span><br><span class="line"><span class="comment"># 这条命令使用 diff 比较文件 1 和文件 2，找出它们之间的差异。如果文件 1 中缺少某些进程ID，而这些进程ID出现在文件 2 中，那么这些进程ID对应的进程可能是隐藏的。</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># top命令查看资源占用率较高的进程</span></span><br><span class="line"><span class="comment"># 处置方法</span></span><br><span class="line">   1. <span class="built_in">kill</span> -9 pid杀死进程</span><br><span class="line">   2. <span class="built_in">rm</span> -rf 文件名 删除文件</span><br><span class="line">   3. 如果root权限删除不了，可能被添加了 i 属性，使用lsattr filename查看文件属性，然后使用 chattr -i filename移除 i 属性，然后删除</span><br><span class="line">   4. 有的进程存在守护进程，导致无法删除，我们先将进程挂起，查杀守护进程后，在删除该进程</span><br><span class="line">   5. ps命令全程位process state，进程状态，ps -ef显示所有进程的UID，PPIP，C与STIME栏位</span><br></pre></td></tr></table></figure>
+
+<h3 id="开机启动项"><a href="#开机启动项" class="headerlink" title="开机启动项"></a>开机启动项</h3><h4 id="基本使用-1"><a href="#基本使用-1" class="headerlink" title="基本使用"></a>基本使用</h4><p>系统运行级别:</p>
+<table>
+<thead>
+<tr>
+<th align="center">运行级别</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">0</td>
+<td align="center">关机</td>
+</tr>
+<tr>
+<td align="center">1</td>
+<td align="center">单用户模式,可以想象为Windows的安全模式,主要用于系统修复</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">不完全的命令行模式,不含NFS服务</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td align="center">完全的命令行模式,就是标准字符界面</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="center">系统保留</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="center">图形模式</td>
+</tr>
+</tbody></table>
+<p>查看运行级别命令<code>runlevel </code></p>
+<p>系统默认允许级别</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">vi  /etc/inittab</span><br><span class="line"></span><br><span class="line"><span class="built_in">id</span>=3:initdefault  <span class="comment"># 系统开机后直接进入哪个运行级别</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 开机启动配置文件</span></span><br><span class="line"></span><br><span class="line">/etc/rc.local</span><br><span class="line">/etc/init.d/rc.local</span><br><span class="line">/etc/rc.d/rc[0~6].d</span><br><span class="line"></span><br><span class="line"><span class="comment"># 例子:当我们需要开机启动自己的脚本时,只需要将可执行脚本丢在/etc/init.d目录下,然后在 /etc/rc.d/rc*.d 中建立软链接即可</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">ln</span> -s /etc/init.d/sshd /etc/rc.d/rc3.d/S100ssh</span><br><span class="line"><span class="comment"># 此处sshd 是具体服务的脚本文件,S100ssh是其软链接,S开头代表加载时自启动;如果是K开头的脚本文件,代表运行级别加载时需要关闭的.</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="入侵排查-1"><a href="#入侵排查-1" class="headerlink" title="入侵排查"></a>入侵排查</h4><p>启动项文件:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">more /etc/rc.local </span><br><span class="line">/etc/rc.d/rc[0~6].d</span><br><span class="line"><span class="comment"># 很多红色显示的为开机启动项，需要依次删掉</span></span><br><span class="line"><span class="built_in">ls</span> /etc/rc*/</span><br><span class="line"><span class="comment"># chkconfig开机启动项</span></span><br><span class="line">chkconfig --list</span><br></pre></td></tr></table></figure>
+
+<h3 id="定时任务"><a href="#定时任务" class="headerlink" title="定时任务"></a>定时任务</h3><h4 id="基本使用-2"><a href="#基本使用-2" class="headerlink" title="基本使用"></a>基本使用</h4><ol>
+<li><p>利用<code>crontab</code>创建计划任务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">crontab -l  <span class="comment"># 列出某个用户 cron 服务的详细内容</span></span><br><span class="line"><span class="comment"># Tips:默认编写的crontab文件会保存在(/var/spool/cron/用户名 例如:/var/spool/cron/root)</span></span><br><span class="line"><span class="comment"># 指定用户查看计划任务</span></span><br><span class="line">crontab -u root -l</span><br><span class="line">crontab -r  <span class="comment"># 删除每个用户 cront 任务(谨慎:删除所有的计划任务)</span></span><br><span class="line">crontab -e  <span class="comment"># 使用编辑器编辑当前的 crontab 文件 </span></span><br><span class="line"><span class="comment"># 如:*/1 * * * * echo &quot;hello world&quot; &gt;&gt; /tmp/test.txt # 每分钟写入文件</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>利用<code>anacron</code>实现异步定时任务调度</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 每天运行 /home/backup.sh 脚本</span></span><br><span class="line">vi /etc/anacrontab </span><br><span class="line"></span><br><span class="line">@daily   10   example.daily  /bin/bash /home/backup.sh</span><br><span class="line"><span class="comment"># 当机器在backup.sh期望被运行时是关机的,anacron会在机器开机十分钟之后运行它,而不用再等待7天</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="入侵排查-2"><a href="#入侵排查-2" class="headerlink" title="入侵排查"></a>入侵排查</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 重点关注以下目录中是否存在恶意脚本</span></span><br><span class="line">/etc/crontab</span><br><span class="line">/etc/cron.d/*</span><br><span class="line">/etc/cron.daily/* </span><br><span class="line">/etc/cron.hourly/* </span><br><span class="line">/etc/cron.monthly/*</span><br><span class="line">/etc/cron.weekly/</span><br><span class="line">/etc/anacrontab</span><br><span class="line">/var/spool/anacron/*</span><br><span class="line">/var/spool/cron/root</span><br><span class="line">/var/spool/cron/crontabs/root</span><br><span class="line">/var/spool/cron/*</span><br><span class="line"><span class="comment"># 小技巧</span></span><br><span class="line">more /etc/cron.daily/* <span class="comment"># 查看目录下所有文件</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="服务"><a href="#服务" class="headerlink" title="服务"></a>服务</h3><h4 id="服务自启动"><a href="#服务自启动" class="headerlink" title="服务自启动"></a>服务自启动</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第一种修改方法</span></span><br><span class="line">chkconfig [--level 运行级别][独立服务名][on|off]</span><br><span class="line">chkconfig –level 2345 httpd on  <span class="comment"># 开启自启动</span></span><br><span class="line">chkconfig httpd on <span class="comment"># (默认 level 是 2345)</span></span><br><span class="line"><span class="comment"># 第二种修改方法</span></span><br><span class="line">修改 /etc/re.d/rc.local文件</span><br><span class="line">加入 /etc/init.d/httpd start</span><br><span class="line"><span class="comment"># 第三种修改方法</span></span><br><span class="line">使用ntsysv命令管理自启动,可以管理独立服务和xinetd服务</span><br><span class="line"><span class="comment"># 第四种修改方法</span></span><br><span class="line">service --status-all</span><br></pre></td></tr></table></figure>
+
+<h4 id="入侵排查-3"><a href="#入侵排查-3" class="headerlink" title="入侵排查"></a>入侵排查</h4><ol>
+<li><p>查询已安装的服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看服务自启动状态，可以看到所有的RPM包安装的服务</span></span><br><span class="line">chkconfig --list</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看当前服务</span></span><br><span class="line">ps aux | grep crond</span><br><span class="line"></span><br><span class="line"><span class="comment"># 系统在3与5级别下的启动项</span></span><br><span class="line">chkconfig --list | grep <span class="string">&quot;3:on|5:on&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 服务安装位置，一般是在 /usr/local/</span></span><br><span class="line"><span class="comment"># 注意：service 命令通常用于启动传统的SysV init脚本，而不是直接指示服务安装位置</span></span><br><span class="line">service httpd start</span><br><span class="line"></span><br><span class="line"><span class="comment"># 搜索 /etc/rc.d/init.d/ 查看是否存在</span></span><br><span class="line"><span class="comment"># 这个目录包含了传统的SysV init脚本，用于启动和管理服务</span></span><br><span class="line"><span class="built_in">ls</span> /etc/rc.d/init.d/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看 systemd 服务单元文件</span></span><br><span class="line"><span class="comment"># 这些目录包含了 systemd 服务单元文件，用于启动和管理服务</span></span><br><span class="line"><span class="built_in">ls</span> /usr/lib/systemd/system</span><br><span class="line"><span class="built_in">ls</span> /etc/systemd/system</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="文件痕迹"><a href="#文件痕迹" class="headerlink" title="文件痕迹"></a>文件痕迹</h3><h4 id="敏感目录"><a href="#敏感目录" class="headerlink" title="敏感目录"></a>敏感目录</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /tmp 和 /usr/bin、/usr/sbin</span></span><br><span class="line"><span class="comment"># /tmp 目录经常被恶意软件用作软件下载目录</span></span><br><span class="line"><span class="comment"># /usr/bin 和 /usr/sbin 目录中的文件经常被恶意软件替换以执行恶意任务</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查 /tmp 目录中可疑文件</span></span><br><span class="line"><span class="built_in">ls</span> -la /tmp</span><br><span class="line"><span class="comment"># 检查 /usr/bin 目录中可疑文件</span></span><br><span class="line"><span class="built_in">ls</span> -la /usr/bin</span><br><span class="line"><span class="comment"># 检查 /usr/sbin 目录中可疑文件</span></span><br><span class="line"><span class="built_in">ls</span> -la /usr/sbin</span><br><span class="line"></span><br><span class="line"><span class="comment"># ~/.ssh 和 /etc/ssh</span></span><br><span class="line"><span class="comment"># ~/.ssh 目录常被用作存储后门的SSH配置，例如恶意的SSH公钥</span></span><br><span class="line"><span class="comment"># /etc/ssh 目录中的配置文件可能被修改以创建后门</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查 ~/.ssh 目录中的文件，包括公钥和私钥</span></span><br><span class="line"><span class="built_in">ls</span> -la ~/.ssh</span><br><span class="line"><span class="comment"># 检查 /etc/ssh 目录中的配置文件</span></span><br><span class="line"><span class="built_in">ls</span> -la /etc/ssh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重点检查 SSH 公钥配置文件</span></span><br><span class="line"><span class="built_in">cat</span> ~/.ssh/authorized_keys</span><br><span class="line"><span class="built_in">cat</span> /etc/ssh/ssh_config</span><br><span class="line"><span class="built_in">cat</span> /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure>
+
+<h4 id="时间点查找"><a href="#时间点查找" class="headerlink" title="时间点查找"></a>时间点查找</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用 find 命令查找在特定时间段内变动的文件</span></span><br><span class="line"><span class="comment"># 以下是一些常见的 find 命令选项和示例</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查找过去 7 天内修改过的普通文件</span></span><br><span class="line">find /path/to/search -<span class="built_in">type</span> f -mtime -7</span><br><span class="line"><span class="comment"># 查找过去 30 天内访问过的普通文件</span></span><br><span class="line">find /path/to/search -<span class="built_in">type</span> f -atime -30</span><br><span class="line"><span class="comment"># 查找过去 60 天内创建的普通文件</span></span><br><span class="line">find /path/to/search -<span class="built_in">type</span> f -ctime -60</span><br><span class="line"><span class="comment"># 查找所有符号链接</span></span><br><span class="line">find /path/to/search -<span class="built_in">type</span> l</span><br><span class="line"><span class="comment"># 查找所有目录</span></span><br><span class="line">find /path/to/search -<span class="built_in">type</span> d</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 stat 命令查看文件的详细时间信息</span></span><br><span class="line"><span class="comment"># stat 文件名</span></span><br><span class="line"><span class="built_in">stat</span> /path/to/file</span><br><span class="line"></span><br><span class="line"><span class="comment"># 示例：查找 /var/log 目录下过去 2 天内修改过的文件，并显示详细时间信息</span></span><br><span class="line">find /var/log -<span class="built_in">type</span> f -mtime -2 -<span class="built_in">exec</span> <span class="built_in">stat</span> &#123;&#125; \;</span><br><span class="line"><span class="comment"># 示例：查找 /home 目录下过去 1 天内创建的文件，并显示详细时间信息</span></span><br><span class="line">find /home -<span class="built_in">type</span> f -ctime -1 -<span class="built_in">exec</span> <span class="built_in">stat</span> &#123;&#125; \;</span><br><span class="line"><span class="comment"># 示例：查找 /etc 目录下过去 5 天内访问过的文件，并显示详细时间信息</span></span><br><span class="line">find /etc -<span class="built_in">type</span> f -atime -5 -<span class="built_in">exec</span> <span class="built_in">stat</span> &#123;&#125; \;</span><br></pre></td></tr></table></figure>
+
+<h4 id="特殊文件"><a href="#特殊文件" class="headerlink" title="特殊文件"></a>特殊文件</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 特殊权限文件查找</span></span><br><span class="line">find /tmp -perm 777</span><br><span class="line"><span class="comment"># webshell扫描</span></span><br><span class="line">find /var/www -name <span class="string">&quot;*.php&quot;</span> | xargs egrep查找php文件是否包含egrep关键字</span><br><span class="line"><span class="comment"># 还可使用findwebshell，scan_webshell.py等扫描工具进行扫描</span></span><br><span class="line"><span class="comment"># 对系统命令进行排查</span></span><br><span class="line"><span class="comment"># ls、ps等命令可能被攻击者恶意替换，使用ls -alt /bin查看命令修改的时间</span></span><br><span class="line">linux后门检测，chkrootkit、rkhunter</span><br><span class="line"><span class="comment"># 排查suid程序</span></span><br><span class="line">find / -perm -u=s -<span class="built_in">type</span> f 2&gt;/dev/null</span><br></pre></td></tr></table></figure>
+
+<h3 id="系统日志"><a href="#系统日志" class="headerlink" title="系统日志"></a>系统日志</h3><p>日志默认存放位置:<code>/var/log/</code></p>
+<p>查看日志配置情况:<code>more /etc/rsyslog.conf</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 日志级别</span></span><br><span class="line">debug    <span class="comment"># 系统调试信息</span></span><br><span class="line">info     <span class="comment"># 常规信息</span></span><br><span class="line">warning  <span class="comment"># 警告信息</span></span><br><span class="line">err      <span class="comment"># 报错(级别低,阻止了某个功能能不能正常工作)</span></span><br><span class="line">crit     <span class="comment"># 报错(级别高,阻止了某个软件或整个系统不能正常工作)</span></span><br><span class="line">alert    <span class="comment"># 需要立即修改的信息</span></span><br><span class="line">emerg    <span class="comment"># 内核崩溃</span></span><br><span class="line">none     <span class="comment"># 不采集任何日志信息</span></span><br><span class="line"><span class="comment"># 注意:从上到下,级别从低到高,记录的信息越来越少</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 必看日志</span></span><br><span class="line">/var/log/secure             <span class="comment"># 包含验证和授权方面信息.例如:sshd 会将所有信息记录(其中包括失败登录)在这里</span></span><br><span class="line">/var/log/cron               <span class="comment"># 每当cron进程开始一个工作时,就会将相关信息记录在这个文件中</span></span><br><span class="line">/var/log/messages           <span class="comment"># 包括整体系统信息,其中也包含系统启动期间的日志.此外,mail,cron,daemon,kern和auth等内容也记录在var/log/messages日志中</span></span><br><span class="line">/var/log/btmp               <span class="comment"># 记录所有失败登录信息.使用last命令可以查看btmp文件.例如:last -f /var/log/btmp more</span></span><br><span class="line">/var/log/wtmp               <span class="comment"># 记录登录进入、退出、数据交换、关机和重启，即last命令</span></span><br><span class="line">/var/log/lastlog            <span class="comment"># 记录所有用户的最近信息.这不是一个ASCII文件,因此需要用lastlog命令查看内容</span></span><br><span class="line">/var/log/cups               <span class="comment"># 涉及所有打印信息的日志。</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 了解</span></span><br><span class="line">/var/log/userlog            <span class="comment"># 记录用户所有等级用户信息的日志</span></span><br><span class="line">/var/log/dmesg              <span class="comment"># 包含内核缓冲信息(kernel ring buffer).在系统启动时,会在屏幕上显示许多与硬件有关的信息.可以用dmesg查看它们</span></span><br><span class="line">/var/log/auth.log           <span class="comment"># 包含系统授权信息，包括用户登录和使用的权限机制等</span></span><br><span class="line">/var/10g/boot.log           <span class="comment"># 包含系统启动时的日志</span></span><br><span class="line">/var/log/daemon.log         <span class="comment"># 包含各种系统后台守护进程日志信息</span></span><br><span class="line">/var/log/dpkg.log           <span class="comment"># 包括安装或dpkg命令清除软件包的日志</span></span><br><span class="line">/var/log/kern.log           <span class="comment"># 包含内核产生的日志,有助于在定制内核时解决问题</span></span><br><span class="line">/var/log/maillog  </span><br><span class="line">/var/log/mai1.<span class="built_in">log</span>           <span class="comment"># 包含来自系统运行电子邮件服务器的日志信息.例如:sendmail日志信息就全部送到这个文件中</span></span><br><span class="line">/var/log/user.log           <span class="comment"># 记录所有等级用户信息的日志</span></span><br><span class="line">/var/log/Xorg.x.log         <span class="comment"># 来自X的日志信息</span></span><br><span class="line">/var/log/alternatives.log   <span class="comment"># 更新替代信息都记录在这个文件中</span></span><br><span class="line">/var/log/anaconda.log       <span class="comment"># 在安装Linux时,所有安装信息都储存在这个文件中</span></span><br><span class="line">/var/log/yum.log            <span class="comment"># 包含使用yum安装的软件包信息</span></span><br><span class="line">/var/log/utmp               <span class="comment"># 包含登录信息.使用wtmp可以找出谁正在登陆进入系统,谁使用命令显示这个文件或信息等</span></span><br><span class="line">/var/log/faillog            <span class="comment"># 包含用户登录失败信息.此外,错误登录命令也会记录在本文件中</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 除了上述Log文件以外,vār/log还基于系统的具体应用包含以下一些子目录:</span></span><br><span class="line">/var/log/httpd/或/var/log/apache2        <span class="comment">#  包含服务器access_log和error_log信息</span></span><br><span class="line">/var/log/lighttpd/                       <span class="comment">#  包含light HTTPD的access_log和error_log</span></span><br><span class="line">/var/log/mail/                           <span class="comment">#  这个子目录包含邮件服务器的额外日志</span></span><br><span class="line">/var/log/prelink/                        <span class="comment">#  包含.so文件被prelink修改的信息</span></span><br><span class="line">/var/log/audit/                          <span class="comment">#  包含被Linux audit daemon储存的信息</span></span><br><span class="line">/var/log/samba/                          <span class="comment">#  包含由samba存储的信息</span></span><br><span class="line">/var/log/sa/                             <span class="comment">#  包含每日由sysstat软件包收集的sar文件</span></span><br><span class="line">/var/log/sssd/                           <span class="comment">#  用于守护进程安全服务</span></span><br><span class="line">/var/log/xferlog(vsftpd.log)             <span class="comment"># LinuxFTP日志</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="日志分析技巧"><a href="#日志分析技巧" class="headerlink" title="日志分析技巧"></a>日志分析技巧</h4><ol>
+<li><p>定位有多少IP在爆破主机的root帐号</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">&quot;Failed password for root&quot;</span> /var/log/secure | awk <span class="string">&#x27;&#123;print $11&#125;&#x27;</span> | <span class="built_in">sort</span> | <span class="built_in">uniq</span> -c | <span class="built_in">sort</span> -nr | more</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>定位有哪些 IP 在爆破主机的root帐号</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">&quot;Failed password&quot;</span> /var/log/secure|grep -E -o <span class="string">&quot;(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)&quot;</span>|<span class="built_in">uniq</span> -c</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>爆破用户名字典是什么</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">&quot;Failed password&quot;</span> /var/log/secure|perl -e <span class="string">&#x27;while($_=&lt;&gt;)&#123; /for(.*?) from/; print &quot;$1\n&quot;;&#125;&#x27;</span>|<span class="built_in">uniq</span> -c|<span class="built_in">sort</span> -nr</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>登录成功的IP有哪些</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">&quot;Accepted &quot;</span> /var/log/secure | awk <span class="string">&#x27;&#123;print $11&#125;&#x27;</span> | <span class="built_in">sort</span> | <span class="built_in">uniq</span> -c | <span class="built_in">sort</span> -nr | more</span><br><span class="line"><span class="comment"># 登录成功的日期、用户名、IP:</span></span><br><span class="line">grep <span class="string">&quot;Accepted &quot;</span> /var/log/secure | awk <span class="string">&#x27;&#123;print $1,$2,$3,$9,$11&#125;&#x27;</span> </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>增加一个用户kali日志</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># grep &quot;useradd&quot; /var/log/secure</span></span><br><span class="line">Jul1000:12:15localhostuseradd[2382]: newgroup: name=kali, GID=1001</span><br><span class="line">Jul1000:12:15localhostuseradd[2382]: newuser: name=kali, UID=1001, GID=1001, home=/home/kali</span><br><span class="line">, shell=/bin/bash</span><br><span class="line">Jul1000:12:58localhostpasswd: pam_unix(passwd:chauthtok): passwordchangedforkali</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>删除用户kali日志</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># grep &quot;userdel&quot; /var/log/secure</span></span><br><span class="line">Jul1000:14:17localhostuserdel[2393]: deleteuser<span class="string">&#x27;kali&#x27;</span></span><br><span class="line">Jul1000:14:17localhostuserdel[2393]: removedgroup<span class="string">&#x27;kali&#x27;</span> ownedby<span class="string">&#x27;kali&#x27;</span></span><br><span class="line">Jul1000:14:17localhostuserdel[2393]: removedshadowgroup<span class="string">&#x27;kali&#x27;</span> ownedby<span class="string">&#x27;kali&#x27;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>su切换用户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 通过 /var/log/auth.log 文件（适用于基于 Debian 的系统，如 Ubuntu）：</span></span><br><span class="line"><span class="built_in">cat</span> /var/log/auth.log | grep su</span><br><span class="line"><span class="built_in">cat</span> /var/log/auth.log | grep sudo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过 /var/log/secure 文件（适用于基于 Red Hat 的系统，如 CentOS 和 Fedora）：</span></span><br><span class="line"><span class="built_in">cat</span> /var/log/secure | grep su</span><br><span class="line"><span class="built_in">cat</span> /var/log/secure | grep sudo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过 /var/log/messages 文件（适用于某些旧版本的系统）：</span></span><br><span class="line"><span class="built_in">cat</span> /var/log/messages | grep su</span><br><span class="line"><span class="built_in">cat</span> /var/log/messages | grep sudo</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="通信分析"><a href="#通信分析" class="headerlink" title="通信分析"></a>通信分析</h3><ul>
+<li><code>iptables</code><br>Linux平台下的包过滤防火墙,具有封包过滤、封包重定向和网络地址转换(NAT)等功能<table>
+<thead>
+<tr>
+<th>表</th>
+<th>链</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>filter</td>
+<td>INPUT,FORWARD,OUTPUT</td>
+</tr>
+<tr>
+<td>nat</td>
+<td>PREROUTING,OUTPUT,POSTROUTING</td>
+</tr>
+<tr>
+<td>mangle</td>
+<td>PREROUTING,INPUT,FORWARD,OUTPUT,POSTROUTING</td>
+</tr>
+<tr>
+<td>raw</td>
+<td>PREROUTING,OUTPUT</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>动作</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ACCEPT</td>
+<td>允许数据包通过</td>
+</tr>
+<tr>
+<td>DROP</td>
+<td>直接丢弃数据包,不会给数据端发送响应</td>
+</tr>
+<tr>
+<td>REJECT</td>
+<td>拒绝数据包,必要时会给数据端发送响应</td>
+</tr>
+<tr>
+<td>SNAT</td>
+<td>源地址转换,解决内网用户公用一个公网地址</td>
+</tr>
+<tr>
+<td>MASQUERADE</td>
+<td>SNAT的特殊形式,适用于动态IP</td>
+</tr>
+<tr>
+<td>REDIRECT</td>
+<td>在本机做端口映射</td>
+</tr>
+</tbody></table>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 192.168.10.0/24 可接受,但192.168.10.10丢弃</span></span><br><span class="line">iptables -A INPUT -i eth0 -s 192.168.10.0/24 -j ACCEPT</span><br><span class="line">iptables -A INPUT -i eth0 -s 192.168.10.10 -j DROP</span><br><span class="line">iptables -nL --line-number | grep 192.168.10</span><br><span class="line">iptables -L -t nat</span><br><span class="line"><span class="comment"># 重点注意:红队常用nat</span></span><br></pre></td></tr></table></figure></li>
+<li><code>FireWalld</code><br> <a href="https://jiangjiyue.github.io/2021/09/01/46f9142e/">Linux-FireWalld</a></li>
+</ul>
+<h3 id="命令被替换"><a href="#命令被替换" class="headerlink" title="命令被替换"></a>命令被替换</h3><h4 id="BusyBox"><a href="#BusyBox" class="headerlink" title="BusyBox"></a>BusyBox</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载 BusyBox 64 位二进制文件</span></span><br><span class="line">wget -O busybox https://busybox.net/downloads/binaries/1.31.0-defconfig-multiarch-musl/busybox-x86_64</span><br><span class="line"><span class="comment"># 赋予权限</span></span><br><span class="line"><span class="built_in">chmod</span> +x busybox</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看查看其版本，使用和当前支持的功能</span></span><br><span class="line">./busybox</span><br><span class="line">[root@localhost opt]<span class="comment"># ./busybox</span></span><br><span class="line">BusyBox v1.31.0 (2019-06-10 15:54:54 CEST) multi-call binary.</span><br><span class="line">BusyBox is copyrighted by many authors between 1998-2015.</span><br><span class="line">Licensed under GPLv2. See <span class="built_in">source</span> distribution <span class="keyword">for</span> detailed</span><br><span class="line">copyright notices.</span><br><span class="line"></span><br><span class="line">Usage: busybox [<span class="keyword">function</span> [arguments]...]</span><br><span class="line">   or: busybox --list[-full]</span><br><span class="line">   or: busybox --show SCRIPT</span><br><span class="line">   or: busybox --install [-s] [DIR]</span><br><span class="line">   or: <span class="keyword">function</span> [arguments]...</span><br><span class="line"></span><br><span class="line">        BusyBox is a multi-call binary that combines many common Unix</span><br><span class="line">        utilities into a single executable.  Most people will create a</span><br><span class="line">        <span class="built_in">link</span> to busybox <span class="keyword">for</span> each <span class="keyword">function</span> they wish to use and BusyBox</span><br><span class="line">        will act like whatever it was invoked as.</span><br><span class="line"></span><br><span class="line">Currently defined <span class="built_in">functions</span>:</span><br><span class="line">        [, [[, acpid, add-shell, addgroup, adduser, adjtimex, <span class="built_in">arch</span>, arp, arping, ash, awk, <span class="built_in">base64</span>, <span class="built_in">basename</span>, bc, beep,</span><br><span class="line">        blkdiscard, blkid, blockdev, bootchartd, brctl, bunzip2, bzcat, bzip2, cal, <span class="built_in">cat</span>, chat, chattr, <span class="built_in">chgrp</span>, <span class="built_in">chmod</span>,</span><br><span class="line">        <span class="built_in">chown</span>, chpasswd, chpst, <span class="built_in">chroot</span>, chrt, chvt, <span class="built_in">cksum</span>, clear, cmp, <span class="built_in">comm</span>, conspy, <span class="built_in">cp</span>, cpio, crond, crontab, cryptpw,</span><br><span class="line">        cttyhack, <span class="built_in">cut</span>, <span class="built_in">date</span>, dc, <span class="built_in">dd</span>, deallocvt, delgroup, deluser, depmod, devmem, <span class="built_in">df</span>, dhcprelay, diff, <span class="built_in">dirname</span>, dmesg,</span><br><span class="line">        dnsd, dnsdomainname, dos2unix, dpkg, dpkg-deb, <span class="built_in">du</span>, dumpkmap, dumpleases, <span class="built_in">echo</span>, ed, egrep, eject, <span class="built_in">env</span>, envdir,</span><br><span class="line">        envuidgid, ether-wake, <span class="built_in">expand</span>, <span class="built_in">expr</span>, <span class="built_in">factor</span>, fakeidentd, fallocate, <span class="literal">false</span>, fatattr, fbset, fbsplash, fdflush,</span><br><span class="line">        fdformat, fdisk, fgconsole, fgrep, find, findfs, flock, <span class="built_in">fold</span>, free, freeramdisk, fsck, fsck.minix, fsfreeze,</span><br><span class="line">        fstrim, fsync, ftpd, ftpget, ftpput, fuser, getopt, getty, grep, <span class="built_in">groups</span>, gunzip, gzip, halt, hd, hdparm, <span class="built_in">head</span>,</span><br><span class="line">        hexdump, hexedit, <span class="built_in">hostid</span>, hostname, httpd, hush, hwclock, i2cdetect, i2cdump, i2cget, i2cset, i2ctransfer, <span class="built_in">id</span>,</span><br><span class="line">        ifconfig, ifdown, ifenslave, ifplugd, ifup, inetd, init, insmod, install, ionice, iostat, ip, ipaddr, ipcalc,</span><br><span class="line">        ipcrm, ipcs, iplink, ipneigh, iproute, iprule, iptunnel, kbd_mode, <span class="built_in">kill</span>, killall, killall5, klogd, last, less,</span><br><span class="line">        <span class="built_in">link</span>, linux32, linux64, linuxrc, <span class="built_in">ln</span>, loadfont, loadkmap, logger, login, <span class="built_in">logname</span>, logread, losetup, lpd, lpq, lpr,</span><br><span class="line">        <span class="built_in">ls</span>, lsattr, lsmod, lsof, lspci, lsscsi, lsusb, lzcat, lzma, lzop, makedevs, makemime, man, <span class="built_in">md5sum</span>, mdev, mesg,</span><br><span class="line">        microcom, <span class="built_in">mkdir</span>, mkdosfs, mke2fs, <span class="built_in">mkfifo</span>, mkfs.ext2, mkfs.minix, mkfs.vfat, <span class="built_in">mknod</span>, mkpasswd, mkswap, <span class="built_in">mktemp</span>,</span><br><span class="line">        modinfo, modprobe, more, mount, mountpoint, mpstat, mt, <span class="built_in">mv</span>, nameif, nanddump, nandwrite, nbd-client, nc, netstat,</span><br><span class="line">        <span class="built_in">nice</span>, <span class="built_in">nl</span>, nmeter, <span class="built_in">nohup</span>, nologin, <span class="built_in">nproc</span>, nsenter, nslookup, ntpd, nuke, <span class="built_in">od</span>, openvt, partprobe, passwd, <span class="built_in">paste</span>,</span><br><span class="line">        patch, pgrep, pidof, ping, ping6, pipe_progress, pivot_root, pkill, pmap, popmaildir, poweroff, powertop,</span><br><span class="line">        <span class="built_in">printenv</span>, <span class="built_in">printf</span>, ps, pscan, pstree, <span class="built_in">pwd</span>, pwdx, raidautorun, rdate, rdev, readahead, <span class="built_in">readlink</span>, readprofile,</span><br><span class="line">        <span class="built_in">realpath</span>, reboot, reformime, remove-shell, renice, reset, resize, resume, rev, <span class="built_in">rm</span>, <span class="built_in">rmdir</span>, rmmod, route, rpm,</span><br><span class="line">        rpm2cpio, rtcwake, run-init, run-parts, runlevel, runsv, runsvdir, rx, script, scriptreplay, sed, sendmail, <span class="built_in">seq</span>,</span><br><span class="line">        setarch, setconsole, setfattr, setfont, setkeycodes, setlogcons, setpriv, setserial, setsid, setuidgid, sh,</span><br><span class="line">        <span class="built_in">sha1sum</span>, <span class="built_in">sha256sum</span>, sha3sum, <span class="built_in">sha512sum</span>, showkey, <span class="built_in">shred</span>, <span class="built_in">shuf</span>, slattach, <span class="built_in">sleep</span>, smemcap, softlimit, <span class="built_in">sort</span>, <span class="built_in">split</span>,</span><br><span class="line">        ssl_client, start-stop-daemon, <span class="built_in">stat</span>, strings, <span class="built_in">stty</span>, su, sulogin, <span class="built_in">sum</span>, sv, svc, svlogd, svok, swapoff, swapon,</span><br><span class="line">        switch_root, <span class="built_in">sync</span>, sysctl, syslogd, <span class="built_in">tac</span>, <span class="built_in">tail</span>, tar, taskset, tc, tcpsvd, <span class="built_in">tee</span>, telnet, telnetd, <span class="built_in">test</span>, tftp, tftpd,</span><br><span class="line">        time, <span class="built_in">timeout</span>, top, <span class="built_in">touch</span>, <span class="built_in">tr</span>, traceroute, traceroute6, <span class="literal">true</span>, <span class="built_in">truncate</span>, ts, <span class="built_in">tty</span>, ttysize, tunctl, ubiattach,</span><br><span class="line">        ubidetach, ubimkvol, ubirename, ubirmvol, ubirsvol, ubiupdatevol, udhcpc, udhcpc6, udhcpd, udpsvd, uevent, umount,</span><br><span class="line">        <span class="built_in">uname</span>, <span class="built_in">unexpand</span>, <span class="built_in">uniq</span>, unix2dos, <span class="built_in">unlink</span>, unlzma, unshare, unxz, unzip, <span class="built_in">uptime</span>, <span class="built_in">users</span>, usleep, uudecode, uuencode,</span><br><span class="line">        vconfig, vi, vlock, volname, w, wall, watch, watchdog, <span class="built_in">wc</span>, wget, <span class="built_in">which</span>, <span class="built_in">who</span>, <span class="built_in">whoami</span>, whois, xargs, xxd, xz, xzcat,</span><br><span class="line">        <span class="built_in">yes</span>, zcat, zcip</span><br><span class="line">        </span><br><span class="line"><span class="comment"># 使用BusyBox</span></span><br><span class="line"><span class="comment">## 基本语法</span></span><br><span class="line">./busybox <span class="built_in">command</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## 查看可用命令条数</span></span><br><span class="line">busybox --list | <span class="built_in">wc</span> -l</span><br><span class="line">396</span><br><span class="line"></span><br><span class="line"><span class="comment">## ls</span></span><br><span class="line">./busybox <span class="built_in">ls</span></span><br><span class="line"><span class="comment">## ping</span></span><br><span class="line"> ./busybox ping www.baidu.com</span><br><span class="line">PING www.baidu.com (180.101.50.188): 56 data bytes</span><br><span class="line">64 bytes from 180.101.50.188: <span class="built_in">seq</span>=0 ttl=128 time=42.306 ms</span><br><span class="line">64 bytes from 180.101.50.188: <span class="built_in">seq</span>=1 ttl=128 time=55.544 ms</span><br><span class="line">64 bytes from 180.101.50.188: <span class="built_in">seq</span>=2 ttl=128 time=41.421 ms</span><br><span class="line">64 bytes from 180.101.50.188: <span class="built_in">seq</span>=3 ttl=128 time=33.776 ms</span><br><span class="line">64 bytes from 180.101.50.188: <span class="built_in">seq</span>=4 ttl=128 time=40.611 ms</span><br><span class="line">64 bytes from 180.101.50.188: <span class="built_in">seq</span>=5 ttl=128 time=40.129 ms</span><br><span class="line">^C</span><br><span class="line">--- www.baidu.com ping statistics ---</span><br><span class="line">6 packets transmitted, 6 packets received, 0% packet loss</span><br><span class="line">round-trip min/avg/max = 33.776/42.297/55.544 ms</span><br><span class="line"><span class="comment">## 使用 Httpd WebServer</span></span><br><span class="line">./busybox --list | grep httpd</span><br><span class="line"><span class="comment"># 进入busybox shell环境</span></span><br><span class="line">./busybox sh</span><br><span class="line"><span class="comment"># 激活WebServer</span></span><br><span class="line">/opt <span class="comment"># ./busybox httpd</span></span><br><span class="line"><span class="comment"># 退出进入busybox shell环境</span></span><br><span class="line"><span class="built_in">exit</span></span><br><span class="line"><span class="comment"># 查询webserver 进程</span></span><br><span class="line">[root@localhost opt]<span class="comment"># ps -ef | grep httpd</span></span><br><span class="line">root      38923      1  0 14:45 ?        00:00:00 ./busybox httpd</span><br><span class="line">root      39460   3959  0 14:45 pts/0    00:00:00 grep --color=auto httpd</span><br><span class="line"><span class="comment"># 测试</span></span><br><span class="line">[root@localhost opt]<span class="comment"># curl localhost</span></span><br><span class="line">&lt;HTML&gt;&lt;HEAD&gt;&lt;TITLE&gt;404 Not Found&lt;/TITLE&gt;&lt;/HEAD&gt;</span><br><span class="line">&lt;BODY&gt;&lt;H1&gt;404 Not Found&lt;/H1&gt;</span><br><span class="line">The requested URL was not found</span><br><span class="line">&lt;/BODY&gt;&lt;/HTML&gt;</span><br><span class="line"><span class="comment"># 可以创建一个简单的页面</span></span><br><span class="line">./busybox sh</span><br><span class="line"><span class="comment"># 新建文件</span></span><br><span class="line">/opt <span class="comment"># ./busybox vi index.html</span></span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">Welcome to BusyBox !</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407301458025.png" data-fancybox="true"/></div></div>
+
+<h4 id="检查确认系统命令工具是否被替换"><a href="#检查确认系统命令工具是否被替换" class="headerlink" title="检查确认系统命令工具是否被替换"></a>检查确认系统命令工具是否被替换</h4><p>使用工具篇中的rkhunter检测即可</p>
+<h2 id="工具篇"><a href="#工具篇" class="headerlink" title="工具篇"></a>工具篇</h2><h3 id="一、Rootkit查杀"><a href="#一、Rootkit查杀" class="headerlink" title="一、Rootkit查杀"></a>一、Rootkit查杀</h3><h4 id="chkrootkit"><a href="#chkrootkit" class="headerlink" title="chkrootkit"></a>chkrootkit</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># http://www.chkrootkit.org</span></span><br><span class="line"><span class="comment"># 使用方法:</span></span><br><span class="line">wget ftp://ftp.pangeia.com.br/pub/seg/pac/chkrootkit.tar.gz</span><br><span class="line">tar zxvf chkrootkit.tar.gz</span><br><span class="line"><span class="built_in">cd</span> chkrootkit-0.52</span><br><span class="line">makesense</span><br><span class="line"><span class="comment"># 编译完成没有报错的话执行检查</span></span><br><span class="line">./chkrootkit</span><br></pre></td></tr></table></figure>
+
+<h4 id="rkhunter"><a href="#rkhunter" class="headerlink" title="rkhunter"></a>rkhunter</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># http://rkhunter.sourceforge.net</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用方法:</span></span><br><span class="line">wget https://nchc.dl.sourceforge.net/project/rkhunter/rkhunter/1.4.4/rkhunter-1.4.4.tar.gz</span><br><span class="line">tar -zxvf rkhunter-1.4.4.tar.gz</span><br><span class="line"><span class="built_in">cd</span> rkhunter-1.4.4</span><br><span class="line">./installer.sh --install</span><br><span class="line">rkhunter -c</span><br></pre></td></tr></table></figure>
+
+<h3 id="二、病毒查杀"><a href="#二、病毒查杀" class="headerlink" title="二、病毒查杀"></a>二、病毒查杀</h3><h4 id="Clamav"><a href="#Clamav" class="headerlink" title="Clamav"></a>Clamav</h4><p><strong>安装方式一:</strong> </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ClamAV 的官方下载地址为:</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># http://www.clamav.net/download.html</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 1.安装zlib</span></span><br><span class="line">wget http://nchc.dl.sourceforge.net/project/libpng/zlib/1.2.7/zlib-1.2.7.tar.gz </span><br><span class="line">tar -zxvf zlib-1.2.7.tar.gz</span><br><span class="line"><span class="built_in">cd</span> zlib-1.2.7</span><br><span class="line"><span class="comment"># 安装一下gcc编译环境</span></span><br><span class="line">yum install gcc</span><br><span class="line">CFLAGS=<span class="string">&quot;-O3 -fPIC&quot;</span>./configure --prefix=/usr/local/zlib/</span><br><span class="line">make &amp;&amp; make install</span><br><span class="line"><span class="comment"># 2.添加用户组clamav和组成员clamav</span></span><br><span class="line">groupadd clamav</span><br><span class="line">useradd -gclamav -s/bin/false -c<span class="string">&quot;Clam AntiVirus&quot;</span>clamav</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3.安装Clamav</span></span><br><span class="line">tar -zxvf clamav-0.97.6.tar.gz</span><br><span class="line"><span class="built_in">cd</span> clamav-0.97.6</span><br><span class="line">./configure --prefix=/opt/clamav --disable-clamav-with-zlib=/usr/local/zlib</span><br><span class="line">make</span><br><span class="line">makeinstall</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 配置Clamav</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">mkdir</span>/opt/clamav/logs</span><br><span class="line"><span class="built_in">mkdir</span>/opt/clamav/updata</span><br><span class="line"><span class="built_in">touch</span>/opt/clamav/logs/freshclam.log</span><br><span class="line"><span class="built_in">touch</span>/opt/clamav/logs/clamd.log</span><br><span class="line"><span class="built_in">cd</span>/opt/clamav/logs</span><br><span class="line"><span class="built_in">chown</span> clamav:clamav clamd.log</span><br><span class="line"><span class="built_in">chown</span> clamav:clamav freshclam.log</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5.ClamAV使用</span></span><br><span class="line"></span><br><span class="line">/opt/clamav/bin/freshclam <span class="comment"># 升级病毒库</span></span><br><span class="line">./clamscan –h <span class="comment"># 查看相应的帮助信息</span></span><br><span class="line">./clamscan -r /home  <span class="comment"># 扫描所有用户的主目录就使用</span></span><br><span class="line">./clamscan -r --bell -i /bin  <span class="comment"># 扫描 bin 目录并且显示有问题的文件的扫描结果</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>安装方式二:</strong> </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装</span></span><br><span class="line">yum install -y clamav</span><br><span class="line"><span class="comment"># 更新病毒库</span></span><br><span class="line">freshclam</span><br><span class="line"></span><br><span class="line"><span class="comment"># 扫描方法</span></span><br><span class="line">clamscan -r/etc --max-dir-recursion=5-l/root/etcclamav.log</span><br><span class="line">clamscan -r/bin --max-dir-recursion=5-l/root/binclamav.log</span><br><span class="line">clamscan -r/usr --max-dir-recursion=5-l/root/usrclamav.log</span><br><span class="line"></span><br><span class="line"><span class="comment"># 扫描并杀毒</span></span><br><span class="line">clamscan -r --remove/usr/bin/bsd-port</span><br><span class="line">clamscan -r --remove/usr/bin/</span><br><span class="line">clamscan -r--remove/usr/local/zabbix/sbin</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看日志发现</span></span><br><span class="line"><span class="built_in">cat</span>/root/usrclamav.log |grep FOUND</span><br></pre></td></tr></table></figure>
+
+<h3 id="三、webshell查杀"><a href="#三、webshell查杀" class="headerlink" title="三、webshell查杀"></a>三、webshell查杀</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">linux 版:</span><br><span class="line"></span><br><span class="line"><span class="comment"># 河马 webshell 查杀</span></span><br><span class="line">http://www.shellpub.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># 深信服 Webshell 网站后门检测工具</span></span><br><span class="line">http://edr.sangfor.com.cn/backdoor_detection.html</span><br><span class="line"></span><br><span class="line">牧云</span><br><span class="line">findWebshell-master</span><br><span class="line">php-malware-finder-master</span><br><span class="line">PHP-Shell-Detector-master</span><br></pre></td></tr></table></figure>
+
+<h3 id="四、RPM-check检查"><a href="#四、RPM-check检查" class="headerlink" title="四、RPM check检查"></a>四、RPM check检查</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 系统完整性可以通过 rpm 自带的 -Va 来校验检查所有的 rpm 软件包,查看哪些命令是否被替换了:</span></span><br><span class="line"></span><br><span class="line">./rpm -Va &gt; rpm.log</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果一切均校验正常将不会产生任何输出,如果有不一致的地方,就会显示出来,输出格式是 8 位长字符串,每个字符都用以表示文件与 RPM 数据库中一种属性的比较结果 ,如果是. (点) 则表示测试通过.</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>验证内容中的8个信息的具体内容如下:</strong></p>
+<ol>
+<li>S文件大小是否改变</li>
+<li>M文件的类型或文件的权限（rwx）是否被改变</li>
+<li>5文件 MD5 校验是否改变（可以看成文件内容是否改变）</li>
+<li>D设备中,从代码是否改变</li>
+<li>L文件路径是否改变</li>
+<li>U文件的属主（所有者）是否改变</li>
+<li>G文件的属组是否改变</li>
+<li>T文件的修改时间是否改变</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果命令被替换了,如何还原回来:</span></span><br><span class="line"><span class="comment"># 文件提取还原案例:</span></span><br><span class="line"></span><br><span class="line">rpm  -qf /bin/ls  <span class="comment"># 查询ls命令属于哪个软件包</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">mv</span>  /bin/ls /tmp  <span class="comment"># 先把ls转移到tmp目录下,造成ls命令丢失的假象</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 提取rpm包中ls命令到当前目录的/bin/ls下</span></span><br><span class="line">rpm2cpio /mnt/cdrom/Packages/coreutils-8.4-19.el6.i686.rpm | cpio -idv ./bin/ls </span><br><span class="line"></span><br><span class="line"><span class="comment"># 把ls命令复制到/bin/目录修复文件丢失</span></span><br><span class="line"><span class="built_in">cp</span> /root/bin/ls  /bin/ </span><br></pre></td></tr></table></figure>
+
+<h3 id="五、Linux安全检查脚本"><a href="#五、Linux安全检查脚本" class="headerlink" title="五、Linux安全检查脚本"></a>五、Linux安全检查脚本</h3><div class="tag-plugin ghcard"><a class="ghcard" rel="external nofollow noopener noreferrer noopener" target="_blank" href="https://github.com/grayddq/GScan"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://github-readme-stats.xaoxuu.com/api/pin/?username=grayddq&repo=GScan&theme=dark&show_owner=true"/></a></div>
+<div class="tag-plugin ghcard"><a class="ghcard" rel="external nofollow noopener noreferrer noopener" target="_blank" href="https://github.com/ppabc/security_check"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://github-readme-stats.xaoxuu.com/api/pin/?username=ppabc&repo=security_check&theme=dark&show_owner=true"/></a></div>
+<div class="tag-plugin ghcard"><a class="ghcard" rel="external nofollow noopener noreferrer noopener" target="_blank" href="https://github.com/T0xst/linux"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://github-readme-stats.xaoxuu.com/api/pin/?username=T0xst&repo=linux&theme=dark&show_owner=true"/></a></div>
+
+
+<div class="article-footer fs14">
+    <section id="references">
+      <div class="header"><span>参考资料</span></div>
+      <div class="body">
+        <ul>
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener" href="https://github.com/Bypass007/Emergency-Response-Notes">Bypass007-应急响应实战笔记</a></p>
+
+        </li>
+        
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener" href="https://swisskyrepo.github.io/InternalAllTheThings/redteam/persistence/linux-persistence/">Linux-持久化</a></p>
+
+        </li>
+        
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener" href="https://freebuf.com/column/162604.html">警惕利用Linux预加载型恶意动态链接库的后门</a></p>
+
+        </li>
+        </ul>
+      </div>
+    </section>
+    
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2024/07/12/b7b8d727/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2024/07/12/b7b8d727/&title=应急响应之Linux - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407151641563.png&summary=
+    总字符数: 21.15K 
+    
+    
+    代码: 18.27K, 文本: 1.28K
+    
+    
+    预计阅读时间: 1.42 小时
+    
+    
+
+
+
+入侵排查思路系统基本信息
+lscpu查..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=应急响应之Linux - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2024/07/12/b7b8d727/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2024/07/12/b7b8d727/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2024/07/16/29554557/">应急响应靶机训练-Linux1</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2024/07/11/87585b1a/">应急响应靶机训练-Web3</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\2024\07\16\29554557\" title="应急响应靶机训练-Linux1"><span class="title">应急响应靶机训练-Linux1</span></a><a class="item" href="\2024\07\17\b05c14ed\" title="应急响应靶机训练-Linux2"><span class="title">应急响应靶机训练-Linux2</span></a><a class="item" href="\2021\09\19\2dd5e334\" title="ELK收集nginx日志并展示来源IP地图"><span class="title">ELK收集nginx日志并展示来源IP地图</span></a><a class="item" href="\2022\09\06\6e6b1513\" title="基于Awstats的Apache日志分析"><span class="title">基于Awstats的Apache日志分析</span></a><a class="item" href="\2024\09\24\3c3f9499\" title="CS-Cobalt Strike必备知识"><span class="title">CS-Cobalt Strike必备知识</span></a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body waline'>
+      
+
+<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/tools/">工具</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%A5%E4%BE%B5%E6%8E%92%E6%9F%A5%E6%80%9D%E8%B7%AF"><span class="toc-text">入侵排查思路</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E5%9F%BA%E6%9C%AC%E4%BF%A1%E6%81%AF"><span class="toc-text">系统基本信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%A6%E5%8F%B7%E5%AE%89%E5%85%A8"><span class="toc-text">账号安全</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="toc-text">基本使用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%A5%E4%BE%B5%E6%8E%92%E6%9F%A5"><span class="toc-text">入侵排查</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%86%E5%8F%B2%E5%91%BD%E4%BB%A4"><span class="toc-text">历史命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3"><span class="toc-text">端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B"><span class="toc-text">进程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8%E9%A1%B9"><span class="toc-text">开机启动项</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8-1"><span class="toc-text">基本使用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%A5%E4%BE%B5%E6%8E%92%E6%9F%A5-1"><span class="toc-text">入侵排查</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1"><span class="toc-text">定时任务</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8-2"><span class="toc-text">基本使用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%A5%E4%BE%B5%E6%8E%92%E6%9F%A5-2"><span class="toc-text">入侵排查</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1"><span class="toc-text">服务</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E8%87%AA%E5%90%AF%E5%8A%A8"><span class="toc-text">服务自启动</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%A5%E4%BE%B5%E6%8E%92%E6%9F%A5-3"><span class="toc-text">入侵排查</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%97%95%E8%BF%B9"><span class="toc-text">文件痕迹</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%8F%E6%84%9F%E7%9B%AE%E5%BD%95"><span class="toc-text">敏感目录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E7%82%B9%E6%9F%A5%E6%89%BE"><span class="toc-text">时间点查找</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%89%B9%E6%AE%8A%E6%96%87%E4%BB%B6"><span class="toc-text">特殊文件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E6%97%A5%E5%BF%97"><span class="toc-text">系统日志</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90%E6%8A%80%E5%B7%A7"><span class="toc-text">日志分析技巧</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E4%BF%A1%E5%88%86%E6%9E%90"><span class="toc-text">通信分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%A2%AB%E6%9B%BF%E6%8D%A2"><span class="toc-text">命令被替换</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#BusyBox"><span class="toc-text">BusyBox</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A3%80%E6%9F%A5%E7%A1%AE%E8%AE%A4%E7%B3%BB%E7%BB%9F%E5%91%BD%E4%BB%A4%E5%B7%A5%E5%85%B7%E6%98%AF%E5%90%A6%E8%A2%AB%E6%9B%BF%E6%8D%A2"><span class="toc-text">检查确认系统命令工具是否被替换</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7%E7%AF%87"><span class="toc-text">工具篇</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81Rootkit%E6%9F%A5%E6%9D%80"><span class="toc-text">一、Rootkit查杀</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#chkrootkit"><span class="toc-text">chkrootkit</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#rkhunter"><span class="toc-text">rkhunter</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%97%85%E6%AF%92%E6%9F%A5%E6%9D%80"><span class="toc-text">二、病毒查杀</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Clamav"><span class="toc-text">Clamav</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81webshell%E6%9F%A5%E6%9D%80"><span class="toc-text">三、webshell查杀</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E3%80%81RPM-check%E6%A3%80%E6%9F%A5"><span class="toc-text">四、RPM check检查</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%94%E3%80%81Linux%E5%AE%89%E5%85%A8%E6%A3%80%E6%9F%A5%E8%84%9A%E6%9C%AC"><span class="toc-text">五、Linux安全检查脚本</span></a></li></ol></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js`,
+    marked: `https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.27.0" async></script>
+
+<!-- optional -->
+
+  <script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js'
+
+  function load_comment(){
+    if(!document.getElementById("waline_container"))return;
+
+    utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css');
+
+    const el = document.getElementById("waline_container");
+    var path = el.getAttribute('comment_id');
+    if (!path) {
+      path = decodeURI(window.location.pathname);
+    }
+
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+      el: '#waline_container',
+      path: path,
+      
+    }));
+
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    load_comment();
+  });
+
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"></script><script defer src="https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.swiper-slide img, .gallery img ,#waline_container .vcontent img`,
+    css: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css`,
+    js: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || null
+        }
+      });
+    })
+  }
+</script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          loop: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+</div></body></html>

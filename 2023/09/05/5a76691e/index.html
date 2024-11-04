@@ -1,0 +1,834 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.27.0" theme-name="Stellar" theme-version="1.27.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>PHP-表单 - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="总字符数: 13.57K                代码: 7.34K, 文本: 3.42K               预计阅读时间: 47 分钟            一、PHP 表单PHP 中的 $_GET 和$_POST变量用于检索表单中的信息,比如用户输入. 表单处理有一点很重要的事情值得注意,当处理 HTML 表单时,PHP 能把来自 HTML 页面中的表单元素自动变成可">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHP-表单">
+<meta property="og:url" content="https://jiangjiyue.github.io/2023/09/05/5a76691e/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="总字符数: 13.57K                代码: 7.34K, 文本: 3.42K               预计阅读时间: 47 分钟            一、PHP 表单PHP 中的 $_GET 和$_POST变量用于检索表单中的信息,比如用户输入. 表单处理有一点很重要的事情值得注意,当处理 HTML 表单时,PHP 能把来自 HTML 页面中的表单元素自动变成可">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071845007.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071845277.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071845824.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071845683.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071846222.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071847995.PNG">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071847395.PNG">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071847735.PNG">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071847441.PNG">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071847823.png">
+<meta property="article:published_time" content="2023-09-05T13:01:08.000Z">
+<meta property="article:modified_time" content="2024-02-09T08:13:36.000Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="编程语言">
+<meta property="article:tag" content="PHP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071845007.png">
+  
+  
+  
+  <meta name="keywords" content="编程语言,PHP">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.27.0">
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="导航" href="/sites/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/tools/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
+</div>
+<div class="widgets">
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">专栏：PHP</span></div><div class="widget-body"><a class="item" href="/2023/09/02/20d7e033/"><span class="title">PHP-从入门到精通(上)</span></a><a class="item" href="/2023/09/03/39ccd172/"><span class="title">PHP-从入门到精通(下)</span></a><a class="item" href="/2023/09/04/258025d3/"><span class="title">PHP-算法初识~</span></a><a class="item active" href="/2023/09/05/5a76691e/"><span class="title">PHP-表单</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a><a class="item" href="/2023/09/06/d0324d08/"><span class="title">PHP-文件上传</span></a><a class="item" href="/2023/09/07/f2a0f176/"><span class="title">PHP-MySQL</span></a><a class="item" href="/2023/09/08/c3682c7d/"><span class="title">PHP-留言板项目</span></a></div></widget>
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2024/11/04/fe2980d6/"><span class="title">CS-ShellCode加载器</span></a><a class="item title" href="/2023/03/11/247b757/"><span class="title">VulHub-Fastjson漏洞复现</span></a><a class="item title" href="/2023/04/28/76971e68/"><span class="title">VulHub-Tomcat漏洞复现</span></a><a class="item title" href="/2024/07/05/dd58c5ed/"><span class="title">应急响应之Webshell流量分析</span></a><a class="item title" href="/2024/10/27/77c80f0f/"><span class="title">CS-C语言总结</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/topic">专栏</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/2023/09/02/20d7e033/">PHP</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2023-09-05T13:01:08.000Z">2023-09-05</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-02-09T08:13:36.000Z">2024-02-09</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>PHP-表单</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
+    <p>总字符数: 13.57K </p>
+    </div>
+    <div class="cell" style="">
+    <p>代码: 7.34K, 文本: 3.42K</p>
+    </div>
+    <div class="cell" style="">
+    <p>预计阅读时间: 47 分钟</p>
+    </div>
+    </div>
+
+<h2 id="一、PHP-表单"><a href="#一、PHP-表单" class="headerlink" title="一、PHP 表单"></a>一、PHP 表单</h2><p>PHP 中的 <code>$_GET</code> 和<code>$_POST</code>变量用于检索表单中的信息,比如用户输入.</p>
+<h3 id="表单处理"><a href="#表单处理" class="headerlink" title="表单处理"></a>表单处理</h3><p>有一点很重要的事情值得注意,当处理 HTML 表单时,PHP 能把来自 HTML 页面中的表单元素自动变成可供 PHP 脚本使用.</p>
+<h4 id="PHP-GET-变量"><a href="#PHP-GET-变量" class="headerlink" title="PHP $_GET 变量"></a>PHP $_GET 变量</h4><p>在 PHP 中,预定义的 $_GET 变量用于收集来自 method&#x3D;”get” 的表单中的值.</p>
+<p><strong>预定义的 $_GET 变量用于收集来自 method&#x3D;”get” 的表单中的值.</strong></p>
+<p>从带有 GET 方法的表单发送的信息,对任何人都是可见的(会显示在浏览器的地址栏),并且对发送信息的量也有限制.</p>
+<p>实例</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>表单<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;form.php&quot;</span> <span class="attr">method</span>=<span class="string">&quot;get&quot;</span>&gt;</span></span><br><span class="line">    用户名:<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span>&gt;</span></span><br><span class="line">    密码:<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;提交&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight php"><figcaption><span>login.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$username</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;username&#x27;</span>];</span><br><span class="line"><span class="variable">$password</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;password&#x27;</span>];</span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;账号:&quot;</span>.<span class="variable">$username</span>.<span class="string">&quot;密码:&quot;</span>.<span class="variable">$password</span>;</span><br></pre></td></tr></table></figure>
+
+<p>测试如下:</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071845007.png" data-fancybox="true"/></div></div>
+
+<p>提交后,可看到发送到服务器的URL如下所示,而此时see.php文件即可通过<code>$_GET</code>变量来收集表单数据了,这里需要注意的是,表单域的名称会自动成为<code>$_GET</code>buh数组中的键:</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071845277.png" data-fancybox="true"/></div></div>
+
+<p><strong>何时使用method&#x3D;”get”呢?</strong></p>
+<ol>
+<li>在HTML表单中使用method&#x3D;”get”时,所有变量名和值都会显示在URL中,因此在发送密码或其他敏感信息时,不应该使用该方法.</li>
+<li>正因为变量显示在URL中,因此可在收藏夹中收藏该页面,在某些情况下,这很有用.但HTTP GET方法不适合大型的变量值,它的值不能超过2000个字符.</li>
+</ol>
+<h4 id="PHP-POST-变量"><a href="#PHP-POST-变量" class="headerlink" title="PHP $_POST 变量"></a>PHP $_POST 变量</h4><p>在 PHP 中,预定义的 $_POST 变量用于收集来自 method&#x3D;”post” 的表单中的值.</p>
+<p>从带有POST方法的表单发送的消息,对任何人都是不可见的,也就是不会显示在浏览器的地址栏中,且对发送消息的量也没有限制.然而,默认情况下,POST方法的发送消息量最大为8MB,可通过设置php.ini文件中的post_max_size进行更改.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>表单<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;form.php&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span>&gt;</span></span><br><span class="line">    用户名:<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span>&gt;</span></span><br><span class="line">    密码:<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;提交&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><figcaption><span>login.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$username</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;username&#x27;</span>];</span><br><span class="line"><span class="variable">$password</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;password&#x27;</span>];</span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;账号:&quot;</span>.<span class="variable">$username</span>.<span class="string">&quot;密码:&quot;</span>.<span class="variable">$password</span>;</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071845824.png" data-fancybox="true"/></div></div>
+
+<p>点提交后,<code>login.php</code>通过<code>$_POST</code>变量来收集表单数据,表单域的名称会自动成为<code>$_POST</code>数组中的键</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071845683.png" data-fancybox="true"/></div></div>
+
+<p>何时使用method&#x3D;”post”呢?</p>
+<p>从带有POST方法的表达发送的信息,对任何人都是不可见的,且对发送信息的量也没有限制.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071846222.png" data-fancybox="true"/></div></div>
+
+<h4 id="GET和POST的区别"><a href="#GET和POST的区别" class="headerlink" title="GET和POST的区别:"></a>GET和POST的区别:</h4><table>
+<thead>
+<tr>
+<th>请求方式</th>
+<th>GET</th>
+<th>POST</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>参数位置</td>
+<td>url的query中</td>
+<td>一般在content中,query也可</td>
+</tr>
+<tr>
+<td>参数大小</td>
+<td>受限于浏览器url大小,一般不超过32K</td>
+<td>1G</td>
+</tr>
+<tr>
+<td>服务器数据接收</td>
+<td>接收1次</td>
+<td>根据数据大小,可分多次接收</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>从服务器端获取数据,不做增删改</td>
+<td>向服务器提交数据,如何增删改操作</td>
+</tr>
+<tr>
+<td>安全性</td>
+<td>参数携带的url中,安全性低</td>
+<td>相对于GET请求,安全性更高</td>
+</tr>
+</tbody></table>
+<ol>
+<li>多数浏览器对POST采用两阶段发送数据,先发请求头,再发请求体,即使参数少也会被分成两个步骤来发送,也就是第一步发header数据,第二步发body数据.HTTP为应用层协议,而再传输层有些情况TCP会出现两次连接的过程,HTTP协议本身不保存状态信息,一次请求一次相应,对TCP而言,通信次数越多反而越不可靠,最可靠的就是在一次连接中就传输完需要的消息,尽量使用GET请求来减少网络耗时,若通信时间增加,这段时间客户端与服务端一直保持连接状态,可能增加服务端负载,可靠性就会下降.</li>
+<li>GET请求会被cache,也就是GET请求能够被保持在浏览器中,尤其是当GET提交密码等重要数据,别人查看历史记录,便可直接看到这些私密数据,而POST不会进行cache.(cache:储存缓存)</li>
+<li>GET参数带在URL后面,传统IE中URL的最大可用长度为2048个字符,其他浏览器对URL长度限制实现上各不相同,而POST请求理论上无长度限制.</li>
+<li>GET提交的数据大小,不同浏览器的限制不同,一般在2K-8K之间,POST提交数据比较大,大小由服务器来设定,而且某些数据只能用POST方法携带,比如file.</li>
+<li>全部用POST不合理,最好先把请求按功能和场景先分一下类,对数据请求频繁,数据不敏感且数据量在普通浏览器最小限定的2K范围内的,这种情况下使用GET,其他情况使用POST.</li>
+<li>GET的本质是”得”,而POST本质是”给”,且GET是”幂等”的,在这一点上,GET被认为是”安全的”,实际上服务端也可用作资源更新,但这种用法违反约定,容易造成CSRF也就是跨站请求伪造.</li>
+<li>GET安全性非常低,POST安全性较高.</li>
+</ol>
+<h3 id="获取下拉菜单的数据"><a href="#获取下拉菜单的数据" class="headerlink" title="获取下拉菜单的数据"></a>获取下拉菜单的数据</h3><h4 id="PHP-下拉菜单单选"><a href="#PHP-下拉菜单单选" class="headerlink" title="PHP 下拉菜单单选"></a>PHP 下拉菜单单选</h4><p>以下实例设置了下拉菜单三个选项,表单使用 GET 方式获取数据,action 属性值为空表示提交到当前脚本,我们可以通过 select 的 name 属性获取下拉菜单的值:</p>
+<figure class="highlight php"><figcaption><span>teacher.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;teacher&#x27;</span>]))&#123;</span><br><span class="line">    <span class="variable">$teacher</span> = <span class="title function_ invoke__">htmlspecialchars</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;teacher&#x27;</span>]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$teacher</span> ==<span class="string">&#x27;Allen&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&#x27;Allen老师精通python语言.&#x27;</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span>(<span class="variable">$teacher</span> ==<span class="string">&#x27;Bob&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&#x27;Bob老师精通Go语言.&#x27;</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span>(<span class="variable">$teacher</span> ==<span class="string">&#x27;Tony&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&#x27;Tony老师全能大师&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">&lt;form action=<span class="string">&quot;&quot;</span> method=<span class="string">&quot;get&quot;</span>&gt;</span><br><span class="line">    &lt;select name=<span class="string">&quot;teacher&quot;</span>&gt;</span><br><span class="line">        &lt;option value=<span class="string">&quot;&quot;</span>&gt;选择老师:&lt;/option&gt;</span><br><span class="line">        &lt;option value=<span class="string">&quot;Allen&quot;</span>&gt;Allen&lt;/option&gt;</span><br><span class="line">        &lt;option value=<span class="string">&quot;Bob&quot;</span>&gt;Bob&lt;/option&gt;</span><br><span class="line">        &lt;option value=<span class="string">&quot;Tony&quot;</span>&gt;Tony&lt;/option&gt;</span><br><span class="line">    &lt;/select&gt;</span><br><span class="line">    &lt;input type=<span class="string">&quot;submit&quot;</span> value=<span class="string">&quot;提交&quot;</span>&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong>:<code>htmlspecialchars()</code>函数是使用来把一些预定义的字符转换为HTML实体,返回转换后的新字符串,原字符串不变.如果 string 包含无效的编码,则返回一个空的字符串</p>
+<h4 id="单选按钮表单"><a href="#单选按钮表单" class="headerlink" title="单选按钮表单"></a>单选按钮表单</h4><p>PHP 单选按钮表单中 name 属性的值是一致的,value 值是不同的.</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;sex&#x27;</span>]))&#123;</span><br><span class="line">    <span class="variable">$sex</span> = <span class="title function_ invoke__">htmlspecialchars</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;sex&#x27;</span>]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$sex</span> ==<span class="string">&#x27;boy&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&#x27;you are a boy  !&#x27;</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span>(<span class="variable">$sex</span> ==<span class="string">&#x27;girl&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&#x27;you are a girl  !&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;请进行选择!!&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">&lt;form action=<span class="string">&quot;&quot;</span> method=<span class="string">&quot;get&quot;</span>&gt;</span><br><span class="line">    &lt;input type=<span class="string">&quot;radio&quot;</span> name=<span class="string">&quot;sex&quot;</span> value=<span class="string">&quot;boy&quot;</span> /&gt;男</span><br><span class="line">    &lt;input type=<span class="string">&quot;radio&quot;</span> name=<span class="string">&quot;sex&quot;</span> value=<span class="string">&quot;girl&quot;</span> /&gt;女</span><br><span class="line">    &lt;input type=<span class="string">&quot;submit&quot;</span> value=<span class="string">&quot;提交&quot;</span>&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="checkbox-复选框"><a href="#checkbox-复选框" class="headerlink" title="checkbox 复选框"></a>checkbox 复选框</h4><p><code>PHP checkbox</code>复选框可以选择多个值:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;teacher&#x27;</span>]))&#123;</span><br><span class="line">   <span class="variable">$teacher</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;teacher&#x27;</span>];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(<span class="title function_ invoke__">is_array</span>(<span class="variable">$teacher</span>))&#123;</span><br><span class="line">    <span class="variable">$sites</span> = <span class="keyword">array</span>(<span class="string">&quot;allen&quot;</span>=&gt;<span class="string">&quot;Allen老师精通Python语言&quot;</span>,<span class="string">&quot;bob&quot;</span>=&gt;<span class="string">&quot;Bob老师精通Go语言&quot;</span>,<span class="string">&quot;tony&quot;</span>=&gt;<span class="string">&quot;Tony老师全能大师&quot;</span>);</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="variable">$teacher</span> <span class="keyword">as</span> <span class="variable">$k</span>=&gt;<span class="variable">$v</span>)&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="variable">$sites</span>[<span class="variable">$v</span>].<span class="string">&quot;&lt;/br&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">&lt;form action=<span class="string">&quot;&quot;</span> method=<span class="string">&quot;post&quot;</span>&gt;</span><br><span class="line">    &lt;input type=<span class="string">&quot;checkbox&quot;</span> name=<span class="string">&quot;teacher[]&quot;</span> value=<span class="string">&quot;allen&quot;</span>&gt; Allen&lt;br&gt;</span><br><span class="line">    &lt;input type=<span class="string">&quot;checkbox&quot;</span> name=<span class="string">&quot;teacher[]&quot;</span> value=<span class="string">&quot;bob&quot;</span>&gt; Bob&lt;br&gt;</span><br><span class="line">    &lt;input type=<span class="string">&quot;checkbox&quot;</span> name=<span class="string">&quot;teacher[]&quot;</span> value=<span class="string">&quot;tony&quot;</span>&gt; Tony&lt;br&gt;</span><br><span class="line">    &lt;input type=<span class="string">&quot;submit&quot;</span> value=<span class="string">&quot;提交&quot;</span>&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="表单的非空判断"><a href="#表单的非空判断" class="headerlink" title="表单的非空判断"></a>表单的非空判断</h3><h4 id="empty-函数"><a href="#empty-函数" class="headerlink" title="empty() 函数"></a>empty() 函数</h4><p><strong>作用:</strong> 该函数用于检查一个变量是否为空,当一个变量并不存在,或者它的值等同于 FALSE,那么它会被认为不存在.如果变量不存在的话,empty()并不会产生警告.</p>
+<p><strong>注意:</strong> empty() 在5.5 版本之后支持表达式了,而不仅仅是变量.</p>
+<p><strong>语法:</strong> bool empty ( mixed $var )</p>
+<p>返回值:</p>
+<p>当 var 存在,并且是一个非空非零的值时返回 FALSE 否则返回 TRUE.</p>
+<p>以下的变量会被认为是空的:</p>
+<ul>
+<li><code>&quot;&quot;</code>(空字符串)</li>
+<li><code>0</code> (作为整数的0)</li>
+<li><code>0.0</code>(作为浮点数的0)</li>
+<li><code>&quot;0&quot;</code>(作为字符串的0)</li>
+<li><code>NULL</code></li>
+<li><code>FALSE</code></li>
+<li><code>array()</code>(一个空数组)</li>
+<li><code>$var;</code>(一个声明了,但是没有值的变量)</li>
+</ul>
+<p>如下empty()函数判断字符串是否为空:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    <span class="variable">$str1</span>=<span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="variable">$str2</span>=<span class="string">&#x27;php&#x27;</span>;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">empty</span>(<span class="variable">$str1</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;$str1&#x27;</span> . <span class="string">&quot; 为空或为 0.&quot;</span> . <span class="string">&quot;&lt;br&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;$str1&#x27;</span> . <span class="string">&quot; 不为空或不为 0.&quot;</span> . <span class="string">&quot;&lt;br&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">empty</span>(<span class="variable">$str2</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;$str2&#x27;</span> . <span class="string">&quot; 为空或为 0.&quot;</span> . <span class="string">&quot;&lt;br&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;$str2&#x27;</span> . <span class="string">&quot; 字符串不为空或不为0.&quot;</span> . <span class="string">&quot;&lt;br&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071847995.PNG" data-fancybox="true"/></div></div>
+
+<h3 id="表单实例"><a href="#表单实例" class="headerlink" title="表单实例"></a>表单实例</h3><h4 id="1-登录表单"><a href="#1-登录表单" class="headerlink" title="1. 登录表单"></a>1. 登录表单</h4><p>如下登录form表单:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;submit&#x27;</span>])) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;username&#x27;</span>]) || !<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;password&#x27;</span>])) &#123;</span><br><span class="line">        <span class="keyword">exit</span>(<span class="string">&quot;账号或密码为空&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable">$username</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;username&#x27;</span>];</span><br><span class="line">    <span class="variable">$password</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;password&#x27;</span>];</span><br><span class="line">    <span class="keyword">if</span>(<span class="variable">$username</span>!==<span class="string">&#x27;admin&#x27;</span>||<span class="variable">$password</span>!==<span class="string">&#x27;admin&#x27;</span>)&#123;</span><br><span class="line">        <span class="keyword">exit</span>(<span class="string">&quot;账号或密码不正确&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;登录成功&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=<span class="string">&quot;en&quot;</span>&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=<span class="string">&quot;UTF-8&quot;</span>&gt;</span><br><span class="line">    &lt;title&gt;登录界面&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;form action=<span class="string">&quot;&quot;</span> method=<span class="string">&quot;post&quot;</span>&gt;</span><br><span class="line">    &lt;div style=<span class="string">&quot;text-align:center&quot;</span>&gt;</span><br><span class="line">        &lt;h1&gt;登录页面&lt;/h1&gt;</span><br><span class="line">        用户名:&lt;input type=<span class="string">&quot;text&quot;</span> name=<span class="string">&quot;username&quot;</span>&gt;&lt;/br&gt;</span><br><span class="line">        密码:&lt;input type=<span class="string">&quot;password&quot;</span> name=<span class="string">&quot;password&quot;</span>&gt;&lt;/br&gt;</span><br><span class="line">        &lt;input type=<span class="string">&quot;submit&quot;</span> value=<span class="string">&quot;登录&quot;</span> name=<span class="string">&quot;submit&quot;</span>&gt;</span><br><span class="line">        &lt;a href=<span class="string">&quot;register.php&quot;</span> target=<span class="string">&quot;_blank&quot;</span>&gt;注册&lt;/a&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/form&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>表单呈现:</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071847395.PNG" data-fancybox="true"/></div></div>
+
+<h4 id="2-注册表单"><a href="#2-注册表单" class="headerlink" title="2. 注册表单"></a>2. 注册表单</h4><p>如下注册form表单:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;submit&#x27;</span>]))&#123;</span><br><span class="line">    <span class="comment">// 获取所有数据</span></span><br><span class="line">    <span class="variable">$username</span> = <span class="title function_ invoke__">trim</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;username&#x27;</span>]);</span><br><span class="line">    <span class="variable">$password</span> = <span class="title function_ invoke__">trim</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;password&#x27;</span>]);</span><br><span class="line">    <span class="variable">$repassword</span> = <span class="title function_ invoke__">trim</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;repassword&#x27;</span>]);</span><br><span class="line">    <span class="variable">$email</span> = <span class="title function_ invoke__">trim</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;email&#x27;</span>]);</span><br><span class="line">    <span class="variable">$phone</span> = (<span class="keyword">int</span>)<span class="title function_ invoke__">trim</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;phone&#x27;</span>]);</span><br><span class="line">    <span class="variable">$sex</span> = <span class="title function_ invoke__">trim</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;sex&#x27;</span>]);</span><br><span class="line">    <span class="variable">$addres</span> = <span class="title function_ invoke__">trim</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;address&#x27;</span>]);</span><br><span class="line">    <span class="title function_ invoke__">var_dump</span>(<span class="variable">$_POST</span>);</span><br><span class="line">    <span class="comment">// 检查用户输入的主要数据是否为空等</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">empty</span>(<span class="variable">$username</span>)&amp;&amp;<span class="keyword">empty</span>(<span class="variable">$password</span>)&amp;&amp;<span class="keyword">empty</span>(<span class="variable">$repassword</span>))&#123;</span><br><span class="line">        <span class="keyword">exit</span>(<span class="string">&quot;请确认输入了账号密码&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(<span class="variable">$password</span>!==<span class="variable">$repassword</span>)&#123;</span><br><span class="line">        <span class="keyword">exit</span>(<span class="string">&quot;重复密码不匹配&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 其他的都可以检查,自行检查吧</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;script&gt;alert(&#x27;注册成功&#x27;);&lt;/script&gt;&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">&lt;form action=<span class="string">&quot;&quot;</span> method=<span class="string">&quot;post&quot;</span>&gt;</span><br><span class="line">    &lt;div style=<span class="string">&quot;text-align:center&quot;</span>&gt;</span><br><span class="line">        &lt;h1&gt;注册页面&lt;/h1&gt;</span><br><span class="line">        用户名:&lt;input type=<span class="string">&quot;text&quot;</span> name=<span class="string">&quot;username&quot;</span> id=<span class="string">&quot;username&quot;</span> maxlength=<span class="string">&quot;5&quot;</span>&gt;&lt;/br&gt;</span><br><span class="line">        密码:&lt;input type=<span class="string">&quot;password&quot;</span> name=<span class="string">&quot;password&quot;</span> id=<span class="string">&quot;password&quot;</span>&gt;&lt;/br&gt;</span><br><span class="line">        重复密码:&lt;input type=<span class="string">&quot;password&quot;</span> name=<span class="string">&quot;repassword&quot;</span> id=<span class="string">&quot;repassword&quot;</span>&gt;&lt;/br&gt;</span><br><span class="line">        邮箱:&lt;input type=<span class="string">&quot;email&quot;</span> name=<span class="string">&quot;email&quot;</span> id=<span class="string">&quot;email&quot;</span>&gt;&lt;/br&gt;</span><br><span class="line">        手机号:&lt;input type=<span class="string">&quot;number&quot;</span> name=<span class="string">&quot;phone&quot;</span> id=<span class="string">&quot;phone&quot;</span>&gt;&lt;/br&gt;</span><br><span class="line">        性别:</span><br><span class="line">        男:&lt;input type=<span class="string">&quot;radio&quot;</span> name=<span class="string">&quot;sex&quot;</span> value=<span class="string">&quot;boy&quot;</span> checked=<span class="string">&quot;checked&quot;</span>&gt;&lt;/br&gt;</span><br><span class="line">        女:&lt;input type=<span class="string">&quot;radio&quot;</span> name=<span class="string">&quot;sex&quot;</span> value=<span class="string">&quot;girl&quot;</span> checked=<span class="string">&quot;checked&quot;</span>&gt;&lt;/br&gt;</span><br><span class="line">        家庭住址:</span><br><span class="line">        &lt;input type=<span class="string">&quot;text&quot;</span> name=<span class="string">&quot;address&quot;</span> id=<span class="string">&quot;address&quot;</span>&gt;&lt;/br&gt;</span><br><span class="line">        &lt;input type=<span class="string">&quot;submit&quot;</span> value=<span class="string">&quot;注册&quot;</span> name=<span class="string">&quot;submit&quot;</span>&gt;</span><br><span class="line">        &lt;a href=<span class="string">&quot;login.php&quot;</span> target=<span class="string">&quot;_blank&quot;</span>&gt;登录&lt;/a&gt;</span><br><span class="line">	&lt;/div&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+
+<p>表单呈现:</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071847735.PNG" data-fancybox="true"/></div></div>
+
+<h4 id="3-留言表单"><a href="#3-留言表单" class="headerlink" title="3. 留言表单"></a>3. 留言表单</h4><p>如下留言form表单:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;submit&#x27;</span>]))&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">empty</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;title&#x27;</span>]&amp;&amp;<span class="keyword">empty</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;content&#x27;</span>])))&#123;</span><br><span class="line">        <span class="keyword">exit</span>(<span class="string">&quot;没有内容&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">echo</span> <span class="variable">$_POST</span>[<span class="string">&#x27;title&#x27;</span>].<span class="string">&quot;&lt;/br&gt;&quot;</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="variable">$_POST</span>[<span class="string">&#x27;content&#x27;</span>];</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">&lt;form action=<span class="string">&quot;&quot;</span> method=<span class="string">&quot;POST&quot;</span>&gt;</span><br><span class="line">    &lt;div style=<span class="string">&quot;text-align:center&quot;</span>&gt;</span><br><span class="line">        &lt;h1&gt;留言吧:&lt;/h1&gt;</span><br><span class="line">        &lt;input type=<span class="string">&quot;text&quot;</span> name=<span class="string">&quot;title&quot;</span>   placeholder=<span class="string">&quot;请输入留言标题&quot;</span>&gt;&lt;br&gt;</span><br><span class="line">        &lt;textarea name=<span class="string">&quot;content&quot;</span> rows=<span class="string">&quot;5&quot;</span> cols=<span class="string">&quot;50&quot;</span>&gt;&lt;/textarea&gt;&lt;br&gt;</span><br><span class="line">        &lt;input type=<span class="string">&quot;submit&quot;</span> value=<span class="string">&quot;留言&quot;</span> name=<span class="string">&quot;submit&quot;</span>&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+
+<p>表单呈现:</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071847441.PNG" data-fancybox="true"/></div></div>
+
+<h4 id="4-个人中心表单"><a href="#4-个人中心表单" class="headerlink" title="4. 个人中心表单"></a>4. 个人中心表单</h4><p>如下留言form表单:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$avatar</span> = <span class="string">&quot;https://gw.alicdn.com/i1/710600684/O1CN01OwjnvQ1GvJkcNOcpb_!!710600684.jpg_Q75.jpg_.webp&quot;</span>;</span><br><span class="line"><span class="variable">$username</span> = <span class="string">&quot;admin&quot;</span>;</span><br><span class="line"><span class="variable">$email</span> = <span class="string">&quot;admin@admin.com&quot;</span>;</span><br><span class="line"><span class="variable">$phone</span> = <span class="number">12998765641</span>;</span><br><span class="line"><span class="variable">$address</span> = <span class="string">&quot;扭曲丛林99号&quot;</span>;</span><br><span class="line"><span class="variable">$sex</span> = <span class="string">&quot;男&quot;</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">&lt;div style=<span class="string">&quot;text-align:center&quot;</span>&gt;</span><br><span class="line">    &lt;h1&gt;个人中心&lt;/h1&gt;</span><br><span class="line">    &lt;img src=<span class="string">&quot;&lt;?php echo <span class="subst">$avatar</span>?&gt;&quot;</span> width=<span class="string">&quot;120&quot;</span> height=<span class="string">&quot;70&quot;</span>&gt;&lt;br&gt;</span><br><span class="line">    &lt;form&gt;</span><br><span class="line">        &lt;input type=<span class="string">&quot;file&quot;</span> name=<span class="string">&quot;filename&quot;</span> &gt;</span><br><span class="line">        &lt;input type=<span class="string">&quot;submit&quot;</span> name=<span class="string">&quot;submit&quot;</span> value=<span class="string">&quot;提交&quot;</span> &gt;&lt;br&gt;</span><br><span class="line">        用户名:&lt;input type=<span class="string">&quot;text&quot;</span> name=<span class="string">&quot;username&quot;</span>  value=<span class="string">&quot;&lt;?php echo <span class="subst">$username</span>?&gt;&quot;</span> &gt;&lt;br&gt;</span><br><span class="line">        邮箱:&lt;input type=<span class="string">&quot;text&quot;</span> name=<span class="string">&quot;email&quot;</span>  value=<span class="string">&quot;&lt;?php echo <span class="subst">$email</span>?&gt;&quot;</span> &gt;&lt;br&gt;</span><br><span class="line">        手机号:&lt;input type=<span class="string">&quot;text&quot;</span> name=<span class="string">&quot;phone&quot;</span>  value=<span class="string">&quot;&lt;?php echo <span class="subst">$phone</span>?&gt;&quot;</span> &gt;&lt;br&gt;</span><br><span class="line">        家庭住址:&lt;input type=<span class="string">&quot;text&quot;</span> name=<span class="string">&quot;address&quot;</span>  value=<span class="string">&quot;&lt;?php echo <span class="subst">$address</span>?&gt;&quot;</span> &gt;&lt;br&gt;</span><br><span class="line">        sex:&lt;input type=<span class="string">&quot;text&quot;</span> name=<span class="string">&quot;sex&quot;</span>  value=<span class="string">&quot;&lt;?php echo <span class="subst">$sex</span>?&gt;&quot;</span> &gt;&lt;br</span><br><span class="line">    &lt;/form&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+<p>表单呈现:</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071847823.png" data-fancybox="true"/></div></div>
+
+<h2 id="二、Cookie和Session的简介"><a href="#二、Cookie和Session的简介" class="headerlink" title="二、Cookie和Session的简介"></a>二、Cookie和Session的简介</h2><p>Cookie和Session都是用于在Web应用程序中存储和管理用户状态信息的机制.</p>
+<ul>
+<li>Cookie是由Web服务器发送给Web浏览器的小数据文件,存储在用户计算机上.它可以包含有关用户的个人偏好设置、登录凭据等信息.每次用户访问该站点时,浏览器会将cookie发送回服务器,以方便Web服务器识别和跟踪用户.</li>
+<li>Session则是在服务器端创建的一段时间内存储用户状态的机制.当用户首次访问网站时,web服务器会为其分配一个唯一的session ID,并将该ID存储在cookie中.Web浏览器将在每个请求中发送该cookie,以便Web服务器可以将请求与正确的会话关联起来.</li>
+</ul>
+<p>总之,Cookie存储客户端数据,而Session存储服务器端数据,并且Session比Cookie更安全,因为所有的Session数据都存储在服务器端.</p>
+<h3 id="PHP-Cookie"><a href="#PHP-Cookie" class="headerlink" title="PHP Cookie"></a>PHP Cookie</h3><ul>
+<li>浏览器会将Cookie的key&#x2F;value保存到某个目录下的文本文件内,下次请求同一网站时就发送该Cookie给服务器.</li>
+<li>Cookie名称和值可以由服务器端开发者定义,这样服务器可以知道该用户是否是合法用户以及是否需要重新登录等,服务器可以设置或读取Cookies中包含信息,借此维护用户跟服务器会话中的状态.</li>
+</ul>
+<p><strong>注意</strong> :每种浏览器都可以存储COOKIE数据;各个浏览器之间的COOKIE数据不能共享</p>
+<h4 id="1、创建-cookie"><a href="#1、创建-cookie" class="headerlink" title="1、创建 cookie"></a>1、创建 cookie</h4><p>使用<code>setcookie()</code> 函数用于设置 cookie.</p>
+<p><strong>注:</strong> setcookie() 函数必须位于 <code>&lt;html&gt;</code> 标签之前.</p>
+<p><strong>语法:</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_ invoke__">setcookie</span>(name, value, expire, path, domain);</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">name	必需.规定 cookie 的名称.</span><br><span class="line">value	必需.规定 cookie 的值.</span><br><span class="line">expire	可选.规定 cookie 的过期时间.</span><br><span class="line">path	可选.规定 cookie 的服务器路径.</span><br><span class="line">domain	可选.规定 cookie 的域名.</span><br><span class="line">secure	可选.规定是否需要在安全的 HTTPS 连接来传输 cookie.</span><br></pre></td></tr></table></figure>
+
+<p><strong>实例操作</strong>:在<code>1.php</code>中创建如下创建名为 <code>user</code> 的 <code>cookie</code>,并为它赋值 <code>admin</code>:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">setcookie</span>(<span class="string">&quot;user&quot;</span>, <span class="string">&quot;admin&quot;</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2、在其他页面中取回-Cookie-的值"><a href="#2、在其他页面中取回-Cookie-的值" class="headerlink" title="2、在其他页面中取回 Cookie 的值"></a>2、在其他页面中取回 <code>Cookie</code> 的值</h4><p>PHP 中获取<code>cookie</code>数据是通过<strong>超全局数组</strong><code>$COOKIE</code>来实现的.</p>
+<p><strong>实例操作</strong>:在<code>2.php</code>中取回名为 <code>user</code> 的 <code>cookie</code> 的值,并把它显示在页面上:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">echo</span> <span class="variable">$_COOKIE</span>[<span class="string">&quot;user&quot;</span>]; <span class="comment">//输出COOKIE</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>输出效果:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">admin</span><br></pre></td></tr></table></figure>
+
+<h4 id="3、删除COOKIE数据"><a href="#3、删除COOKIE数据" class="headerlink" title="3、删除COOKIE数据"></a>3、删除COOKIE数据</h4><ol>
+<li><p>设置有效期为过去的某一个时间</p>
+<p>如下:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="comment">//假设我们的网站上有一个&quot;记住我&quot;的功能,用户可以选择保持登录状态.当用户选中了&quot;记住我&quot;后,您可以使用 Cookie 来实现自动登录的功能.</span></span><br><span class="line"><span class="comment">// 当用户手动退出账号之后我们就可以用以下方法去删除Cookie,不在实现自动登录功能</span></span><br><span class="line"><span class="title function_ invoke__">setcookie</span>(<span class="string">&quot;user&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="title function_ invoke__">time</span>()-<span class="number">3600</span>); <span class="comment">//将过期时间设置为当前时间减去3600 秒(即使 Cookie 过期)</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置COOKIE的值为false或空字符串</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_ invoke__">setcookie</span>(<span class="string">&quot;user&quot;</span>, <span class="string">&quot;false&quot;</span>);</span><br><span class="line"><span class="title function_ invoke__">setcookie</span>(<span class="string">&quot;user&quot;</span>, <span class="string">&quot;&quot;</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>清理浏览器缓存</p>
+</li>
+</ol>
+<h4 id="4、COOKIE优缺点"><a href="#4、COOKIE优缺点" class="headerlink" title="4、COOKIE优缺点"></a>4、COOKIE优缺点</h4><ul>
+<li>COOKIE存储在客户端,相对来说不太安全.</li>
+<li>COOKIE存储的数据类型,只能是字符串.</li>
+<li>COOKIE存储的数据容量,大约只能存储4KB数据.</li>
+<li>浏览器可以禁用缓存,也可以禁用COOKIE,则COOKIE功能就失效.</li>
+</ul>
+<h3 id="PHP-Session"><a href="#PHP-Session" class="headerlink" title="PHP Session"></a>PHP Session</h3><ul>
+<li>PHP session 变量用于存储关于用户会话(session)的信息,或者更改用户会话(session)的设置.Session 变量存储单一用户的信息,并且对于应用程序中的所有页面都是可用的.</li>
+</ul>
+<h4 id="1、开启SESSION会话功能-session-start-函数"><a href="#1、开启SESSION会话功能-session-start-函数" class="headerlink" title="1、开启SESSION会话功能(session_start()函数)"></a>1、开启SESSION会话功能(session_start()函数)</h4><p><code>$SESSION</code>变量默认是不存在的,因此,必须先开启<code>SESSION</code>,才能使用<code>$SESSION</code>变量;</p>
+<p><strong>注意:</strong> <code>session_start()</code> 函数必须位于 <code>&lt;html&gt;</code> 标签之前</p>
+<p><strong>用法:</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="title function_ invoke__">session_start</span>(); <span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line"></span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码会向服务器注册用户的会话,以便您可以开始保存用户信息,同时会为用户会话分配一个 UID.</p>
+<p>一个网站不管添加多少个<code>SESSION</code>数据,最终在浏览器端只存储一个<code>SESSION</code>的UID值.</p>
+<p><strong>注意:</strong></p>
+<ul>
+<li>每个需要<code>SESSION</code>数据的页面,都要开启<code>SESSION</code>功能</li>
+<li><code>SESSION</code>功能,不能重复开启(同一个页面不能开2次)</li>
+</ul>
+<h4 id="2、存储-Session-变量"><a href="#2、存储-Session-变量" class="headerlink" title="2、存储 Session 变量"></a>2、存储 Session 变量</h4><p>存储和取回 <code>SESSION</code> 变量的正确方法是使用 PHP <code>$_SESSION</code> 变量<br><strong>用法</strong>:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$_SESSION</span>[<span class="string">&#x27;变量名&#x27;</span>]</span><br></pre></td></tr></table></figure>
+
+<p><strong>实例操作</strong>:在<code>1.php</code>中开启<code>SESSION</code>功能,并且给<code>SESSION</code>变量<code>uid</code>赋值为<code>admin</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">session_start</span>();</span><br><span class="line"><span class="variable">$_SESSION</span>[<span class="string">&#x27;uid&#x27;</span>]=<span class="string">&quot;admin&quot;</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=<span class="string">&quot;en&quot;</span>&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">	&lt;meta charset=<span class="string">&quot;UTF-8&quot;</span>&gt;</span><br><span class="line">	&lt;title&gt;admin&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3、在其他页面中取回SESSION变量的值"><a href="#3、在其他页面中取回SESSION变量的值" class="headerlink" title="3、在其他页面中取回SESSION变量的值"></a>3、在其他页面中取回<code>SESSION</code>变量的值</h4><p><strong>实例操作</strong>:在<code>2.php</code>中开启SESSION功能,并且将<code>SESSION</code>变量<code>uid</code>输出</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">session_start</span>();</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=<span class="string">&quot;en&quot;</span>&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">	&lt;meta charset=<span class="string">&quot;UTF-8&quot;</span>&gt;</span><br><span class="line">	&lt;title&gt;admin&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;userid=&quot;</span>. <span class="variable">$_SESSION</span>[<span class="string">&#x27;uid&#x27;</span>];</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>输出结果:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">userid=admin</span><br></pre></td></tr></table></figure>
+
+<h4 id="4、销毁Session"><a href="#4、销毁Session" class="headerlink" title="4、销毁Session"></a>4、销毁Session</h4><p>删除某些 <code>SESSION</code> 数据,可以使用 <code>unset()</code> 或 <code>session_destroy()</code> 函数.</p>
+<p><code>unset()</code> 函数用于释放指定的 <code>SESSION</code> 变量:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">unset</span>(<span class="variable">$_SESSION</span>[<span class="string">&#x27;uid&#x27;</span>]);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>也可以通过 <code>session_destroy()</code> 函数彻底终结 <code>SESSION</code>:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">?php</span><br><span class="line"><span class="title function_ invoke__">session_destroy</span>();</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>注意:</strong> <code>session_destroy()</code> 将重置 <code>SESSION</code>,您将失去所有已存储的 <code>SESSION</code> 数据,使用的时候慎重.</p>
+<h4 id="5、SESSION的优点和特点"><a href="#5、SESSION的优点和特点" class="headerlink" title="5、SESSION的优点和特点"></a>5、SESSION的优点和特点</h4><ul>
+<li>Session对象存储特定用户的会话数据;</li>
+<li>Session将会话数据存储在服务器端;</li>
+<li>Session是基于Cookie技术的,没有Cookie就没有Session;</li>
+<li>Session在整个用户会话中,一直存在下去,一个用户会话时效:从用户登录开始,到用户登录结束;</li>
+<li>Session存储的数据量要比cookie大的多;</li>
+<li>Session存储的内容类型,不限于字符串;</li>
+<li>Session数据存储在服务器端,更安全,可靠.</li>
+<li>Session 的工作机制是:为每个访问者创建一个唯一的 id (UID),并基于这个 UID 来存储变量.UID 存储在 cookie 中,亦或通过 URL 进行传导.</li>
+</ul>
+<h3 id="cookie和session主要区别"><a href="#cookie和session主要区别" class="headerlink" title="cookie和session主要区别:"></a>cookie和session主要区别:</h3><ol>
+<li>Cookie以文本文件格式存储在浏览器中,而session存储在服务端.</li>
+<li>cookie的存储限制了数据量,只允许4KB,而session是无限量的</li>
+<li>我们可以轻松访问cookie值但是我们无法轻松访问会话值,因此它更安全</li>
+<li>设置cookie时间可以使cookie过期.但是使用<code>session-destory()</code>,我们将会销毁会话</li>
+</ol>
+<h2 id="三、使用我们的Cookie或Session完成表单项目"><a href="#三、使用我们的Cookie或Session完成表单项目" class="headerlink" title="三、使用我们的Cookie或Session完成表单项目"></a>三、使用我们的Cookie或Session完成表单项目</h2><p>未完待续….</p>
+<p><strong>思考?生产环境中为什么没有人会把所有的或者敏感信息存放到session或者Cookie当中呢?</strong></p>
+
+<div class="article-footer fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2023/09/05/5a76691e/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2023/09/05/5a76691e/&title=PHP-表单 - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071849019.png&summary=
+    总字符数: 13.57K 
+    
+    
+    代码: 7.34K, 文本: 3.42K
+    
+    
+    预计阅读时间: 47 分钟
+    
+    
+
+一、PHP 表单PHP 中的 $_GET 和$_..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=PHP-表单 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2023/09/05/5a76691e/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2023/09/05/5a76691e/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/06/d0324d08/">PHP-文件上传</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/04/258025d3/">PHP-算法初识~</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\2022\06\23\92579896\" title="PHP-JSON 字符串转义问题"><span class="title">PHP-JSON 字符串转义问题</span></a><a class="item" href="\2023\09\07\f2a0f176\" title="PHP-MySQL"><span class="title">PHP-MySQL</span></a><a class="item" href="\2023\09\02\20d7e033\" title="PHP-从入门到精通(上)"><span class="title">PHP-从入门到精通(上)</span></a><a class="item" href="\2023\09\06\d0324d08\" title="PHP-文件上传"><span class="title">PHP-文件上传</span></a><a class="item" href="\2024\09\24\3c3f9499\" title="CS-Cobalt Strike必备知识"><span class="title">CS-Cobalt Strike必备知识</span></a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body waline'>
+      
+
+<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/tools/">工具</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81PHP-%E8%A1%A8%E5%8D%95"><span class="toc-text">一、PHP 表单</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A1%A8%E5%8D%95%E5%A4%84%E7%90%86"><span class="toc-text">表单处理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#PHP-GET-%E5%8F%98%E9%87%8F"><span class="toc-text">PHP $_GET 变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#PHP-POST-%E5%8F%98%E9%87%8F"><span class="toc-text">PHP $_POST 变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GET%E5%92%8CPOST%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">GET和POST的区别:</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E4%B8%8B%E6%8B%89%E8%8F%9C%E5%8D%95%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="toc-text">获取下拉菜单的数据</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#PHP-%E4%B8%8B%E6%8B%89%E8%8F%9C%E5%8D%95%E5%8D%95%E9%80%89"><span class="toc-text">PHP 下拉菜单单选</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%95%E9%80%89%E6%8C%89%E9%92%AE%E8%A1%A8%E5%8D%95"><span class="toc-text">单选按钮表单</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#checkbox-%E5%A4%8D%E9%80%89%E6%A1%86"><span class="toc-text">checkbox 复选框</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A1%A8%E5%8D%95%E7%9A%84%E9%9D%9E%E7%A9%BA%E5%88%A4%E6%96%AD"><span class="toc-text">表单的非空判断</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#empty-%E5%87%BD%E6%95%B0"><span class="toc-text">empty() 函数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A1%A8%E5%8D%95%E5%AE%9E%E4%BE%8B"><span class="toc-text">表单实例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95"><span class="toc-text">1. 登录表单</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E6%B3%A8%E5%86%8C%E8%A1%A8%E5%8D%95"><span class="toc-text">2. 注册表单</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E7%95%99%E8%A8%80%E8%A1%A8%E5%8D%95"><span class="toc-text">3. 留言表单</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E4%B8%AA%E4%BA%BA%E4%B8%AD%E5%BF%83%E8%A1%A8%E5%8D%95"><span class="toc-text">4. 个人中心表单</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Cookie%E5%92%8CSession%E7%9A%84%E7%AE%80%E4%BB%8B"><span class="toc-text">二、Cookie和Session的简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP-Cookie"><span class="toc-text">PHP Cookie</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1%E3%80%81%E5%88%9B%E5%BB%BA-cookie"><span class="toc-text">1、创建 cookie</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2%E3%80%81%E5%9C%A8%E5%85%B6%E4%BB%96%E9%A1%B5%E9%9D%A2%E4%B8%AD%E5%8F%96%E5%9B%9E-Cookie-%E7%9A%84%E5%80%BC"><span class="toc-text">2、在其他页面中取回 Cookie 的值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3%E3%80%81%E5%88%A0%E9%99%A4COOKIE%E6%95%B0%E6%8D%AE"><span class="toc-text">3、删除COOKIE数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4%E3%80%81COOKIE%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-text">4、COOKIE优缺点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP-Session"><span class="toc-text">PHP Session</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1%E3%80%81%E5%BC%80%E5%90%AFSESSION%E4%BC%9A%E8%AF%9D%E5%8A%9F%E8%83%BD-session-start-%E5%87%BD%E6%95%B0"><span class="toc-text">1、开启SESSION会话功能(session_start()函数)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2%E3%80%81%E5%AD%98%E5%82%A8-Session-%E5%8F%98%E9%87%8F"><span class="toc-text">2、存储 Session 变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3%E3%80%81%E5%9C%A8%E5%85%B6%E4%BB%96%E9%A1%B5%E9%9D%A2%E4%B8%AD%E5%8F%96%E5%9B%9ESESSION%E5%8F%98%E9%87%8F%E7%9A%84%E5%80%BC"><span class="toc-text">3、在其他页面中取回SESSION变量的值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4%E3%80%81%E9%94%80%E6%AF%81Session"><span class="toc-text">4、销毁Session</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5%E3%80%81SESSION%E7%9A%84%E4%BC%98%E7%82%B9%E5%92%8C%E7%89%B9%E7%82%B9"><span class="toc-text">5、SESSION的优点和特点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cookie%E5%92%8Csession%E4%B8%BB%E8%A6%81%E5%8C%BA%E5%88%AB"><span class="toc-text">cookie和session主要区别:</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E4%BD%BF%E7%94%A8%E6%88%91%E4%BB%AC%E7%9A%84Cookie%E6%88%96Session%E5%AE%8C%E6%88%90%E8%A1%A8%E5%8D%95%E9%A1%B9%E7%9B%AE"><span class="toc-text">三、使用我们的Cookie或Session完成表单项目</span></a></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js`,
+    marked: `https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.27.0" async></script>
+
+<!-- optional -->
+
+  <script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js'
+
+  function load_comment(){
+    if(!document.getElementById("waline_container"))return;
+
+    utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css');
+
+    const el = document.getElementById("waline_container");
+    var path = el.getAttribute('comment_id');
+    if (!path) {
+      path = decodeURI(window.location.pathname);
+    }
+
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+      el: '#waline_container',
+      path: path,
+      
+    }));
+
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    load_comment();
+  });
+
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"></script><script defer src="https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.swiper-slide img, .gallery img ,#waline_container .vcontent img`,
+    css: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css`,
+    js: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || null
+        }
+      });
+    })
+  }
+</script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          loop: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+</div></body></html>

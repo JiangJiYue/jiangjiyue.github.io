@@ -1,0 +1,957 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.27.0" theme-name="Stellar" theme-version="1.27.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>Security-全方位探索网络安全 - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="总字符数: 17.24K                代码: 无, 文本: 14.25K               预计阅读时间: 1.03 小时              信息、信息安全以及网络安全的基本概念信息 1948年,数学家香农在题为”交流数学理论”的论文中指出:”信息是用来消除随机不确定性的东西.“,宇宙中所有事物的最基本的创造单位是信息.   信息:指音频、消息、通信系">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Security-全方位探索网络安全">
+<meta property="og:url" content="https://jiangjiyue.github.io/2024/02/12/7564e3ff/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="总字符数: 17.24K                代码: 无, 文本: 14.25K               预计阅读时间: 1.03 小时              信息、信息安全以及网络安全的基本概念信息 1948年,数学家香农在题为”交流数学理论”的论文中指出:”信息是用来消除随机不确定性的东西.“,宇宙中所有事物的最基本的创造单位是信息.   信息:指音频、消息、通信系">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305070920501.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402181609310.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402181613341.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402181615934.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402181615974.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402181618986.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402181626614.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402181656308.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402181937376.png">
+<meta property="og:image" content="https://github-readme-stats.xaoxuu.com/api/pin/?username=vulhub&repo=vulhub&theme=dark&show_owner=true">
+<meta property="og:image" content="https://github-readme-stats.xaoxuu.com/api/pin/?username=digininja&repo=DVWA&theme=dark&show_owner=true">
+<meta property="og:image" content="https://github-readme-stats.xaoxuu.com/api/pin/?username=zhuifengshaonianhanlu&repo=pikachu&theme=dark&show_owner=true">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402181937122.png">
+<meta property="og:image" content="https://github-readme-stats.xaoxuu.com/api/pin/?username=Audi-1&repo=sqli-labs&theme=dark&show_owner=true">
+<meta property="og:image" content="https://github-readme-stats.xaoxuu.com/api/pin/?username=do0dl3&repo=xss-labs&theme=dark&show_owner=true">
+<meta property="og:image" content="https://github-readme-stats.xaoxuu.com/api/pin/?username=c0ny1&repo=upload-labs&theme=dark&show_owner=true">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402181949209.png">
+<meta property="article:published_time" content="2024-02-12T04:20:15.000Z">
+<meta property="article:modified_time" content="2024-07-28T01:50:12.000Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="信息安全">
+<meta property="article:tag" content="信息收集">
+<meta property="article:tag" content="渗透测试">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305070920501.png">
+  
+  
+  
+  <meta name="keywords" content="信息安全,信息收集,渗透测试">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.27.0">
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="导航" href="/sites/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/tools/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
+</div>
+<div class="widgets">
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">专栏：Security-Base</span></div><div class="widget-body"><a class="item" href="/2024/02/08/c44eef61/"><span class="title">Security-会话授权</span></a><a class="item" href="/2024/02/10/c44eef61/"><span class="title">Security-网安专业术语篇</span></a><a class="item active" href="/2024/02/12/7564e3ff/"><span class="title">Security-全方位探索网络安全</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a><a class="item" href="/2024/02/14/dbeaca23/"><span class="title">Security-被动信息收集</span></a><a class="item" href="/2024/02/16/449cb93/"><span class="title">Security-主动信息收集</span></a><a class="item" href="/2024/02/20/449cb93/"><span class="title">Security-WebShell介绍及使用</span></a><a class="item" href="/2024/02/22/449cb93/"><span class="title">Security-反弹Shell大全及使用</span></a></div></widget>
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2024/11/04/fe2980d6/"><span class="title">CS-ShellCode加载器</span></a><a class="item title" href="/2023/03/11/247b757/"><span class="title">VulHub-Fastjson漏洞复现</span></a><a class="item title" href="/2023/04/28/76971e68/"><span class="title">VulHub-Tomcat漏洞复现</span></a><a class="item title" href="/2024/07/05/dd58c5ed/"><span class="title">应急响应之Webshell流量分析</span></a><a class="item title" href="/2024/10/27/77c80f0f/"><span class="title">CS-C语言总结</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/topic">专栏</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/2024/02/08/c44eef61/">Security-Base</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2024-02-12T04:20:15.000Z">2024-02-12</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-07-28T01:50:12.000Z">2024-07-28</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>Security-全方位探索网络安全</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
+    <p>总字符数: 17.24K </p>
+    </div>
+    <div class="cell" style="">
+    <p>代码: 无, 文本: 14.25K</p>
+    </div>
+    <div class="cell" style="">
+    <p>预计阅读时间: 1.03 小时</p>
+    </div>
+    </div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305070920501.png" data-fancybox="true"/></div></div>
+
+<h2 id="信息、信息安全以及网络安全的基本概念"><a href="#信息、信息安全以及网络安全的基本概念" class="headerlink" title="信息、信息安全以及网络安全的基本概念"></a>信息、信息安全以及网络安全的基本概念</h2><h3 id="信息"><a href="#信息" class="headerlink" title="信息"></a>信息</h3><blockquote>
+<p>1948年,数学家香农在题为”交流数学理论”的论文中指出:”<strong>信息是用来消除随机不确定性的东西.</strong>“,宇宙中所有事物的最基本的创造单位是信息.</p>
+</blockquote>
+<ol>
+<li><p>信息:指音频、消息、通信系统中传输和处理的对象,是指人类社会传播的一切内容.(本身是无形的,可以寄存在纸张、大脑记忆、磁盘等.)</p>
+<ul>
+<li>信息的功能:它可以减少事物的不确定性.(可以理解为事物本身和外部环境的互动关系).</li>
+</ul>
+</li>
+<li><p>消息:消息用于广泛的应用中.新鲜事物被称为消息.(消息是信息的笼统概念,信息则是消息的精确概念.)</p>
+</li>
+<li><p>数据:数据是信息的符号表示或者称为载体;信息是数据的内涵,是数据的语义解释.(密码本身是一串数据无价值,但是赋予它某个平台,它就是一条有用的信息.)</p>
+</li>
+</ol>
+<h3 id="信息技术"><a href="#信息技术" class="headerlink" title="信息技术"></a>信息技术</h3><blockquote>
+<p>信息技术(<code>Information Technology , IT</code>),是用于管理和处理信息所采用的各种技术的总称.(一般用在计算机科学和通信技术来设计、开发、安装和实施信息系统及应用软件.)</p>
+</blockquote>
+<p>信息技术的发展:</p>
+<ul>
+<li>第一阶段:电讯技术的发明(电磁技术的发展,贝尔(Bell)发明电话机)</li>
+<li>第二阶段:计算机技术的发展 (电子管计算机,主要运用于军事处理)</li>
+<li>第三阶段:互联网的使用(计算机网络发展成为全球性网络——因特网<code>Internet</code>)</li>
+<li>第四阶段:网络社会(云计算,物联网进入各行各业,与人类社会息息相关)</li>
+</ul>
+<h3 id="信息安全"><a href="#信息安全" class="headerlink" title="信息安全"></a>信息安全</h3><blockquote>
+<p>信息安全就是信息本身的安全(无关乎是否应用了计算机作为信息处理的手段).</p>
+</blockquote>
+<p>在网络基础上指信息网络的硬件、软件及其系统中的数据受到保护不受偶然的或者恶意的原因而遭到破坏、更改、泄露以及系统连续可靠正常地运行,信息服务不中断.</p>
+<p>在商业经济领域上指信息的<strong>完整性,保密性,不可否认性</strong>等.</p>
+<blockquote>
+<p>信息安全是一门涉及计算机科学、 网络技术、 通信技术、 密码技术、 信息安全技术、应用数学、数论、信息论等多种学科的综合性学科.</p>
+<p>ISO(国际标准化组织)的定义为: 为数据处理系统建立和采用的技术、管理上的安全保护,为的是保护计算机硬件、软件、数据不因偶然和恶意的原因而遭到破坏(涉及可用性),更改(涉及完整性)和泄露(涉及机密性).</p>
+<p>这里面既包含了层面的概念,其中计算机硬件可以看作是物理层面,软件可以看作是运行层面,再就是数据层面;又包含了属性的概念.</p>
+</blockquote>
+<h3 id="网络安全"><a href="#网络安全" class="headerlink" title="网络安全"></a>网络安全</h3><blockquote>
+<p>网络安全(Cyber Security):网络系统的硬件、软件及系统中的数据受到保护,不因偶然的或者恶意的原因而遭到破坏、篡改、泄露,系统连续可靠正常地运行,网络服务不被中断。</p>
+</blockquote>
+<h3 id="网络安全和信息安全的区别"><a href="#网络安全和信息安全的区别" class="headerlink" title="网络安全和信息安全的区别"></a>网络安全和信息安全的区别</h3><ol>
+<li><p>包含和被包含的关系:信息安全包含网络安全,信息安全还包括操作系统安全、数据库安全、硬件设备和设施安全、物理安全、人员安全、软件开发、应用安全等。</p>
+</li>
+<li><p>针对的设备不同:网络安全侧重于研究<strong>网络环境下</strong>的计算机安全,信息安全侧重于<strong>计算机数据和信息</strong>的安全。</p>
+</li>
+<li><p>侧重点不同:网络安全更注重在网络层面,比如通过部署防火墙、入侵检测等硬件设备来实现链路层面的安全防护,而信息安全的层面要比网络安全的覆盖面大的多,信息安全是从数据的角度来看安全防护。</p>
+</li>
+</ol>
+<p>通常采用的手段包括:防火墙、入侵检测、代码审计、渗透测试、风险评估等,安全防护不仅仅是在网络层面,更加关注的应用层面,可以说信息安全更贴近于用户的实际需求及想法</p>
+<h3 id="网络空间"><a href="#网络空间" class="headerlink" title="网络空间"></a>网络空间</h3><p><strong>网络空间</strong>具有网络安全威胁高隐蔽性、网络安全技术高密集性、网络安全控制地理区域不可限制性、网络安全防护时间不可区分性、网络攻防严重非对称性的特点。</p>
+<p>2016年国家发布了《国家网络空间安全战略》</p>
+<p>2017年6月1日实施《中华人民共和国网络安全法》</p>
+<h3 id="信息系统"><a href="#信息系统" class="headerlink" title="信息系统"></a>信息系统</h3><blockquote>
+<p>信息系统是具有<strong>集成性</strong>的系统,每一个组织中信息流动的总和构成一个信息系统.是输入、处理、输出的综合体.</p>
+</blockquote>
+<p>信息系统的安全分为:</p>
+<ol>
+<li>设备安全</li>
+<li>数据安全</li>
+<li>内容安全(符合法律法规)</li>
+<li>行为安全(强调的是软硬件工作)</li>
+<li>过程的安全(保证系统的安全可控)</li>
+</ol>
+<h2 id="从安全模型理解信息系统安全"><a href="#从安全模型理解信息系统安全" class="headerlink" title="从安全模型理解信息系统安全"></a>从安全模型理解信息系统安全</h2><blockquote>
+<p>​		本质上讲，网络安全就是网络上的信息安全，是指网络系统的硬件、软件和系统中的数据受到保护，不受偶然的或者恶意的攻击而遭到破坏、更改、泄露，系统连续可靠正常地运行，网络服务不中断。</p>
+<p>​		广义上讲，凡是涉及到网络上信息的保密性、完整性、可用性、真实性和可控性的相关技术和理论都是网络安全所要研究的领域。</p>
+</blockquote>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><span>扩展</span></summary><div class="body"><p>在信息安全领域，经过长期的实践和研究总结出了CIA三元组概念.它们是信息安全的基本原则,用来确保数据和系统的安全性、完整性和可信度</p><ul><li><p>实践经验：长期以来，信息安全专业人员在保护数据和系统方面积累了丰富的经验。通过观察实际案例、分析攻击手段和漏洞，他们发现了保密性、完整性和可用性对于信息安全的重要性。</p></li><li><p>学术研究：学术界对于信息安全领域进行了深入的研究，探索了各种安全威胁和防御机制。在这个过程中，研究者们逐渐发现了保密性、完整性和可用性作为信息安全的核心概念，并将其提出。</p></li><li><p>标准和框架：国际组织和标准化机构（如ISO、NIST等）为信息安全制定了一系列标准和框架。这些标准和框架强调保密性、完整性和可用性的重要性，并将其作为信息安全管理的核心原则。</p></li></ul></div></details></div>
+
+<h3 id="信息安全的概念"><a href="#信息安全的概念" class="headerlink" title="信息安全的概念"></a>信息安全的概念</h3><ol>
+<li>保密性（CONFIDENTIALITY）：确保数据和信息只能被授权的人或实体访问和查看。通过使用加密技术、身份验证和访问控制等方法，防止未经授权的访问和泄露。</li>
+<li>完整性（INTEGRITY）：确保数据和信息在传输、存储和处理过程中不被篡改、损坏或修改。使用数据校验和完整性验证机制，如哈希函数、数字签名和访问日志等，以保证数据的完整性。</li>
+<li>可用性（AVAILABILITY）：确保系统和服务在需要时可用和正常运行。通过实施冗余和备份策略、灾备计划、故障恢复机制等，以提供持续的可用性和业务连续性。</li>
+<li>可控性（CONTROLLABILITY）：确保对系统和资源的访问和操作可以被有效地管理和控制。通过实施访问控制、权限管理、审计跟踪和安全策略等措施，确保只有授权的用户可以进行合法的访问和操作。</li>
+<li>不可否认性（NON REPUDIATION）：确保发送方和接收方都无法否认已发送或接收到的数据或交互行为。通过使用数字签名、时间戳和审计跟踪等技术手段，可以提供不可抵赖的证据，防止交易和操作的双方否认其行为。</li>
+</ol>
+<div class="tag-plugin colorful note" color="red"><div class="body"><p>保密性（confidentiality）与Integrity（完整性）和Availability（可用性）并称为信息安全的CIA三要素</p></div></div>
+
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><span>这三个特性被选定为CIA三元组的原因</span></summary><div class="body"><ol><li>相互独立：保密性、完整性和可用性是相互独立的概念，每个特性都关注信息安全的不同方面。保密性关注数据的机密性和访问控制，完整性关注数据的完整性和防止篡改，可用性关注系统和服务的可用性和正常运行。它们共同构成了一个全面的信息安全框架。</li><li>平衡性：保密性、完整性和可用性之间存在一种平衡关系。在信息安全管理中，需要权衡这三个特性，以满足组织的安全需求。例如，过于强调保密性可能会降低可用性，过于强调可用性可能会牺牲保密性等。因此，将它们作为三元组，有助于我们在信息安全设计和实现中找到适当的平衡点。</li><li>综合性：保密性、完整性和可用性涵盖了信息安全的核心要素。除了这三个特性之外，还有其他特性如真实性、不可抵赖性等，但它们通常可以被归类为保密性、完整性和可用性的子属性。因此，CIA三元组提供了一个全面而简洁的框架，使我们能够系统地考虑信息安全的关键方面。</li></ol><p>综上所述，保密性、完整性和可用性之所以被选定为CIA三元组，是因为它们相互独立、平衡且综合地涵盖了信息安全的核心要素。这个三元组框架在实践中被广泛接受，并成为设计和评估信息安全措施的基础。</p></div></details></div>
+
+<h3 id="安全思维模型一-CIA-Triad"><a href="#安全思维模型一-CIA-Triad" class="headerlink" title="安全思维模型一:CIA Triad"></a>安全思维模型一:CIA Triad</h3><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402181609310.png" data-fancybox="true"/></div></div>
+
+<p>CIA Triad原则就是一切的攻防手段都是围绕着保密性(C)、完整性(I)、可用性(A)三原则展开的。</p>
+<ol>
+<li><strong>保密性</strong>：【保密性实际上是它的本质就是信息越界】这个边界实际上是有两类：一：时间边界；二：空间边界。时间边界就是说还没到那个时间点，他提前给放出来。比方说我们说高考试卷，每年的高考语文试卷不到6月7号上午9点，九点之前你弄出来了，这就是一个重大的泄密。再说空间边界，这个信息从你的内网跑到外网去了，从本来是只能张三李四知道是变成了王五知道。这就是一个跨越了空间的边界，信息它跨越了非授权、非受控的空间边界，它就是一种信息的泄密，保密性遭受破坏。</li>
+<li><strong>完整性</strong>：【完整性是指信息的它原本的状态，系统的原本的结构和组成】如果说这信息它原本的状态发生了变化，它比方说从1变成了2，它的组成是从无到有或是结构要素的位置发生了变化、或比例发生了变化，这导致了完整性遭受破坏。</li>
+<li><strong>可用性</strong>：这一点比较好理解，就是【我需要的时候，这个系统或信息能够去在合理的时间之内获得，就是可用性】这就是所谓的我们说的CIA这个模型.</li>
+</ol>
+<p>这三个属性用来确保信息的合法性和可信度</p>
+<p>“DAD”模型是一种用于描述和分析数据安全性风险的模型。它关注的是攻击者对数据进行篡改、破坏或泄露的能力和方式，以及这些威胁对数据完整性、可用性和保密性的影响。通过建立”DAD”模型，可以评估数据安全风险，制定相应的安全策略和措施来保护数据。</p>
+<p>“DAD”模型通常包含以下几个要素：</p>
+<ol>
+<li>数据篡改（Data Alteration）：指未经授权的修改或变更数据的内容，可能导致数据不准确、不完整或误导性。</li>
+<li>数据破坏（Data Destruction）：指对数据进行有意的破坏或删除，使其无法再被使用或恢复。</li>
+<li>数据泄露（Data Disclosure）：指未经授权的披露或泄露敏感数据，可能导致隐私泄露或其他潜在风险。</li>
+</ol>
+<h3 id="安全思维模型二-访问控制模型"><a href="#安全思维模型二-访问控制模型" class="headerlink" title="安全思维模型二:访问控制模型"></a>安全思维模型二:访问控制模型</h3><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402181613341.png" data-fancybox="true"/></div></div>
+
+<p>大部分的攻击最终都是为了获取相关权限，很多手段都是围绕去获取受害者的身份信息和验证信息（比如密码）。这个模型当中，发起访问的一方就是访问主体，被访问的那方就叫做客体。整个访问就会产生信息流。</p>
+<p>在任何一个访问控制系统中，都包含以下四个行为：</p>
+<ol>
+<li><strong>身份标示</strong>：访问主体在一个确定边界的系统范围被给予唯一的标示，解决你是谁的问题；</li>
+<li><strong>身份验证</strong>：对访问主体需要做基本的身份验证，解决你宣称就是谁谁谁的问题。</li>
+<li><strong>授权</strong>：用户身份验证通过后，需要确定用户可以访问哪些资源，以及对资源进行怎样的操作（读、写、删除等）。解决用户能做什么的问题。</li>
+<li><strong>审计</strong>：对用户的访问行为都记录在案，以备事后追责或改进系统。</li>
+</ol>
+<h3 id="安全思维模型三-边界与隔离模型"><a href="#安全思维模型三-边界与隔离模型" class="headerlink" title="安全思维模型三:边界与隔离模型"></a>安全思维模型三:边界与隔离模型</h3><div class="tag-plugin colorful note" color="red"><div class="body"><p>边界和隔离是安全防御的第一手段；</p></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402181615934.png" data-fancybox="true"/></div></div>
+
+<p>边界与隔离模型是指在网络和系统设计中采用边界和隔离机制来保护系统免受外部攻击和内部滥用。这些模型包括网络边界防火墙、网络分段、虚拟专用网络（VPN）、沙箱环境等，通过划定边界和实施隔离措施，限制不同区域之间的访问和通信，提高系统的安全性。</p>
+<p>无论是我们所说远古的长城还是到现在的墨西哥和美国边境之间的隔离墙，边界和隔离都是非常有效的一种最古老、最朴素的技术手段，到现在还在运用。划定边界，以界隔离，大道至简。</p>
+<h3 id="安全思维模型四-恶意行为攻击模型"><a href="#安全思维模型四-恶意行为攻击模型" class="headerlink" title="安全思维模型四:恶意行为攻击模型"></a>安全思维模型四:恶意行为攻击模型</h3><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402181615974.png" data-fancybox="true"/></div></div>
+
+<h3 id="安全思维模型五-风险管理模型"><a href="#安全思维模型五-风险管理模型" class="headerlink" title="安全思维模型五:风险管理模型"></a>安全思维模型五:风险管理模型</h3><ol>
+<li>风险识别：这个环节旨在识别和确定潜在的安全风险。通过对组织内外的各种因素进行分析和调查，包括系统漏洞、侵入方式、业务过程等，以识别可能导致安全事件发生的风险源。</li>
+<li>风险分析：在风险分析环节，对已经识别出来的风险进行深入分析。这包括评估风险发生的概率、影响程度、持续时间等方面。通过对风险的综合分析，可以得出每个风险的相对优先级，以便在后续的决策过程中进行排序和处理。</li>
+<li>风险评估：这一环节旨在对已经分析出来的风险进行定量或定性评估。根据组织的风险承受能力和目标，可以为每个风险分配一个合适的风险等级。评估结果可用于决策制定、资源分配和风险处理的参考。</li>
+<li>风险应对：在这个环节中，基于前面的风险评估，制定相应的风险应对策略和措施。这可能包括预防措施（如加强安全培训、修补漏洞）、应急响应计划、备份和恢复策略等。风险应对旨在减轻或消除风险的影响，并防止未来的风险事件发生。</li>
+</ol>
+<p>风险管理模型是一种用于评估和管理安全风险的框架或方法，它包括一系列环节，如风险识别、风险分析、风险评估和风险应对等。通过使用风险管理模型，组织可以更好地理解和评估可能对其安全目标造成威胁的各种风险，并制定相应的风险控制策略和措施。</p>
+<h3 id="安全思维模型六-安全生命周期模型"><a href="#安全思维模型六-安全生命周期模型" class="headerlink" title="安全思维模型六:安全生命周期模型"></a>安全思维模型六:安全生命周期模型</h3><blockquote>
+<p>​	安全生命周期模型（Security Development Lifecycle）：安全生命周期模型强调在软件和系统开发过程中整合安全性，包括需求分析、设计、开发、测试和维护等阶段，确保产品的安全性能和可靠性。</p>
+</blockquote>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402181618986.png" data-fancybox="true"/></div></div>
+
+<h2 id="介绍靶场渗透实战"><a href="#介绍靶场渗透实战" class="headerlink" title="介绍靶场渗透实战"></a>介绍靶场渗透实战</h2><h3 id="什么是靶场"><a href="#什么是靶场" class="headerlink" title="什么是靶场?"></a>什么是靶场?</h3><blockquote>
+<p>​	在网络安全领域，靶场指的是模拟真实网络环境、用于进行安全演练、攻击模拟和安全测试的特定环境或系统。靶场提供了一个安全的环境，使安全专业人员能够模拟真实的攻击场景，并测试不同防御策略和技术</p>
+</blockquote>
+<p>靶场可以用于多种目的，包括以下几个方面：</p>
+<ol>
+<li><p>安全演练：靶场模拟各种攻击场景，例如网络入侵、恶意软件感染等，使安全团队能够实时进行应急响应和事件处置的演练，提高应对突发安全事件的能力。</p>
+</li>
+<li><p>攻击模拟：通过模拟真实的攻击行为，例如渗透测试、红队演练等，安全专业人员可以评估目标系统的安全性，并找出潜在的漏洞和弱点，从而改进和加强防御措施。</p>
+</li>
+<li><p>安全研究与学习：靶场提供了一个安全的环境，供安全研究人员和学生学习和研究各种安全技术和攻击手法，加深对网络安全的理解和认识。</p>
+</li>
+</ol>
+<p>靶场可以是物理的、虚拟的或混合的环境，可以包括真实网络设备、虚拟机、网络模拟器等。为确保安全，靶场应该被隔离在独立的环境中，以防止攻击对其他系统和网络造成影响。同时，在使用靶场进行测试和演练时，必须遵守法律法规，并获得合法的授权</p>
+<h3 id="为什么进行靶场渗透实战？"><a href="#为什么进行靶场渗透实战？" class="headerlink" title="为什么进行靶场渗透实战？"></a>为什么进行靶场渗透实战？</h3><div class="tag-plugin colorful note" color="red"><div class="body"><p>靶场渗透实战对于安全专业人员的成长和技能提升至关重要</p></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402181626614.png" data-fancybox="true"/></div></div>
+
+<h3 id="靶场渗透实战的优点"><a href="#靶场渗透实战的优点" class="headerlink" title="靶场渗透实战的优点"></a>靶场渗透实战的优点</h3><ul>
+<li>实际操作经验：靶场渗透实战提供了真实且可控的环境，在这个环境中进行操作可以使学习者深入了解攻击和防御技术。通过实际操作，他们可以学习到不同类型的漏洞和攻击手法，了解如何利用这些漏洞，以及如何有效地捕捉和分析攻击流量。</li>
+<li>安全意识培养：通过参与靶场渗透实战，学习者将被直接暴露在模拟的攻击环境中。他们有机会亲自感受到攻击造成的影响，并从中认识到安全问题的重要性。这种体验可以有效地提高他们对网络安全的关注度和理解能力，培养出积极主动的安全意识。</li>
+<li>深入了解安全漏洞：靶场渗透实战提供了一个模拟的系统和网络环境，使学习者能够全面了解各种安全漏洞和弱点。他们可以主动寻找和利用这些漏洞，了解它们的工作原理和可能导致的风险。这种深入了解能够让学习者更好地规划和实施安全措施，提高整体的网络安全性。</li>
+<li>团队协作与合作能力：靶场渗透实战通常需要多人合作完成。学习者要团结合作，共同攻克难题。这样的实战训练不仅可以培养他们的团队协作和沟通能力，还能锻炼问题解决能力和决策能力。</li>
+<li>增强解决问题的能力：靶场渗透实战对学习者的解决问题的能力提出了较高的要求。在实际操作中，学习者需要分析和评估系统的漏洞和脆弱点，并设计并执行相应的攻击和防御策略。这种思考和解决问题的能力是靶场渗透实战的重要收获，也是学习者在实际工作中非常宝贵的技能。</li>
+</ul>
+<h2 id="将靶场实战与安全模型相结合"><a href="#将靶场实战与安全模型相结合" class="headerlink" title="将靶场实战与安全模型相结合"></a>将靶场实战与安全模型相结合</h2><h3 id="网络安全测试流程"><a href="#网络安全测试流程" class="headerlink" title="网络安全测试流程"></a>网络安全测试流程</h3><p>当进行网络安全测试时，我们通常会按照以下流程进行。</p>
+<ul>
+<li>前期交互阶段，这包括确定目标IP地址以及与客户进行沟通和了解需求。</li>
+<li>信息收集阶段，在这个阶段我们使用工具如nmap和arp-scan进行扫描，收集有关目标系统和网络的信息。</li>
+<li>威胁建模阶段，我们根据收集到的信息和端口情况制定一个攻击路线和威胁模型。</li>
+<li>漏洞分析阶段，我们根据攻击路线逐一分析系统和网络是否存在漏洞，并进行相应的POC（Proof of Concept）收集。</li>
+<li>完成漏洞分析后，我们进入渗透攻击阶段，使用合适的exploit工具来获取目标系统的访问权限。</li>
+<li>后渗透攻击阶段，我们通过提权等方式进一步获取root权限并维持权限，同时进行日志清理等操作以隐藏我们的痕迹。</li>
+<li>渗透测试报告阶段，我们将整个测试过程的发现整理成报告，提供给客户以供参考和修复漏洞。</li>
+</ul>
+<p>其实上面的流程就是来自于一个被广泛接受的标准是PTES，即<code>Penetration Testing Execution Standard</code>。它提供了一个全面的方法论来指导渗透测试的执行。PTES帮助测试团队按照一致的流程和标准进行工作，以确保测试的质量和实用性</p>
+<h3 id="靶场渗透测试实战简介"><a href="#靶场渗透测试实战简介" class="headerlink" title="靶场渗透测试实战简介"></a>靶场渗透测试实战简介</h3><p>在接下来我们要演示的DC3靶场中，我们将使用一系列工具和技术来进行渗透测试，包括主机存活检测、端口服务扫描、网站指纹收集、漏洞扫描、SQL注入、John密码破解、Webshell连接以及内核提权。</p>
+<ol>
+<li>主机存活检测： 使用网络工具（如ping、ICMP）确认目标主机是否在线。主机存活检测是渗透测试的第一步，在攻击之前需要先确认目标是否可达。</li>
+<li>端口服务扫描： 使用端口扫描工具（如nmap）扫描目标主机上开放的网络服务。通过识别开放的端口和服务，我们可以了解目标系统的架构和可能存在的潜在漏洞。</li>
+<li>网站指纹收集： 通过检查目标网站的HTTP响应头、元数据等信息，收集网站的特征和版本信息。这有助于我们针对特定漏洞或弱点进行更有针对性的渗透测试。</li>
+<li>漏洞扫描： 使用专业的漏洞扫描工具（如Nessus、OpenVAS）对目标主机进行扫描，以发现已知的安全漏洞。漏洞扫描帮助我们识别系统中存在的脆弱点，并为后续的攻击提供目标。</li>
+<li>SQL注入： 利用对数据库进行恶意操作的漏洞，尝试执行恶意SQL语句，以获取数据库中的敏感信息。SQL注入是常见的网络应用程序漏洞之一，渗透测试中需要重点关注和利用。</li>
+<li>John密码破解： 使用密码破解工具（如John the Ripper）对明文或散列密码进行破解。通过猜测密码或破解散列值，我们可以获取系统用户的凭据，进而获取更高的访问权限。</li>
+<li>Webshell连接： 通过漏洞攻击或弱密码等方式获取Web服务器的权限，并建立与服务器的远程shell连接。Webshell是一个常用的攻击手段，可让我们远程执行命令和操纵目标系统。</li>
+<li>内核提权： 利用漏洞或配置错误来提升对系统的访问权限，获取管理员或Root级别权限。内核提权是渗透测试中的高级技术，通过利用操作系统的漏洞来获取最高权限。</li>
+</ol>
+<div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://gitee.com/jiangjiyue1/safe-killer_-zone/blob/master/Security-Base/dc3.md" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://gitee.com/jiangjiyue1/safe-killer_-zone/blob/master/Security-Base/dc3.md</span></div><div class="bottom"><span class="title">https://gitee.com/jiangjiyue1/safe-killer_-zone/blob/master/Security-Base/dc3.md</span><span class="cap desc footnote"></span></div></a></div>
+
+<h3 id="安全问题的重要性"><a href="#安全问题的重要性" class="headerlink" title="安全问题的重要性"></a>安全问题的重要性</h3><p>大家可以思考一下,在我们刚刚的实战过程中</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><span>获取了哪些信息?</span></summary><div class="body"><p>这是答案1</p></div></details><details class="folder" index="1"><summary><span>得到了哪些权限?</span></summary><div class="body"><p>这是答案2</p></div></details><details class="folder" index="2"><summary><span>哪些是因为配置不当造成的</span></summary><div class="body"><p>这是答案3</p></div></details><details class="folder" index="3"><summary><span>哪些是因为未及时更新造成的</span></summary><div class="body"><p>这是答案3</p></div></details></div>
+
+<div class="tag-plugin colorful note" color="red"><div class="body"><p>这些所有简单的问题其实都是我们的安全问题,由此可见安全问题的重要性</p></div></div>
+
+<ul>
+<li>保护机密信息：许多安全问题涉及到保护敏感信息的机密性和完整性。如果未经授权的人员可以访问或修改敏感信息，那么可能会导致数据泄露或其他严重后果。</li>
+<li>防止黑客攻击：根据安全行业的普遍认知，黑客在攻击一个目标之前通常会尝试利用一些已知的漏洞，或通过社交工程等方式攻击目标的弱点。了解并识别这些攻击向量，能够帮助我们在保护我们的系统免受黑客攻击的同时，提高我们的安全意识。</li>
+<li>减少业务风险：安全问题可能会导致数据丢失、数据泄露、破坏业务连续性等问题，这些问题可能会带来巨大的财务和声誉损失。因此，了解各种安全问题的重要性，并采取相应的安全措施来优化安全威胁的效果，可以减少业务风险。</li>
+</ul>
+<h3 id="安全问题-弱密码"><a href="#安全问题-弱密码" class="headerlink" title="安全问题 - 弱密码"></a>安全问题 - 弱密码</h3><blockquote>
+<p>​	弱密码是指易于猜测、推测或破解的密码，由于其缺乏复杂性、长度和随机性，容易受到各种攻击方式的威胁。以下是弱密码可能带来的危害：</p>
+</blockquote>
+<ul>
+<li>安全性降低：弱密码容易被猜测或通过暴力破解等手段获取，这将导致用户帐号和系统的安全受到威胁。攻击者可以通过获得弱密码来越过访问控制，进而盗取个人信息、进行未经授权的活动，甚至入侵整个系统。</li>
+<li>越权访问和数据泄露：使用弱密码的用户可能会被攻击者盗取其帐号，进而获取越权访问权限。攻击者可以利用这些权限访问敏感信息、私人数据和财务记录，从而导致数据泄露和隐私泄露问题。</li>
+<li>被挟持和滥用：弱密码使用户更容易受到社会工程学攻击，例如钓鱼、密码重置和身份欺诈等。攻击者可以通过伪装成合法机构或服务提供商，引诱用户输入其登录凭据，从而控制用户帐号并进行滥用。</li>
+<li>影响他人安全：如果用户在多个平台或服务中使用相同的弱密码，一旦其中一个帐号被攻破，攻击者就可以尝试在其他地方重复使用相同的凭据。这将给其他用户和相关系统带来潜在的安全威胁和风险。</li>
+<li>企业和组织受损：在企业环境中，如果员工使用弱密码来保护企业资产和系统，企业可能面临数据泄露、业务中断、声誉受损等严重后果。此外，弱密码也给企业的安全管理和合规性带来挑战。</li>
+</ul>
+<h4 id="对应的安全模型-访问控制模型"><a href="#对应的安全模型-访问控制模型" class="headerlink" title="对应的安全模型:访问控制模型"></a>对应的安全模型:访问控制模型</h4><ul>
+<li>弱密码与访问控制密切相关：弱密码可能导致未经授权的访问系统和资源。访问控制模型是确保只有授权用户可以访问系统和资源的机制，因此弱密码直接涉及访问控制问题。</li>
+<li>弱密码影响身份验证：弱密码容易被猜测、破解或使用暴力攻击进行登录尝试。身份验证是访问控制的核心组成部分，而弱密码会直接影响身份验证的有效性和安全性。</li>
+<li>访问控制模型解决弱密码问题：访问控制模型通过权限管理、身份验证和授权机制等手段限制用户对系统和资源的访问权限。弱密码是访问控制模型需要解决和管理的问题之一。</li>
+</ul>
+<h4 id="解决和预防弱密码问题"><a href="#解决和预防弱密码问题" class="headerlink" title="解决和预防弱密码问题"></a>解决和预防弱密码问题</h4><ul>
+<li>强制密码策略：实施一套强制的密码策略，包括要求密码长度、复杂性（如数字、字母和特殊字符的组合）、定期更换密码等。这将提高密码的复杂性并降低猜测或破解密码的风险。</li>
+<li>多因素身份验证(MFA)：采用多因素身份验证机制，例如结合密码与手机验证码、指纹识别、硬件令牌等。即使密码被破解，攻击者也无法通过第二个因素进行验证。</li>
+<li>教育和培训用户：提供密码安全的教育和培训，教育用户选择强密码、避免使用常见的密码、不共享密码等好的安全实践。</li>
+<li>密码管理工具：推荐用户使用密码管理工具来生成和管理强密码。这些工具能够自动生成随机且强大的密码，并将其加密保存在一个安全的数据库中。</li>
+<li>定期审查密码：定期对系统和用户的密码进行审核，检查是否存在弱密码并提醒用户修改。管理员可以使用密码破解工具或密码策略审核工具来辅助识别弱密码。</li>
+<li>锁定账户和限制登录尝试：实施账户锁定机制，当用户连续多次登录失败时，暂时锁定账户，以防止恶意攻击者进行暴力破解密码。</li>
+<li>使用单点登录(SSO)和身份提供商(IdP)：通过使用SSO和IdP，可以减少用户需要记住的密码数量，从而降低弱密码问题的风险。</li>
+</ul>
+<h3 id="安全问题-–-漏洞利用"><a href="#安全问题-–-漏洞利用" class="headerlink" title="安全问题 – 漏洞利用"></a>安全问题 – 漏洞利用</h3><blockquote>
+<p>​	漏洞利用（Vulnerability Exploitation）是指攻击者利用软件、系统或网络中的漏洞，通过输入特定的数据或执行恶意代码等手段，成功入侵目标系统或获取未经授权的权限。</p>
+</blockquote>
+<ul>
+<li>未经授权访问：漏洞利用可以使攻击者绕过访问控制机制，进入受攻击的系统、应用程序或网络。攻击者可以获取管理员权限、访问敏感信息、操纵和删除数据，甚至完全控制目标系统。</li>
+<li>数据泄露和隐私泄露：通过漏洞利用，攻击者可以获取包括个人身份信息、财务数据、健康记录等敏感信息。这些数据泄露可能导致个人隐私受到侵犯，进而被用于身份盗窃、欺诈和其他非法活动。</li>
+<li>业务中断和系统崩溃：某些漏洞利用技术可以导致目标系统崩溃、服务中断或不可用。攻击者可以通过发送恶意数据包、执行拒绝服务（Denial of Service，DoS）攻击来占用系统资源，使业务无法正常运行，给企业和用户带来巨大影响。</li>
+<li>恶意代码传播：漏洞利用可以用于传播恶意软件、病毒和蠕虫等恶意代码。攻击者可以通过利用系统或应用程序中的漏洞实施远程执行代码（Remote Code Execution，RCE），将恶意代码注入到目标系统中，进而传播到其他系统和网络。</li>
+</ul>
+<h4 id="对应的安全模型-边界与隔离模型"><a href="#对应的安全模型-边界与隔离模型" class="headerlink" title="对应的安全模型:边界与隔离模型"></a>对应的安全模型:边界与隔离模型</h4><blockquote>
+<p>漏洞利用往往可以通过攻击系统的弱点或漏洞来入侵系统。在边界与隔离模型下，重要的是将系统划分为不同的边界区域，每个区域都有特定的安全策略和访问控制规则。这样可以限制漏洞利用的传播和影响范围，即使一部分系统受到攻击，其他区域仍然可以保持相对安全。</p>
+</blockquote>
+<ul>
+<li>限制攻击面：通过设置边界和隔离控制，可以减少系统暴露在外部攻击的机会。攻击者需要首先突破边界才能进一步进行漏洞利用。</li>
+<li>损失隔离：将系统划分为不同的区域和层次可以减轻漏洞利用的潜在影响。即使一个区域受到攻击，其他区域仍然可以保持相对安全。</li>
+<li>访问控制：边界与隔离模型注重实施严格的访问控制策略。只有经过授权的用户或实体才能穿越边界并访问相应的资源。</li>
+<li>维护容错性：通过隔离和分段的设计，边界与隔离模型可提高系统的容错性。即使一个区域出现漏洞利用或故障，其他区域仍然可以正常运行。</li>
+</ul>
+<h4 id="解决和预防漏洞利用问题"><a href="#解决和预防漏洞利用问题" class="headerlink" title="解决和预防漏洞利用问题"></a>解决和预防漏洞利用问题</h4><ul>
+<li>漏洞管理：建立一个系统化的漏洞管理流程，包括漏洞扫描、漏洞评估和漏洞修复。定期检查和修补系统和应用程序中的已知漏洞，确保及时更新和安装安全补丁。</li>
+<li>访问控制和权限管理：实施严格的身份验证、访问控制和权限管理机制，限制对系统和敏感数据的访问。根据最小权限原则，对每个用户或角色分配最低必要权限。</li>
+<li>网络安全措施：部署防火墙、入侵检测系统（IDS）和入侵预防系统（IPS）等网络安全设备，监测和阻断恶意流量。定期进行网络漏洞扫描和安全审计。</li>
+<li>应用程序安全：开发安全的应用程序，包括使用安全编码实践、输入验证、输出过滤、安全配置和错误处理机制。进行应用程序漏洞扫描和代码审计，修复和消除潜在的漏洞。</li>
+<li>持续监测和响应：建立安全事件监测和响应机制，包括实时监控、日志分析和安全事件响应策略。及时检测和处理异常行为和潜在的漏洞利用活动。</li>
+<li>安全更新和漏洞通告：定期关注安全厂商和供应商发布的安全更新和漏洞通告。确保及时跟踪并采取必要的行动来解决已知的漏洞。</li>
+<li>安全审计和合规性：定期进行安全审计和风险评估，确保系统符合安全标准和合规性要求。根据审计结果，改进安全策略和控制措施。</li>
+</ul>
+<h3 id="安全问题-–-数据泄露"><a href="#安全问题-–-数据泄露" class="headerlink" title="安全问题 – 数据泄露"></a>安全问题 – 数据泄露</h3><blockquote>
+<p>数据泄露指的是未经授权或非法方式导致敏感信息、个人数据或机密信息被披露、公开或泄露的事件。这些信息可以包括但不限于个人身份信息、银行账号、信用卡信息、健康记录、商业机密等。</p>
+</blockquote>
+<ul>
+<li>个人隐私暴露：当个人敏感信息被泄露后，个人的隐私权可能受到侵犯。攻击者可能利用这些信息进行身份盗窃、欺诈活动或其他非法行为。</li>
+<li>金融损失：银行账号、信用卡信息等被泄露后，攻击者可以通过盗取资金、进行非法交易或滥用信用卡等方式导致受害者遭受经济损失。</li>
+<li>信誉受损：组织遭受数据泄露事件后，其信誉和声誉可能受到损害。公众对该组织的信任度可能降低，客户和合作伙伴可能会转向竞争对手，从而对组织造成负面影响。</li>
+<li>知识产权风险：商业机密、专有技术或研究成果等的泄露可能导致知识产权受损。竞争对手或其他不良方进行恶意盗取、复制、使用或披露，给组织带来重大经济损失。</li>
+<li>组织运营受阻：数据泄露事件可能导致系统瘫痪、服务中断或业务操作受到干扰。这可能会造成生产停滞、客户流失、员工不信任等问题，对组织的正常运营造成重大影响。</li>
+</ul>
+<h4 id="对应的安全模型-安全生命周期模型"><a href="#对应的安全模型-安全生命周期模型" class="headerlink" title="对应的安全模型:安全生命周期模型"></a>对应的安全模型:安全生命周期模型</h4><blockquote>
+<p>安全生命周期模型被视为与数据泄露有关的安全思维模型，因为它提供了一个全面、前瞻且持续的框架，帮助我们在整个软件或系统的生命周期中集成和管理安全性，从而更好地预防和应对数据泄露风险。</p>
+</blockquote>
+<ul>
+<li>全面性：安全生命周期模型提供了一个全面的安全开发和管理框架，涵盖了软件或系统的整个生命周期。在每个阶段中，都集成和考虑了安全性，从需求分析到设计、开发、测试、部署和维护等各个环节。数据泄露通常与系统或应用程序的某个环节存在关联，因此在整个生命周期中集成安全性能够更好地降低数据泄露的风险。</li>
+<li>防患于未然：安全生命周期模型强调在早期阶段识别和解决安全问题，以防止数据泄露等安全漏洞的出现。通过在需求分析和设计阶段考虑安全需求和安全措施，可以在后续的开发和测试过程中更好地建立起安全性。这种前瞻性的思维模式有助于减少潜在的数据泄露风险。</li>
+<li>持续性：安全生命周期模型将安全性视为一个持续的过程，而不是一次性的解决方案。在软件或系统的整个生命周期中，需要不断地进行安全性评估、漏洞修复和风险管理等工作。通过持续地关注和改进安全性，可以更好地应对新的威胁和漏洞，并及时采取相应的措施来预防数据泄露等安全问题。</li>
+</ul>
+<h4 id="解决和预防数据泄露问题"><a href="#解决和预防数据泄露问题" class="headerlink" title="解决和预防数据泄露问题"></a>解决和预防数据泄露问题</h4><ul>
+<li>实施数据分类：数据分类可以根据数据的敏感程度和重要性将数据分为不同级别，然后为每个级别分配合适的保护措施。比如公司内部有些数据只能供内部团队查看，而不是每个员工都可以访问。</li>
+<li>强化系统访问控制：限制系统访问权限可以控制员工和外部人员对数据的访问，从而减少数据遭到不当使用或泄露的风险。为每个用户分配权限，并定期审查和更新这些权限。</li>
+<li>加密数据：加密是一种有效的保护数据隐私和防止数据泄露的方法。可以利用数据库、文件夹或通信线路进行数据加密，确保数据在传输和存储过程中的安全性。</li>
+<li>监控数据访问和使用：监控数据访问和使用可以帮助企业及时发现和处理可能的数据泄露事件。例如，记录所有数据访问和操作，使用报警系统以及实施审计和监控，可以使管理者在数据流出问题发生之前了解到问题。</li>
+<li>定期进行漏洞扫描和渗透测试：定期进行漏洞扫描和渗透测试可以发现系统或应用程序中的安全漏洞，并及时修复它们，从而减少数据泄露的风险。</li>
+</ul>
+<h2 id="相关术语"><a href="#相关术语" class="headerlink" title="相关术语"></a>相关术语</h2><h3 id="渗透测试"><a href="#渗透测试" class="headerlink" title="渗透测试"></a>渗透测试</h3><h4 id="何为-what"><a href="#何为-what" class="headerlink" title="何为?what?"></a>何为?what?</h4><div class="tag-plugin link dis-select"><a class="link-card plain" title="" href="https://gitee.com/jiangjiyue1/safe-killer_-zone/blob/master/Security-Base/PTES.md" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon"><div class="left"><span class="title">https://gitee.com/jiangjiyue1/safe-killer_-zone/blob/master/Security-Base/PTES.md</span><span class="cap link footnote">https://gitee.com/jiangjiyue1/safe-killer_-zone/blob/master/Security-Base/PTES.md</span></div><div class="right"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div></div></a></div>
+
+<p>首先，我们需要获得目标系统拥有者或合法授权人的书面授权<mark class="tag-plugin colorful mark" color="warning">(无授权不上机)</mark>，这份授权文件明确规定了测试的权限范围和方式。</p>
+<p>同时，我们也会与目标系统拥有者签署保密协议，确保测试结果只限于授权人员知晓，并防止泄漏敏感信息。</p>
+<p>在测试开始之前，我们会提供一份风险告知书，详细说明可能出现的风险和潜在影响，以确保目标系统拥有者清楚地理解测试的性质。通过这些准备工作，我们能够建立起测试团队与目标系统拥有者之间的合作和信任关系，为顺利进行渗透测试奠定基础。</p>
+<h4 id="为什么要这样做why"><a href="#为什么要这样做why" class="headerlink" title="为什么要这样做why?"></a>为什么要这样做why?</h4><p>​	渗透测试已成为安全计划中不可或缺的一部分，用于对系统或整个IT基础设施进行模拟测试。</p>
+<p>通过渗透测试，可以揭示操作系统、网络设备和应用程序中的核心攻击向量和弱点。其主要目的是发现和修复漏洞，以防止攻击者利用它们。</p>
+<p>在当今日益复杂的网络犯罪环境中，包括DDoS攻击、网络钓鱼勒索软件和其他无数攻击策略的使用，渗透测试变得比以往任何时候都更加重要。最佳的防御措施始于了解业务&#x2F;公司的优势和劣势，正如《战争艺术》中所述，如果对敌人和自身一无所知，就必然会面临威胁。</p>
+<p>渗透测试通过了解可能遭受的攻击方式，并采取相应的保护步骤，提供了使安全组织更加成熟的情报和见解。</p>
+<h4 id="如何做-HOW"><a href="#如何做-HOW" class="headerlink" title="如何做?HOW?"></a>如何做?HOW?</h4><p>当谈到渗透测试时，我们可以使用一个类比来解释其过程，比如小偷进入一座建筑物的例子:</p>
+<ol>
+<li>确定目标：小偷决定要进入的建筑物是他的目标。</li>
+<li>收集信息：小偷开始收集有关建筑物的信息，例如它的结构、门窗的位置和安全措施。</li>
+<li>发现漏洞：小偷利用他收集到的信息，寻找建筑物中的漏洞，例如未锁好的门、窗户没有关闭或者是容易破坏的锁。</li>
+<li>获取访问权限：小偷选择最容易进入的路径，比如找到一个未锁好的门或窗户，然后进入建筑物。</li>
+<li>探索系统：一旦小偷进入建筑物，他开始探索里面的各个房间，寻找贵重物品或者其他有价值的东西。</li>
+<li>维持访问：如果小偷成功地找到了贵重物品，他可能会决定在建筑物内继续停留，以确保他可以长时间持续获取财物。</li>
+<li>分析结果：小偷分析他所获得的贵重物品，并决定如何处理这些物品。</li>
+<li>编写报告：小偷可能会记录他的行动、观察和建议，以便他可以在未来的行动中学习和改进。</li>
+</ol>
+<h4 id="渗透测试的思维是怎么样的"><a href="#渗透测试的思维是怎么样的" class="headerlink" title="渗透测试的思维是怎么样的?"></a>渗透测试的思维是怎么样的?</h4><p>我们所谓的猥琐的思维就是渗透的思维，也就是大家常说的鬼点子多，鬼主意多。</p>
+<p>这意味着我们要从不同角度去思考同⼀件事情我们在渗透的时候要始终贯彻⼀个方针：换位思考。</p>
+<p>比如管理员会怎么设置网站，管理员会怎么设置密码，管理员会… …</p>
+<p>渗透就跟泡妹纸⼀样</p>
+<ol>
+<li>认识妹纸(确定目标)</li>
+<li>了解妹纸（信息收集）</li>
+<li>逗妹纸开心（漏洞扫描） 得到妹纸的肯定之后就开始寻找时机表白（漏洞利用） </li>
+<li>表白失败（漏洞被修补或有WAF）</li>
+<li>要么死缠烂打要么就Next one，要么就用其他的方法来搞定妹纸</li>
+</ol>
+<div class="tag-plugin link dis-select"><a class="link-card plain" title="" href="https://security-1258894728.cos.ap-beijing.myqcloud.com/Manual/PTES.7z" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon"><div class="left"><span class="title">https://security-1258894728.cos.ap-beijing.myqcloud.com/Manual/PTES.7z</span><span class="cap link footnote">https://security-1258894728.cos.ap-beijing.myqcloud.com/Manual/PTES.7z</span></div><div class="right"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div></div></a></div>
+
+<h3 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h3><h4 id="何为-what-1"><a href="#何为-what-1" class="headerlink" title="何为?what?"></a>何为?what?</h4><blockquote>
+<p>​	漏洞（Vulnerability）是指软件、系统或网络中存在的错误或缺陷，可能被恶意利用从而导致安全威胁。漏洞可以存在于操作系统、应用程序、网络协议或硬件设备中。</p>
+</blockquote>
+<p>我们使用的各种设备，如手机、电脑、工作站、服务器、路由器和门铃等，在某个时间点都可能存在一些弱点，也就是漏洞。</p>
+<p>特别是对于大企业和小企业而言，我们都希望不让这些漏洞存在，因此我们需要采取一些措施来检测并修复它们。</p>
+<p>在互联网上，黑客们一直在寻找这些漏洞，他们希望利用这些漏洞来实现某种目标。如果存在这样的漏洞，他们会尝试利用它。</p>
+<p>因此，漏洞就是系统中的弱点，而威胁或威胁者则是指利用这些弱点的人，我们通常将他们称为黑客。</p>
+<p>据统计，有95%的网络攻击是利用已知的漏洞进行的，并且每年都会发现超过15000个新的漏洞。</p>
+<p>这再次强调了修补漏洞的重要性，以降低黑客攻击的风险。</p>
+<h4 id="为什么要这样做why-1"><a href="#为什么要这样做why-1" class="headerlink" title="为什么要这样做why?"></a>为什么要这样做why?</h4><p>漏洞利用是指利用计算系统中存在的潜在漏洞或弱点来实施攻击的过程。</p>
+<p>举个例子，如果我们想要破坏一个窗户，我们可以向窗户扔一块石头或使用一根撬棍。无论哪种方式,都是利用窗户易碎这个共同的潜在漏洞。</p>
+<p>在计算机系统中也可能发生类似的情况，即漏洞利用是通过发送一些恶意代码（即恶意软件本身）给受害者来实现的。</p>
+<p>黑客会利用操作系统或应用程序中的潜在漏洞，以此进行漏洞利用攻击。他们可能会利用这些漏洞来获取未经授权的访问权限、窃取敏感信息或对系统进行损坏。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402181656308.png" data-fancybox="true"/></div></div>
+
+<h4 id="如何做-HOW-1"><a href="#如何做-HOW-1" class="headerlink" title="如何做?HOW?"></a>如何做?HOW?</h4><h5 id="exploitDB"><a href="#exploitDB" class="headerlink" title="exploitDB"></a>exploitDB</h5><p>​	漏洞利用数据库是一个大家都知道的资源库，里面包含了已经发现的可以用来攻击系统漏洞的代码。其中一个非盈利组织安全公司维护的项目叫做exploitDB（也称为searchsploit）。该项目的目的并不是收集漏洞本身，而是收集那些可用于利用漏洞的工具和代码，从最简单的概念验证（即证明漏洞存在）到成熟的可以实际利用漏洞的代码和软件。这个数据库拥有成千上万的漏洞利用程序，并且还在不断增加新的内容。通过使用这个数据库，安全专业人员可以更好地了解已知的漏洞，并采取相应的安全措施来保护软件和系统。</p>
+<h5 id="MSF"><a href="#MSF" class="headerlink" title="MSF"></a>MSF</h5><p><code>Metasploit Framework</code>（简称MSF）是一种常见且广为人知的漏洞利用工具。它是一个开源框架，任何人都可以下载和使用。该框架包含2000多个不同的漏洞利用程序，可以自动化地利用这些漏洞。它主要用于进行渗透测试，但也可以被滥用以非法访问系统。Metasploit基于模块化设计，任何人都可以贡献新的模块，并且有几种不同类型的模块可用。</p>
+<h3 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><h4 id="何为-what-2"><a href="#何为-what-2" class="headerlink" title="何为?what?"></a>何为?what?</h4><blockquote>
+<p>​	漏洞复现是指通过重新创建或模拟已知的漏洞情景，以验证漏洞的存在和可利用性。它是一个安全测试过程中的重要步骤。通过漏洞复现，安全专业人员可以确认漏洞的存在，并评估其对系统或应用程序的威胁程度。</p>
+</blockquote>
+<p>​	漏洞复现通常包括以下步骤：</p>
+<ol>
+<li>收集漏洞相关信息：安全专业人员首先会收集有关漏洞的详细描述、已公开的漏洞利用代码或漏洞报告等信息。</li>
+<li>重建漏洞环境：为了复现漏洞，安全专业人员需要在实验环境中重建与漏洞相关的系统或应用程序。这可能涉及到配置特定的操作系统、软件版本和网络设置等。</li>
+<li>复现漏洞：在重建的漏洞环境中，安全专业人员会按照已知的漏洞利用方法和步骤，尝试复现漏洞的具体行为。他们可能使用漏洞利用工具或自行编写代码来实施攻击。</li>
+<li>观察和记录结果：在漏洞复现的过程中，安全专业人员会观察漏洞的表现，并记录详细的复现过程和结果。这些记录对于后续的漏洞分析和修复非常重要。</li>
+</ol>
+<h4 id="为什么要这样做why-2"><a href="#为什么要这样做why-2" class="headerlink" title="为什么要这样做why?"></a>为什么要这样做why?</h4><ol>
+<li>理解漏洞本质：通过漏洞复现，渗透测试工程师可以深入理解漏洞的本质、原理和影响。这对于他们在渗透测试过程中更好地识别和利用类似漏洞至关重要。</li>
+<li>验证漏洞存在：在渗透测试中，识别漏洞并确认其存在是至关重要的一步。通过漏洞复现，渗透测试工程师可以验证已发现的漏洞，并获得更多有关漏洞的详细信息。</li>
+<li>发现未知的漏洞：在复现已知漏洞的过程中，渗透测试工程师或学习者有可能意外地发现原本未知的漏洞。这种发现不仅是对自身技术能力的肯定，也为系统安全提供了更全面的保护。</li>
+<li>学习攻击技术：通过漏洞复现，渗透测试学习者可以学习和了解不同类型漏洞的攻击技术。他们可以通过模拟攻击来加深对漏洞利用过程的理解，提高自己的技术水平。</li>
+<li>提供修复建议：通过漏洞复现，渗透测试工程师可以收集足够的证据和数据，为系统管理员或开发者提供详细的修复建议。这有助于加强系统的安全性和减少潜在的攻击风险。温</li>
+<li>故而知新：通过漏洞复现，渗透测试工程师或学习者可以重新研究和复习已知的漏洞类型和攻击技术。这有助于加深对现有漏洞的理解，并为探索新漏洞奠定基础。</li>
+</ol>
+<h4 id="如何做-HOW-2"><a href="#如何做-HOW-2" class="headerlink" title="如何做?HOW?"></a>如何做?HOW?</h4><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402181937376.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://www.vulnhub.com/" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://www.vulnhub.com/</span></div><div class="bottom"><span class="title">https://www.vulnhub.com/</span><span class="cap desc footnote"></span></div></a></div>
+
+<div class="tag-plugin ghcard"><a class="ghcard" rel="external nofollow noopener noreferrer noopener" target="_blank" href="https://github.com/vulhub/vulhub"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://github-readme-stats.xaoxuu.com/api/pin/?username=vulhub&repo=vulhub&theme=dark&show_owner=true"/></a></div>
+
+<div class="tag-plugin ghcard"><a class="ghcard" rel="external nofollow noopener noreferrer noopener" target="_blank" href="https://github.com/digininja/DVWA"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://github-readme-stats.xaoxuu.com/api/pin/?username=digininja&repo=DVWA&theme=dark&show_owner=true"/></a></div>
+
+<div class="tag-plugin ghcard"><a class="ghcard" rel="external nofollow noopener noreferrer noopener" target="_blank" href="https://github.com/zhuifengshaonianhanlu/pikachu"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://github-readme-stats.xaoxuu.com/api/pin/?username=zhuifengshaonianhanlu&repo=pikachu&theme=dark&show_owner=true"/></a></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402181937122.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin ghcard"><a class="ghcard" rel="external nofollow noopener noreferrer noopener" target="_blank" href="https://github.com/Audi-1/sqli-labs"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://github-readme-stats.xaoxuu.com/api/pin/?username=Audi-1&repo=sqli-labs&theme=dark&show_owner=true"/></a></div>
+
+<div class="tag-plugin ghcard"><a class="ghcard" rel="external nofollow noopener noreferrer noopener" target="_blank" href="https://github.com/do0dl3/xss-labs"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://github-readme-stats.xaoxuu.com/api/pin/?username=do0dl3&repo=xss-labs&theme=dark&show_owner=true"/></a></div>
+
+<div class="tag-plugin ghcard"><a class="ghcard" rel="external nofollow noopener noreferrer noopener" target="_blank" href="https://github.com/c0ny1/upload-labs"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://github-readme-stats.xaoxuu.com/api/pin/?username=c0ny1&repo=upload-labs&theme=dark&show_owner=true"/></a></div>
+
+<div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://portswigger.net/web-security/" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://portswigger.net/web-security/</span></div><div class="bottom"><span class="title">https://portswigger.net/web-security/</span><span class="cap desc footnote"></span></div></a></div>
+
+<h2 id="优秀UP主推荐"><a href="#优秀UP主推荐" class="headerlink" title="优秀UP主推荐"></a>优秀UP主推荐</h2><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402181949209.png" data-fancybox="true"/></div></div>
+<div class="article-footer fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2024/02/12/7564e3ff/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2024/02/12/7564e3ff/&title=Security-全方位探索网络安全 - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402190842939.png&summary=
+    总字符数: 17.24K 
+    
+    
+    代码: 无, 文本: 14.25K
+    
+    
+    预计阅读时间: 1.03 小时
+    
+    
+
+
+
+信息、信息安全以及网络安全的基本概念信息
+19..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=Security-全方位探索网络安全 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2024/02/12/7564e3ff/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2024/02/12/7564e3ff/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2024/02/14/dbeaca23/">Security-被动信息收集</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2024/02/10/c44eef61/">Security-网安专业术语篇</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\2024\02\08\c44eef61\" title="Security-会话授权"><span class="title">Security-会话授权</span></a><a class="item" href="\2024\02\16\449cb93\" title="Security-主动信息收集"><span class="title">Security-主动信息收集</span></a><a class="item" href="\2024\02\10\c44eef61\" title="Security-网安专业术语篇"><span class="title">Security-网安专业术语篇</span></a><a class="item" href="\2024\02\14\dbeaca23\" title="Security-被动信息收集"><span class="title">Security-被动信息收集</span></a><a class="item" href="\2024\09\24\3c3f9499\" title="CS-Cobalt Strike必备知识"><span class="title">CS-Cobalt Strike必备知识</span></a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body waline'>
+      
+
+<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/tools/">工具</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E3%80%81%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E4%BB%A5%E5%8F%8A%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-text">信息、信息安全以及网络安全的基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF"><span class="toc-text">信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%8A%80%E6%9C%AF"><span class="toc-text">信息技术</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8"><span class="toc-text">信息安全</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8"><span class="toc-text">网络安全</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%92%8C%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">网络安全和信息安全的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E7%A9%BA%E9%97%B4"><span class="toc-text">网络空间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E7%B3%BB%E7%BB%9F"><span class="toc-text">信息系统</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E5%AE%89%E5%85%A8%E6%A8%A1%E5%9E%8B%E7%90%86%E8%A7%A3%E4%BF%A1%E6%81%AF%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8"><span class="toc-text">从安全模型理解信息系统安全</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="toc-text">信息安全的概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E6%80%9D%E7%BB%B4%E6%A8%A1%E5%9E%8B%E4%B8%80-CIA-Triad"><span class="toc-text">安全思维模型一:CIA Triad</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E6%80%9D%E7%BB%B4%E6%A8%A1%E5%9E%8B%E4%BA%8C-%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%A8%A1%E5%9E%8B"><span class="toc-text">安全思维模型二:访问控制模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E6%80%9D%E7%BB%B4%E6%A8%A1%E5%9E%8B%E4%B8%89-%E8%BE%B9%E7%95%8C%E4%B8%8E%E9%9A%94%E7%A6%BB%E6%A8%A1%E5%9E%8B"><span class="toc-text">安全思维模型三:边界与隔离模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E6%80%9D%E7%BB%B4%E6%A8%A1%E5%9E%8B%E5%9B%9B-%E6%81%B6%E6%84%8F%E8%A1%8C%E4%B8%BA%E6%94%BB%E5%87%BB%E6%A8%A1%E5%9E%8B"><span class="toc-text">安全思维模型四:恶意行为攻击模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E6%80%9D%E7%BB%B4%E6%A8%A1%E5%9E%8B%E4%BA%94-%E9%A3%8E%E9%99%A9%E7%AE%A1%E7%90%86%E6%A8%A1%E5%9E%8B"><span class="toc-text">安全思维模型五:风险管理模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E6%80%9D%E7%BB%B4%E6%A8%A1%E5%9E%8B%E5%85%AD-%E5%AE%89%E5%85%A8%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E6%A8%A1%E5%9E%8B"><span class="toc-text">安全思维模型六:安全生命周期模型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E5%AE%9E%E6%88%98"><span class="toc-text">介绍靶场渗透实战</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E9%9D%B6%E5%9C%BA"><span class="toc-text">什么是靶场?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%9B%E8%A1%8C%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E5%AE%9E%E6%88%98%EF%BC%9F"><span class="toc-text">为什么进行靶场渗透实战？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E5%AE%9E%E6%88%98%E7%9A%84%E4%BC%98%E7%82%B9"><span class="toc-text">靶场渗透实战的优点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%86%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E4%B8%8E%E5%AE%89%E5%85%A8%E6%A8%A1%E5%9E%8B%E7%9B%B8%E7%BB%93%E5%90%88"><span class="toc-text">将靶场实战与安全模型相结合</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95%E6%B5%81%E7%A8%8B"><span class="toc-text">网络安全测试流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%B6%E5%9C%BA%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%AE%9E%E6%88%98%E7%AE%80%E4%BB%8B"><span class="toc-text">靶场渗透测试实战简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98%E7%9A%84%E9%87%8D%E8%A6%81%E6%80%A7"><span class="toc-text">安全问题的重要性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98-%E5%BC%B1%E5%AF%86%E7%A0%81"><span class="toc-text">安全问题 - 弱密码</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E5%BA%94%E7%9A%84%E5%AE%89%E5%85%A8%E6%A8%A1%E5%9E%8B-%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%A8%A1%E5%9E%8B"><span class="toc-text">对应的安全模型:访问控制模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E5%92%8C%E9%A2%84%E9%98%B2%E5%BC%B1%E5%AF%86%E7%A0%81%E9%97%AE%E9%A2%98"><span class="toc-text">解决和预防弱密码问题</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98-%E2%80%93-%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-text">安全问题 – 漏洞利用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E5%BA%94%E7%9A%84%E5%AE%89%E5%85%A8%E6%A8%A1%E5%9E%8B-%E8%BE%B9%E7%95%8C%E4%B8%8E%E9%9A%94%E7%A6%BB%E6%A8%A1%E5%9E%8B"><span class="toc-text">对应的安全模型:边界与隔离模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E5%92%8C%E9%A2%84%E9%98%B2%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%E9%97%AE%E9%A2%98"><span class="toc-text">解决和预防漏洞利用问题</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98-%E2%80%93-%E6%95%B0%E6%8D%AE%E6%B3%84%E9%9C%B2"><span class="toc-text">安全问题 – 数据泄露</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E5%BA%94%E7%9A%84%E5%AE%89%E5%85%A8%E6%A8%A1%E5%9E%8B-%E5%AE%89%E5%85%A8%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E6%A8%A1%E5%9E%8B"><span class="toc-text">对应的安全模型:安全生命周期模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E5%92%8C%E9%A2%84%E9%98%B2%E6%95%B0%E6%8D%AE%E6%B3%84%E9%9C%B2%E9%97%AE%E9%A2%98"><span class="toc-text">解决和预防数据泄露问题</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E6%9C%AF%E8%AF%AD"><span class="toc-text">相关术语</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95"><span class="toc-text">渗透测试</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%95%E4%B8%BA-what"><span class="toc-text">何为?what?</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E8%BF%99%E6%A0%B7%E5%81%9Awhy"><span class="toc-text">为什么要这样做why?</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%81%9A-HOW"><span class="toc-text">如何做?HOW?</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E7%9A%84%E6%80%9D%E7%BB%B4%E6%98%AF%E6%80%8E%E4%B9%88%E6%A0%B7%E7%9A%84"><span class="toc-text">渗透测试的思维是怎么样的?</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-text">漏洞利用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%95%E4%B8%BA-what-1"><span class="toc-text">何为?what?</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E8%BF%99%E6%A0%B7%E5%81%9Awhy-1"><span class="toc-text">为什么要这样做why?</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%81%9A-HOW-1"><span class="toc-text">如何做?HOW?</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#exploitDB"><span class="toc-text">exploitDB</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#MSF"><span class="toc-text">MSF</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0"><span class="toc-text">漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%95%E4%B8%BA-what-2"><span class="toc-text">何为?what?</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E8%BF%99%E6%A0%B7%E5%81%9Awhy-2"><span class="toc-text">为什么要这样做why?</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%81%9A-HOW-2"><span class="toc-text">如何做?HOW?</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E7%A7%80UP%E4%B8%BB%E6%8E%A8%E8%8D%90"><span class="toc-text">优秀UP主推荐</span></a></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js`,
+    marked: `https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.27.0" async></script>
+
+<!-- optional -->
+
+  <script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js'
+
+  function load_comment(){
+    if(!document.getElementById("waline_container"))return;
+
+    utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css');
+
+    const el = document.getElementById("waline_container");
+    var path = el.getAttribute('comment_id');
+    if (!path) {
+      path = decodeURI(window.location.pathname);
+    }
+
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+      el: '#waline_container',
+      path: path,
+      
+    }));
+
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    load_comment();
+  });
+
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"></script><script defer src="https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.swiper-slide img, .gallery img ,#waline_container .vcontent img`,
+    css: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css`,
+    js: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || null
+        }
+      });
+    })
+  }
+</script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          loop: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+</div></body></html>

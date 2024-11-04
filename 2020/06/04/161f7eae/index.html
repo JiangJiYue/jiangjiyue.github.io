@@ -1,0 +1,964 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.27.0" theme-name="Stellar" theme-version="1.27.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>三. Windows Server从入门到精通 - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="总字符数: 13.85K                代码: 2.50K, 文本: 6.79K               预计阅读时间: 40 分钟            操作系统 定义  ​	一组主管并控制计算机操作、运用和运行硬件、软件资源和提供公共服务来组织用户交互的相互关联的系统软件程序.根据运行的环境,操作系统可以分为桌面操作系统,手机操作系统,服务器操作系统,嵌入式操作系">
+<meta property="og:type" content="article">
+<meta property="og:title" content="三. Windows Server从入门到精通">
+<meta property="og:url" content="https://jiangjiyue.github.io/2020/06/04/161f7eae/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="总字符数: 13.85K                代码: 2.50K, 文本: 6.79K               预计阅读时间: 40 分钟            操作系统 定义  ​	一组主管并控制计算机操作、运用和运行硬件、软件资源和提供公共服务来组织用户交互的相互关联的系统软件程序.根据运行的环境,操作系统可以分为桌面操作系统,手机操作系统,服务器操作系统,嵌入式操作系">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401280838616.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401280851729.png">
+<meta property="article:published_time" content="2020-06-04T10:51:22.000Z">
+<meta property="article:modified_time" content="2024-02-09T08:13:36.000Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="Windows Server">
+<meta property="article:tag" content="DOS">
+<meta property="article:tag" content="计算机基础">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401280838616.png">
+  
+  
+  
+  <meta name="keywords" content="Windows Server,DOS,计算机基础">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.27.0">
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="导航" href="/sites/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/tools/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
+</div>
+<div class="widgets">
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">专栏：SysNetDocs</span></div><div class="widget-body"><a class="item" href="/2020/06/01/f5d15284/"><span class="title">一. 计算机基础知识</span></a><a class="item" href="/2020/06/02/5fa17f4e/"><span class="title">二. Linux从入门到精通(上)</span></a><a class="item" href="/2020/06/03/46ba4e0f/"><span class="title">二. Linux从入门到精通(下)</span></a><a class="item active" href="/2020/06/04/161f7eae/"><span class="title">三. Windows Server从入门到精通</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a><a class="item" href="/2020/06/05/2d7bc590/"><span class="title">四. Kali Linux安装</span></a><a class="item" href="/2020/06/06/82a73708/"><span class="title">五. 计算机网络基础</span></a></div></widget>
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2024/11/04/fe2980d6/"><span class="title">CS-ShellCode加载器</span></a><a class="item title" href="/2023/03/11/247b757/"><span class="title">VulHub-Fastjson漏洞复现</span></a><a class="item title" href="/2023/04/28/76971e68/"><span class="title">VulHub-Tomcat漏洞复现</span></a><a class="item title" href="/2024/07/05/dd58c5ed/"><span class="title">应急响应之Webshell流量分析</span></a><a class="item title" href="/2024/10/27/77c80f0f/"><span class="title">CS-C语言总结</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/topic">专栏</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/2020/06/01/f5d15284/">SysNetDocs</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2020-06-04T10:51:22.000Z">2020-06-04</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-02-09T08:13:36.000Z">2024-02-09</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>三. Windows Server从入门到精通</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
+    <p>总字符数: 13.85K </p>
+    </div>
+    <div class="cell" style="">
+    <p>代码: 2.50K, 文本: 6.79K</p>
+    </div>
+    <div class="cell" style="">
+    <p>预计阅读时间: 40 分钟</p>
+    </div>
+    </div>
+
+<h2 id="操作系统"><a href="#操作系统" class="headerlink" title="操作系统"></a>操作系统</h2><ul>
+<li><p>定义</p>
+<blockquote>
+<p>​	一组主管并控制计算机操作、运用和运行硬件、软件资源和提供公共服务来组织用户交互的相互关联的系统软件程序.根据运行的环境,操作系统可以分为桌面操作系统,手机操作系统,服务器操作系统,嵌入式操作系统等.</p>
+</blockquote>
+</li>
+<li><p>操作系统组成部分</p>
+<blockquote>
+<ul>
+<li>系统调用:是操作系统提供给<strong>程序设计人员</strong>的一种服务</li>
+<li>内核:是操作系统的核心</li>
+<li>内核是操作系统最基本的部分</li>
+</ul>
+</blockquote>
+</li>
+<li><p>操作系统的主要特征</p>
+<table>
+<thead>
+<tr>
+<th>特征</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>并发</td>
+<td>支持多进程&#x2F;线程同时处理,单核通过时间分片,多核实现物理并发.</td>
+</tr>
+<tr>
+<td>共享</td>
+<td>资源可被多进程使用,包括实时共享和虚拟共享.</td>
+</tr>
+<tr>
+<td>虚拟</td>
+<td>物理资源可被抽象成虚拟单位,增加系统灵活性和效能.</td>
+</tr>
+<tr>
+<td>随机</td>
+<td>响应并处理随机事件如设备中断和用户输入,事件发生顺序不可预测.</td>
+</tr>
+<tr>
+<td>异步</td>
+<td>进程不必遵循严格顺序执行,系统管理非线性和不确定性行为.</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><span>Vmware虚拟机里可以装虚拟机吗?</span></summary><div class="body"><ul><li><p><strong>是否可行?</strong></p><p>​	从理论上讲,嵌套虚拟机(即在一个虚拟机内部运行另一个虚拟机)是完全可行的.这取决于主机硬件的计算能力和虚拟化技术的支持.如果主机硬件(如CPU和内存)足够强大,它可以支持多层次的虚拟化.然而,实际上这样做可能会遇到性能瓶颈,因为每一层的虚拟化都会引入额外的开销.</p></li><li><p><strong>一定行吗?</strong></p><p>   虽然理论上可行,但在实践中不一定总是如预期那样工作.许多虚拟化产品特性,尤其是那些依赖于硬件辅助的功能(如Intel VT-x或AMD-V),可能在嵌套虚拟化环境中无法有效工作或者根本不可用.这可能会限制某些应用程序的运行,或者导致性能不佳.</p></li><li><p><strong>有意义吗?</strong></p><p>​    嵌套虚拟化具有实际应用价值,特别是作为开发和测试工具.例如,开发人员可以利用桌面虚拟化应用来创建实验环境,测试软件的新特性,如测试新版本的QQ.此外,嵌套虚拟化也允许测试和学习新的或更新的虚拟化产品,而不会影响物理主机的稳定性.您提供的实例,在VMware中运行配备Hyper-V的Windows 8.1,就是一个很好的实践案例,表明嵌套虚拟化可以用来探索和学习虚拟化技术的不同方面.</p></li></ul></div></details></div>
+
+<h2 id="初始windows"><a href="#初始windows" class="headerlink" title="初始windows"></a>初始windows</h2><h3 id="什么是Windows"><a href="#什么是Windows" class="headerlink" title="什么是Windows?"></a>什么是Windows?</h3><p><strong>Microsoft Windows</strong>: 微软公司研发的操作系统家族</p>
+<ul>
+<li><strong>简介</strong>: 美国微软公司研发的操作系统,首次发布于1985年.最初,Windows仅作为Microsoft-DOS的图形用户界面扩展.</li>
+<li><strong>发展</strong>: 经过多年的不断更新和升级,Windows系统变得更加用户友好,并逐渐成为全球最受欢迎的操作系统之一.</li>
+<li>技术演进:<ul>
+<li><strong>图形用户界面(GUI)</strong>: Windows采用的图形化界面,与以往基于文本的DOS指令输入相比,提供了更加直观和易于使用的操作体验.</li>
+<li><strong>系统兼容性</strong>: 随着电脑硬件和软件技术的进步,Windows系统也相应升级,从最初的16位架构发展到32位,再到现在广泛使用的64位架构.</li>
+</ul>
+</li>
+<li>版本历史:<ul>
+<li><strong>早期版本</strong>: Windows 1.0</li>
+<li><strong>广为人知的版本</strong>: Windows 95、Windows 98</li>
+<li><strong>新千年版本</strong>: Windows ME、Windows 2000、Windows XP</li>
+<li><strong>现代版本</strong>: Windows Vista、Windows 7、Windows 8、Windows 8.1、Windows 10</li>
+<li><strong>企业级</strong>: Windows Server系列</li>
+</ul>
+</li>
+</ul>
+<h3 id="windows账号"><a href="#windows账号" class="headerlink" title="windows账号"></a>windows账号</h3><div class="tag-plugin quot"><p class="content" type="text"><span class="empty"></span><span class="text">Windows用户账号和计算机管理（本地）</span><span class="empty"></span></p></div>
+
+<ul>
+<li><strong>用户账户特点</strong>:<ul>
+<li>不同的用户身份拥有不同的权限.</li>
+<li>每个用户账号包含一个名称和一个密码.</li>
+<li>用户账户拥有唯一的安全标识符(SID),这是一个用来唯一标识用户、组和账号的号码.该标识符在账号首次创建时生成,并在网络上唯一.</li>
+</ul>
+</li>
+<li><strong>用户账号类型</strong>:<ul>
+<li>Administrator(管理员账户)</li>
+<li>DefaultAccount(默认账户)</li>
+<li>Guest(访客账户)</li>
+<li>WDAGUtilityAccount(用于Windows Defender应用程序守护)</li>
+</ul>
+</li>
+<li><strong>用户账户管理工具</strong>:<ul>
+<li>系统工具</li>
+<li>任务计划程序</li>
+<li>事件查看器</li>
+<li>文件共享管理</li>
+<li>本地用户和组管理</li>
+<li>性能监视</li>
+</ul>
+</li>
+<li><strong>高级账户管理操作</strong>:<ul>
+<li>使用 <code>whoami /user</code> 命令查看当前用户的SID.</li>
+<li>通过 <code>secpol.msc</code> 打开本地安全策略进行策略配置.</li>
+</ul>
+</li>
+<li><strong>特别指令</strong>:<ul>
+<li><code>C:\Users\&gt;whoami</code>:显示当前的用户信息.</li>
+<li><code>用户名:desktop-s</code>:示例用户名.</li>
+</ul>
+</li>
+</ul>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401280838616.png" data-fancybox="true"/></div></div>
+
+<h3 id="权限"><a href="#权限" class="headerlink" title="权限"></a>权限</h3><ul>
+<li><strong>Windows常用用户账号及其权限等级</strong>:<ul>
+<li><strong>SYSTEM</strong>: 本地计算机上拥有最高权限的用户账户,为系统核心组件及服务访问计算机资源提供全面权限.</li>
+<li><strong>Administrator</strong>: 默认的系统管理员账户,拥有几乎所有权限,可进行系统设置和更改.</li>
+<li><strong>User</strong>: 普通用户,拥有进行日常操作所需的权限,但不能进行影响其他用户或系统安全的操作.</li>
+<li><strong>Guest</strong>: 来宾用户,权限最少,通常只用于非常基础的操作,且默认情况下是禁用的.</li>
+</ul>
+</li>
+<li><strong>详细权限说明</strong>:<ul>
+<li><strong>SYSTEM</strong>: 通常不由普通用户使用,它允许操作系统及其服务以最高权限运行,确保系统稳定和安全.</li>
+<li><strong>Administrator</strong>: 可以安装软件、更改系统设置、管理其他用户账号和权限等.</li>
+<li><strong>Guest</strong>: 通常用于临时访问,不允许更改系统设置或安装新软件.</li>
+</ul>
+</li>
+</ul>
+<h2 id="Windows-Server"><a href="#Windows-Server" class="headerlink" title="Windows Server"></a>Windows Server</h2><blockquote>
+<p>​	Windows Server 是一个专门为企业级用户和网络服务设计的操作系统,它由微软公司开发,为用户提供了一系列的服务和应用程序,如网络资源管理、Web服务器能力、用户和组管理、消息传递、文件和打印服务等.Windows Server 提供了不同的版本,以满足各种规模和需求的企业,比如 Windows Server 2012、2016、2019 以及最新的 Windows Server 2022.</p>
+</blockquote>
+<p>每个版本的 Windows Server 都在前一个版本的基础上增加了新的功能和改进,例如更好的安全性、改进的虚拟化技术、更方便的管理工具和更高的性能.Windows Server 在企业环境中通常用作域控制器(运行Active Directory来管理用户和资源)、文件和打印服务器、Web服务器(运行IIS)、邮件服务器(运行Exchange Server)及其他专业应用服务器.</p>
+<p>Windows Server 的特点包括但不限于:</p>
+<ol>
+<li><strong>用户和资源管理</strong> - Active Directory是Windows Server的一个核心组件,可以管理网络上的用户帐户和资源.</li>
+<li><strong>虚拟化支持</strong> - Hyper-V允许用户在单个物理服务器上创建和管理多个虚拟机.</li>
+<li><strong>安全性功能</strong> - 提供了多种安全功能,包括加密服务、访问控制和防病毒集成.</li>
+<li><strong>存储解决方案</strong> - 包括不同的存储技术,比如文件系统、存储空间直通和数据去重.</li>
+<li><strong>网络服务</strong> - 包括DNS、DHCP和IPAM等网络基础设施服务.</li>
+<li><strong>远程访问</strong> - 提供了远程桌面服务,允许用户远程连接和使用服务器资源.</li>
+<li><strong>Web和应用平台</strong> - Windows Server能够托管网站、应用程序和服务,如使用IIS提供Web服务.</li>
+<li><strong>自动化和脚本工具</strong> - PowerShell是一个强大的脚本语言和命令行接口,用于自动化和管理任务.</li>
+</ol>
+<p>这里推荐一个博客专栏,对于Windows Server讲的很详细</p>
+<div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://blog.csdn.net/NOWSHUT/article/details/127236823" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://blog.csdn.net/NOWSHUT/article/details/127236823</span></div><div class="bottom"><span class="title">https://blog.csdn.net/NOWSHUT/article/details/127236823</span><span class="cap desc footnote"></span></div></a></div>
+
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><p><strong>系统目录</strong>:</p>
+<ul>
+<li><strong>此电脑 &gt; 本地磁盘 (C:) &gt; Windows</strong>: Windows操作系统的主目录,包含了整个系统运行所需的文件和程序.</li>
+</ul>
+</li>
+<li><p><strong>关键子目录</strong>:</p>
+<ul>
+<li><strong>All Users目录</strong>: 所有用户共享的数据存储位置,包括共用的开始菜单、桌面设置等.</li>
+<li><strong>Command目录</strong>: 包含Windows和DOS环境下常用的命令行工具,例如<code>chkdsk</code>(检查磁盘)、<code>format</code>(格式化磁盘)、<code>fdisk</code>(磁盘分区工具)等.</li>
+<li><mark class="tag-plugin colorful mark" color="red">Config目录: 存放Windows系统的硬件配置文件,用于系统启动和硬件识别</mark></li>
+<li><strong>Desktop目录</strong>: 存放用户桌面上的所有图标和快捷方式,这些文件与桌面上显示的图标动态同步.</li>
+<li><strong>Downloaded Program Files目录</strong>: 通常为Internet Explorer下载的ActiveX控件和Java applets的存放地点.</li>
+<li><strong>System32目录</strong>: Windows系统的核心文件夹,包含系统文件和硬件驱动程序.是系统稳定和功能实现的关键所在.</li>
+</ul>
+</li>
+<li><p><strong>重要的系统文件夹</strong>:</p>
+<div class="tag-plugin colorful note" color="red"><div class="body"><p>System和System32:这两个目录对于Windows的运行至关重要,它们包含了操作系统的核心文件和硬件驱动程序等信息.</p></div></div></li>
+</ul>
+<div class="tag-plugin colorful note" color="red"><div class="body"><p>SAM文件内有密码信息</p></div></div>
+
+<p>当然,可以为您提供一个综合解释,结合了上述两段内容,对于这些关键的Windows系统文件和目录:</p>
+<ol>
+<li><p><strong><code>windows\System32\config\SAM</code></strong>:<br>这是Windows系统中非常关键的文件,因为它存放了加密的用户账号密码信息.具体来说,它是Security Accounts Manager (安全账户管理器) 的数据库,记录着每个用户的账户信息、加密的密码哈希值以及安全描述符等敏感数据.出于安全考虑,这些信息都不会以明文形式存储,而是通过加密保护.</p>
+</li>
+<li><p><strong><code>windows\System32\drivers\etc\hosts</code></strong>:<br>这个文件对于网络配置至关重要.它是一个简单的文本文件,允许用户自定义域名到IP地址的映射.例如,在文件中,您可能会看到如下内容:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1       localhost</span><br><span class="line">192.168.1.10    myprinter.local</span><br><span class="line">93.184.216.34   example.com</span><br></pre></td></tr></table></figure>
+<p>这样,当尝试访问<code>example.com</code>时,系统会优先查询<code>hosts</code>文件而不是发送请求到DNS服务器.这就是为什么恶意软件可能会试图修改这个文件以改变域名解析结果,进行网站劫持.</p>
+</li>
+<li><p><strong>事件查看器日志文件</strong>:<br>Windows事件查看器记录了多种类型的系统日志,用以追踪应用程序、安全、系统等方面的事件.例如,安全日志可能会记录用户的登录事件,展示出登录用户的名称、域、登录ID和登录类型.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">安全性-成功审核:</span><br><span class="line">用户登录成功:</span><br><span class="line">用户名: JohnDoe</span><br><span class="line">域: WIN-DESKTOP</span><br><span class="line">登录ID: 0x20F3D</span><br><span class="line">登录类型: 2</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>Program Files</code>目录</strong>:<br>这是Windows系统默认的应用程序安装目录.在这里,各种软件会存放它们的执行文件(<code>.exe</code>)和动态链接库文件(<code>.dll</code>),这些文件是软件运行的必要组件.以”Feige”软件为例</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">C:\Program Files\Feige\Feige_setup.exe      - 安装程序</span><br><span class="line">C:\Program Files\Feige\FeigeShlExt64.dll    - 应用程序的一个组件或插件</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="文件权限"><a href="#文件权限" class="headerlink" title="文件权限"></a>文件权限</h2><ol>
+<li><strong>完全控制(Full Control)</strong>: 用户可以对文件或文件夹做任何事情,包括修改权限、更改所有者、删除、读取、写入、执行等.这是最高级别的权限,通常只为系统管理员或特定需要的用户组设置.<ul>
+<li><strong>Authenticated Users</strong>: 通过系统认证的所有用户.</li>
+<li><strong>SYSTEM</strong>: 指代系统账户,它具有操作系统内几乎所有权限,用于执行系统任务.</li>
+<li><strong>Administrators (DESKTOP-S5SQ6LB\Administrators)</strong>: 特定计算机(在这个例子中为DESKTOP-S5SQ6LB)的管理员组.</li>
+</ul>
+</li>
+<li><strong>修改(Modify)</strong>: 用户可以修改或删除文件和文件夹,也可以写入新的数据,但不能更改权限或所有者.<ul>
+<li><strong>Users (DESKTOP-S5SQ6LB\Users)</strong>: 特定计算机的普通用户组,它包含了该计算机上的几乎所有用户账户.</li>
+</ul>
+</li>
+<li><strong>读取和运行(Read &amp; Execute)</strong>: 用户可以运行文件中的程序,阅读文件内容,浏览和访问文件夹中的项目,但不一定能修改它们.</li>
+<li><strong>列出文件夹内容(List Folder Contents)</strong>: 与”读取和运行”类似,但主要是针对文件夹结构,允许用户查看文件夹内的项目列表.</li>
+<li><strong>读取(Read)</strong>: 用户可以查看文件内容以及文件夹中的项目,还可以查看文件或文件夹的属性、所有者和权限,但不能做出任何更改.</li>
+<li><strong>写入(Write)</strong>: 用户可以在文件夹中创建新文件或文件夹,修改文件夹的属性,但不允许删除文件或文件夹.</li>
+</ol>
+<h2 id="服务"><a href="#服务" class="headerlink" title="服务"></a>服务</h2><blockquote>
+<p>服务:(端口区分服务)服务是一种应用程序类型,它在后台运行.服务应用程序通常可以在本地和通过网络为用户提供一些功能,例如客户端&#x2F;服务器应用程序、Web服务器、数据库服务器以及其他基于服务器的应用程序.</p>
+</blockquote>
+<div class="tag-plugin colorful note" color="red"><div class="body"><p>服务其实就是定义理论计算机的一些功能.</p></div></div>
+
+<p>要<strong>打开服务管理器</strong>,您可以按照以下步骤操作:</p>
+<ol>
+<li>使用快捷键 <code>Win+R</code> 打开”运行”对话框.</li>
+<li>输入 <code>services.msc</code> 并按 <code>Enter</code> 键.</li>
+</ol>
+<p>这样就会打开Windows的服务管理控制台,您可以查看和管理系统中的所有服务.服务的状态可以是运行中、已停止、暂停、禁用等.</p>
+<p><strong>服务的作用</strong>可以归纳为:</p>
+<ol>
+<li><strong>功能启用</strong>:服务决定了计算机上哪些功能可以使用.例如,如果打印机服务被禁用,用户将无法打印文档.</li>
+<li><strong>功能对应性</strong>:不同的服务提供不同的功能.比如,<code>DHCP</code> 服务负责自动分配IP地址,<code>Print Spooler</code> 服务管理打印队列.</li>
+<li><strong>资源共享</strong>:服务使得计算机可以有效地共享其资源.例如,文件共享服务允许网络上的其他计算机访问特定的文件夹和文件.</li>
+</ol>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><span>常见服务</span></summary><div class="body"><ol><li><strong>Web服务</strong>: 允许计算机托管网站和Web应用程序,通常使用HTTP(超文本传输协议)或HTTPS(安全超文本传输协议)来访问.在Windows上,这通常是指Internet Information Services (IIS).</li><li><strong>DNS服务(Domain Name System)</strong>: 解析域名到IP地址,是使得用户可以通过人类可读的域名访问网站而不需要记忆复杂的IP地址的服务.</li><li><strong>DHCP服务(Dynamic Host Configuration Protocol)</strong>: 自动为网络上的设备分配IP地址、子网掩码、默认网关和DNS服务器信息等网络配置信息.</li><li><strong>邮件服务</strong>: 处理、发送和接收电子邮件.在Windows服务器上,这可能指的是Microsoft Exchange Server或其他邮件服务器软件.</li><li><strong>Telnet服务</strong>: Telnet是一个旧的网络协议,用于提供文本界面远程登录服务,允许用户通过网络连接到远程计算机.由于安全性较低,现在更推荐使用SSH.</li><li><strong>SSH服务(Secure Shell)</strong>: 是一个加密协议,用于安全地访问远程计算机.SSH提供了安全的网络服务、远程命令执行等功能.</li><li><strong>FTP服务(File Transfer Protocol)</strong>: 用于在网络上的计算机之间传输文件.FTP可以用于上传和下载数据,但它不加密传输的数据,因此被认为不如SFTP或FTPS安全.</li><li><strong>SMB服务(Server Message Block)</strong>: 是一种网络文件共享协议,允许在局域网络内的计算机之间共享文件和打印机等资源.在Windows环境中,这通常与文件和打印共享设置相关联.</li></ol></div></details></div>
+
+<h2 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h2><blockquote>
+<p>​	进程是计算机中的一个执行实例,是操作系统分配资源和调度执行的基本单位.当你运行一个程序时,系统为它创建一个进程,进程会拥有运行该程序所需的所有资源,包括内存、处理器时间、磁盘空间和输入输出设备.每个进程都有一个独一无二的进程标识符(PID).</p>
+<p>一个进程通常包括以下几个部分:</p>
+<ol>
+<li><strong>代码区域</strong>:存储可执行程序的代码.</li>
+<li><strong>数据区域</strong>:存储变量和动态分配的内存.</li>
+<li><strong>堆栈区域</strong>:包含执行运行时的函数参数、局部变量和返回地址.</li>
+</ol>
+<p>进程能够执行任务,处理数据,并与其他进程进行通信.操作系统通过进程管理来确保平稳有序的执行多个任务,这包括进程创建、执行、暂停和终止,以及进程间通信和同步.进程管理是现代计算机操作系统中最复杂和关键的部分之一.</p>
+</blockquote>
+<ol>
+<li><strong>conime.exe</strong>: 与输入法编辑器有关的系统进程,能够确保正常调整和编辑系统中的输入法</li>
+<li><strong>csrss.exe</strong>: 客户端&#x2F;服务器运行时子系统(Client&#x2F;Server Runtime Subsystem),负责管理Windows图形显示,处理用户与系统交互的基础界面任务.</li>
+<li><strong>ctfmon.exe</strong>: 与微软的文本服务框架有关并负责输入法的管理,确保语言栏能正常显示在任务栏中.</li>
+<li><mark class="tag-plugin colorful mark" color="red">explorer.exe: Windows资源管理器,是Windows图形用户界面的核心组成部分,提供桌面环境、任务栏、文件管理等功能.</mark></li>
+<li><strong>lsass.exe</strong>: 本地安全权限管理系统(Local Security Authority Subsystem Service),负责验证用户登录Windows的过程.</li>
+<li><mark class="tag-plugin colorful mark" color="red">services.exe: 服务控制管理器（Service Control Manager）,负责启动、停止和管理后台服务的进程.</mark></li>
+<li><strong>smss.exe</strong>: 会话管理子系统(Session Manager Subsystem),负责管理Windows用户会话的启动过程.</li>
+<li><strong>svchost.exe</strong>: 服务主机进程(Service Host),用于加载由DLL文件实现的服务.</li>
+<li><mark class="tag-plugin colorful mark" color="red">system: 系统进程,负责管理系统级别的功能和页面文件（虚拟内存）.</mark></li>
+<li><strong>System Idle Process</strong>: 系统空闲进程,当CPU处于空闲状态时会运行,不是实际的进程,而是一个用于计算空闲CPU资源的指示器.</li>
+<li><strong>winlogon.exe</strong>: Windows NT登录程序,负责管理用户的登录和注销过程.</li>
+</ol>
+<h2 id="注册表"><a href="#注册表" class="headerlink" title="注册表"></a>注册表</h2><blockquote>
+<p>​	注册表是Microsoft Windows操作系统中的一个重要组件,它用于存储系统设置和配置信息.注册表包含了与操作系统、安装的应用程序、系统硬件和用户偏好设置相关的信息,这些信息组织在一个层次化的数据库中.</p>
+</blockquote>
+<p>注册表主要由以下几个”根键”构成:</p>
+<ol>
+<li><strong>HKEY_CLASSES_ROOT</strong> (HKCR):存储了文件类型关联信息.</li>
+<li><strong>HKEY_CURRENT_USER</strong> (HKCU):包含当前登录用户的配置信息.</li>
+<li><strong>HKEY_LOCAL_MACHINE</strong> (HKLM):包含计算机的硬件和软件配置信息.</li>
+<li><strong>HKEY_USERS</strong> (HKU):包含所有用户的配置信息.</li>
+<li><strong>HKEY_CURRENT_CONFIG</strong> (HKCC):包含当前硬件配置信息.</li>
+<li><strong>HKEY_PERFORMANCE_DATA</strong>:存储性能数据.</li>
+</ol>
+<p>注册表的打开方式如下:</p>
+<p>在大多数版本的Windows操作系统中,可以通过以下步骤打开注册表编辑器(Regedit):</p>
+<ol>
+<li>按下<code>Win+R</code>组合键打开”运行”对话框.</li>
+<li>输入”regedit”然后按Enter键或点击”确定”.</li>
+<li>这会打开注册表编辑器,你可以浏览和修改注册表项.</li>
+</ol>
+<mark class="tag-plugin colorful mark" color="warning">修改注册表之前,务必谨慎行事.不正确的修改可能会导致系统不稳定甚至无法启动.在做任何更改之前,建议先备份相关的注册表项.</mark>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401280851729.png" data-fancybox="true"/></div></div>
+
+<h2 id="DOS命令"><a href="#DOS命令" class="headerlink" title="DOS命令"></a>DOS命令</h2><blockquote>
+<p>​	DOS(全称为Disk Operating System,被称为磁盘操作系统)是计算机上的一种基于磁盘管理的操作系统.它允许用户直接操作和管理磁盘上的文件.大多数计算机在出厂时会自带DOS操作系统.</p>
+</blockquote>
+<h3 id="MS-DOS"><a href="#MS-DOS" class="headerlink" title="MS-DOS"></a>MS-DOS</h3><blockquote>
+<p>​	MS-DOS,即Microsoft Disk Operating System的简称,是由美国微软公司(Microsoft)提供的磁盘操作系统版本.在Windows 95发布之前,DOS是个人计算机的基础,而MS-DOS是最广泛使用的版本.</p>
+</blockquote>
+<p>DOS充当了人与计算机硬件之间的桥梁,是一层封装硬件复杂性的”外壳”.</p>
+<p>使用DOS时,用户不必深入理解硬件结构或记忆复杂的机器指令.通过简单的类自然语言的DOS命令,可以轻松完成大多数日常操作.</p>
+<p>此外,DOS有效地管理各种软硬件资源,并进行合理调度,确保软件和硬件在其监控和管理下有序工作.</p>
+<h3 id="DOS和Windows的区别"><a href="#DOS和Windows的区别" class="headerlink" title="DOS和Windows的区别"></a>DOS和Windows的区别</h3><h4 id="本质"><a href="#本质" class="headerlink" title="本质"></a>本质</h4><p>DOS和Windows都是微软公司推出的操作系统.Windows可以视为DOS的图形界面扩展或后继版本,相比于DOS,Windows在用户接口和多任务处理上有了质的飞跃.</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><span>DOS特点</span></summary><div class="body"><ul><li>实模式操作系统.</li><li>仅支持单任务单用户.</li><li>文字交互界面(非图形化).</li><li>快速响应操作.</li><li>需要通过特定的DOS命令进行操作,例如远程操作等高级功能.</li></ul></div></details><details class="folder" index="1"><summary><span>Windows特点</span></summary><div class="body"><ul><li>图形用户界面(GUI).</li><li>支持多任务多用户.</li><li>简化操作,主要通过鼠标点击进行.</li><li>由于多任务特性,可能存在安全隐患.</li></ul></div></details></div>
+
+<h4 id="关键区别"><a href="#关键区别" class="headerlink" title="关键区别"></a>关键区别</h4><p>Windows中的cmd命令提示符不是真正的DOS,而是Windows在图形环境中模拟的DOS环境.它用于执行某些高级命令,这些命令在纯DOS环境中更高效.真正的DOS是一个独立的操作系统,而非Windows系统的一部分.</p>
+<h3 id="命令和批处理"><a href="#命令和批处理" class="headerlink" title="命令和批处理"></a>命令和批处理</h3><p>在早期的操作系统中,DOS命令和批处理命令是用于执行操作的命令集合.下面详细解释了它们之间的主要区别:</p>
+<h4 id="DOS命令-1"><a href="#DOS命令-1" class="headerlink" title="DOS命令"></a>DOS命令</h4><p>DOS命令是一系列可以在DOS操作系统中直接执行的指令.它们用于在命令行界面(CLI)下执行诸如文件管理、系统检查等特定操作.</p>
+<ul>
+<li><strong>例子:</strong><ul>
+<li><code>DIR</code>:显示目录内容.</li>
+<li><code>COPY</code>:复制一个或多个文件到另一位置.</li>
+</ul>
+</li>
+</ul>
+<p>DOS命令在执行完毕后,控制权会返回到命令行,等待用户输入新的命令.</p>
+<h4 id="批处理命令"><a href="#批处理命令" class="headerlink" title="批处理命令"></a>批处理命令</h4><p>批处理命令是将一系列DOS命令按照特定顺序组合在一个文本文件中,这个文件通常具有扩展名<code>.bat</code>或<code>.cmd</code>.</p>
+<ul>
+<li><strong>特性:</strong><ul>
+<li><strong>自动化:</strong> 通过执行批处理文件,可以自动连续执行所有列出的命令.</li>
+<li><strong>控制结构:</strong> 包括条件语句、循环等,允许根据特定条件执行或跳过某些命令.</li>
+<li><strong>方便:</strong> 用户可以通过单次执行批处理文件来完成复杂的任务序列,而不必手动输入每个命令.</li>
+</ul>
+</li>
+</ul>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>DOS命令适用于单次任务,方便快捷,而批处理文件则适用于需要一系列操作的批量处理任务,可以实现高效的任务自动化.批处理命令在需要重复性任务处理时尤其有用,它们显著提高了效率,减少了手动执行命令的需要.</p>
+<h2 id="Windows-命令行操作指南"><a href="#Windows-命令行操作指南" class="headerlink" title="Windows 命令行操作指南"></a>Windows 命令行操作指南</h2><blockquote>
+<p>​	在Windows操作系统中,命令行(CMD)提供了一组丰富的命令,用于执行各种任务,如文件管理、系统状态查询和网络操作等.以下是一些常用的DOS命令和批处理命令</p>
+</blockquote>
+<h3 id="文件和目录操作命令"><a href="#文件和目录操作命令" class="headerlink" title="文件和目录操作命令"></a>文件和目录操作命令</h3><h4 id="1-查看目录内容-dir"><a href="#1-查看目录内容-dir" class="headerlink" title="1. 查看目录内容 (dir)"></a>1. 查看目录内容 (dir)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">dir</span> [盘符:][路径][文件名] [参数]</span><br><span class="line"># 例如,查看D盘根目录下所有文件:</span><br><span class="line"><span class="built_in">dir</span> D:\</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-创建新目录-md-mkdir"><a href="#2-创建新目录-md-mkdir" class="headerlink" title="2. 创建新目录 (md&#x2F;mkdir)"></a>2. 创建新目录 (md&#x2F;mkdir)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">md</span> [盘符][路径]</span><br><span class="line"># 例如,创建一个名为TEMP的新目录:</span><br><span class="line"><span class="built_in">md</span> TEMP</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-删除目录-rd-rmdir"><a href="#3-删除目录-rd-rmdir" class="headerlink" title="3. 删除目录 (rd&#x2F;rmdir)"></a>3. 删除目录 (rd&#x2F;rmdir)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rd</span> [盘符][路径]</span><br><span class="line"># 注意:仅能删除空目录,不能删除当前目录.</span><br><span class="line"><span class="built_in">rd</span> TEMP</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-进入指定目录-cd"><a href="#4-进入指定目录-cd" class="headerlink" title="4. 进入指定目录 (cd)"></a>4. 进入指定目录 (cd)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> [路径]</span><br><span class="line"># 例如,进入HAPPY目录:</span><br><span class="line"><span class="built_in">cd</span> HAPPY</span><br><span class="line"># 回到根目录:</span><br><span class="line"><span class="built_in">cd</span> \</span><br><span class="line"># 返回上一层目录</span><br><span class="line"><span class="built_in">cd</span>..</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-拷贝文件-copy"><a href="#5-拷贝文件-copy" class="headerlink" title="5. 拷贝文件 (copy)"></a>5. 拷贝文件 (copy)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">copy</span> [源目录或文件] [目的目录或文件]</span><br><span class="line"># 注意:目的目录必须存在.</span><br><span class="line"><span class="built_in">copy</span> C:*.COM D:\</span><br></pre></td></tr></table></figure>
+
+<h4 id="6-移动文件-move"><a href="#6-移动文件-move" class="headerlink" title="6. 移动文件 (move)"></a>6. 移动文件 (move)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">move</span> [源目录或文件] [目的目录或文件]</span><br><span class="line"># 例如,移动文件到另一个目录:</span><br><span class="line"><span class="built_in">move</span> C:\example.txt D:\folder</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-删除文件-del"><a href="#7-删除文件-del" class="headerlink" title="7. 删除文件 (del)"></a>7. 删除文件 (del)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">del</span> [盘符][路径][文件名] [参数]</span><br><span class="line"># 例如,删除C盘DATA目录下所有后缀为.BAK的文件:</span><br><span class="line"><span class="built_in">del</span> C:\DATA*.BAK</span><br><span class="line"># 使用&#x27;/P&#x27;参数在删除前进行确认:</span><br><span class="line"><span class="built_in">del</span> /P C:\DATA*.BAK</span><br></pre></td></tr></table></figure>
+
+<h4 id="8-重命名文件或目录-ren-rename"><a href="#8-重命名文件或目录-ren-rename" class="headerlink" title="8. 重命名文件或目录 (ren&#x2F;rename)"></a>8. 重命名文件或目录 (ren&#x2F;rename)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ren</span> [原名] [现名]</span><br><span class="line"># 例如,重命名文件:</span><br><span class="line"><span class="built_in">ren</span> oldname.txt newname.txt</span><br></pre></td></tr></table></figure>
+
+<h4 id="9-查看文本文件内容-type"><a href="#9-查看文本文件内容-type" class="headerlink" title="9. 查看文本文件内容 (type)"></a>9. 查看文本文件内容 (type)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">type</span> [文件名]</span><br><span class="line"># 例如,查看文件内容:</span><br><span class="line"><span class="built_in">type</span> example.txt</span><br></pre></td></tr></table></figure>
+
+<h4 id="10-新建文本文件"><a href="#10-新建文本文件" class="headerlink" title="10. 新建文本文件"></a>10. 新建文本文件</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 使用以下命令之一新建文件:</span><br><span class="line"><span class="built_in">echo</span>.&gt;file.txt</span><br><span class="line"><span class="built_in">type</span> <span class="built_in">nul</span>&gt;newtest.txt</span><br><span class="line"><span class="built_in">echo</span> 文件内容&gt;new.txt</span><br></pre></td></tr></table></figure>
+
+<h3 id="网络工具命令"><a href="#网络工具命令" class="headerlink" title="网络工具命令"></a>网络工具命令</h3><h4 id="11-查看本机IP-ipconfig"><a href="#11-查看本机IP-ipconfig" class="headerlink" title="11. 查看本机IP (ipconfig)"></a>11. 查看本机IP (ipconfig)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ipconfig</span>        # 显示简单信息</span><br><span class="line"><span class="built_in">ipconfig</span> /all   # 显示详细信息</span><br></pre></td></tr></table></figure>
+
+<h4 id="12-测试网络连通性-ping"><a href="#12-测试网络连通性-ping" class="headerlink" title="12. 测试网络连通性 (ping)"></a>12. 测试网络连通性 (ping)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ping</span> [ip或主机名]        # 基本用法</span><br><span class="line"><span class="built_in">ping</span> -t [ip或主机名]     # 持续<span class="built_in">ping</span>直到停止</span><br></pre></td></tr></table></figure>
+
+<h4 id="13-查看网络连接状态-netstat"><a href="#13-查看网络连接状态-netstat" class="headerlink" title="13. 查看网络连接状态 (netstat)"></a>13. 查看网络连接状态 (netstat)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -ano # 查看网络连接、状态以及对应的进程ID</span><br></pre></td></tr></table></figure>
+
+<h3 id="系统操作命令"><a href="#系统操作命令" class="headerlink" title="系统操作命令"></a>系统操作命令</h3><h4 id="14-清屏-cls"><a href="#14-清屏-cls" class="headerlink" title="14. 清屏 (cls)"></a>14. 清屏 (cls)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cls</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="15-查看系统日期和时间"><a href="#15-查看系统日期和时间" class="headerlink" title="15. 查看系统日期和时间"></a>15. 查看系统日期和时间</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="variable">%date%</span> <span class="variable">%time%</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="16-显示操作系统版本-ver"><a href="#16-显示操作系统版本-ver" class="headerlink" title="16. 显示操作系统版本 (ver)"></a>16. 显示操作系统版本 (ver)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ver</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="17-关机命令-shutdown"><a href="#17-关机命令-shutdown" class="headerlink" title="17. 关机命令 (shutdown)"></a>17. 关机命令 (shutdown)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">shutdown -s           # 关机</span><br><span class="line">shutdown -r           # 重启</span><br><span class="line">shutdown -l           # 注销</span><br><span class="line">shutdown -h           # 休眠</span><br><span class="line">shutdown -a           # 取消关机或重启计划</span><br></pre></td></tr></table></figure>
+
+<h4 id="18-退出命令行环境-exit"><a href="#18-退出命令行环境-exit" class="headerlink" title="18. 退出命令行环境 (exit)"></a>18. 退出命令行环境 (exit)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">exit</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="其他实用命令"><a href="#其他实用命令" class="headerlink" title="其他实用命令"></a>其他实用命令</h3><h4 id="19-修改CMD窗口标题和颜色-title-color"><a href="#19-修改CMD窗口标题和颜色-title-color" class="headerlink" title="19. 修改CMD窗口标题和颜色 (title, color)"></a>19. 修改CMD窗口标题和颜色 (title, color)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">title</span> 新的标题名</span><br><span class="line"><span class="built_in">color</span> 颜色值</span><br></pre></td></tr></table></figure>
+
+<h4 id="20-查看和设置环境变量-set"><a href="#20-查看和设置环境变量-set" class="headerlink" title="20. 查看和设置环境变量 (set)"></a>20. 查看和设置环境变量 (set)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span>           # 显示所有环境变量</span><br><span class="line"><span class="built_in">set</span> variable  # 显示指定的环境变量</span><br></pre></td></tr></table></figure>
+
+<h4 id="21-创建批处理文件示例"><a href="#21-创建批处理文件示例" class="headerlink" title="21. 创建批处理文件示例"></a>21. 创建批处理文件示例</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 在桌面创建批处理文件&#x27;hah.bat&#x27;,内容为打印信息</span><br><span class="line"><span class="built_in">cd</span> desktop</span><br><span class="line"><span class="built_in">copy</span> <span class="built_in">con</span> hah.bat</span><br><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"><span class="built_in">echo</span> =====================</span><br><span class="line"><span class="built_in">echo</span>  中国真伟大<span class="variable">!!!</span></span><br><span class="line"><span class="built_in">echo</span> =====================</span><br><span class="line">^Z  # 使用Ctrl + Z来结束并保存文件</span><br></pre></td></tr></table></figure>
+
+<h3 id="进阶网络命令"><a href="#进阶网络命令" class="headerlink" title="进阶网络命令"></a>进阶网络命令</h3><h4 id="22-查询DNS信息-nslookup"><a href="#22-查询DNS信息-nslookup" class="headerlink" title="22. 查询DNS信息 (nslookup)"></a>22. 查询DNS信息 (nslookup)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nslookup www.example.com</span><br></pre></td></tr></table></figure>
+
+<h4 id="23-追踪路由-tracert"><a href="#23-追踪路由-tracert" class="headerlink" title="23. 追踪路由 (tracert)"></a>23. 追踪路由 (tracert)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tracert [目标IP或域名]</span><br></pre></td></tr></table></figure>
+
+<h4 id="24-生成目录树-tree"><a href="#24-生成目录树-tree" class="headerlink" title="24. 生成目录树 (tree)"></a>24. 生成目录树 (tree)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">tree</span> /F /A</span><br></pre></td></tr></table></figure>
+
+<h4 id="25-文件隐藏与属性设置-attrib"><a href="#25-文件隐藏与属性设置-attrib" class="headerlink" title="25. 文件隐藏与属性设置 (attrib)"></a>25. 文件隐藏与属性设置 (attrib)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">attrib</span> +h [文件或文件夹名] # 隐藏</span><br><span class="line"><span class="built_in">attrib</span> +s [文件或文件夹名] # 系统文件</span><br></pre></td></tr></table></figure>
+
+<h3 id="高级命令行技巧"><a href="#高级命令行技巧" class="headerlink" title="高级命令行技巧"></a>高级命令行技巧</h3><h4 id="26-使用find和findstr进行文本搜索"><a href="#26-使用find和findstr进行文本搜索" class="headerlink" title="26. 使用find和findstr进行文本搜索"></a>26. 使用find和findstr进行文本搜索</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">find</span> &quot;[字符串]&quot; [文件名]</span><br><span class="line"><span class="built_in">findstr</span> /r [正则表达式] [文件名]</span><br></pre></td></tr></table></figure>
+
+<h4 id="27-查看系统详细信息-systeminfo"><a href="#27-查看系统详细信息-systeminfo" class="headerlink" title="27. 查看系统详细信息 (systeminfo)"></a>27. 查看系统详细信息 (systeminfo)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systeminfo</span><br></pre></td></tr></table></figure>
+
+<h4 id="28-切换用户并以管理员权限运行-runas"><a href="#28-切换用户并以管理员权限运行-runas" class="headerlink" title="28. 切换用户并以管理员权限运行 (runas)"></a>28. 切换用户并以管理员权限运行 (runas)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">runas /user:administrator <span class="built_in">cmd</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="29-显示当前登录用户"><a href="#29-显示当前登录用户" class="headerlink" title="29. 显示当前登录用户"></a>29. 显示当前登录用户</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">net</span> config workstation</span><br><span class="line">whoami</span><br></pre></td></tr></table></figure>
+
+<h4 id="30-用户和权限管理"><a href="#30-用户和权限管理" class="headerlink" title="30. 用户和权限管理"></a>30. 用户和权限管理</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">net</span> user</span><br><span class="line"><span class="built_in">net</span> user 用户名 密码 /add /<span class="built_in">del</span>  # 添加/删除用户</span><br><span class="line"><span class="built_in">net</span> localgroup administrators username /add  # 提升用户至管理员</span><br></pre></td></tr></table></figure>
+
+<h4 id="31-进程管理"><a href="#31-进程管理" class="headerlink" title="31. 进程管理"></a>31. 进程管理</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tasklist</span><br><span class="line">tasklist -ano  # 显示进程开放的端口</span><br><span class="line"><span class="built_in">taskkill</span> /f /t /im xx.exe  # 杀死进程</span><br></pre></td></tr></table></figure>
+
+<h4 id="32-服务管理"><a href="#32-服务管理" class="headerlink" title="32. 服务管理"></a>32. 服务管理</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">net</span> <span class="built_in">start</span>  # 查看运行的服务</span><br><span class="line"><span class="built_in">net</span> stop [服务名]  # 停止服务</span><br></pre></td></tr></table></figure>
+
+<h4 id="33-简单文件操作"><a href="#33-简单文件操作" class="headerlink" title="33. 简单文件操作"></a>33. 简单文件操作</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> hello &gt; hello.txt  # 创建并写入文件</span><br><span class="line"><span class="built_in">md</span> directoryname  # 创建目录</span><br><span class="line"><span class="built_in">rd</span> directoryname  # 删除目录</span><br><span class="line"><span class="built_in">ren</span> oldname newname  # 重命名文件或目录</span><br><span class="line"><span class="built_in">del</span> filename  # 删除文件</span><br></pre></td></tr></table></figure>
+
+<h3 id="编码和系统诊断"><a href="#编码和系统诊断" class="headerlink" title="编码和系统诊断"></a>编码和系统诊断</h3><h4 id="34-更改命令行窗口编码"><a href="#34-更改命令行窗口编码" class="headerlink" title="34. 更改命令行窗口编码"></a>34. 更改命令行窗口编码</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chcp 65001</span><br><span class="line"><span class="comment"># 设置为UTF-8编码,解决乱码问题</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="35-查看主机名-hostname"><a href="#35-查看主机名-hostname" class="headerlink" title="35. 查看主机名 (hostname)"></a>35. 查看主机名 (hostname)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hostname</span><br><span class="line"># 显示当前计算机的主机名</span><br></pre></td></tr></table></figure>
+
+<h4 id="36-查看或修改路由表-route"><a href="#36-查看或修改路由表-route" class="headerlink" title="36. 查看或修改路由表 (route)"></a>36. 查看或修改路由表 (route)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">route <span class="built_in">print</span></span><br><span class="line"># 打印路由表</span><br><span class="line">route add [目的网络] mask [子网掩码] [网关]</span><br><span class="line"># 添加静态路由表项</span><br></pre></td></tr></table></figure>
+
+<h4 id="37-查看或修改ARP缓存-arp"><a href="#37-查看或修改ARP缓存-arp" class="headerlink" title="37. 查看或修改ARP缓存 (arp)"></a>37. 查看或修改ARP缓存 (arp)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">arp -a</span><br><span class="line"># 显示当前ARP缓存表</span><br></pre></td></tr></table></figure>
+
+<h4 id="38-查看网络共享-net-view"><a href="#38-查看网络共享-net-view" class="headerlink" title="38. 查看网络共享 (net view)"></a>38. 查看网络共享 (net view)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">net</span> view</span><br><span class="line"># 显示本地网络上的计算机和网络资源</span><br></pre></td></tr></table></figure>
+
+<h4 id="39-配置网络-netsh"><a href="#39-配置网络-netsh" class="headerlink" title="39. 配置网络 (netsh)"></a>39. 配置网络 (netsh)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">netsh firewall show state</span><br><span class="line"># 显示当前防火墙状态</span><br><span class="line">netsh firewall <span class="built_in">set</span> opmode disable</span><br><span class="line"># 关闭Windows防火墙</span><br></pre></td></tr></table></figure>
+
+<h4 id="40-网络连接测试-telnet"><a href="#40-网络连接测试-telnet" class="headerlink" title="40. 网络连接测试 (telnet)"></a>40. 网络连接测试 (telnet)</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">telnet [目标IP或域名] [端口]</span><br><span class="line"># 通过Telnet协议测试与远程系统的TCP连接</span><br></pre></td></tr></table></figure>
+
+
+<div class="article-footer fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2020/06/04/161f7eae/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2020/06/04/161f7eae/&title=三. Windows Server从入门到精通 - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071550329.png&summary=
+    总字符数: 13.85K 
+    
+    
+    代码: 2.50K, 文本: 6.79K
+    
+    
+    预计阅读时间: 40 分钟
+    
+    
+
+操作系统
+定义
+
+​	一组主管并控制计算机操作、..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=三. Windows Server从入门到精通 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2020/06/04/161f7eae/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2020/06/04/161f7eae/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2020/06/05/2d7bc590/">四. Kali Linux安装</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2020/06/03/46ba4e0f/">二. Linux从入门到精通(下)</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\2020\06\01\f5d15284\" title="一. 计算机基础知识"><span class="title">一. 计算机基础知识</span></a><a class="item" href="\2020\06\05\2d7bc590\" title="四. Kali Linux安装"><span class="title">四. Kali Linux安装</span></a><a class="item" href="\2021\10\13\f65e33\" title="第一章计算机基础知识"><span class="title">第一章计算机基础知识</span></a><a class="item" href="\2020\06\03\46ba4e0f\" title="二. Linux从入门到精通(下)"><span class="title">二. Linux从入门到精通(下)</span></a><a class="item" href="\2024\09\24\3c3f9499\" title="CS-Cobalt Strike必备知识"><span class="title">CS-Cobalt Strike必备知识</span></a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body waline'>
+      
+
+<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/tools/">工具</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F"><span class="toc-text">操作系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9D%E5%A7%8Bwindows"><span class="toc-text">初始windows</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFWindows"><span class="toc-text">什么是Windows?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#windows%E8%B4%A6%E5%8F%B7"><span class="toc-text">windows账号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9D%83%E9%99%90"><span class="toc-text">权限</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Windows-Server"><span class="toc-text">Windows Server</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95"><span class="toc-text">目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90"><span class="toc-text">文件权限</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1"><span class="toc-text">服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B"><span class="toc-text">进程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E5%86%8C%E8%A1%A8"><span class="toc-text">注册表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DOS%E5%91%BD%E4%BB%A4"><span class="toc-text">DOS命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MS-DOS"><span class="toc-text">MS-DOS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DOS%E5%92%8CWindows%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">DOS和Windows的区别</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%AC%E8%B4%A8"><span class="toc-text">本质</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E5%8C%BA%E5%88%AB"><span class="toc-text">关键区别</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E5%92%8C%E6%89%B9%E5%A4%84%E7%90%86"><span class="toc-text">命令和批处理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#DOS%E5%91%BD%E4%BB%A4-1"><span class="toc-text">DOS命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%B9%E5%A4%84%E7%90%86%E5%91%BD%E4%BB%A4"><span class="toc-text">批处理命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Windows-%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C%E6%8C%87%E5%8D%97"><span class="toc-text">Windows 命令行操作指南</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%92%8C%E7%9B%AE%E5%BD%95%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4"><span class="toc-text">文件和目录操作命令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E6%9F%A5%E7%9C%8B%E7%9B%AE%E5%BD%95%E5%86%85%E5%AE%B9-dir"><span class="toc-text">1. 查看目录内容 (dir)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E5%88%9B%E5%BB%BA%E6%96%B0%E7%9B%AE%E5%BD%95-md-mkdir"><span class="toc-text">2. 创建新目录 (md&#x2F;mkdir)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E5%88%A0%E9%99%A4%E7%9B%AE%E5%BD%95-rd-rmdir"><span class="toc-text">3. 删除目录 (rd&#x2F;rmdir)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E8%BF%9B%E5%85%A5%E6%8C%87%E5%AE%9A%E7%9B%AE%E5%BD%95-cd"><span class="toc-text">4. 进入指定目录 (cd)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-%E6%8B%B7%E8%B4%9D%E6%96%87%E4%BB%B6-copy"><span class="toc-text">5. 拷贝文件 (copy)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-%E7%A7%BB%E5%8A%A8%E6%96%87%E4%BB%B6-move"><span class="toc-text">6. 移动文件 (move)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6-del"><span class="toc-text">7. 删除文件 (del)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-%E9%87%8D%E5%91%BD%E5%90%8D%E6%96%87%E4%BB%B6%E6%88%96%E7%9B%AE%E5%BD%95-ren-rename"><span class="toc-text">8. 重命名文件或目录 (ren&#x2F;rename)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-%E6%9F%A5%E7%9C%8B%E6%96%87%E6%9C%AC%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9-type"><span class="toc-text">9. 查看文本文件内容 (type)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10-%E6%96%B0%E5%BB%BA%E6%96%87%E6%9C%AC%E6%96%87%E4%BB%B6"><span class="toc-text">10. 新建文本文件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E5%B7%A5%E5%85%B7%E5%91%BD%E4%BB%A4"><span class="toc-text">网络工具命令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#11-%E6%9F%A5%E7%9C%8B%E6%9C%AC%E6%9C%BAIP-ipconfig"><span class="toc-text">11. 查看本机IP (ipconfig)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#12-%E6%B5%8B%E8%AF%95%E7%BD%91%E7%BB%9C%E8%BF%9E%E9%80%9A%E6%80%A7-ping"><span class="toc-text">12. 测试网络连通性 (ping)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#13-%E6%9F%A5%E7%9C%8B%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5%E7%8A%B6%E6%80%81-netstat"><span class="toc-text">13. 查看网络连接状态 (netstat)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4"><span class="toc-text">系统操作命令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#14-%E6%B8%85%E5%B1%8F-cls"><span class="toc-text">14. 清屏 (cls)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#15-%E6%9F%A5%E7%9C%8B%E7%B3%BB%E7%BB%9F%E6%97%A5%E6%9C%9F%E5%92%8C%E6%97%B6%E9%97%B4"><span class="toc-text">15. 查看系统日期和时间</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#16-%E6%98%BE%E7%A4%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%89%88%E6%9C%AC-ver"><span class="toc-text">16. 显示操作系统版本 (ver)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#17-%E5%85%B3%E6%9C%BA%E5%91%BD%E4%BB%A4-shutdown"><span class="toc-text">17. 关机命令 (shutdown)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#18-%E9%80%80%E5%87%BA%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%8E%AF%E5%A2%83-exit"><span class="toc-text">18. 退出命令行环境 (exit)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E5%AE%9E%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-text">其他实用命令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#19-%E4%BF%AE%E6%94%B9CMD%E7%AA%97%E5%8F%A3%E6%A0%87%E9%A2%98%E5%92%8C%E9%A2%9C%E8%89%B2-title-color"><span class="toc-text">19. 修改CMD窗口标题和颜色 (title, color)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#20-%E6%9F%A5%E7%9C%8B%E5%92%8C%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F-set"><span class="toc-text">20. 查看和设置环境变量 (set)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#21-%E5%88%9B%E5%BB%BA%E6%89%B9%E5%A4%84%E7%90%86%E6%96%87%E4%BB%B6%E7%A4%BA%E4%BE%8B"><span class="toc-text">21. 创建批处理文件示例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E9%98%B6%E7%BD%91%E7%BB%9C%E5%91%BD%E4%BB%A4"><span class="toc-text">进阶网络命令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#22-%E6%9F%A5%E8%AF%A2DNS%E4%BF%A1%E6%81%AF-nslookup"><span class="toc-text">22. 查询DNS信息 (nslookup)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#23-%E8%BF%BD%E8%B8%AA%E8%B7%AF%E7%94%B1-tracert"><span class="toc-text">23. 追踪路由 (tracert)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#24-%E7%94%9F%E6%88%90%E7%9B%AE%E5%BD%95%E6%A0%91-tree"><span class="toc-text">24. 生成目录树 (tree)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#25-%E6%96%87%E4%BB%B6%E9%9A%90%E8%97%8F%E4%B8%8E%E5%B1%9E%E6%80%A7%E8%AE%BE%E7%BD%AE-attrib"><span class="toc-text">25. 文件隐藏与属性设置 (attrib)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%AB%98%E7%BA%A7%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%8A%80%E5%B7%A7"><span class="toc-text">高级命令行技巧</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#26-%E4%BD%BF%E7%94%A8find%E5%92%8Cfindstr%E8%BF%9B%E8%A1%8C%E6%96%87%E6%9C%AC%E6%90%9C%E7%B4%A2"><span class="toc-text">26. 使用find和findstr进行文本搜索</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#27-%E6%9F%A5%E7%9C%8B%E7%B3%BB%E7%BB%9F%E8%AF%A6%E7%BB%86%E4%BF%A1%E6%81%AF-systeminfo"><span class="toc-text">27. 查看系统详细信息 (systeminfo)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#28-%E5%88%87%E6%8D%A2%E7%94%A8%E6%88%B7%E5%B9%B6%E4%BB%A5%E7%AE%A1%E7%90%86%E5%91%98%E6%9D%83%E9%99%90%E8%BF%90%E8%A1%8C-runas"><span class="toc-text">28. 切换用户并以管理员权限运行 (runas)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#29-%E6%98%BE%E7%A4%BA%E5%BD%93%E5%89%8D%E7%99%BB%E5%BD%95%E7%94%A8%E6%88%B7"><span class="toc-text">29. 显示当前登录用户</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#30-%E7%94%A8%E6%88%B7%E5%92%8C%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86"><span class="toc-text">30. 用户和权限管理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#31-%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86"><span class="toc-text">31. 进程管理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#32-%E6%9C%8D%E5%8A%A1%E7%AE%A1%E7%90%86"><span class="toc-text">32. 服务管理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#33-%E7%AE%80%E5%8D%95%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C"><span class="toc-text">33. 简单文件操作</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E7%A0%81%E5%92%8C%E7%B3%BB%E7%BB%9F%E8%AF%8A%E6%96%AD"><span class="toc-text">编码和系统诊断</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#34-%E6%9B%B4%E6%94%B9%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%AA%97%E5%8F%A3%E7%BC%96%E7%A0%81"><span class="toc-text">34. 更改命令行窗口编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#35-%E6%9F%A5%E7%9C%8B%E4%B8%BB%E6%9C%BA%E5%90%8D-hostname"><span class="toc-text">35. 查看主机名 (hostname)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#36-%E6%9F%A5%E7%9C%8B%E6%88%96%E4%BF%AE%E6%94%B9%E8%B7%AF%E7%94%B1%E8%A1%A8-route"><span class="toc-text">36. 查看或修改路由表 (route)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#37-%E6%9F%A5%E7%9C%8B%E6%88%96%E4%BF%AE%E6%94%B9ARP%E7%BC%93%E5%AD%98-arp"><span class="toc-text">37. 查看或修改ARP缓存 (arp)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#38-%E6%9F%A5%E7%9C%8B%E7%BD%91%E7%BB%9C%E5%85%B1%E4%BA%AB-net-view"><span class="toc-text">38. 查看网络共享 (net view)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#39-%E9%85%8D%E7%BD%AE%E7%BD%91%E7%BB%9C-netsh"><span class="toc-text">39. 配置网络 (netsh)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#40-%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5%E6%B5%8B%E8%AF%95-telnet"><span class="toc-text">40. 网络连接测试 (telnet)</span></a></li></ol></li></ol></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js`,
+    marked: `https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.27.0" async></script>
+
+<!-- optional -->
+
+  <script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js'
+
+  function load_comment(){
+    if(!document.getElementById("waline_container"))return;
+
+    utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css');
+
+    const el = document.getElementById("waline_container");
+    var path = el.getAttribute('comment_id');
+    if (!path) {
+      path = decodeURI(window.location.pathname);
+    }
+
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+      el: '#waline_container',
+      path: path,
+      
+    }));
+
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    load_comment();
+  });
+
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"></script><script defer src="https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.swiper-slide img, .gallery img ,#waline_container .vcontent img`,
+    css: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css`,
+    js: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || null
+        }
+      });
+    })
+  }
+</script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          loop: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+</div></body></html>

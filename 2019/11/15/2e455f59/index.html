@@ -1,0 +1,802 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.27.0" theme-name="Stellar" theme-version="1.27.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>Linux-redis从入门到精通 - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="总字符数: 13.12K                代码: 8.57K, 文本: 2.49K               预计阅读时间: 48 分钟            Redis概述NoSQL NoSQL，泛指非关系型的数据库。随着互联网web2.0网站的兴起，传统的关系数据库在处理web2.0网站，特别是超大规模和高并发的SNS类型的web2.0纯动态网站已经显得力不从心，出现">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux-redis从入门到精通">
+<meta property="og:url" content="https://jiangjiyue.github.io/2019/11/15/2e455f59/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="总字符数: 13.12K                代码: 8.57K, 文本: 2.49K               预计阅读时间: 48 分钟            Redis概述NoSQL NoSQL，泛指非关系型的数据库。随着互联网web2.0网站的兴起，传统的关系数据库在处理web2.0网站，特别是超大规模和高并发的SNS类型的web2.0纯动态网站已经显得力不从心，出现">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402201523774.png">
+<meta property="og:image" content="https://github-readme-stats.xaoxuu.com/api/pin/?username=MicrosoftArchive&repo=redis&theme=dark&show_owner=true">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402201447556.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402201447968.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402201451513.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402201451455.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202306282107303.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202306282110843.png">
+<meta property="article:published_time" content="2019-11-15T06:30:23.000Z">
+<meta property="article:modified_time" content="2024-02-20T07:24:22.000Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="Centos">
+<meta property="article:tag" content="运维">
+<meta property="article:tag" content="数据库">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402201523774.png">
+  
+  
+  
+  <meta name="keywords" content="Centos,运维,数据库,Redis">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.27.0">
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="导航" href="/sites/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/tools/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
+</div>
+<div class="widgets">
+
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2024/11/04/fe2980d6/"><span class="title">CS-ShellCode加载器</span></a><a class="item title" href="/2023/03/11/247b757/"><span class="title">VulHub-Fastjson漏洞复现</span></a><a class="item title" href="/2023/04/28/76971e68/"><span class="title">VulHub-Tomcat漏洞复现</span></a><a class="item title" href="/2024/07/05/dd58c5ed/"><span class="title">应急响应之Webshell流量分析</span></a><a class="item title" href="/2024/10/27/77c80f0f/"><span class="title">CS-C语言总结</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/">安全运维</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2019-11-15T06:30:23.000Z">2019-11-15</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-02-20T07:24:22.000Z">2024-02-20</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>Linux-redis从入门到精通</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
+    <p>总字符数: 13.12K </p>
+    </div>
+    <div class="cell" style="">
+    <p>代码: 8.57K, 文本: 2.49K</p>
+    </div>
+    <div class="cell" style="">
+    <p>预计阅读时间: 48 分钟</p>
+    </div>
+    </div>
+
+<h2 id="Redis概述"><a href="#Redis概述" class="headerlink" title="Redis概述"></a>Redis概述</h2><h3 id="NoSQL"><a href="#NoSQL" class="headerlink" title="NoSQL"></a>NoSQL</h3><blockquote>
+<p>NoSQL，泛指非关系型的数据库。随着互联网web2.0网站的兴起，传统的关系数据库在处理web2.0网站，特别是超大规模和高并发的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/SNS/10242?fromModule=lemma_inlink" title="SNS">SNS</a>类型的web2.0纯动态网站已经显得力不从心，出现了很多难以克服的问题，而非关系型的数据库则由于其本身的特点得到了非常迅速的发展。NoSQL数据库的产生就是为了解决大规模数据集合多重数据种类带来的挑战，特别是大数据应用难题</p>
+</blockquote>
+<p>主流的NoSQL产品:</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402201523774.png" data-fancybox="true"/></div></div>  
+
+<p>目前缓存的主流技术：Redis、Memcached、mongoDB </p>
+<h3 id="缓存的需求"><a href="#缓存的需求" class="headerlink" title="缓存的需求"></a>缓存的需求</h3><blockquote>
+<p>在信息爆炸的今天，数据的存储，对数据的查询都是非常频繁且非常大量的。关系型数据库的就显得力不从心了，扩展性较差，查询简单条件数据的效率较低等缺点，无意是致命的。而NOSQL数据库中的数据之间并无关系，这一特点造就了NOSQL的易扩展性，读写性能高等优势。所以面对大量的数据读写，非关系型数据库相比较于关系型数据库有着巨大的优势。</p>
+</blockquote>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><span>为什么要使用Nosql?</span></summary><div class="body"><ol><li>对数据高并发的读写</li><li>海量数据的读写</li><li>对数据的高可扩展性</li><li>NoSql出现的目地是为解决性能问题所产生的技术</li></ol><p>Redis数据库是NOSQL数据库中以<code>key-value</code>存储模式下的一种数据库。</p></div></details><details class="folder" index="1"><summary><span>那么Redis数据库为什么又在NOSQL中脱颖而出?</span></summary><div class="body"><ol><li>Redis支持多种数据类型：<ul><li><code>string</code>（字符串）</li><li><code>hash</code>（哈希）</li><li><code>list</code>（列表）</li><li><code>set</code>（集合）</li><li><code>zset</code>(<code>sorted set</code>：有序集合)。</li></ul></li><li>支持主从复制，读写分离。读写效率大大提升。</li><li>数据存储在内存中，可用来做缓存。需要持久化的数据就将其存入硬盘，不需要持久化的数据，可以进行短暂的存储，提高访问速度。</li></ol></div></details></div>
+
+<h2 id="Redis简介及安装"><a href="#Redis简介及安装" class="headerlink" title="Redis简介及安装"></a>Redis简介及安装</h2><div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://redis.io/" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://redis.io/</span></div><div class="bottom"><span class="title">https://redis.io/</span><span class="cap desc footnote"></span></div></a></div>
+
+<div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://www.redis.net.cn/" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://www.redis.net.cn/</span></div><div class="bottom"><span class="title">https://www.redis.net.cn/</span><span class="cap desc footnote"></span></div></a></div>
+
+<h3 id="redis下载"><a href="#redis下载" class="headerlink" title="redis下载"></a>redis下载</h3><p>linux环境下载：</p>
+<div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://redis.io/download" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://redis.io/download</span></div><div class="bottom"><span class="title">https://redis.io/download</span><span class="cap desc footnote"></span></div></a></div>
+
+<p>windows环境下载： </p>
+<div class="tag-plugin ghcard"><a class="ghcard" rel="external nofollow noopener noreferrer noopener" target="_blank" href="https://github.com/MicrosoftArchive/redis"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://github-readme-stats.xaoxuu.com/api/pin/?username=MicrosoftArchive&repo=redis&theme=dark&show_owner=true"/></a></div>
+
+<div class="tag-plugin colorful note" color="warning"><div class="body"><p>redis官网不支持windows平台的，windows版本是由微软自己建立的一个分支，基于官方的源码上进行编译发布维护，一般比官方版略低</p></div></div>
+
+<h3 id="window安装"><a href="#window安装" class="headerlink" title="window安装"></a>window安装</h3><p><strong>安装方式一 临时服务</strong></p>
+<p>无需要安装，只需要开启服务端和客户端即可</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402201447556.png" data-fancybox="true"/></div></div>
+
+<p>点击&#96;&#96;redis-server.exe&#96; 开启服务， 开启后不要关闭，关闭redis服务器就关掉了</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402201447968.png" data-fancybox="true"/></div></div>
+
+<p>点击&#96;&#96;redis-cli.exe&#96; 开启客户端</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402201451513.png" data-fancybox="true"/></div></div>
+
+<p><strong>安装方式二 安装到系统服务</strong></p>
+<p>直接按装到本机服务中，无需要来回启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装到系统服务</span></span><br><span class="line">redis-server --service-install redis.windows.conf --loglevel verbose</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402201451455.png" data-fancybox="true"/></div></div>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 卸载服务</span></span><br><span class="line">redis-server --service-uninstall  先停掉redis服务器</span><br><span class="line"><span class="comment"># 开启服务</span></span><br><span class="line">redis-server --service-start</span><br><span class="line"><span class="comment"># 停止服务</span></span><br><span class="line">redis-server --service-stop </span><br><span class="line"></span><br><span class="line"><span class="comment"># 开启客户端</span></span><br><span class="line">点击redis-cli.exe</span><br><span class="line"><span class="comment"># 也可以指定连接</span></span><br><span class="line">redis-cli.exe -h 127.0.0.1 -p 6379</span><br></pre></td></tr></table></figure>
+
+<h3 id="linux安装"><a href="#linux安装" class="headerlink" title="linux安装"></a>linux安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载安装redis</span></span><br><span class="line"><span class="built_in">cd</span> /opt</span><br><span class="line">wget http://download.redis.io/releases/redis-2.8.17.tar.gz</span><br><span class="line"><span class="comment"># 解压</span></span><br><span class="line">tar zxvf redis-2.8.17.tar.gz</span><br><span class="line"><span class="comment"># 进入到redis目录</span></span><br><span class="line"><span class="built_in">cd</span> redis-2.8.17</span><br><span class="line">make</span><br><span class="line"><span class="comment"># 然后进入到src文件夹</span></span><br><span class="line"><span class="built_in">cd</span> src/</span><br><span class="line"><span class="comment"># 启动Redis-Server</span></span><br><span class="line">./redis-server</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202306282107303.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202306282110843.png" data-fancybox="true"/></div></div>
+
+<h2 id="Redis操作"><a href="#Redis操作" class="headerlink" title="Redis操作"></a>Redis操作</h2><h3 id="多数据库"><a href="#多数据库" class="headerlink" title="多数据库"></a>多数据库</h3><p>redis默认数据库数有16个，0-15号库，默认连接的数据库0号库,通过<code>redis.windows.conf</code>查看</p>
+<p>redis不支持自定义数据库名称，redis的多数据库之间不是完全隔离有，<code>flushall</code>命令会清空所有的数据库数据</p>
+<h3 id="选择数据库"><a href="#选择数据库" class="headerlink" title="选择数据库"></a>选择数据库</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">select</span> <span class="number">1</span></span><br><span class="line">OK</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span>[<span class="number">1</span>]<span class="operator">&gt;</span> <span class="keyword">set</span> test abc</span><br><span class="line">OK</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span>[<span class="number">1</span>]<span class="operator">&gt;</span> <span class="keyword">get</span> test</span><br><span class="line">&quot;abc&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span>[<span class="number">1</span>]<span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="清空数据库"><a href="#清空数据库" class="headerlink" title="清空数据库"></a>清空数据库</h3><blockquote>
+<p>    <code>FLUSHALL</code>  – 清空【所有数据库】的所有数据<br>    <code>FLUSHDB</code>  –  清空【当前】所在数据库的数据</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">set</span> a <span class="number">123</span></span><br><span class="line">OK</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">get</span> a</span><br><span class="line">&quot;123&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> flushdb <span class="comment">-- 清空【当前】所在数据库的数据</span></span><br><span class="line">OK</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">get</span> a </span><br><span class="line">(nil)</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">set</span> b <span class="number">123</span><span class="comment">-- 0号库设置数据</span></span><br><span class="line">OK</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">get</span> b</span><br><span class="line">&quot;123&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">select</span> <span class="number">1</span><span class="comment">-- 切换1号库设置数据</span></span><br><span class="line">OK</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span>[<span class="number">1</span>]<span class="operator">&gt;</span> <span class="keyword">set</span> c <span class="number">123</span></span><br><span class="line">OK</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span>[<span class="number">1</span>]<span class="operator">&gt;</span> <span class="keyword">get</span> c</span><br><span class="line">&quot;123&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span>[<span class="number">1</span>]<span class="operator">&gt;</span> flushall <span class="comment">-- 清空【所有数据库】的所有数据</span></span><br><span class="line">OK</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span>[<span class="number">1</span>]<span class="operator">&gt;</span> <span class="keyword">get</span> c<span class="comment">-- 清空后1号库数据已清除</span></span><br><span class="line">(nil)</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span>[<span class="number">1</span>]<span class="operator">&gt;</span> <span class="keyword">select</span> <span class="number">0</span> <span class="comment">-- 清空后0号库数据已清除</span></span><br><span class="line">OK</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">get</span> b</span><br><span class="line">(nil)</span><br></pre></td></tr></table></figure>
+
+<h3 id="基本命令"><a href="#基本命令" class="headerlink" title="基本命令"></a>基本命令</h3><blockquote>
+<p>    <code>keys *</code>  – 查看当前所有key<br>    <code>exists key</code>  –判断key是否存在，存在返回1，不存在返回0<br>    <code>del key</code> – 删除key，成功返回1，失败返回0<br>    <code>type key</code>  –查看key的数据类型</p>
+</blockquote>
+<p><code>keys *</code>   – 查看当前所有key</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">set</span> a <span class="number">123</span></span><br><span class="line">OK</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">set</span> b <span class="number">321</span></span><br><span class="line">OK</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> keys <span class="operator">*</span> <span class="comment">-- 查看当前所有key</span></span><br><span class="line"><span class="number">1</span>) &quot;b&quot;</span><br><span class="line"><span class="number">2</span>) &quot;a&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>exists key</code>  –判断key是否存在，存在返回1，不存在返回0</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">exists</span> a <span class="comment">-- 判断key是否存在，存在返回1，不存在返回0</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">1</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">exists</span> c</span><br><span class="line">(<span class="type">integer</span>) <span class="number">0</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>del key</code>      – 删除key，成功返回1，失败返回0  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> keys <span class="operator">*</span></span><br><span class="line"><span class="number">1</span>) &quot;b&quot;</span><br><span class="line"><span class="number">2</span>) &quot;c&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> del b <span class="comment">-- 删除key，成功返回1，失败返回0</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">1</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> del a</span><br><span class="line">(<span class="type">integer</span>) <span class="number">0</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>type key</code>  –查看key的数据类型  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">set</span> a <span class="number">123</span></span><br><span class="line">OK</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> type a<span class="comment">-- 查看数据类型</span></span><br><span class="line">string</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin colorful note" color="red"><div class="body"><p>设置相同的key名，会覆盖上一个</p></div></div>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">set</span> k1 aaa</span><br><span class="line">OK</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">set</span> k1 bbb</span><br><span class="line">OK</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">get</span> k1<span class="comment">-- 注意设置相同的key名，会覆盖上一个</span></span><br><span class="line">&quot;bbb&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>clear</code> 清屏</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> clear</span><br><span class="line"><span class="comment">-- 或者 ctrl + L</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="五种数据类型"><a href="#五种数据类型" class="headerlink" title="五种数据类型"></a>五种数据类型</h2><blockquote>
+<p>​	redis存储的是：key,value格式的数据，其中key都是字符串，value有5种不同的数据结构</p>
+</blockquote>
+<ol>
+<li>字符串类型 (<code>String</code>): 这是最基本的类型，一个键可以对应一个字符串值，字符串类型是二进制安全的，可以包含任何数据，如 jpg 图片或者序列化的对象。一个键存储的字符串值最大能达到 512MB。</li>
+<li>散列类型 (<code>Hash</code>): <code>Redis hash</code> 是一个键值对集合，它是一个字符串字段和字符串值之间的映射表，适合存储对象。每个 <code>hash</code> 可以存储 <code>2^32 - 1</code> 键值对（40多亿）。</li>
+<li>列表类型 (<code>List</code>): <code>Redis</code> 列表是一个简单的字符串列表，按照插入顺序排序。你可以添加一个元素到列表的头部（左边）或者尾部（右边）。它的底层实现是一个双向链表，因此即使列表中有数百万的元素，向列表的两端添加元素也是非常快的。它支持重复元素。</li>
+<li>集合类型 (<code>Set</code>): <code>Redis</code>的<code>Set</code>是字符串类型的无序集合。它是通过哈希表实现的，所以添加、删除、查找的复杂度都是<code>O(1)</code>。<code>set</code> 中的最大成员数为<code>2^32 - 1</code>。集合中的元素是唯一的，这意味着同一个集合中不能出现重复的元素。</li>
+<li>有序集合类型 (<code>Sorted Set</code>, ZSet):<code>Redis Sorted Sets</code>也是集合，它和 Set 一样也是不允许重复的成员元素，但不同的是每个元素都会关联一个<code>double</code>类型的分数。redis 正是通过分数来为集合中的成员进行从小到大的排序。不仅如此，它还支持按照分数区间和字典区间来获取成员列表。</li>
+</ol>
+<p>每种数据结构都有其用途,例如，<code>lists</code>可以用作消息队列，<code>sets</code>可以用来存储无序的集合数据，例如标签、好友关系等，<code>hashes</code> 是存储对象的理想选择，<code>sorted sets</code>可以用来做带有权重的排行榜等。</p>
+<h3 id="字符串（string）"><a href="#字符串（string）" class="headerlink" title="字符串（string）"></a>字符串（string）</h3><p><code>get、set</code>赋值取值</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">set</span> a <span class="number">123</span></span><br><span class="line">OK</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">get</span> a</span><br><span class="line">&quot;123&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">get</span> b</span><br><span class="line">(nil)</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>intcr</code>递增，返回递增后的值 默认+1</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> incr num</span><br><span class="line">(<span class="type">integer</span>) <span class="number">1</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> incr num</span><br><span class="line">(<span class="type">integer</span>) <span class="number">2</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> incr num</span><br><span class="line">(<span class="type">integer</span>) <span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+<p> <code>incrby</code>增加定制的整数</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> incrby num <span class="number">2</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">5</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> incrby num <span class="number">2</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">7</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> incrby num <span class="number">2</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">9</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>decr、decrby</code>减少指定的整数</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> decr num</span><br><span class="line">(<span class="type">integer</span>) <span class="number">8</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> decr num</span><br><span class="line">(<span class="type">integer</span>) <span class="number">7</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> decrby num <span class="number">3</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">4</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> decrby num <span class="number">3</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">1</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> decrby num <span class="number">3</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">-2</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>append</code>向键值的末尾追加值 , 返回值是追加后字符串的长度</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">set</span> str hello</span><br><span class="line">OK</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> append str &quot;redis&quot;</span><br><span class="line">(<span class="type">integer</span>) <span class="number">10</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">get</span> str</span><br><span class="line">&quot;helloredis&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>strlen</code>获取字符串的长度，如何键不存在返回0</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">set</span> str hello</span><br><span class="line">OK</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> strlen str</span><br><span class="line">(<span class="type">integer</span>) <span class="number">5</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> strlen a <span class="comment">-- a 不存在返回0</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">0</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>mset、mget</code> 同时设置、获取多个键值</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> mset k1 v1 k2 v2 k3 v3</span><br><span class="line">OK</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">get</span> k1</span><br><span class="line">&quot;v1&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> mget k2 k3</span><br><span class="line"><span class="number">1</span>) &quot;v2&quot;</span><br><span class="line"><span class="number">2</span>) &quot;v3&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p> <code>del</code> 指定删除键，如果不存返回0</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">set</span> m <span class="number">111</span></span><br><span class="line">OK</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> del m</span><br><span class="line">(<span class="type">integer</span>) <span class="number">1</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> del n</span><br><span class="line">(<span class="type">integer</span>) <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="哈希类型（hash）"><a href="#哈希类型（hash）" class="headerlink" title="哈希类型（hash）"></a>哈希类型（hash）</h3><p>哈希类型 <code>hash</code>, <code>map</code>类型</p>
+<p><strong>存储</strong>：<code>hset key field value</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> hset myhash username zhangsan</span><br><span class="line">(<span class="type">integer</span>) <span class="number">1</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> hset myhash password asd123</span><br><span class="line">(<span class="type">integer</span>) <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>获取：</strong></p>
+<p><code>hget key field</code>: 获取指定的field对应的值</p>
+<p><code>hgetall key</code>：获取所有的field和value</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> hget myhash username</span><br><span class="line">&quot;zhangsan&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> hget myhash password</span><br><span class="line">&quot;asd123&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> hgetall myhash</span><br><span class="line"><span class="number">1</span>) &quot;username&quot;</span><br><span class="line"><span class="number">2</span>) &quot;zhangsan&quot;</span><br><span class="line"><span class="number">3</span>) &quot;password&quot;</span><br><span class="line"><span class="number">4</span>) &quot;asd123&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>删除：</strong> <code>hdel key field</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> hdel myhash username</span><br><span class="line">(<span class="type">integer</span>) <span class="number">1</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> hgetall myhash</span><br><span class="line"><span class="number">1</span>) &quot;password&quot;</span><br><span class="line"><span class="number">2</span>) &quot;123&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="列表类型（list）"><a href="#列表类型（list）" class="headerlink" title="列表类型（list）"></a>列表类型（list）</h3><p>列表类型<code>list</code> ： <code>linkedlist</code>格式, 支持重复元素</p>
+<p>特点：单键多值</p>
+<p><strong>添加：</strong></p>
+<p>可以添加一个元素到列表的头部（左边）或者尾部（右边）对两端的操作性能都比较高，查询效率比较低</p>
+<p><code>lpush key value</code>: 将元素加入列表(左边)</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> lpush k1 a<span class="comment">-- 向左边添加 a</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">1</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> lpush k1 b<span class="comment">-- 向左边添加 b</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">2</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> lpush k1 c<span class="comment">-- 向左边添加 c</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">3</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="comment">-- 每添加一个往左边放一个：c &lt;- b &lt;- a</span></span><br><span class="line"></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> lpush k1 a a b b <span class="comment">-- 支持重复的数据</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">4</span></span><br><span class="line"></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> flushdb <span class="comment">-- 清空当前数据库</span></span><br><span class="line"></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> lpush k1 a b c <span class="comment">-- 也可以同时添加多个值</span></span><br><span class="line"></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> lindex k1 <span class="number">0</span><span class="comment">-- 根据索引0 找到c</span></span><br><span class="line">&quot;c&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> lindex k1 <span class="number">1</span><span class="comment">-- 根据索引1 找到b</span></span><br><span class="line">&quot;b&quot; </span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> lindex k1 <span class="number">2</span><span class="comment">-- 根据索引2 找到a</span></span><br><span class="line">&quot;a&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> lrange k1 <span class="number">0</span> <span class="number">-1</span> <span class="comment">-- 范围取值</span></span><br><span class="line"><span class="number">1</span>) &quot;c&quot; <span class="comment">-- 索引0索引也为-3</span></span><br><span class="line"><span class="number">2</span>) &quot;b&quot; <span class="comment">-- 索引1索引也为-2</span></span><br><span class="line"><span class="number">3</span>) &quot;a&quot; <span class="comment">-- 索引2索引也为-1</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="comment">-- 结果：c &lt;- b &lt;- a</span></span><br></pre></td></tr></table></figure>
+
+<p><code>rpush key value</code>：将元素加入列表(右边)</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> rpush k2 v1 v2 v3 <span class="comment">-- 向右边添加</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">3</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> lindex k2 <span class="number">0</span> <span class="comment">-- 根据索引获取</span></span><br><span class="line">&quot;v1&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> lindex k2 <span class="number">1</span></span><br><span class="line">&quot;v2&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> lindex k2 <span class="number">2</span></span><br><span class="line">&quot;v3&quot;</span><br><span class="line"></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> lrange k2 <span class="number">0</span> <span class="number">-1</span></span><br><span class="line"><span class="number">1</span>) &quot;v1&quot; <span class="comment">-- 索引0 索引也为-3</span></span><br><span class="line"><span class="number">2</span>) &quot;v2&quot; <span class="comment">-- 索引1 索引也为-2</span></span><br><span class="line"><span class="number">3</span>) &quot;v3&quot; <span class="comment">-- 索引2 索引也为-1</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span><span class="comment">-- 每添加一个往右边放一个： v1 -&gt; v2 -&gt; v3</span></span><br><span class="line"></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> llen k2 <span class="comment">-- 获取长度</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>获取</strong>：返回列表中指定区间内的元素，区间以偏移量<code>start</code>和<code>end</code>指定。其中</p>
+<ol>
+<li>0表示列表的第一个元素，</li>
+<li>1表示列表的第 二个元素，</li>
+<li>依次类推( 索引<code>0..end</code> )。</li>
+</ol>
+<p>你也可以使用负数，</p>
+<ol>
+<li>-1表示最后一个元素，</li>
+<li>-2表示倒数第二个元素，</li>
+<li>依次类推。</li>
+</ol>
+<p><code>lrange key start end</code> 范围获取</p>
+<p><code>lindex key index</code> 根据索引获取</p>
+<p><code>llen key</code> 获取长度</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> lpush k1 a b c<span class="comment">-- 存放数据</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">3</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> lindex k1 <span class="number">0</span><span class="comment">-- 根据索引0 找到c</span></span><br><span class="line">&quot;c&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> lindex k1 <span class="number">1</span><span class="comment">-- 根据索引1 找到b</span></span><br><span class="line">&quot;b&quot; </span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> lindex k1 <span class="number">2</span><span class="comment">-- 根据索引2 找到a</span></span><br><span class="line">&quot;a&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> lrange k1 <span class="number">0</span> <span class="number">-1</span> <span class="comment">-- 范围取值：0表示第一个 -1表示最后一个</span></span><br><span class="line"><span class="number">1</span>) &quot;c&quot;</span><br><span class="line"><span class="number">2</span>) &quot;b&quot;</span><br><span class="line"><span class="number">3</span>) &quot;a&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> lrange k1 <span class="number">0</span> <span class="number">-2</span> <span class="comment">-- 范围取值：0表示第一个 -2表示倒数第二个</span></span><br><span class="line"><span class="number">1</span>) &quot;c&quot;</span><br><span class="line"><span class="number">2</span>) &quot;b&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> llen k1 <span class="comment">-- 获取长度</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">3</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>删除</strong>：</p>
+<p><code>lpop key</code>： 删除列表最左边的元素，并将元素返回</p>
+<p><code>rpop key</code>： 删除列表最右边的元素，并将元素返回</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> lpush k1 a b c <span class="comment">-- 存放数据</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> lrange k1 <span class="number">0</span> <span class="number">-1</span> <span class="comment">-- 范围取值：0表示第一个 -1表示最后一个</span></span><br><span class="line"><span class="number">1</span>) &quot;c&quot;</span><br><span class="line"><span class="number">2</span>) &quot;b&quot;</span><br><span class="line"><span class="number">3</span>) &quot;a&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> lpop k1 <span class="comment">-- 删除最左边元素，并返回</span></span><br><span class="line">&quot;c&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> lpop k1</span><br><span class="line">&quot;b&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> lpop k1</span><br><span class="line">&quot;a&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> keys <span class="operator">*</span> <span class="comment">-- 值在键在 值光键亡</span></span><br><span class="line">(<span class="keyword">empty</span> <span class="keyword">array</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="集合类型（set）"><a href="#集合类型（set）" class="headerlink" title="集合类型（set）"></a>集合类型（set）</h3><p>集合类型<code>set</code> , 不允许重复元素, 无序, 与<code>java</code>中的<code>HashSet</code>内部实现是一样的</p>
+<p><strong>存储</strong>：<code>sadd key value</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> sadd myset a <span class="comment">-- 添加数据</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">1</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> sadd myset a <span class="comment">-- 不允许添加重复元素，返回0</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">0</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> scard myset <span class="comment">-- 返回集合中的元素个数</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">1</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> smembers myset <span class="comment">-- 获取数据</span></span><br><span class="line"><span class="number">1</span>) &quot;a&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> flushdb<span class="comment">-- 清空当前数据库</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> sadd myset a a b c <span class="comment">-- 也可以一次性添加多个数据</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>获取</strong>：<code>smembers key</code>:获取set集合中所有元素</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> sadd myset a b c</span><br><span class="line">(<span class="type">integer</span>) <span class="number">3</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> smembers myset<span class="comment">-- 获取set集合中所有元素</span></span><br><span class="line"><span class="number">1</span>) &quot;b&quot;</span><br><span class="line"><span class="number">2</span>) &quot;c&quot;</span><br><span class="line"><span class="number">3</span>) &quot;a&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> smembers myset2 <span class="comment">-- 获取不到返回empty</span></span><br><span class="line">(<span class="keyword">empty</span> list <span class="keyword">or</span> <span class="keyword">set</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>随机操作</strong>：<code>srandmember key</code>随机查询set中的元素； <code>spop key</code>随机删除set中的元素；</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- srandmember key 随机查询set中的元素</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> srandmember myset</span><br><span class="line">&quot;a&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> srandmember myset</span><br><span class="line">&quot;c&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> srandmember myset</span><br><span class="line">&quot;a&quot;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- spop key 随机删除set中的元素</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> spop myset <span class="comment">-- 随机删除</span></span><br><span class="line">&quot;b&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> spop myset<span class="comment">-- 随机删除</span></span><br><span class="line">&quot;d&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> smembers myset <span class="comment">-- 查看数据</span></span><br><span class="line"><span class="number">1</span>) &quot;c&quot;</span><br><span class="line"><span class="number">2</span>) &quot;a&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>删除</strong>：<code>srem key value</code>:删除set集合中的某个元素</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> srem myset c <span class="comment">-- 指定删除set集合中的某个元素</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">1</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> smembers myset</span><br><span class="line"><span class="number">1</span>) &quot;b&quot;</span><br><span class="line"><span class="number">2</span>) &quot;a&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> srem myset a b <span class="comment">-- 同时也可以删除多个值</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">2</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> smembers myset</span><br><span class="line">(<span class="keyword">empty</span> <span class="keyword">array</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="有序集合（zset）"><a href="#有序集合（zset）" class="headerlink" title="有序集合（zset）"></a>有序集合（zset）</h3><p>有序集合类型 <code>sorted set</code>, 不允许重复元素，且元素有顺序; 每个元素都会关联一个<code>double</code>类型的分数。redis正是通过分数来为集合中的成员进行从小到大的排序。</p>
+<p><strong>存储</strong>：<code>zadd key score value</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> zadd mysort <span class="number">80</span> jack</span><br><span class="line">(<span class="type">integer</span>) <span class="number">1</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> zadd mysort <span class="number">80</span> jack <span class="comment">-- 相同数据不能存</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">0</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> zadd mysort <span class="number">60</span> lisi</span><br><span class="line">(<span class="type">integer</span>) <span class="number">1</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> zadd mysort <span class="number">20</span> zhangsan</span><br><span class="line">(<span class="type">integer</span>) <span class="number">1</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> flushdb</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> zadd mysort <span class="number">80</span> jack <span class="number">60</span> lisi <span class="number">20</span> zhangsan<span class="comment">-- 也可以同时添加多个</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>获取</strong>：<code>zrange key start end [withscores]</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> zrange mysort <span class="number">0</span> <span class="number">-1</span><span class="comment">-- 第一个数据为0 最后一个数据为-1</span></span><br><span class="line"><span class="number">1</span>) &quot;zhangsan&quot;</span><br><span class="line"><span class="number">2</span>) &quot;lisi&quot;</span><br><span class="line"><span class="number">3</span>) &quot;jack&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> zrange mysort <span class="number">0</span> <span class="number">-1</span> withscores <span class="comment">-- 包含值及评分都显示出来</span></span><br><span class="line"><span class="number">1</span>) &quot;zhangsan&quot;</span><br><span class="line"><span class="number">2</span>) &quot;20&quot;</span><br><span class="line"><span class="number">3</span>) &quot;lisi&quot;</span><br><span class="line"><span class="number">4</span>) &quot;60&quot;</span><br><span class="line"><span class="number">5</span>) &quot;jack&quot;</span><br><span class="line"><span class="number">6</span>) &quot;80&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> flushdb <span class="comment">-- 清空当前库</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> zadd mysort <span class="number">100</span> a <span class="number">200</span> b <span class="number">300</span> c <span class="number">400</span> d <span class="number">500</span> e</span><br><span class="line">(<span class="type">integer</span>) <span class="number">5</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> zrange mysort <span class="number">0</span> <span class="number">-1</span></span><br><span class="line"><span class="number">1</span>) &quot;a&quot;</span><br><span class="line"><span class="number">2</span>) &quot;b&quot;</span><br><span class="line"><span class="number">3</span>) &quot;c&quot;</span><br><span class="line"><span class="number">4</span>) &quot;d&quot;</span><br><span class="line"><span class="number">5</span>) &quot;e&quot;</span><br><span class="line"><span class="comment">-- zrangebyscore key min max 可以通评分进行区间取值</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> zrangebyscore mysort <span class="number">100</span> <span class="number">300</span></span><br><span class="line"><span class="number">1</span>) &quot;a&quot;</span><br><span class="line"><span class="number">2</span>) &quot;b&quot;</span><br><span class="line"><span class="number">3</span>) &quot;c&quot;</span><br><span class="line"><span class="comment">-- zrangebyscore key min maxwithscores 可以通评分进行区间取值并显示分数</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> zrangebyscore mysort <span class="number">100</span> <span class="number">300</span> withscores</span><br><span class="line"><span class="number">1</span>) &quot;a&quot;</span><br><span class="line"><span class="number">2</span>) &quot;100&quot;</span><br><span class="line"><span class="number">3</span>) &quot;b&quot;</span><br><span class="line"><span class="number">4</span>) &quot;200&quot;</span><br><span class="line"><span class="number">5</span>) &quot;c&quot;</span><br><span class="line"><span class="number">6</span>) &quot;300&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- zrevrangebyscore key max min 从大到小排序</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> zrevrangebyscore mysort <span class="number">500</span> <span class="number">200</span></span><br><span class="line"><span class="number">1</span>) &quot;e&quot;</span><br><span class="line"><span class="number">2</span>) &quot;d&quot;</span><br><span class="line"><span class="number">3</span>) &quot;c&quot;</span><br><span class="line"><span class="number">4</span>) &quot;b&quot;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- zrevrangebyscore key max min withscores 从大到小排序并显示分数</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> zrevrangebyscore mysort <span class="number">500</span> <span class="number">200</span> withscores</span><br><span class="line"><span class="number">1</span>) &quot;e&quot;</span><br><span class="line"><span class="number">2</span>) &quot;500&quot;</span><br><span class="line"><span class="number">3</span>) &quot;d&quot;</span><br><span class="line"><span class="number">4</span>) &quot;400&quot;</span><br><span class="line"><span class="number">5</span>) &quot;c&quot;</span><br><span class="line"><span class="number">6</span>) &quot;300&quot;</span><br><span class="line"><span class="number">7</span>) &quot;b&quot;</span><br><span class="line"><span class="number">8</span>) &quot;200&quot;</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- zcount mysort min max 查询区间的元素个数</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> zcount mysort <span class="number">100</span> <span class="number">300</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">3</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- zrank key value 查看集合中的排名 （排名从0开始）</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> zrank mysort a</span><br><span class="line">(<span class="type">integer</span>) <span class="number">0</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> zrank mysort b</span><br><span class="line">(<span class="type">integer</span>) <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 查看所有元素</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> zrange mysort <span class="number">0</span> <span class="number">-1</span> withscores</span><br><span class="line"> <span class="number">1</span>) &quot;a&quot;</span><br><span class="line"> <span class="number">2</span>) &quot;100&quot;</span><br><span class="line"> <span class="number">3</span>) &quot;b&quot;</span><br><span class="line"> <span class="number">4</span>) &quot;200&quot;</span><br><span class="line"> <span class="number">5</span>) &quot;c&quot;</span><br><span class="line"> <span class="number">6</span>) &quot;300&quot;</span><br><span class="line"> <span class="number">7</span>) &quot;d&quot;</span><br><span class="line"> <span class="number">8</span>) &quot;400&quot;</span><br><span class="line"> <span class="number">9</span>) &quot;e&quot;</span><br><span class="line"><span class="number">10</span>) &quot;500&quot;</span><br></pre></td></tr></table></figure>
+
+<p><strong>删除</strong>：<code>zrem key value</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> zrem mysort b<span class="comment">-- 删除单个</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">1</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> zrem mysort a c<span class="comment">-- 删除多个</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Redis生存时间"><a href="#Redis生存时间" class="headerlink" title="Redis生存时间"></a>Redis生存时间</h2><p>redis在实际应用中更多是用作缓存，解而缓存的数据一般都需要设置生存时间的 即：到期后数据销毁</p>
+<h3 id="设置生存时间"><a href="#设置生存时间" class="headerlink" title="设置生存时间"></a>设置生存时间</h3><p><strong>设置生存时间</strong>   <code>expire key seconds</code></p>
+<p>TTL 返回值：</p>
+<p>大于0：剩余生存时间，单位为秒</p>
+<p>负数： 数据已经被删除</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">set</span> k1 abc<span class="comment">-- 添加数据</span></span><br><span class="line">OK</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> expire k1 <span class="number">10</span> <span class="comment">-- 设置当前k1的生存时间</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">1</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> ttl k1 <span class="comment">-- 查看剩余生存时间</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">3</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> ttl k1</span><br><span class="line">(<span class="type">integer</span>) <span class="number">2</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> ttl k1</span><br><span class="line">(<span class="type">integer</span>) <span class="number">1</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> ttl k1 <span class="comment">-- 返回负数数据销毁</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">-2</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">get</span> k1 <span class="comment">-- 此时数据就销毁</span></span><br><span class="line">(nil)</span><br></pre></td></tr></table></figure>
+
+<h3 id="清除生存时间"><a href="#清除生存时间" class="headerlink" title="清除生存时间"></a>清除生存时间</h3><p><strong>清除生存时间</strong> <code>persist key</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">set</span> k1 <span class="number">123</span></span><br><span class="line">OK</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> expire k1 <span class="number">100</span> <span class="comment">-- 设置生存时间</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">1</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> ttl k1 <span class="comment">-- 查看生存时间</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">51</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> ttl k1</span><br><span class="line">(<span class="type">integer</span>) <span class="number">50</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> persist k1 <span class="comment">-- 清除生存时间</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">1</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> ttl k1 <span class="comment">-- 返回负数 表示生存的时间已清除，数据还存在</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">-1</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">get</span> k1</span><br><span class="line">&quot;123&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="设置单位为毫秒"><a href="#设置单位为毫秒" class="headerlink" title="设置单位为毫秒"></a>设置单位为毫秒</h3><p>设置单为毫秒 <code>pexpire key milliseconds</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> <span class="keyword">set</span> k1 <span class="number">123</span></span><br><span class="line">OK</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> pexpire k1 <span class="number">10000</span> <span class="comment">-- 设置当前生存时间为10000毫秒（10秒）</span></span><br><span class="line">(<span class="type">integer</span>) <span class="number">1</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> ttl k1</span><br><span class="line">(<span class="type">integer</span>) <span class="number">7</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> ttl k1</span><br><span class="line">(<span class="type">integer</span>) <span class="number">6</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span><span class="operator">&gt;</span> ttl k1</span><br><span class="line">(<span class="type">integer</span>) <span class="number">5</span></span><br></pre></td></tr></table></figure>
+<div class="article-footer fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2019/11/15/2e455f59/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2019/11/15/2e455f59/&title=Linux-redis从入门到精通 - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402201521298.png&summary=
+    总字符数: 13.12K 
+    
+    
+    代码: 8.57K, 文本: 2.49K
+    
+    
+    预计阅读时间: 48 分钟
+    
+    
+
+Redis概述NoSQL
+NoSQL，泛指非关系..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=Linux-redis从入门到精通 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2019/11/15/2e455f59/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2019/11/15/2e455f59/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2019/12/24/384da78c/">Python-模糊查询批量修改文件名</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2019/10/21/628a2fb5/">家庭网络拓扑</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\2024\01\29\2e455f59\" title="Linux-MySQL从入门到精通(上)"><span class="title">Linux-MySQL从入门到精通(上)</span></a><a class="item" href="\2024\01\31\375e6e18\" title="Linux-MySQL从入门到精通(下)"><span class="title">Linux-MySQL从入门到精通(下)</span></a><a class="item" href="\2021\09\07\fc81f96\" title="Linux-Mysql主主架构"><span class="title">Linux-Mysql主主架构</span></a><a class="item" href="\2021\09\24\bee72ce8\" title="Linux-MySQL开启慢查询日志"><span class="title">Linux-MySQL开启慢查询日志</span></a><a class="item" href="\2024\01\30\f480ed3c\" title="Linux-MySQL从入门到精通(中)"><span class="title">Linux-MySQL从入门到精通(中)</span></a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body waline'>
+      
+
+<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/tools/">工具</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis%E6%A6%82%E8%BF%B0"><span class="toc-text">Redis概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#NoSQL"><span class="toc-text">NoSQL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%93%E5%AD%98%E7%9A%84%E9%9C%80%E6%B1%82"><span class="toc-text">缓存的需求</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis%E7%AE%80%E4%BB%8B%E5%8F%8A%E5%AE%89%E8%A3%85"><span class="toc-text">Redis简介及安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#redis%E4%B8%8B%E8%BD%BD"><span class="toc-text">redis下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#window%E5%AE%89%E8%A3%85"><span class="toc-text">window安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#linux%E5%AE%89%E8%A3%85"><span class="toc-text">linux安装</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis%E6%93%8D%E4%BD%9C"><span class="toc-text">Redis操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-text">多数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%89%E6%8B%A9%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-text">选择数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B8%85%E7%A9%BA%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-text">清空数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4"><span class="toc-text">基本命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E7%A7%8D%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-text">五种数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%EF%BC%88string%EF%BC%89"><span class="toc-text">字符串（string）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%93%88%E5%B8%8C%E7%B1%BB%E5%9E%8B%EF%BC%88hash%EF%BC%89"><span class="toc-text">哈希类型（hash）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%97%E8%A1%A8%E7%B1%BB%E5%9E%8B%EF%BC%88list%EF%BC%89"><span class="toc-text">列表类型（list）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9B%86%E5%90%88%E7%B1%BB%E5%9E%8B%EF%BC%88set%EF%BC%89"><span class="toc-text">集合类型（set）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88%EF%BC%88zset%EF%BC%89"><span class="toc-text">有序集合（zset）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis%E7%94%9F%E5%AD%98%E6%97%B6%E9%97%B4"><span class="toc-text">Redis生存时间</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E7%94%9F%E5%AD%98%E6%97%B6%E9%97%B4"><span class="toc-text">设置生存时间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B8%85%E9%99%A4%E7%94%9F%E5%AD%98%E6%97%B6%E9%97%B4"><span class="toc-text">清除生存时间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E5%8D%95%E4%BD%8D%E4%B8%BA%E6%AF%AB%E7%A7%92"><span class="toc-text">设置单位为毫秒</span></a></li></ol></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js`,
+    marked: `https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.27.0" async></script>
+
+<!-- optional -->
+
+  <script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js'
+
+  function load_comment(){
+    if(!document.getElementById("waline_container"))return;
+
+    utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css');
+
+    const el = document.getElementById("waline_container");
+    var path = el.getAttribute('comment_id');
+    if (!path) {
+      path = decodeURI(window.location.pathname);
+    }
+
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+      el: '#waline_container',
+      path: path,
+      
+    }));
+
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    load_comment();
+  });
+
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"></script><script defer src="https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.swiper-slide img, .gallery img ,#waline_container .vcontent img`,
+    css: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css`,
+    js: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || null
+        }
+      });
+    })
+  }
+</script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          loop: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+</div></body></html>

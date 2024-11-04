@@ -1,0 +1,700 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.27.0" theme-name="Stellar" theme-version="1.27.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>PHP-算法初识~ - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="总字符数: 8.08K                代码: 5.11K, 文本: 2.83K               预计阅读时间: 35 分钟            编程思想编程思想:如何利用数学模式,来解决对应的需求问题:然后利用代码实现对应的数据模型(逻辑).算法:使用代码实现对应的数学模型,从而解决对应的业务问题. 逆推算法递推算法是一种简单的算法,即通过已知条件,利用特定">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHP-算法初识~">
+<meta property="og:url" content="https://jiangjiyue.github.io/2023/09/04/258025d3/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="总字符数: 8.08K                代码: 5.11K, 文本: 2.83K               预计阅读时间: 35 分钟            编程思想编程思想:如何利用数学模式,来解决对应的需求问题:然后利用代码实现对应的数据模型(逻辑).算法:使用代码实现对应的数学模型,从而解决对应的业务问题. 逆推算法递推算法是一种简单的算法,即通过已知条件,利用特定">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-04T11:30:08.000Z">
+<meta property="article:modified_time" content="2024-02-09T08:13:36.000Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="编程语言">
+<meta property="article:tag" content="PHP">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <meta name="keywords" content="编程语言,PHP">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.27.0">
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="导航" href="/sites/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/tools/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
+</div>
+<div class="widgets">
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">专栏：PHP</span></div><div class="widget-body"><a class="item" href="/2023/09/02/20d7e033/"><span class="title">PHP-从入门到精通(上)</span></a><a class="item" href="/2023/09/03/39ccd172/"><span class="title">PHP-从入门到精通(下)</span></a><a class="item active" href="/2023/09/04/258025d3/"><span class="title">PHP-算法初识~</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a><a class="item" href="/2023/09/05/5a76691e/"><span class="title">PHP-表单</span></a><a class="item" href="/2023/09/06/d0324d08/"><span class="title">PHP-文件上传</span></a><a class="item" href="/2023/09/07/f2a0f176/"><span class="title">PHP-MySQL</span></a><a class="item" href="/2023/09/08/c3682c7d/"><span class="title">PHP-留言板项目</span></a></div></widget>
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2024/11/04/fe2980d6/"><span class="title">CS-ShellCode加载器</span></a><a class="item title" href="/2023/03/11/247b757/"><span class="title">VulHub-Fastjson漏洞复现</span></a><a class="item title" href="/2023/04/28/76971e68/"><span class="title">VulHub-Tomcat漏洞复现</span></a><a class="item title" href="/2024/07/05/dd58c5ed/"><span class="title">应急响应之Webshell流量分析</span></a><a class="item title" href="/2024/10/27/77c80f0f/"><span class="title">CS-C语言总结</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/topic">专栏</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/2023/09/02/20d7e033/">PHP</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2023-09-04T11:30:08.000Z">2023-09-04</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-02-09T08:13:36.000Z">2024-02-09</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>PHP-算法初识~</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
+    <p>总字符数: 8.08K </p>
+    </div>
+    <div class="cell" style="">
+    <p>代码: 5.11K, 文本: 2.83K</p>
+    </div>
+    <div class="cell" style="">
+    <p>预计阅读时间: 35 分钟</p>
+    </div>
+    </div>
+
+<h2 id="编程思想"><a href="#编程思想" class="headerlink" title="编程思想"></a>编程思想</h2><p>编程思想:如何利用数学模式,来解决对应的需求问题:然后利用代码实现对应的数据模型(逻辑).<br>算法:使用代码实现对应的数学模型,从而解决对应的业务问题.</p>
+<h3 id="逆推算法"><a href="#逆推算法" class="headerlink" title="逆推算法"></a>逆推算法</h3><p>递推算法是一种简单的算法,即通过已知条件,利用特定关系得出中间推论,直至得到结果的算法.递推算法分为顺推和逆推两种.</p>
+<ol>
+<li>顺推:通过最简单的条件(已知),然后逐步推演结果</li>
+<li>逆推:通过结果找到规律,然后推到已知条件</li>
+</ol>
+<p>斐波那契数列: 1 1 2 3 5 8 13 …</br><br>通常需求:请求得指定位置N所对应的值是多少</br><br>找规律:</p>
+<ol>
+<li>第一个数是1</li>
+<li>第二个数也是1</li>
+<li>从第三位开始:属于前两个数的和</li>
+</ol>
+<p>代码解决思路:</p>
+<ol>
+<li>如果数字位置为1和2,结果都是1</li>
+<li>从第三个开始,想办法得到前两个的结果,就可以得到</li>
+</ol>
+<p>终极解决办法:想办法把要求的位置之前的所有的值都出来,那么要求的数就可以通过前两个之和计算出来:使用数组存储所有结果即可.</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//递推思想(算法)</span></span><br><span class="line"><span class="comment">//需求:规律1 1 2 3 5 ...</span></span><br><span class="line"><span class="comment">//求出指定位数对应的值</span></span><br><span class="line"><span class="comment">//已知条件:第一个和第二个数都为1,第三个开始为前两个之和</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">my_recursive</span>(<span class="params"><span class="variable">$des</span></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//判断:如果为第一个或第二个直接返回结果</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="variable">$des</span>==<span class="number">1</span>||<span class="variable">$des</span>==<span class="number">2</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//开始计算:</span></span><br><span class="line">    <span class="variable">$f</span>[<span class="number">1</span>] =<span class="number">1</span>;</span><br><span class="line">    <span class="variable">$f</span>[<span class="number">2</span>]=<span class="number">1</span>;  <span class="comment">//如果想要第一个或者第二个结果,那么可以直接给出</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="variable">$i</span>=<span class="number">3</span>;<span class="variable">$i</span>&lt;=<span class="variable">$des</span>;<span class="variable">$i</span>++)&#123;</span><br><span class="line">        <span class="variable">$f</span>[<span class="variable">$i</span>]=<span class="variable">$f</span>[<span class="variable">$i</span>-<span class="number">1</span>]+<span class="variable">$f</span>[<span class="variable">$i</span>-<span class="number">2</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//返回结果</span></span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$f</span>[<span class="variable">$des</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//调用函数并查看结果</span></span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">my_recursive</span>(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">结果:<span class="number">55</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="递归算法"><a href="#递归算法" class="headerlink" title="递归算法"></a>递归算法</h3><p>递归算法是把问题转化为规模缩小了的同类问题的子问题.然后递归调用函数(或过程〉来表示问题的解.</p>
+<ol>
+<li>简化问题:找到最优子问题(不能再小)</li>
+<li>函数调用自己</li>
+</ol>
+<p>斐波那契序列:1 1 2 3 5 8 13…<br>需求:求指定位置的数列的值<br>规律:第一个和第二个为1,从第三个开始为前两个之和<br>假设:<br>F(N) &#x3D; F(N-1)+F(N-2);<br>F(N-1) &#x3D; F(N-1)+F(N-3);<br>···<br>F(2)&#x3D;F(1)&#x3D;1</p>
+<p>递归思想中:有两个非常重要的点<br>递归点:发现当前问题可以有解决当期问题的函数,去解决规模比当前小一点的问题来解决</br><br>F(N) &#x3D; F(N-1)+F(N-2);</br><br>递归出口:当问题解决的时候,已经到达(必须有)最优子问题,不能再次调用函数</br><br>如果一个函数递归调用自己而没有递归出口:就是死循环</br><br>递归的本质是函数调用函数:一个函数需要开辟一块内存空间,递归会出现同时调用N多个函数(自己):递归的本质是利用空间换时间</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//递归思想</span></span><br><span class="line"><span class="comment">//递归一定有函数</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">recursion</span>(<span class="params"><span class="variable">$n</span></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//递归出口</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="variable">$n</span> == <span class="number">1</span> || <span class="variable">$n</span> == <span class="number">2</span> ) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="comment">//递归点:求N的值,与求N-1的值一模一样,只是N-1的规模比N小</span></span><br><span class="line">    <span class="keyword">return</span> <span class="title function_ invoke__">recursion</span>(<span class="variable">$n</span>-<span class="number">1</span>)+<span class="title function_ invoke__">recursion</span>(<span class="variable">$n</span>-<span class="number">2</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">recursion</span>(<span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="数组排序算法"><a href="#数组排序算法" class="headerlink" title="数组排序算法"></a>数组排序算法</h2><h3 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h3><p>冒泡排序(Bubble Sort),是一种计算机科学领域的较简单的排序算法.<br>它重复地走访过要排序的数列,一次比较两个元素,如果他们的顺序错误就把他们交换过来.走访数列的工作是重复地进行直到没有再需要交换,也就是说该数列已经排序完成.</p>
+<p>冒泡排序的算法思路:</p>
+<ol>
+<li>比较相邻的元素.如果第一个比第二个大,就交换他们两个.</li>
+<li>对每一对相邻元素作同样的工作,从开始第一对到结尾的最后一对.在这一点,最后的元素应该会是最大的数.</li>
+<li>针对所有的元素重复以上的步骤,除了最后一个.</li>
+<li>持续每次对越来越少的元素重复上面的步骤,直到没有任何一对数字需要比较.</li>
+</ol>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//数组排序算法:冒泡排序</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$arr</span> = <span class="keyword">array</span>(<span class="number">1</span>,<span class="number">4</span>,<span class="number">2</span>,<span class="number">9</span>,<span class="number">7</span>,<span class="number">5</span>,<span class="number">8</span>);</span><br><span class="line"><span class="comment">//2.想办法让下面可以每次最大值的代码重复执行</span></span><br><span class="line"><span class="keyword">for</span>(<span class="variable">$i</span>=<span class="number">0</span>,<span class="variable">$len</span> = <span class="title function_ invoke__">count</span>(<span class="variable">$arr</span>);<span class="variable">$i</span>&lt;<span class="variable">$len</span>;<span class="variable">$i</span>++)&#123;</span><br><span class="line">    <span class="comment">//1. 想办法将最大的值放大最右边</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="variable">$j</span> = <span class="number">0</span>; <span class="variable">$j</span> &lt; <span class="variable">$len</span> - <span class="number">1</span>-<span class="variable">$i</span>;<span class="variable">$j</span>++)&#123;</span><br><span class="line">        <span class="comment">//判断:两两相比</span></span><br><span class="line">        <span class="keyword">if</span>(<span class="variable">$arr</span>[<span class="variable">$j</span>]&gt;<span class="variable">$arr</span>[<span class="variable">$j</span>+<span class="number">1</span>])&#123;</span><br><span class="line">            <span class="comment">//左边比右边大:交换</span></span><br><span class="line">            <span class="variable">$temp</span> = <span class="variable">$arr</span>[<span class="variable">$j</span>];</span><br><span class="line">            <span class="variable">$arr</span>[<span class="variable">$j</span>] = <span class="variable">$arr</span>[<span class="variable">$j</span>+<span class="number">1</span>];</span><br><span class="line">            <span class="variable">$arr</span>[<span class="variable">$j</span>+<span class="number">1</span>] = <span class="variable">$temp</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;&#x27;</span>;</span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="variable">$arr</span>);</span><br><span class="line"></span><br><span class="line">结果:</span><br><span class="line"><span class="title function_ invoke__">Array</span></span><br><span class="line">(</span><br><span class="line">    [<span class="number">0</span>] =&gt; <span class="number">1</span></span><br><span class="line">    [<span class="number">1</span>] =&gt; <span class="number">2</span></span><br><span class="line">    [<span class="number">2</span>] =&gt; <span class="number">4</span></span><br><span class="line">    [<span class="number">3</span>] =&gt; <span class="number">5</span></span><br><span class="line">    [<span class="number">4</span>] =&gt; <span class="number">7</span></span><br><span class="line">    [<span class="number">5</span>] =&gt; <span class="number">8</span></span><br><span class="line">    [<span class="number">6</span>] =&gt; <span class="number">9</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h3 id="选择排序"><a href="#选择排序" class="headerlink" title="选择排序"></a>选择排序</h3><p>选择排序(Selection sort)是一种简单直观的排序算法.它的工作原理是每一次从待排序的数据元素中选出最小(或最大)的一个元素,存放在序列的起始位置,直到全部待排序的数据元素排完.选择排序是不稳定的排序方法(比如序列[5,5,3]第一次就将第一个[5]与[3]交换,导致第一个5挪动到第二个5后面).</p>
+<p>选择排序的算法思路:</p>
+<ol>
+<li>假设第一个元素为最小元素,记下下标.</li>
+<li>寻找右侧剩余的元素,如果有更小的,重新记下最新的下标.</li>
+<li>如果有新的最小的,交换两个元素.</li>
+<li>往右重复以上步骤,直到元素本身是最后一个.</li>
+</ol>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//数组排序算法:选择排序</span></span><br><span class="line"><span class="variable">$arr</span> = <span class="keyword">array</span>(<span class="number">1</span>,<span class="number">5</span>,<span class="number">2</span>,<span class="number">9</span>,<span class="number">6</span>,<span class="number">3</span>,<span class="number">4</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//1.确定要交换多少次:一次只能找一个最小的,需要找数组长度对应的次数</span></span><br><span class="line"><span class="keyword">for</span>(<span class="variable">$i</span>=<span class="number">0</span>,<span class="variable">$len</span>=<span class="title function_ invoke__">count</span>(<span class="variable">$arr</span>);<span class="variable">$i</span>&lt;<span class="variable">$len</span>;<span class="variable">$i</span>++)&#123;</span><br><span class="line">    <span class="comment">//2.假设当前第一个已经排好序</span></span><br><span class="line">    <span class="variable">$min</span> = <span class="variable">$i</span>; <span class="comment">//当前第一个数是最小的</span></span><br><span class="line">    <span class="comment">//3.拿当前最小的去比较剩余的其他数</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="variable">$j</span>=<span class="variable">$i</span>+<span class="number">1</span>;<span class="variable">$j</span>&lt;<span class="variable">$len</span>;<span class="variable">$j</span>++)&#123;</span><br><span class="line">        <span class="comment">//4.比较:比较当前元素与选定的最小的元素</span></span><br><span class="line">        <span class="keyword">if</span>(<span class="variable">$arr</span>[<span class="variable">$j</span>]&lt;<span class="variable">$arr</span>[<span class="variable">$min</span>])&#123;</span><br><span class="line">            <span class="comment">//说明当前的$min不合适</span></span><br><span class="line">            <span class="variable">$min</span> = <span class="variable">$j</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//5.交换当前选定的值与实际最小的元素值</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="variable">$min</span> != <span class="variable">$i</span>)&#123;</span><br><span class="line">        <span class="variable">$temp</span> = <span class="variable">$arr</span>[<span class="variable">$i</span>];</span><br><span class="line">        <span class="variable">$arr</span>[<span class="variable">$i</span>]=<span class="variable">$arr</span>[<span class="variable">$min</span>];</span><br><span class="line">        <span class="variable">$arr</span>[<span class="variable">$min</span>]=<span class="variable">$temp</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;&#x27;</span>;</span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="variable">$arr</span>);</span><br><span class="line"></span><br><span class="line">结果:</span><br><span class="line"><span class="title function_ invoke__">Array</span></span><br><span class="line">(</span><br><span class="line">    [<span class="number">0</span>] =&gt; <span class="number">1</span></span><br><span class="line">    [<span class="number">1</span>] =&gt; <span class="number">2</span></span><br><span class="line">    [<span class="number">2</span>] =&gt; <span class="number">3</span></span><br><span class="line">    [<span class="number">3</span>] =&gt; <span class="number">4</span></span><br><span class="line">    [<span class="number">4</span>] =&gt; <span class="number">5</span></span><br><span class="line">    [<span class="number">5</span>] =&gt; <span class="number">6</span></span><br><span class="line">    [<span class="number">6</span>] =&gt; <span class="number">9</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h3 id="插入排序"><a href="#插入排序" class="headerlink" title="插入排序"></a>插入排序</h3><p>插入排序(Insert sort),插入排序的基本操作就是将一个数据插入到已经排好序的有序数据中,从而得到一个新的、个数加一的有序数据,算法适用于少量数据的排序,是稳定的排序方法.插入算法把要排序的数组分成两部分:第一部分包含了这个数组的所有元素,但将最后一个元素除外(让数组多一个空间才有插入的位置),而第二部分就只包含这一个元素(即待插入元素).在第一部分排序完成后,再将这个最后元素插入到已排好序的第一部分中.</br><br>插入排序的基本思想是:每步将一个待排序的纪录,按其关键码值的大小插入前面已经排序的文件中适当位置上,直到全部插入完为止.</br><br>插入排序的算法思路:</p>
+<ol>
+<li><p>设置监视哨r[0],将待插入纪录的值赋值给r[0];</p>
+</li>
+<li><p>设置开始查找的位置j; </p>
+</li>
+<li><p>在数组中进行搜索,搜索中将第j个纪录后移,直至r[0].kex&gt;&#x3D;r[j].key为止;</p>
+</li>
+<li><p>将r[0]插入r[j+1]的位置上.</p>
+</li>
+<li><p>认定第一个元素已经排好序;</p>
+</li>
+<li><p>取出第二个元素,作为待插入数据;</p>
+</li>
+<li><p>与已经排好序的数组的最右侧元素开始进行比较</p>
+</li>
+<li><p>如果后面的小于前面的:说明前面已经排好序的那个数组元素不在对的位置(向后移一个),然后让新的元素填充进去(继续向前比:高级)</p>
+</li>
+<li><p>重复前面的步骤:直到当前元素插入到对位置;</p>
+</li>
+<li><p>重复以上步骤,直到所有的数组元素都插入到对的位置.</p>
+</li>
+</ol>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//数组排序算法:插入排序</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$arr</span> = <span class="keyword">array</span>(<span class="number">4</span>,<span class="number">2</span>,<span class="number">6</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">5</span>);</span><br><span class="line"><span class="comment">//1、确定要插入多少回(假设一个数组一次性插入到对的位置,同时第一个位置是假设对的)</span></span><br><span class="line"><span class="keyword">for</span>(<span class="variable">$i</span> = <span class="number">1</span>,<span class="variable">$len</span> = <span class="title function_ invoke__">count</span>(<span class="variable">$arr</span>);<span class="variable">$i</span>&lt; <span class="variable">$len</span>;<span class="variable">$i</span>++)&#123;</span><br><span class="line">    <span class="comment">//2、取出当前要插入的元素的值</span></span><br><span class="line">    <span class="variable">$temp</span> = <span class="variable">$arr</span>[<span class="variable">$i</span>];</span><br><span class="line">    <span class="comment">//3、让该数据与前面已经排好序的数组元素重复比较(挨个比较),直到的位置(交换)</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="variable">$j</span> =<span class="variable">$i</span> - <span class="number">1</span>;<span class="variable">$j</span> &gt;= <span class="number">0</span>;<span class="variable">$j</span>--)&#123;</span><br><span class="line">        <span class="comment">// 4、比较</span></span><br><span class="line">        <span class="keyword">if</span>(<span class="variable">$arr</span>[<span class="variable">$j</span>] &gt;<span class="variable">$temp</span>)&#123;</span><br><span class="line">            <span class="comment">//说明当前要插入的元素,比前面的已经排好序的元素的值要小:交换位置</span></span><br><span class="line">            <span class="variable">$arr</span>[<span class="variable">$j</span>+<span class="number">1</span>] = <span class="variable">$arr</span>[<span class="variable">$j</span>];</span><br><span class="line">            <span class="variable">$arr</span>[<span class="variable">$j</span>] = <span class="variable">$temp</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">//说明当前待插入元素,比前面的元素要大:说明位置正确</span></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;&#x27;</span>;</span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="variable">$arr</span>);</span><br><span class="line"></span><br><span class="line">结果:</span><br><span class="line"><span class="title function_ invoke__">Array</span></span><br><span class="line">(</span><br><span class="line">    [<span class="number">0</span>] =&gt; <span class="number">2</span></span><br><span class="line">    [<span class="number">1</span>] =&gt; <span class="number">4</span></span><br><span class="line">    [<span class="number">2</span>] =&gt; <span class="number">5</span></span><br><span class="line">    [<span class="number">3</span>] =&gt; <span class="number">6</span></span><br><span class="line">    [<span class="number">4</span>] =&gt; <span class="number">8</span></span><br><span class="line">    [<span class="number">5</span>] =&gt; <span class="number">9</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h3 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h3><p>快速排序(Quicksort)是对冒泡排序的一种改进.通过一趟排序将要排序的数据分割成独立的两部分,其中一部分的所有数据都比另外一部分的所有数据都要小,然后再按此方法对这两部分数据分别进行快速排序,整个排序过程可以递归进行,以此达到整个数据变成有序序列.(递归)</br><br>设要排序的数组是 A[0]……A[N-1],首先任意选取一个数据(通常选用数组的第一个数)作为关键数据,然后将所有比它小的数都放到它前面,所有比它大的数都放到它后面,这个过程称为一趟快速排序.值得注意的是,快速排序不是一种稳定的排序算法,也就是说,多个相同的值的相对位置也许会在算法结束时产生变动</br><br>快速排序的算法是:</p>
+<ol>
+<li>从数组中选出一个元素(通常第一个),作为参照对象.</li>
+<li>定义两个数组,将目标数组中剩余的元素与参照元素挨个比较:小的放到一个数组,大的放到另外一个数组.</li>
+<li>第二步执行完之后,前后的数组顺序不确定,但是确定了自己的位置.</li>
+<li>将得到的小数组按照第1到第3部重复操作(子问题).</li>
+<li>回溯最小数组(一个元素).</li>
+</ol>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//PHP数组排序:快速排序</span></span><br><span class="line"><span class="variable">$arr</span> = <span class="keyword">array</span>(<span class="number">5</span>,<span class="number">6</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">9</span>,<span class="number">2</span>,<span class="number">7</span>,<span class="number">8</span>);</span><br><span class="line"><span class="comment">//快速排序</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">quick_sort</span>(<span class="params"><span class="variable">$arr</span></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//递归出口</span></span><br><span class="line">    <span class="variable">$len</span> = <span class="title function_ invoke__">count</span>(<span class="variable">$arr</span>);</span><br><span class="line">    <span class="keyword">if</span>(<span class="variable">$len</span> &lt;= <span class="number">1</span>) <span class="keyword">return</span> <span class="variable">$arr</span>;</span><br><span class="line">    <span class="comment">//取出某个元素,然后将剩余的数组元素,分散到两个不同的数组中</span></span><br><span class="line">    <span class="variable">$left</span> = <span class="variable">$right</span> =<span class="keyword">array</span>();</span><br><span class="line">    <span class="keyword">for</span>(<span class="variable">$i</span>=<span class="number">1</span>;<span class="variable">$i</span>&lt;<span class="variable">$len</span>;<span class="variable">$i</span>++)&#123;</span><br><span class="line">        <span class="comment">//第一个元素作为比较元素</span></span><br><span class="line">        <span class="comment">//比较:小的放left中,大的放right中</span></span><br><span class="line">        <span class="keyword">if</span>(<span class="variable">$arr</span>[<span class="variable">$i</span>]&lt;<span class="variable">$arr</span>[<span class="number">0</span>])&#123;</span><br><span class="line">            <span class="variable">$left</span>[]=<span class="variable">$arr</span>[<span class="variable">$i</span>];</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="variable">$right</span>[]=<span class="variable">$arr</span>[<span class="variable">$i</span>];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//$left和$right数组没有排序好:递归点</span></span><br><span class="line">    <span class="variable">$left</span> = <span class="title function_ invoke__">quick_sort</span>(<span class="variable">$left</span>);</span><br><span class="line">    <span class="variable">$right</span> = <span class="title function_ invoke__">quick_sort</span>(<span class="variable">$right</span>);</span><br><span class="line">    <span class="comment">//合并三个&quot;数&quot;组</span></span><br><span class="line">    <span class="keyword">return</span> <span class="title function_ invoke__">array_merge</span>(<span class="variable">$left</span>,(<span class="keyword">array</span>)<span class="variable">$arr</span>[<span class="number">0</span>],<span class="variable">$right</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">quick_sort</span>(<span class="variable">$arr</span>));</span><br><span class="line">结果:</span><br><span class="line"><span class="title function_ invoke__">Array</span></span><br><span class="line">(</span><br><span class="line">    [<span class="number">0</span>] =&gt; <span class="number">2</span></span><br><span class="line">    [<span class="number">1</span>] =&gt; <span class="number">3</span></span><br><span class="line">    [<span class="number">2</span>] =&gt; <span class="number">4</span></span><br><span class="line">    [<span class="number">3</span>] =&gt; <span class="number">5</span></span><br><span class="line">    [<span class="number">4</span>] =&gt; <span class="number">6</span></span><br><span class="line">    [<span class="number">5</span>] =&gt; <span class="number">7</span></span><br><span class="line">    [<span class="number">6</span>] =&gt; <span class="number">8</span></span><br><span class="line">    [<span class="number">7</span>] =&gt; <span class="number">9</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h3 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h3><p>归并排序(MERGE-SORT)是建立在归并操作上的一种有效的排序算法,该算法是采用分治法(Divide and Conquer)的一个非常典型的应用.将已有序的子序列合并,得到完全有序的序列;即先使每个子序列有序,再使子序列段间有序.若将两个有序表合并成一个有序表,称为二路归并</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">二路归并实现:</span><br><span class="line"><span class="variable">$arr1</span> = <span class="keyword">array</span>(<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>);</span><br><span class="line"><span class="variable">$arr2</span> = <span class="keyword">array</span>(<span class="number">2</span>,<span class="number">4</span>,<span class="number">6</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//取出一个空数组用于归并空间</span></span><br><span class="line"><span class="variable">$arr3</span> = <span class="keyword">array</span>();</span><br><span class="line"><span class="keyword">while</span>(<span class="title function_ invoke__">count</span>(<span class="variable">$arr1</span>)&amp;&amp;<span class="title function_ invoke__">count</span>(<span class="variable">$arr2</span>))&#123;</span><br><span class="line">    <span class="comment">//只要$arr1和$arr2里面还有元素,就进行循环</span></span><br><span class="line">    <span class="comment">//取出每个元组的第一个元素:进行比较</span></span><br><span class="line">    <span class="variable">$arr3</span>[] = <span class="variable">$arr1</span>[<span class="number">0</span>]&lt;<span class="variable">$arr2</span>[<span class="number">0</span>]?<span class="title function_ invoke__">array_shift</span>(<span class="variable">$arr1</span>):<span class="title function_ invoke__">array_shift</span>(<span class="variable">$arr2</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//合并结果</span></span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">array_merge</span>(<span class="variable">$arr3</span>,<span class="variable">$arr1</span>,<span class="variable">$arr2</span>));</span><br><span class="line">结果:</span><br><span class="line"><span class="title function_ invoke__">Array</span></span><br><span class="line">(</span><br><span class="line">    [<span class="number">0</span>] =&gt; <span class="number">1</span></span><br><span class="line">    [<span class="number">1</span>] =&gt; <span class="number">2</span></span><br><span class="line">    [<span class="number">2</span>] =&gt; <span class="number">3</span></span><br><span class="line">    [<span class="number">3</span>] =&gt; <span class="number">4</span></span><br><span class="line">    [<span class="number">4</span>] =&gt; <span class="number">5</span></span><br><span class="line">    [<span class="number">5</span>] =&gt; <span class="number">6</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>归并排序的算法是:</p>
+<ol>
+<li>将数组拆分成两个数组</li>
+<li>重复步骤1将数组拆分成最小单元</li>
+<li>申请空间,使其大小为两个已经排序序列之和,该空间用来存放合并后的序列</li>
+<li>设定两个指针,最初位置分别为两个已经排序序列的起始位置</li>
+<li>比较两个指针所指向的元素,选择相对小的元素放入到合并空间,并移动指针到下一位置</li>
+<li>重复步骤3直到某一指针超出序列尾</li>
+<li>将另一序列剩下的所有元素直接复制到合并序列尾</li>
+</ol>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$arr</span>=<span class="keyword">array</span>(<span class="number">4</span>,<span class="number">7</span>,<span class="number">2</span>,<span class="number">1</span>,<span class="number">5</span>,<span class="number">9</span>,<span class="number">3</span>);</span><br><span class="line"><span class="comment">//归并排序函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">merge_sort</span>(<span class="params"><span class="variable">$arr</span></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//递归出口</span></span><br><span class="line">    <span class="variable">$len</span> = <span class="title function_ invoke__">count</span>(<span class="variable">$arr</span>);</span><br><span class="line">    <span class="keyword">if</span>(<span class="variable">$len</span>&lt;=<span class="number">1</span>) <span class="keyword">return</span> <span class="variable">$arr</span>;</span><br><span class="line">    <span class="comment">//拆分</span></span><br><span class="line">    <span class="variable">$middle</span> = <span class="title function_ invoke__">floor</span>(<span class="variable">$len</span>/<span class="number">2</span>);</span><br><span class="line">    <span class="variable">$left</span> = <span class="title function_ invoke__">array_slice</span>(<span class="variable">$arr</span>,<span class="number">0</span>,<span class="variable">$middle</span>);</span><br><span class="line">    <span class="variable">$right</span> = <span class="title function_ invoke__">array_slice</span>(<span class="variable">$arr</span>,<span class="variable">$middle</span>);</span><br><span class="line">    <span class="comment">//递归点:$left和$right都没有排好序:而且可能是多个元素的数组</span></span><br><span class="line">    <span class="variable">$left</span> = <span class="title function_ invoke__">merge_sort</span>(<span class="variable">$left</span>);</span><br><span class="line">    <span class="variable">$right</span> = <span class="title function_ invoke__">merge_sort</span>(<span class="variable">$right</span>);</span><br><span class="line">    <span class="comment">//假设:左边和右边都已经排好序了</span></span><br><span class="line">    <span class="variable">$m</span> = <span class="keyword">array</span>();</span><br><span class="line">    <span class="keyword">while</span>(<span class="title function_ invoke__">count</span>(<span class="variable">$left</span>)&amp;&amp;<span class="title function_ invoke__">count</span>(<span class="variable">$right</span>))&#123;</span><br><span class="line">        <span class="comment">//只要$arr1和$arr2里面还有元素,就进行循环</span></span><br><span class="line">        <span class="comment">//取出每个元组的第一个元素:进行比较</span></span><br><span class="line">        <span class="variable">$m</span>[] = <span class="variable">$left</span>[<span class="number">0</span>]&lt;<span class="variable">$right</span>[<span class="number">0</span>]?<span class="title function_ invoke__">array_shift</span>(<span class="variable">$left</span>):<span class="title function_ invoke__">array_shift</span>(<span class="variable">$right</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//返回结果</span></span><br><span class="line">    <span class="keyword">return</span> <span class="title function_ invoke__">array_merge</span>(<span class="variable">$m</span>,<span class="variable">$left</span>,<span class="variable">$right</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">merge_sort</span>(<span class="variable">$arr</span>));</span><br><span class="line"></span><br><span class="line">结果:</span><br><span class="line"><span class="title function_ invoke__">Array</span></span><br><span class="line">(</span><br><span class="line">    [<span class="number">0</span>] =&gt; <span class="number">1</span></span><br><span class="line">    [<span class="number">1</span>] =&gt; <span class="number">2</span></span><br><span class="line">    [<span class="number">2</span>] =&gt; <span class="number">3</span></span><br><span class="line">    [<span class="number">3</span>] =&gt; <span class="number">4</span></span><br><span class="line">    [<span class="number">4</span>] =&gt; <span class="number">5</span></span><br><span class="line">    [<span class="number">5</span>] =&gt; <span class="number">7</span></span><br><span class="line">    [<span class="number">6</span>] =&gt; <span class="number">9</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h3 id="查找算法"><a href="#查找算法" class="headerlink" title="查找算法"></a>查找算法</h3><h4 id="查找算法含义"><a href="#查找算法含义" class="headerlink" title="查找算法含义"></a>查找算法含义</h4><p>查找是在大量的信息中寻找一个特定的信息元素,在计算机应用中,查找是常用的基本运算.查找算法是指实现查找过程对应的代码结.就是在大型数组中去快速定位想要的元素.</p>
+<h4 id="顺序查找算法"><a href="#顺序查找算法" class="headerlink" title="顺序查找算法"></a>顺序查找算法</h4><p>顺序查找也称为线形查找,从数据结构线形表的一端开始,顺序扫描,依次将扫描到的结点关键字与给定值k相比较,若相等则表示查找成功;若扫描结束仍没有找到关键字等于k的结点,表示查找失败.</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//顺序查找</span></span><br><span class="line"><span class="variable">$arr</span> = <span class="keyword">array</span>(<span class="number">1</span>,<span class="number">3</span>,<span class="number">6</span>,<span class="number">8</span>,<span class="number">23</span>,<span class="number">68</span>,<span class="number">100</span>);</span><br><span class="line"><span class="comment">//顺序查找:v哦那个数组第一个元素快速,挨个匹配</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">check_order</span>(<span class="params"><span class="variable">$arr</span>,<span class="variable">$num</span></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//全部匹配</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="variable">$i</span>=<span class="number">0</span>,<span class="variable">$len</span>=<span class="title function_ invoke__">count</span>(<span class="variable">$arr</span>);<span class="variable">$i</span>&lt;<span class="variable">$len</span>;<span class="variable">$i</span>++)&#123;</span><br><span class="line">        <span class="comment">//判断</span></span><br><span class="line">        <span class="keyword">if</span>(<span class="variable">$arr</span>[<span class="variable">$i</span>] == <span class="variable">$num</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="variable">$i</span>+<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_ invoke__">var_dump</span>(<span class="title function_ invoke__">check_order</span>(<span class="variable">$arr</span>,<span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">结果:</span><br><span class="line"><span class="keyword">int</span>(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<h4 id="二分查找算法"><a href="#二分查找算法" class="headerlink" title="二分查找算法"></a>二分查找算法</h4><p>二分查找要求线形表中的结点按关键字值升序或降序排列,用给定值k先与中间结点的关键字比较,中间结点把线形表分成两个子表,若相等则查找成功;若不相等,再根据k与该中间结点关键字的比较结果确定下一步查找那个子表,这样递归进行,直到查找到或查找结束发现表中没有这样的结点.</br><br>折半算法思路:</p>
+<ol>
+<li>计算数组长度;</li>
+<li>确定左右两边的指针位置;</li>
+<li>找到中间位置;</li>
+<li>匹配;</li>
+<li>然后根据大小重定边界;</li>
+</ol>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//二分查找算法</span></span><br><span class="line"><span class="variable">$arr</span> = <span class="keyword">array</span>(<span class="number">1</span>,<span class="number">3</span>,<span class="number">6</span>,<span class="number">8</span>,<span class="number">23</span>,<span class="number">68</span>,<span class="number">100</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">check_break</span>(<span class="params"><span class="variable">$arr</span>,<span class="variable">$res</span></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//1.得到数组的边界(长度)</span></span><br><span class="line">    <span class="variable">$right</span> = <span class="title function_ invoke__">count</span>(<span class="variable">$arr</span>);</span><br><span class="line">    <span class="variable">$left</span> = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">//2. 循环匹配</span></span><br><span class="line">    <span class="keyword">while</span>(<span class="variable">$left</span>&lt;=<span class="variable">$right</span>)&#123;</span><br><span class="line">        <span class="comment">//3.得到中间位置</span></span><br><span class="line">        <span class="variable">$middle</span> = <span class="title function_ invoke__">floor</span>((<span class="variable">$right</span>+<span class="variable">$left</span>)/<span class="number">2</span>);</span><br><span class="line">        <span class="comment">//4.匹配数据</span></span><br><span class="line">        <span class="keyword">if</span>(<span class="variable">$arr</span>[<span class="variable">$middle</span>]==<span class="variable">$res</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="variable">$middle</span>+<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//5.没有找到</span></span><br><span class="line">        <span class="keyword">if</span>(<span class="variable">$arr</span>[<span class="variable">$middle</span>]&lt;<span class="variable">$res</span>)&#123;</span><br><span class="line">            <span class="comment">//值在右边</span></span><br><span class="line">            <span class="variable">$left</span>=<span class="variable">$middle</span>+<span class="number">1</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="comment">//值在左边</span></span><br><span class="line">            <span class="variable">$right</span> = <span class="variable">$middle</span>-<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_ invoke__">var_dump</span>(<span class="title function_ invoke__">check_break</span>(<span class="variable">$arr</span>,<span class="number">3</span>));</span><br><span class="line">结果:</span><br><span class="line"><span class="keyword">float</span>(<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+
+<div class="article-footer fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2023/09/04/258025d3/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2023/09/04/258025d3/&title=PHP-算法初识~ - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401270946765.png&summary=
+    总字符数: 8.08K 
+    
+    
+    代码: 5.11K, 文本: 2.83K
+    
+    
+    预计阅读时间: 35 分钟
+    
+    
+
+编程思想编程思想:如何利用数学模式,来解决对应的需..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=PHP-算法初识~ - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2023/09/04/258025d3/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2023/09/04/258025d3/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/09/05/5a76691e/">PHP-表单</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/09/03/39ccd172/">PHP-从入门到精通(下)</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\2022\06\23\92579896\" title="PHP-JSON 字符串转义问题"><span class="title">PHP-JSON 字符串转义问题</span></a><a class="item" href="\2023\09\07\f2a0f176\" title="PHP-MySQL"><span class="title">PHP-MySQL</span></a><a class="item" href="\2023\09\05\5a76691e\" title="PHP-表单"><span class="title">PHP-表单</span></a><a class="item" href="\2023\09\02\20d7e033\" title="PHP-从入门到精通(上)"><span class="title">PHP-从入门到精通(上)</span></a><a class="item" href="\2024\09\24\3c3f9499\" title="CS-Cobalt Strike必备知识"><span class="title">CS-Cobalt Strike必备知识</span></a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body waline'>
+      
+
+<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/tools/">工具</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3"><span class="toc-text">编程思想</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%86%E6%8E%A8%E7%AE%97%E6%B3%95"><span class="toc-text">逆推算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%92%E5%BD%92%E7%AE%97%E6%B3%95"><span class="toc-text">递归算法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95"><span class="toc-text">数组排序算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F"><span class="toc-text">冒泡排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F"><span class="toc-text">选择排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F"><span class="toc-text">插入排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F"><span class="toc-text">快速排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F"><span class="toc-text">归并排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E7%AE%97%E6%B3%95"><span class="toc-text">查找算法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E7%AE%97%E6%B3%95%E5%90%AB%E4%B9%89"><span class="toc-text">查找算法含义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A1%BA%E5%BA%8F%E6%9F%A5%E6%89%BE%E7%AE%97%E6%B3%95"><span class="toc-text">顺序查找算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE%E7%AE%97%E6%B3%95"><span class="toc-text">二分查找算法</span></a></li></ol></li></ol></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js`,
+    marked: `https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.27.0" async></script>
+
+<!-- optional -->
+
+  <script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js'
+
+  function load_comment(){
+    if(!document.getElementById("waline_container"))return;
+
+    utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css');
+
+    const el = document.getElementById("waline_container");
+    var path = el.getAttribute('comment_id');
+    if (!path) {
+      path = decodeURI(window.location.pathname);
+    }
+
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+      el: '#waline_container',
+      path: path,
+      
+    }));
+
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    load_comment();
+  });
+
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"></script><script defer src="https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.swiper-slide img, .gallery img ,#waline_container .vcontent img`,
+    css: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css`,
+    js: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || null
+        }
+      });
+    })
+  }
+</script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          loop: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+</div></body></html>

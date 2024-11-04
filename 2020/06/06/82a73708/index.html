@@ -1,0 +1,1432 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.27.0" theme-name="Stellar" theme-version="1.27.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>五. 计算机网络基础 - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="总字符数: 39.02K                代码: 1.56K, 文本: 25.86K               预计阅读时间: 1.99 小时                                       Web请求过程剖析 Web(World Wide Web)是指全球范围内的一系列互联网资源和文件的集合,这些资源和文件通过超文本传输协议(HTTP)进行传">
+<meta property="og:type" content="article">
+<meta property="og:title" content="五. 计算机网络基础">
+<meta property="og:url" content="https://jiangjiyue.github.io/2020/06/06/82a73708/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="总字符数: 39.02K                代码: 1.56K, 文本: 25.86K               预计阅读时间: 1.99 小时                                       Web请求过程剖析 Web(World Wide Web)是指全球范围内的一系列互联网资源和文件的集合,这些资源和文件通过超文本传输协议(HTTP)进行传">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303231452371.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401272123953.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305121004582.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303251640189.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303251623412.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303251630223.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303251636235.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252152325.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202410090924431.jpg">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202410221755712.jpg">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252206892.jpeg">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252206798.jpeg">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252207296.jpeg">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252232978.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252233402.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303231610570.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303231610992.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252153014.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252237009.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252158109.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252158882.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252158760.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252159148.jpeg">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252214623.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252246438.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252247901.jpeg">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304082045550.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304082105765.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304082113704.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303231614285.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303282214856.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202410090925491.jpg">
+<meta property="article:published_time" content="2020-06-06T10:51:22.000Z">
+<meta property="article:modified_time" content="2024-10-22T09:56:54.000Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="计算机基础">
+<meta property="article:tag" content="计算机网络基础">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303231452371.png">
+  
+  
+  
+  <meta name="keywords" content="Linux,计算机基础,计算机网络基础">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.27.0">
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="导航" href="/sites/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/tools/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
+</div>
+<div class="widgets">
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">专栏：SysNetDocs</span></div><div class="widget-body"><a class="item" href="/2020/06/01/f5d15284/"><span class="title">一. 计算机基础知识</span></a><a class="item" href="/2020/06/02/5fa17f4e/"><span class="title">二. Linux从入门到精通(上)</span></a><a class="item" href="/2020/06/03/46ba4e0f/"><span class="title">二. Linux从入门到精通(下)</span></a><a class="item" href="/2020/06/04/161f7eae/"><span class="title">三. Windows Server从入门到精通</span></a><a class="item" href="/2020/06/05/2d7bc590/"><span class="title">四. Kali Linux安装</span></a><a class="item active" href="/2020/06/06/82a73708/"><span class="title">五. 计算机网络基础</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a></div></widget>
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2024/11/04/fe2980d6/"><span class="title">CS-ShellCode加载器</span></a><a class="item title" href="/2023/03/11/247b757/"><span class="title">VulHub-Fastjson漏洞复现</span></a><a class="item title" href="/2023/04/28/76971e68/"><span class="title">VulHub-Tomcat漏洞复现</span></a><a class="item title" href="/2024/07/05/dd58c5ed/"><span class="title">应急响应之Webshell流量分析</span></a><a class="item title" href="/2024/10/27/77c80f0f/"><span class="title">CS-C语言总结</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/topic">专栏</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/2020/06/01/f5d15284/">SysNetDocs</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2020-06-06T10:51:22.000Z">2020-06-06</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-10-22T09:56:54.000Z">2024-10-22</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>五. 计算机网络基础</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
+    <p>总字符数: 39.02K </p>
+    </div>
+    <div class="cell" style="">
+    <p>代码: 1.56K, 文本: 25.86K</p>
+    </div>
+    <div class="cell" style="">
+    <p>预计阅读时间: 1.99 小时</p>
+    </div>
+    </div>
+
+
+    <div class="tag-plugin video" style="aspect-ratio:1.7777777777777777;max-width:100%;">
+    <iframe src="https://player.bilibili.com/player.html?bvid=BV1aN411W7Zm&autoplay=false" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true">
+    </iframe>
+    </div>
+    
+
+<h2 id="Web请求过程剖析"><a href="#Web请求过程剖析" class="headerlink" title="Web请求过程剖析"></a>Web请求过程剖析</h2><blockquote>
+<p>Web(World Wide Web)是指全球范围内的一系列互联网资源和文件的集合,这些资源和文件通过超文本传输协议(HTTP)进行传输和访问.</p>
+<p>我们通常所说的Web指的是面向大众的互联网,是一种基于互联网的信息传递和共享方式. </p>
+<p>通俗来说,Web就像是一座大图书馆,里面收藏了无数的书籍和资料.</p>
+<p>我们可以通过电脑、手机等设备连接到互联网,访问Web上的各种网站和应用,获取各种信息和服务.就像在图书馆里查阅书籍一样</p>
+<p>我们可以在Web上搜索各种信息、浏览新闻、购买商品、观看视频、玩游戏等等.</p>
+<p>同时,我们也可以通过Web来发布信息、分享知识、交流想法、开展业务等等,使得信息的传递和共享更加便捷和高效.</p>
+</blockquote>
+<div class="tag-plugin quot"><p class="content" type="text"><span class="empty"></span><span class="text">那就先引入一个叫URL的概念</span><span class="empty"></span></p></div>
+
+<h3 id="URL构成"><a href="#URL构成" class="headerlink" title="URL构成"></a>URL构成</h3><p>这是重点!!!!</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303231452371.png" data-fancybox="true"/></div></div>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 名词解释</span></span><br><span class="line">scheme:协议</span><br><span class="line">Domain Name:域名</span><br><span class="line">Port:端口号</span><br><span class="line">Path to the file:虚拟目录/或文件名</span><br><span class="line">myfile.html:文件名</span><br><span class="line">Parameters:参数</span><br><span class="line">Anchor:锚点</span><br><span class="line"><span class="comment"># HTML中的锚点(Anchor)是指在同一页面内,通过添加链接到页面中的某个具体位置,使得用户可以直接跳转到该位置的标识.锚点的作用是可以方便用户快速定位到页面中的某个具体位置,而不需要手动滚动页面进行查找.锚点通常使用a标签和name属性来实现</span></span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin colorful note" color="red"><div class="body"><p>上面又提到了一个名词:域名!那什么是域名呢?</p></div></div>
+
+<h3 id="域名"><a href="#域名" class="headerlink" title="域名"></a>域名</h3><blockquote>
+<p>域名(Domain Name)是互联网上用于标识和定位网站的一种名称.它是由一串用点分隔的字符组成的,通常包含站点的名称、组织机构的名称、国家或地区的名称等等,最后以一个顶级域名结尾,如.com、.cn、.org等等.</p>
+</blockquote>
+<blockquote>
+<p>域名的作用是将IP地址(Internet Protocol Address)转化为易于记忆的字符串,使人们更方便地访问互联网上的各种资源,如网站、电子邮件、FTP等等. 域名的注册和管理由全球互联网域名与地址分配机构(ICANN)负责,全球各地的注册商可以向ICANN申请注册和管理不同的顶级域名,如.com、.cn、.org等等.一般而言,注册商会向用户提供域名注册和管理服务,用户可以在注册商的网站上查询和申请域名、设置<strong>DNS服务器</strong>、管理域名等等. 总的来说,域名是互联网上的一个重要概念,它使人们更加方便地访问和管理各种网络资源,是互联网基础架构的重要组成部分.</p>
+</blockquote>
+<p>以上提到的DNS服务器的作用就是将域名解析为IP地址</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><span>域名的作用是什么?为什么会出现这种东西?</span></summary><div class="body"><p>域名在互联网上扮演着关键角色,其重要性可以从多个角度来理解:</p><ol><li><strong>便于记忆</strong>:就像名字比身份证号更易于记忆和传递,域名用易记的单词替代数字组成的IP地址,让人们轻松地记住和访问网站.</li><li><strong>访问便利</strong>:域名作为网站的地址,使得用户可以快速访问到企业和组织的在线信息,而不需要记忆可能频繁变更的IP地址.</li><li><strong>抽象层</strong>:域名隐藏了网络复杂性,用户不需要了解服务器的具体IP地址和网络连接细节,只需知道简单的域名.</li><li><strong>品牌识别</strong>:域名与企业品牌紧密关联,成为企业在互联网上宣传品牌形象的有力工具.</li><li><strong>组织结构</strong>:域名系统的层级结构,类似行政区划的级别,有助于组织和管理网络上复杂的身份与资源.</li><li><strong>网络架构</strong>:在互联网的快速发展中,域名使得单个IP地址可以托管多个网站,并在服务器变更时为用户提供无缝访问体验.</li></ol><p>综合以上各点,我们可以看到域名不仅仅是一个方便记忆和访问的标签,它还是网络上企业身份的象征、品牌宣传的平台,以及组织网络资源的有效工具.简而言之,域名是连接用户和互联网服务的桥梁,其重要性不言而喻.通过这个网络地址,人们可以轻松地在广阔的互联网世界中找到和接触到企业或个人的在线门户.</p></div></details></div>
+
+<h3 id="请求过程剖析"><a href="#请求过程剖析" class="headerlink" title="请求过程剖析"></a>请求过程剖析</h3><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401272123953.png" data-fancybox="true"/></div></div>
+
+<p>Web服务器的过程可以简单理解为以下几个步骤:</p>
+<ol>
+<li><p>客户端发送请求:当用户在浏览器中输入网址或者点击链接时,浏览器会向Web服务器发送一个HTTP请求.</p>
+</li>
+<li><p>Web服务器接收请求:Web服务器收到请求后,会根据请求的URL路径和参数等信息,找到对应的服务器程序,然后调用相应的处理函数.</p>
+</li>
+<li><p>服务器程序处理请求:服务器程序会根据请求的内容,执行相应的逻辑,比如读取数据库中的数据、生成动态页面等操作.</p>
+</li>
+<li><p>服务器程序返回响应:服务器程序处理完请求后,会将处理结果封装成HTTP响应,包括响应码、响应头、响应体等信息,发送给Web服务器.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305121004582.png" data-fancybox="true"/></div></div>
+
+<ol>
+<li>Web服务器返回响应:Web服务器收到服务器程序返回的响应后,将其发送给客户端浏览器,浏览器根据响应内容进行解析和渲染,最终呈现给用户. 整个过程中,Web服务器起到了桥梁的作用,连接了客户端浏览器和服务器程序,并负责将双方的请求和响应进行转发和处理.</li>
+</ol>
+</li>
+</ol>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303251640189.png" data-fancybox="true"/></div></div>
+
+<h3 id="渲染模式"><a href="#渲染模式" class="headerlink" title="渲染模式"></a>渲染模式</h3><ol>
+<li>服务器渲染(MVC):在服务器那边直接把数据和html整合在一起,统一返回给浏览器,在页面源代码中可以看到数据</li>
+</ol>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303251623412.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303251630223.png" data-fancybox="true"/></div></div>
+
+<ol start="2">
+<li>客户端渲染(MVVM):第一次请求只要一个html骨架.第二次请求拿到数据,进行数据展示.在页面源代码中看不到数据</li>
+</ol>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303251636235.png" data-fancybox="true"/></div></div>
+
+<p>客户端渲染和服务端渲染都是常见的Web开发方式,它们各自具有一些优缺点. </p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><span>客户端渲染</span></summary><div class="body"><p>优点:</p><ol><li><p>用户交互体验好:由于客户端渲染使用了JavaScript的动态渲染,可以实现更加流畅的界面交互效果.</p></li><li><p>更好的分离前后端:前端只需要关注如何处理数据和呈现内容,不用关心后端如何生成页面,这样可以更加灵活地进行前后端的分离.</p></li></ol><p>缺点:</p><ol><li><p>首屏加载慢:由于客户端需要先下载页面的HTML和JavaScript代码,再通过JavaScript进行渲染,所以首屏加载速度相对较慢.</p></li><li><p>对浏览器性能要求高:客户端渲染需要大量的JavaScript计算和DOM操作,这对浏览器性能有较高的要求.</p></li></ol></div></details><details class="folder" index="1"><summary><span>服务端渲染</span></summary><div class="body"><p>优点:</p><ol><li><p>首屏加载快:由于服务端渲染直接生成HTML页面,所以首屏渲染速度很快.</p></li><li><p>对浏览器性能要求低:服务端渲染不需要大量的JavaScript计算和DOM操作,对浏览器性能要求较低.</p></li></ol><p>缺点:</p><ol><li><p>用户交互体验差:由于服务端渲染只在页面加载时渲染HTML,不支持动态更新,所以用户交互效果相对较差.</p></li><li><p>前后端分离不够彻底:服务端渲染需要将前端和后端的逻辑结合在一起,相对较难实现真正的前后端分离.</p></li><li><p>对服务器性能要求高:服务端需要承担渲染页面的工作,所以对服务器的性能有较高的要求. 综上所述,客户端渲染和服务端渲染各自有其优缺点,选择哪种方式需要根据具体的应用场景和需求进行权衡.</p></li></ol></div></details></div>
+
+<h2 id="网络专业术语"><a href="#网络专业术语" class="headerlink" title="网络专业术语"></a>网络专业术语</h2><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252152325.png" data-fancybox="true"/></div></div>
+
+<h3 id="什么是网络"><a href="#什么是网络" class="headerlink" title="什么是网络?"></a>什么是网络?</h3><blockquote>
+<p>网络(network)是指连接在一起的计算机、设备和其他物体的集合,使它们能够相互通信和交换数据.</p>
+<p>这些设备可以是电脑、手机、路由器、交换机、服务器等.</p>
+<p>网络可以是局域网(Local Area Network,简称 LAN)、广域网(Wide Area Network,简称WAN)、城域网(Metropolitan Area Network,简称MAN) 等不同范围的连接.</p>
+</blockquote>
+<p>在一个网络中,设备通过协议进行通信,这些协议规定了通信过程中需要遵守的规则和标准,例如TCP&#x2F;IP协议就是一种常见的网络协议.通过网络,用户可以在不同的地理位置之间共享信息、资源和服务,例如电子邮件、网页浏览、在线视频、远程文件访问等.网络在现代社会中扮演着非常重要的角色,它不仅使人们更容易地获取信息和资源,还支持了商业、教育、娱乐、社交等各个领域的发展.</p>
+<h3 id="什么是OSI七层模型"><a href="#什么是OSI七层模型" class="headerlink" title="什么是OSI七层模型?"></a>什么是OSI七层模型?</h3><blockquote>
+<p>OSI(开放式系统互联)七层模型是一种标准的网络通信架构,它将网络通信过程划分为七个不同的层次. 每个层次都负责特定的功能,从物理传输到应用层面,通过定义每个层次之间的接口和协议,使得不同的网络设备和系统可以相互通信.</p>
+</blockquote>
+<p>下面是OSI七层模型的层次及其功能:</p>
+<ol>
+<li>物理层<code>(Physical Layer)</code>:负责在物理介质上传输原始比特流,它定义了如何传输数据的物理媒介、 信号的编码和解码方式、电气和机械规范等.</li>
+<li>数据链路层<code>(Data Link Layer)</code>:将物理层提供的原始比特流转化为数据帧,以提供可靠的点对点通信,主要完成数据帧的组帧和解帧、差错检测和纠正等功能. </li>
+<li>网络层<code>(Network Layer)</code>:负责为数据包选择路由和传输,为不同的应用程序提供透明的通信服务. 主要包括寻址、路由选择、流量控制、拥塞控制等功能.</li>
+<li>传输层<code>(Transport Layer)</code>:提供端到端的数据传输服务,为应用程序提供可靠的数据传输机制.主要完成数据分段、流量控制、差错检测和纠正等功能.</li>
+<li>会话层<code>(Session Layer)</code>:负责建立、管理和维护应用程序之间的会话连接,包括会话的建立、维护 和结束等功能.</li>
+<li>表示层<code>(Presentation Layer)</code>:负责数据格式的转换,确保应用程序能够理解和处理来自其他应用程序的数据.主要完成加密、压缩、格式转换等功能.</li>
+<li>应用层<code>(Application Layer)</code>:提供网络应用程序与用户之间的接口,为用户提供各种网络应用服务, 如电子邮件、文件传输、远程登录等.</li>
+</ol>
+<p>通过将网络通信过程划分为不同的层次,OSI七层模型可以促进不同厂商、不同类型的网络设备之间的互操作性,从而实现全球范围内的互联网通信.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202410090924431.jpg" data-fancybox="true"/></div></div>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202410221755712.jpg" data-fancybox="true"/></div></div>
+<h4 id="物理层"><a href="#物理层" class="headerlink" title="物理层"></a>物理层</h4><p>物理层是OSI七层模型中的第一层,也是整个网络体系结构的底层.该层的主要任务是将比特流(0和1)转换为物理信号,并在网络中传输这些信号.</p>
+<p>物理层的功能包括:</p>
+<ol>
+<li>建立和维护物理连接:物理层负责在通信设备之间建立物理连接,如使用网线、光缆等连接设备.</li>
+<li>传输数据:物理层负责将比特流通过物理信号传输到另一台设备,以实现数据的传输.</li>
+<li>编码和调制:物理层负责将数字信号转换成模拟信号,以便在物理介质上传输.</li>
+<li>时钟同步:物理层负责保证发送和接收设备的时钟同步,以确保正确地传输数据.</li>
+<li>电气和机械规范:物理层定义了物理媒介、信号电压、频率和传输速率等方面的规范,以确保不同设备 之间的互操作性.</li>
+</ol>
+<p>总之,物理层的主要作用是将数字信号转换为物理信号并将其传输到目标设备,以便在网络中进行通信.</p>
+<p>物理层的作用:连接不同的物理设备,传输比特流.该层为上层协议提供了一个传输数据的可靠的物理媒体.简单的说,物理层确保原始的数据可在各种物理媒体上传输.</p>
+<p><strong>物理层设备:</strong></p>
+<p>物理层是网络模型中的第一层,负责将比特流转换为物理信号,并在物理媒介上传输这些信号.以下是一些在物理层中使用的设备:</p>
+<ol>
+<li>网卡(Network Interface Card):也称为网络适配器或网卡,是连接计算机到网络中的硬件设备.它 负责将比特流转换为物理信号,并通过物理媒介传输这些信号.</li>
+<li>集线器(Hub):是一种被动设备,用于将多个计算机连接到网络上.它的主要功能是将来自一个端口 的数据广播到所有其他端口.</li>
+<li>中继器(Repeater):是一种放大信号的设备,用于扩展网络的物理距离.中继器接收信号后,放大并 重新发送到下一个设备.</li>
+<li>光纤收发器(Optical Transceiver):是一种用于将数字信号转换成光信号的设备.它通常用于连接两 个网络设备之间的光纤.</li>
+<li>传输介质(Transmission Media):包括电缆、光缆、无线电波等物理媒介,用于在网络设备之间传输信号.</li>
+</ol>
+<p>这些设备和媒介都是物理层中使用的基本元素,它们共同构成了计算机网络的基础设施,使得计算机之间能 够通过物理媒介进行通信.</p>
+<h4 id="数据链路层"><a href="#数据链路层" class="headerlink" title="数据链路层"></a>数据链路层</h4><p>数据链路层是OSI七层模型中的第二层,位于物理层之上,它的主要功能是将数据帧从一个物理节点传输到另一个物理节点,保证数据在物理层的传输的可靠性和正确性.</p>
+<p>数据链路层的主要功能包括:</p>
+<ol>
+<li>帧同步:数据链路层负责将物理层传输的比特流组成数据帧,并在帧之间进行同步,以确保帧的可靠传输.</li>
+<li>帧的识别:数据链路层负责在数据帧中添加头部和尾部,以便识别帧的起始和结束位置,并进行帧的检错和纠错处理.</li>
+<li>访问控制:数据链路层实现了访问控制,以管理多个设备之间的共享物理媒介,例如以太网中的 CSMA&#x2F;CD协议.</li>
+<li>流量控制:数据链路层负责管理传输数据的速率,以确保数据不会被发送端发送太快,而接收端无法及时处理.</li>
+<li>错误检测和纠正:数据链路层负责检测和纠正数据传输过程中出现的错误,例如奇偶校验、CRC检验等.</li>
+</ol>
+<p>在数据链路层中,常用的设备包括网桥(Bridge)和交换机(Switch).网桥用于连接两个不同的局域网, 而交换机则用于连接多个局域网,并将数据帧从一个端口传输到另一个端口.这些设备在数据链路层起着重 要的作用,帮助实现了数据的可靠传输和访问控制.</p>
+<p><strong>有关数据链路层的重要知识点:</strong></p>
+<ul>
+<li><p>数据链路层为网络层提供可靠的数据传输;</p>
+</li>
+<li><p>基本数据单位为帧;</p>
+</li>
+<li><p>主要的协议:以太网协议;</p>
+</li>
+<li><p>两个重要设备名称:网桥和交换机.</p>
+</li>
+<li><p>封装成帧:”帧”是数据链路层数据的基本单位:</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252206892.jpeg" data-fancybox="true"/></div></div></li>
+</ul>
+<p>MAC地址:每一个设备都拥有唯一的MAC地址,共48位,使用十六进制表示. </p>
+<p>以太网协议:是一种使用广泛的局域网技术,是一种应用于数据链路层的协议,使用以太网可以完成<strong>相邻设备</strong>的数据帧传输</p>
+<h4 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h4><p>网络层<code>(Network Layer)</code>是计算机网络体系结构中的第三层,也被称为互联网层<code>(Internet Layer)</code>.它负责将网络上的数据包从源主机传输到目的主机,实现不同网络之间的互联互通.</p>
+<p>网络层的主要功能包括:</p>
+<ol>
+<li>网络寻址:网络层使用IP地址来标识不同的主机和网络.源主机将数据包发送到目的主机时,需要知道目的主机的IP地址,这样才能将数据包正确地路由到目的主机.</li>
+<li>路由选择:当数据包经过多个网络时,网络层需要根据不同的路由算法选择最佳的路径将数据包传输到目的主机.</li>
+<li>分段和重组:如果数据包的大小超过了网络层所支持的最大传输单元(MTU),网络层需要将数据包分 段,然后将每个分段单独传输,并在目的主机处将它们重组成原始的数据包.</li>
+</ol>
+<p>网络层的重要协议包括IP协议、ICMP协议、ARP协议等.IP协议是网络层的核心协议,它定义了IP地址的格 式、数据包的封装和路由选择等重要功能.ICMP协议用于传输网络层的控制消息,例如错误报告和网络故障 信息等.ARP协议则用于将IP地址转换为物理地址,以便网络层能够将数据包正确地发送到目的主机.</p>
+<p><strong>网络层的主要协议:</strong></p>
+<ul>
+<li><p>IP协议(<code>Internet Protocol</code>,因特网互联协议)</p>
+</li>
+<li><p>ICMP协议(<code>Internet Control Message Protocol</code>,因特网控制报文协议)</p>
+</li>
+<li><p>ARP协议(<code>Address Resolution Protocol</code>,地址解析协议)</p>
+</li>
+<li><p>RARP协议(<code>Reverse Address Resolution Protocol</code>,逆地址解析协议)</p>
+</li>
+</ul>
+<div class="tag-plugin colorful note" color="red"><div class="body"><p>网络层重要的设备:路由器</p></div></div>
+
+<h4 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a>传输层</h4><p>传输层是计算机网络体系结构中的一个重要层次,它负责在网络之间传输数据,并为应用程序提供端到端的数据传输服务.传输层协议位于网络层和应用层之间,主要负责以下几个方面:</p>
+<ol>
+<li>端口标识和多路复用:传输层使用端口号标识不同的应用程序,并提供多路复用和多路分解功能,使得多个应用程序可以共享网络连接.</li>
+<li>数据传输可靠性:传输层使用TCP协议提供可靠的数据传输服务,保证数据传输的完整性和可靠性;使用UDP协议提供无连接的数据传输服务,速度较快但不可靠.</li>
+<li>拥塞控制和流量控制:传输层使用TCP协议实现拥塞控制和流量控制,防止网络拥塞和数据包丢失.</li>
+</ol>
+<p>常见的传输层协议包括TCP和UDP协议.</p>
+<ul>
+<li>TCP协议提供面向连接的、可靠的数据传输服务,适用于要求数据传输可靠性和完整性的应用场景</li>
+<li>UDP协议提供无连接的、不可靠的数据传输服务,适用于要求数据传输速度和实时性的应用场景</li>
+</ul>
+<p><strong>有关网络层的重点:</strong></p>
+<ul>
+<li><p>传输层负责将上层数据分段并提供端到端的、可靠的或不可靠的传输以及端到端的差错控制和流量控制问题</p>
+</li>
+<li><p>包含的主要协议:TCP协议(<code>Transmission Control Protocol</code>,传输控制协议)、UDP协议(<code>User Datagram Protocol</code>,用户数据报协议)</p>
+</li>
+<li><p>重要设备:网关</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252206798.jpeg" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252207296.jpeg" data-fancybox="true"/></div></div></li>
+</ul>
+<h4 id="会话层"><a href="#会话层" class="headerlink" title="会话层"></a>会话层</h4><p>会话层(<code>Session Layer</code>)是OSI模型中的第五层,它提供了建立、管理和终止通信会话的机制.通信会话是指在网络中两个或多个设备之间的一系列交互,这些交互通常涉及数据交换、传输控制、错误检测和纠正等功能.</p>
+<p>会话层的主要功能包括以下几个方面:</p>
+<ol>
+<li>建立会话:会话层负责建立两个设备之间的通信会话,并确定通信双方的身份.</li>
+<li>维护会话:在通信会话期间,会话层负责保持会话的状态信息,并确保通信双方之间的通信顺畅.</li>
+<li>终止会话:当通信会话结束时,会话层负责关闭会话,并清除所有相关的状态信息.</li>
+<li>管理会话:会话层还负责管理会话期间可能出现的各种错误和异常情况,以确保通信的可靠性和稳定 性.</li>
+</ol>
+<p>总之,会话层在网络通信中扮演着重要的角色,它确保通信会话的顺利进行,并提供了各种必要的功能,以确保通信的可靠性、安全性和稳定性.</p>
+<h4 id="表示层"><a href="#表示层" class="headerlink" title="表示层"></a>表示层</h4><p>表示层(<code>Presentation Layer</code>)是OSI模型中的第六层,它主要负责处理数据的表示和编码,以确保通信双方能够理解和解释彼此发送的数据.</p>
+<p>表示层的主要功能包括以下几个方面:</p>
+<ol>
+<li>数据格式化:表示层将数据从应用层接收后,负责将其转换为一种标准格式,以便于传输和接收.</li>
+<li>数据加密和解密:为了确保通信的安全性,表示层可以对传输的数据进行加密和解密处理,以保护数据 的机密性和完整性.</li>
+<li>数据压缩和解压缩:在网络传输过程中,数据传输的速度往往是非常重要的.表示层可以通过对数据进 行压缩和解压缩处理,以减小数据传输的大小,提高传输效率.</li>
+<li>数据编码和解码:不同的计算机系统和应用程序之间,可能会使用不同的数据编码格式.表示层可以将 不同编码格式之间的数据进行转换和解码,以确保数据的正确传输和解释.</li>
+</ol>
+<p>总之,表示层是网络通信中非常重要的一层,它确保了数据在传输过程中的正确性、可读性和安全性,同时也提高了数据传输的效率和可靠性.</p>
+<h4 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a>应用层</h4><p>应用层是计算机网络体系结构中的最高层,它为用户提供了许多网络应用程序,如电子邮件、文件传输、 Web浏览器等.</p>
+<p>应用层协议是在应用层之上运行的协议,用于定义应用程序之间的通信规则.常见的应用层协议包括HTTP、FTP、SMTP、POP3、IMAP、DNS等.</p>
+<p>应用层的主要功能是实现应用程序之间的通信和数据交换,应用层协议负责规定数据的格式、编码和传输方式,以及通信双方的行为.应用层协议通常使用基于TCP或UDP协议的传输层协议来传输数据,因此应用层协议的功能和性能往往受限于传输层协议的限制.</p>
+<p>应用层协议是网络通信中的重要组成部分,它为用户提供了各种各样的网络应用程序,并促进了互联网的普及和发展.</p>
+<div class="tag-plugin colorful note" color="red"><div class="title">数据传输基本单位为报文；</div><div class="body"><p>包含的主要协议:FTP(文件传输协议)、Telnet(远程登录协议)、DNS(域名解析协议)、SMTP(邮件传送协议),POP3协议(邮局协议),HTTP协议(超文本传输协议).</p></div></div>
+
+<h3 id="什么是寻址-什么是路由"><a href="#什么是寻址-什么是路由" class="headerlink" title="什么是寻址?什么是路由?"></a>什么是寻址?什么是路由?</h3><blockquote>
+<p>寻址就是通过一个地址来找到存储器中的数据或者设备中的寄存器,就好像你知道了一个房间的地址,就可以去到这个房间里找到你需要的东西一样.在计算机中,寻址是非常重要的过程,因为计算机需要通过地址来访问内存中的指令和数据,才能完成各种操作.</p>
+<p>例如,当你打开一个软件或者浏览器时,计算机就需要通过地址来寻找这个软件或者浏览器的指令和数据,才能把它们加载到内存中,然后运行起来.在计算机指令中,也常常需要使用寻址的方式来访问内存中的数据,例如,将一个内存单元中的数据移动到寄存器中时,需要指定内存单元的地址.</p>
+</blockquote>
+<p>通俗来讲寻址,就是要通过地址找某一样东西.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252232978.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin quot"><p class="content" type="text"><span class="empty"></span><span class="text">路由就是计算机网络中用来实现不同网络之间通信的一种设备或者技术.</span><span class="empty"></span></p></div>
+
+
+<blockquote>
+<p>​	比如,你家用的无线路由器就是一种路由设备.它会将来自不同设备的数据包进行分类,并将它们发送到不同的目标网络,从而实现了不同设备之间的通信. </p>
+<p>在计算机网络中,每个设备都有一个唯一的IP地址,路由器就是通过这些IP地址来进行数据包的转发.</p>
+<p>当一个设备需要发送数据到另一个设备时,它会将数据包发送给它所在的网络中的路由器,路由器会根据目标IP地址来判断这个数据包应该被发送到哪个网络中,然后将数据包发送给下一个路由器,直到最终到达目标设备所在的网络,然后被目标设备接收. </p>
+<p>路由技术在互联网中尤其重要,因为互联网是由众多的网络组成的,不同的网络可能使用不同的协议和技术,但通过路由器可以实现它们之间的互联互通.</p>
+<p>这样,我们才能在任何地方都能访问互联网上的各种资源,包括网站、文件、视频等等.</p>
+</blockquote>
+<p>路由器本质上是一种网关,是互联网的一个结点设备.实现的功能是对不同网络之间的数据包进行存储和分组转发.简单来说,大家可以把路由器理解为网络分发工具.</p>
+<p>通俗来讲路由可以看做现实生活中的”路标”,就是路牌.它的作用就是给数据包指路的,而现实生活中,路标是给汽车指路的.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252233402.png" data-fancybox="true"/></div></div>
+
+<h3 id="代理-Proxy-是什么"><a href="#代理-Proxy-是什么" class="headerlink" title="代理(Proxy)是什么?"></a>代理(Proxy)是什么?</h3><p>代理:</p>
+<blockquote>
+<p>代理(Proxy)是一种网络通信模式,它充当了客户端和服务器之间的中间人,将客户端的请求转发给服务器,并将服务器的响应返回给客户端.代理的作用是隐藏客户端和服务器之间的真实IP地址,保护用户的隐私和安全,同时可以优化网络通信,提高访问速度和稳定性.代理常见的类型有正向代理和反向代理.</p>
+</blockquote>
+<p>正向代理:</p>
+<blockquote>
+<p>正向代理(Forward Proxy)是代表客户端向服务器发送请求的代理服务器.在正向代理的情况下,客户端需要将请求发送给代理服务器,然后由代理服务器向服务器发送请求,并将服务器的响应返回给客户端.正向代理常用于访问被封锁的网站,保护客户端IP地址隐私,以及优化网络通信等.</p>
+</blockquote>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303231610570.png" data-fancybox="true"/></div></div>
+
+<p>反向代理:</p>
+<blockquote>
+<p>反向代理(Reverse Proxy)是代表服务器向客户端发送响应的代理服务器.在反向代理的情况下,客户端将请求发送给反向代理服务器,然后由反向代理服务器向服务器发送请求,并将服务器的响应返回给客户端.反向代理常用于负载均衡、高可用性(HA)和安全性等方面,可以将请求分发到不同的服务器上,从而提高访问速度和稳定性,同时也可以隐藏服务器的真实IP地址,提高安全性.</p>
+</blockquote>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303231610992.png" data-fancybox="true"/></div></div>
+
+<h3 id="单工、半双工、全双工又是什么"><a href="#单工、半双工、全双工又是什么" class="headerlink" title="单工、半双工、全双工又是什么?"></a>单工、半双工、全双工又是什么?</h3><ul>
+<li>单工:简单的说就是一方只能发信息,另一方则只能收信息,通信是单向的.</li>
+<li>半双工:比单工先进一点,就是双方都能发信息,但同一时间则只能一方发信息.</li>
+<li>全双工:比半双工再先进一点,就是双方不仅都能发信息,而且能够同时发送.</li>
+</ul>
+<h3 id="单播、广播、组播-哪款用来表白好呢"><a href="#单播、广播、组播-哪款用来表白好呢" class="headerlink" title="单播、广播、组播?哪款用来表白好呢?"></a>单播、广播、组播?哪款用来表白好呢?</h3><p>表白为什么要表白?</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252153014.png" data-fancybox="true"/></div></div>
+
+<h4 id="通信方式分类"><a href="#通信方式分类" class="headerlink" title="通信方式分类"></a>通信方式分类</h4><p>在IPv4网络中,主机可采用的通信方式有如下三种:</p>
+<ol>
+<li>单播:单台主机与单台主机之间的数据通信</li>
+<li>广播:单台主机向网络中所有主机发送数据包的过程</li>
+<li>组播:单台主机向选定的一组主机发送数据包的过程<br>单播、广播以及组播的用途各不相同,并且使用不同的IP地址做为目的地址.</li>
+</ol>
+<h4 id="单播"><a href="#单播" class="headerlink" title="单播"></a>单播</h4><p>单播是指单台设备与单台设备之间的通信,源地址和目的地址都是单一的IPv4地址,单播数据包的通信可以在网络之间转发.在实际的网络通信中,大多数的通信都属于单播.</p>
+<h4 id="广播-组播"><a href="#广播-组播" class="headerlink" title="广播(组播)"></a>广播(组播)</h4><p>广播是一台主机向网络中所有主机发送数据包,广播的目的地址不同于单播单一的地址.</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><span>扩展知识</span></summary><div class="body"><p>广播有两类:定向广播和有限广播</p><ol><li>定向广播是将数据包发送到向本网络之外的特定网络所有主机,定向广播的目的地址是定向网络的广播地址,如当前网络为192.168.0.0&#x2F;24,要向192.168.1.0&#x2F;24的网络发送定向广播,那么定向广播的目的地址是:192.168.1.255.可以配置路由器让其转发定向广播</li><li>有限广播是将数据包发送到本地网络的所有主机,有限广播使用的目的地址是:255.255.255.255.路由器不转发此广播.</li></ol></div></details></div>
+
+<h4 id="组播-多播"><a href="#组播-多播" class="headerlink" title="组播(多播)"></a>组播(多播)</h4><table>
+<thead>
+<tr>
+<th>通信类型</th>
+<th>描述</th>
+<th>优点</th>
+<th>缺点</th>
+<th>注意事项</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>单播</td>
+<td>单台设备与单台设备之间的通信</td>
+<td>数据直达特定接收者,隐私性好</td>
+<td>在多接收者时效率低,重复数据多</td>
+<td>-</td>
+</tr>
+<tr>
+<td>广播</td>
+<td>单台设备向网络中所有主机发送数据</td>
+<td>简单,无需特定路由,所有节点均可接收</td>
+<td>可能导致网络拥塞,安全性低</td>
+<td>一般限于单个广播域内,不跨越路由</td>
+</tr>
+<tr>
+<td>组播</td>
+<td>向指定的一组主机发送数据</td>
+<td>相比广播减少网络流量,比单播更高效</td>
+<td>需要网络支持IGMP等组播协议</td>
+<td>接收组播的客户机需要安装相应的客户端程序,网络设备需要配置</td>
+</tr>
+</tbody></table>
+<h3 id="吞吐量-难道指的是我们吐的量吗"><a href="#吞吐量-难道指的是我们吐的量吗" class="headerlink" title="吞吐量?难道指的是我们吐的量吗?"></a>吞吐量?难道指的是我们吐的量吗?</h3><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252237009.png" data-fancybox="true"/></div></div>
+
+<blockquote>
+<p>吞吐量是指在一定时间内系统或设备处理的数据量或事务数量.通俗理解吞吐量就好比是一条河流的水流量,河流的水流量表示在一定时间内河流中流过的水的数量.</p>
+<p>吞吐量表示在一定时间内系统或设备处理的数据量或事务数量.如果一条河流水流量大,就能够承载更多的水和物质,同样地,如果一个系统的吞吐量大,就能够处理更多的数据或事务.因此,提高系统吞吐量是提高系统性能的一个重要指标.</p>
+</blockquote>
+<h3 id="端口"><a href="#端口" class="headerlink" title="端口"></a>端口</h3><p>在计算机网络中,端口(Port)是一种逻辑标识符,用于标识网络应用程序.每个网络应用程序都可以选择使用一个或多个端口来进行通信</p>
+<blockquote>
+<p>比如学校同一个食堂卖菜的管卖菜,卖饮料的管饮料</p>
+<p>同一台电脑对外来说只有一个IP,但是一台电脑可以提供各种不同的服务,比如WEB服务,FTP服务,SMTP邮件服务.</p>
+<p>端口就是用来区别服务的,也就是说网络上的服务是用IP+端口这样的形式来区别的.</p>
+<p>不同的服务或协议通常会使用不同的端口号,比如FTP服务使用的是21端口,SSH服务使用的是22端口,SMTP服务使用的是25端口,等等.</p>
+<p>端口号的范围是<strong>从0到65535</strong></p>
+</blockquote>
+<p>端口被分为三类:</p>
+<ol>
+<li>熟知端口(Well-known Ports):它们的端口号在0到1023之间,通常用于一些系统或常用服务,如 HTTP(端口80)、FTP(端口21)、SSH(端口22)、Telnet(端口23)等.</li>
+<li>注册端口(Registered Ports):它们的端口号在1024到49151之间,通常用于一些应用程序或服务, 如Oracle数据库(端口1521)、MySQL数据库(端口3306)等.</li>
+<li>动态&#x2F;私有端口(Dynamic&#x2F;Private Ports):它们的端口号在49152到65535之间,通常用于客户端应用程序临时分配的端口号.</li>
+</ol>
+<p>了解常用的端口号可以帮助我们更好地理解网络协议和应用程序的通信方式.在网络故障排除和安全管理中,端口号也经常被用来诊断和解决问题.</p>
+<p><strong>以下是常见的端口:</strong></p>
+<ol>
+<li>21:FTP(文件传输协议)</li>
+<li>22:SSH(安全外壳协议)</li>
+<li>23:Telnet(远程终端协议)</li>
+<li>25:SMTP(简单邮件传输协议)</li>
+<li>53:DNS(域名系统)</li>
+<li>80:HTTP(超文本传输协议)</li>
+<li>110:POP3(邮局协议版本3)</li>
+<li>143:IMAP(互联网消息访问协议)</li>
+<li>161:SNMP(简单网络管理协议)</li>
+<li>443:HTTPS(安全超文本传输协议)</li>
+<li>465:SMTPS(加密SMTP)</li>
+<li>587:SMTP(带有扩展功能的邮件传输协议)</li>
+<li>993:IMAPS(加密IMAP)</li>
+<li>995:POP3S(加密POP3)</li>
+<li>3389:RDP(远程桌面协议)</li>
+</ol>
+<p>这些是常用的端口,但实际上端口号远不止这些,每个应用程序都可以选择不同的端口号.了解常用端口号可以帮助我们更好地了解网络协议和应用程序.</p>
+<p>数据库使用的端口号取决于数据库管理系统(DBMS)和配置.以下是一些常见的数据库管理系统使用的默认端口号:</p>
+<ol>
+<li>MySQL:3306</li>
+<li>PostgreSQL:5432</li>
+<li>Oracle数据库:1521</li>
+<li>Microsoft SQL Server:1433</li>
+<li>MongoDB:27017</li>
+<li>Redis:6379</li>
+</ol>
+<p>需要注意的是,这些是默认端口号,具体端口号还要取决于数据库的具体配置.如果需要连接到不同的端口号,用户需要在连接字符串或配置文件中指定相应的端口号.</p>
+<h3 id="B-S-C-S"><a href="#B-S-C-S" class="headerlink" title="B&#x2F;S  C&#x2F;S"></a>B&#x2F;S  C&#x2F;S</h3><p>目前PC端应用有两种开发模式,分别为CS和BS</p>
+<h4 id="CS"><a href="#CS" class="headerlink" title="CS"></a>CS</h4><p>CS即Client&#x2F;Server(客户机&#x2F;服务器)结构,C&#x2F;S结构在技能上非常成熟,它的重要特征就是交互性强、拥有安全的存取形式、网络通信数量低、响应速度快、利于处置大量数据.可是这个结构的程序就是针对性开发,变更不够灵活,维护与管理的难度较大.常常只局限在小型局域网,不利于扩展.而且,因为这个结构的每台客户机全部须要安装相对应的客户端程序,分布功能弱并且兼容性差,不可以完成迅速部署安装与配置,因为这样缺少通用性,拥有比较大的局限性.请求拥有肯定专业水准的技能人员去结束.</p>
+<h4 id="BS"><a href="#BS" class="headerlink" title="BS"></a>BS</h4><p>BS即Browser&#x2F;Server(浏览器&#x2F;服务器)结构,就是只安装维护一个服务器(Server),而客户端选用浏览器(Browser)运行软件.B&#x2F;S结构应用程序相对于传统的C&#x2F;S结构应用程序就是一个特别大的进步. B&#x2F;S结构的重要特征就是分布性强、维护方便、开发简单并且共享性强、总体拥有费用低.但数据安全性问题、对服务器需要过高、数据传输速度慢、软件的个性化特征明显减少,这些缺点就是有目共睹的,难以完成传统形式下的特殊功能请求.比如通过浏览器实行大量的数据输入或实行报表的应答、专用性打印输出全部相对比较困难与不便.另外,完成复杂的应用构造有较大的困难.<br>两者重要优缺点如下:</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><span>CS架构优缺点</span></summary><div class="body"><p>优点:</p><ul><li>可以足够表现客户端PC的处置才能,很多工作能够在客户端处置以后再提交给服务器,于是CS客户端响应速度快.</li><li>操作界面漂亮、形式多样,能够足够满足客户自己的个性化要求.</li><li>C&#x2F;S结构的管理信息系统拥有比较强的事务处置才能,可以完成复杂的业务过程.</li><li>安全性能能够非常容易确保,C&#x2F;S通常面向相比固定的用户群,程序越发注重过程,它能够对权限实行多层次校验,提供了更安全的存取形式,对信息安全的控制才能非常强.通常高度机密的信息系统选用C&#x2F;S结构适宜.</li></ul><p>缺点:</p><ul><li>须要专门的客户端安装程序,分布功能弱,针对点多面广且不具备网络条件的用户群体,不可以完成迅速部署安装与配置.</li><li>兼容性差,关于不一样的开发工具,拥有比较大的局限性.假如选用不一样工具,须要重新改写程序.</li><li>开发、维护费用较高,须要拥有肯定专业水准的技术人员才可以结束,发生一次升级,就全部客户端的程序全部须要更改.</li><li>用户群固定.因为程序须要安装就可使用,因为这样不符合面向一些不可知的用户,于是实用面窄,常常用来局域网中.</li></ul></div></details><details class="folder" index="1"><summary><span>BS架构优缺点</span></summary><div class="body"><p>优点:</p><ul><li>分布性强,客户端零维护.只需有网络、浏览器,能够随时随地实行查询、浏览等业务处理.</li><li>业务扩展简单便利,通过添加网页就可以添加服务器功能</li><li>维护简单便利,只须要更改网页,就可以完成全部用户的同步更新.</li><li>开发简单,共享性强.</li></ul><p>缺点:</p><ul><li>个性化特征明显减少,没办法完成拥有个性化的功能要求</li><li>在跨浏览器上,BS架构不尽如人意.</li><li>客户端服务器端的交互就是请求-响应形式,常常动态刷新页面,响应速度明显减少(Ajax能够肯定程度上处理这个问题).没办法完成分页显示,给数据库访问导致较大的压力.</li><li>在速度与安全性上须要花费超大的设计费用.</li><li>功能弱化,难以完成传统形式下的特殊功能需要.</li></ul></div></details></div>
+
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p>CS响应速度快,安全性强,可是开发维护费用高;BS能够完成跨平台,客户端零维护,可是个性化才能低,响应速度较慢.于是有一些单位平日办公应用BS,在实际生产当中使用CS结构.</p>
+<h2 id="网络分类"><a href="#网络分类" class="headerlink" title="网络分类"></a>网络分类</h2><p>网络可以按照不同的标准进行分类,以下是一些常见的分类方式: </p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><span>按照地理范围分类</span></summary><div class="body"><table><thead><tr><th>网络类型</th><th>描述</th><th>优点</th><th>缺点</th><th>应用场景</th></tr></thead><tbody><tr><td>局域网 (LAN)</td><td>涵盖小范围地理区域,如家庭、办公室或学校</td><td>数据传输速度快,建设成本低</td><td>覆盖范围有限</td><td>家庭、小型至中型办公室、学校</td></tr><tr><td>城域网 (MAN)</td><td>涵盖城市范围,通常由多个LAN连接而成</td><td>能连接远距离的局域网,速度相对较快</td><td>建设和维护成本比LAN高</td><td>城市或大型企业,如市政机构或教育机构网络</td></tr><tr><td>广域网 (WAN)</td><td>涵盖更广泛的地理范围,跨越国家或大陆</td><td>覆盖范围广,能连接国际间的网络</td><td>建设成本高,维护复杂,速度可能有限</td><td>互联网、大型跨国公司和研究机构之间的网络</td></tr></tbody></table></div></details><details class="folder" index="1"><summary><span>按照拓扑结构分类</span></summary><div class="body"><table><thead><tr><th>网络拓扑类型</th><th>描述</th><th>优点</th><th>缺点</th><th>应用场景</th></tr></thead><tbody><tr><td>总线型网络</td><td>所有设备连接到一条中央总线上</td><td>成本低廉,易于实施,适合小规模网络</td><td>总线出现故障会影响所有设备,通信可能会发生碰撞</td><td>小型办公室、学校网络</td></tr><tr><td>星型网络</td><td>所有设备连接到一个中央设备上</td><td>易于监控和管理,单点故障不影响其他设备</td><td>中央设备故障可能导致整个网络瘫痪,成本高于总线型网络</td><td>家庭网络、企业网络</td></tr><tr><td>环型网络</td><td>所有设备沿着一个环形线路连接起来</td><td>数据传输延迟相对固定,适合有固定数据路径需求的场景</td><td>增减节点可能会影响网络的运作,单点故障影响整个网络</td><td>一些特定要求稳定传输的工业控制环境</td></tr><tr><td>网状型网络</td><td>多个设备之间直接连接</td><td>提高了网络的可靠性和冗余性</td><td>成本较高,管理和配置相对复杂</td><td>需要高可靠性的应用,如互联网的核心网络</td></tr><tr><td>树型网络</td><td>结合了星型和总线型网络的特点</td><td>易于扩展成大型网络,分层管理可以简化网络管理</td><td>顶层中央节点故障会影响下面的所有设备</td><td>大型组织或分布式组织,如ISP网络</td></tr></tbody></table></div></details><details class="folder" index="2"><summary><span>按照使用者分类</span></summary><div class="body"><table><thead><tr><th>网络类型</th><th>描述</th><th>优点</th><th>缺点</th><th>应用场景</th></tr></thead><tbody><tr><td>公共网络</td><td>对任何人开放,如互联网</td><td>存取开放,资源丰富,连接全球</td><td>安全风险较高,隐私控制较弱</td><td>一般互联网活动,信息共享,社交媒体</td></tr><tr><td>私有网络</td><td>只对特定组织或个人开放,如企业内部网络或个人家庭网络</td><td>安全性较高,可定制化强,控制访问权限</td><td>建设成本和管理成本可能较高,资源有限</td><td>企业网络,家庭网络</td></tr></tbody></table><div class="tag-plugin colorful note" color="red"><div class="title">以下是IANA定义的标准私网IP地址范围:`10.0.0.0`到</div><div class="body"><p><code>10.255.255.255</code>、<code>172.16.0.0</code> 到 <code>172.31.255.255</code>、<code>192.168.0.0</code> 到 <code>192.168.255.255</code> 其余的都是公网网段</p></div></div></div></details><details class="folder" index="3"><summary><span>按照技术分类</span></summary><div class="body"><table><thead><tr><th>网络类型</th><th>描述</th><th>优点</th><th>缺点</th><th>应用场景</th></tr></thead><tbody><tr><td>有线网络</td><td>使用电缆或光纤等有线媒介进行通信的网络</td><td>传输速度稳定快速,受干扰小,安全性相对较高</td><td>需要布线,灵活性相对较低</td><td>办公楼、数据中心、学校</td></tr><tr><td>无线网络</td><td>使用无线电波等无线媒介进行通信的网络,如Wi-Fi和蓝牙网络</td><td>布置灵活,扩展容易,便于移动设备连接</td><td>受环境影响大,安全性和速度可能较低</td><td>家庭、咖啡店、公共场所</td></tr><tr><td>混合网络</td><td>同时使用有线和无线媒介进行通信的网络</td><td>结合有线和无线的优点,灵活且功能全面</td><td>建设和维护相对复杂,成本可能较高</td><td>大型企业、校园网、智能家居系统</td></tr></tbody></table></div></details></div>
+
+
+<p>网络的分类可以根据不同的标准进行,不同的分类方式可以从不同的角度切入,对于不同应用场景的网络建 设有着重要的指导意义.</p>
+<h3 id="地理范围分类"><a href="#地理范围分类" class="headerlink" title="地理范围分类"></a>地理范围分类</h3><div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><span>局域网</span></summary><div class="body"><p>局域网(<code>Local Area Network,LAN</code>)是指在一个较小的地理范围内,由多台计算机和设备组成的通信网络.通常情况下,这个范围不会超过几个建筑物或者一个校园.</p><p>局域网通常由一些硬件设备(例如交换机、路由器、网桥等)和软件设备(例如操作系统、网络协议、应用 程序等)组成.</p><p>局域网中的设备可以通过有线或者无线方式进行连接,使得设备之间可以互相通信和共享资源,例如打印机、文件服务器、数据库等.</p><p>局域网的优点包括传输速度快、安全性高、成本低等.由于其覆盖范围较小,因此可以使用较低功率的网络 设备进行建设和维护,同时也可以更加容易地实现管理和控制.</p><p>常见的局域网应用包括企业内部网络、学校网络、家庭网络等.</p></div></details><details class="folder" index="1"><summary><span>城域网</span></summary><div class="body"><p>城域网(<code>Metropolitan Area Network,MAN</code>)是指连接在一个城市范围内的计算机和网络设备组成的局域网.城域网的覆盖范围比局域网更广,通常是几个到几十个公里.</p><p>城域网通常是由多个局域网通过网桥、路由器等网络设备相互连接而成.这些设备可以将局域网之间的数据进行转发和路由,从而实现城域网之间的通信.城域网中的计算机和设备可以共享资源,例如文件、打印机、数据库等.</p><p>城域网的优点包括传输速度快、可靠性高、覆盖范围广等.它可以为一个城市内的不同组织和企业提供通信和资源共享的平台,支持城市范围内的电子商务、远程教育、视频会议等应用.</p><p>常见的城域网应用包括大型企业内部网络、政府机构网络、医院网络等.</p></div></details><details class="folder" index="2"><summary><span>广域网</span></summary><div class="body"><p>广域网(<code>Wide Area Network,WAN</code>)是指连接在不同地理位置上的计算机和网络设备组成的网络.广域网的覆盖范围比城域网和局域网更广,可以跨越多个城市、地区、甚至是国家和大洲.</p><p>广域网通常是由多个城域网或者局域网通过路由器、交换机等网络设备相互连接而成.广域网中的数据通常 通过互联网或者专用线路进行传输.广域网中的计算机和设备可以互相通信和共享资源,例如文件、数据库、应用程序等.</p><p>广域网的优点包括覆盖范围广、连接速度快、可靠性高等.它可以为跨越不同地理位置的组织和企业提供通信和资源共享的平台,支持远程办公、远程教育、视频会议、云计算等应用.</p><p>常见的广域网应用包括跨国企业网络、电信运营商网络、云服务提供商网络等.</p></div></details><details class="folder" index="3"><summary><span>互联网</span></summary><div class="body"><p>互联网(<code>Internet</code>)是指全球范围内相互连接的计算机网络,其目的是为了实现信息的共享和交流.互联网的发展始于20世纪60年代,经过几十年的演进和发展,如今已成为全球最大的信息资源库和通信平台之一.</p><p>互联网的特点包括开放性、去中心化、信息共享和交互性.任何人都可以通过互联网来获取和发布信息,无需事先获得任何特殊权限或授权.互联网是去中心化的,没有一个中心控制机构可以掌控整个互联网,而是由许多不同的网络和服务器组成.</p><p>互联网还具有信息共享和交互性的特点,使得人们可以通过电子邮件、社 交媒体、在线聊天等方式与世界各地的人们进行交流和互动.</p><p>随着技术的不断进步,互联网正在不断地发生变化和演进.例如,移动互联网、物联网、人工智能等技术的发展和应用,正在为互联网带来更多的新功能和应用场景,使得互联网对人们的生活和工作产生越来越深远的影响.</p></div></details></div> 
+
+<h3 id="使用者分类"><a href="#使用者分类" class="headerlink" title="使用者分类"></a>使用者分类</h3><div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><span>公共网络(外网)</span></summary><div class="body"><p>公共网络是指由政府或私人机构建立和运营的开放式网络,供公众使用.这些网络通常是基于互联网协议的,使得用户可以通过任何连接到该网络的设备(例如电脑、手机、平板电脑等)访问互联网上的信息和服务.</p><p>公共网络的优点在于其开放性和普及性.公共网络为人们提供了广泛的网络连接选择,方便用户在任何时间和任何地点访问互联网.它还促进了信息共享和知识传播,为个人和企业提供了更广阔的市场和机会.</p><p>公共网络通常分为两种类型:有线网络和无线网络.有线网络主要通过光纤、电缆等有线传输介质进行数据传输,其速度和可靠性较高;而无线网络则使用无线电波传输数据,提供了更大的灵活性和移动性,但速度和稳定性可能不如有线网络.</p><p>尽管公共网络为人们提供了许多便利,但也存在一些安全和隐私问题,例如网络攻击、黑客入侵、数据泄露 等.因此,用户需要采取适当的安全措施来保护自己的信息和设备.</p></div></details><details class="folder" index="1"><summary><span>私有网络(内网)</span></summary><div class="body"><p>私有网络是指由企业、组织或个人自行搭建和管理的局域网,通常是为了实现更安全、更高效的信息交流和 共享.私有网络与公共网络不同,私有网络通常只对授权的用户和设备开放,并且数据传输经过加密和其他安全措施的保护.</p><p>私有网络的优点在于其安全性和控制性.企业或组织可以根据自己的需求和安全要求来设计和配置网络,确保其敏感数据和信息不会泄露或被黑客入侵.此外,私有网络也可以提高数据传输的效率和速度,减少网络延迟和拥堵.</p><p>私有网络通常分为两种类型:远程访问VPN和专用网络.远程访问VPN可以让用户通过互联网远程连接到企业或组织内部的网络,从而实现远程办公或者远程访问企业内部资源的目的.专用网络则是由企业或组织自行搭建的局域网,通常用于内部员工之间的信息交流和共享.</p><p>尽管私有网络具有许多优点,但其建设和维护成本较高,需要专业人员来进行设计、配置和管理.此外,私有网络的可扩展性和适应性可能也不如公共网络,因此企业或组织需要仔细评估其需求和资源,选择最适合自己的网络方案.</p></div></details></div>
+
+<h2 id="常见网络拓扑图"><a href="#常见网络拓扑图" class="headerlink" title="常见网络拓扑图"></a>常见网络拓扑图</h2><p>网络拓扑图是用来描述计算机网络中各个节点之间物理连接和逻辑关系的图形化表示,可以帮助人们更直观 地了解网络的结构和布局.根据网络拓扑的不同特点,常见的网络拓扑图包括以下几种:</p>
+<ol>
+<li>星型拓扑:所有的设备都连接到一个中心设备(如交换机、集线器等),中心设备负责转发数据.这种 拓扑结构简单,易于管理,但是中心设备故障会导致整个网络瘫痪.</li>
+<li>总线型拓扑:所有的设备都连接到一条共享的电缆上,数据从一端传输到另一端.这种拓扑结构适用于 规模较小的网络,但是随着网络规模的增大,总线上的数据冲突会增加,导致网络效率降低.</li>
+<li>环型拓扑:所有的设备连接成一个环形的链路,数据沿着环形链路传输,每个设备负责转发数据.这种 拓扑结构适用于数据传输要求高的网络,但是如果一个节点出现故障,整个环形链路就会中断.</li>
+<li>树型拓扑:设备按照树状结构相连,中心节点连接多个分支节点,分支节点又连接其他节点.这种拓扑 结构适用于大型网络,具有高可扩展性和灵活性,但是管理和维护较为复杂.</li>
+<li>网状拓扑:所有的设备都相互连接,没有中心节点.这种拓扑结构适用于要求高可靠性和高容错性的网 络,但是设备之间的连接和数据流向较为复杂.</li>
+</ol>
+<p>不同的拓扑结构适用于不同的网络场景和需求,企业和个人可以根据自己的实际情况选择最适合自己的网络拓扑结构.</p>
+<h3 id="星型结构"><a href="#星型结构" class="headerlink" title="星型结构"></a>星型结构</h3><p>星型拓扑是计算机网络中的一种常见拓扑结构,它的特点是所有的设备都连接到一个中心节点上,这个中心 节点通常是一个集线器、交换机或路由器.中心节点负责转发数据,并控制设备之间的通信.</p>
+<p>在星型拓扑中,每个设备都只需要与中心节点直接相连,因此网络结构简单,易于管理和维护.当一个设备需要与其他设备通信时,它只需要向中心节点发送数据包,中心节点则会将数据包转发到目标设备.</p>
+<p>与其他拓扑结构相比,星型拓扑有以下优点:</p>
+<ol>
+<li>易于管理和维护:由于所有的设备都连接到中心节点上,因此网络结构简单,易于管理和维护.</li>
+<li>易于扩展:当需要增加新的设备时,只需要将新设备连接到中心节点上即可,不会对其他设备产生影 响.</li>
+<li>数据传输稳定:由于每个设备只需要与中心节点直接相连,因此数据传输稳定,不会出现数据冲突的情 况.</li>
+</ol>
+<p>但是,星型拓扑也存在一些缺点:</p>
+<ol>
+<li>中心节点故障会导致整个网络瘫痪:如果中心节点出现故障,整个网络将无法正常运行.</li>
+<li>中心节点带宽有限:由于所有的设备都需要通过中心节点进行通信,因此中心节点的带宽可能会成为瓶 颈,影响网络性能.</li>
+<li>成本较高:由于每个设备都需要连接到中心节点上,因此需要更多的网络线缆和端口,相对来说成本较 高.</li>
+</ol>
+<p>总的来说,星型拓扑是一种简单易用的拓扑结构,适用于小型网络或需要集中管理的网络.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252158109.png" data-fancybox="true"/></div></div>
+
+<h3 id="环形结构"><a href="#环形结构" class="headerlink" title="环形结构"></a>环形结构</h3><p>环型拓扑是一种计算机网络拓扑结构,其特点是所有的设备都按照环的形式连接起来,每个设备都与相邻的 两个设备相连.数据在环上流动,当一个设备向另一个设备发送数据时,数据会沿着环路传输,直到到达目标设备.</p>
+<p>环型拓扑的优点包括:</p>
+<ol>
+<li>成本低:相比于星型拓扑和总线型拓扑,环型拓扑所需的线缆数量较少,因此成本相对较低.</li>
+<li>易于扩展:当需要增加新的设备时,只需要在环上添加一个新节点即可.</li>
+<li>数据传输高效:由于数据只会在环上流动一次,因此数据传输效率较高.</li>
+</ol>
+<p>但是,环型拓扑也存在一些缺点:</p>
+<ol>
+<li>单点故障:如果一个节点出现故障,可能会导致整个环路中断.</li>
+<li>不易管理:由于每个设备都与相邻的两个设备相连,因此网络结构较为复杂,不易管理和维护.</li>
+<li>信号干扰:当环路较长时,信号会经过多次传输,容易受到干扰和损失.</li>
+</ol>
+<p>总的来说,环型拓扑适用于小型网络,具有成本低、易于扩展和高效的传输优势.但在大型网络中,单点故 障和信号干扰等问题可能会限制其应用.这种拓扑结构网络示意图如图所示.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252158882.png" data-fancybox="true"/></div></div>
+
+<h3 id="总线型结构"><a href="#总线型结构" class="headerlink" title="总线型结构"></a>总线型结构</h3><p>总线型拓扑是一种计算机网络拓扑结构,其特点是所有的设备都连接到一条中央总线上,数据通过总线传 输,每个设备只能通过总线与其他设备通信.</p>
+<p>总线型拓扑的优点包括:</p>
+<ol>
+<li>成本低:相比于星型拓扑和环型拓扑,总线型拓扑所需的线缆数量和端口较少,因此成本相对较低.</li>
+<li>易于扩展:当需要增加新的设备时,只需要将新设备连接到总线上即可,不会对其他设备产生影响.</li>
+<li>数据传输高效:由于所有设备都连接到同一条总线上,数据传输效率较高.</li>
+</ol>
+<p>但是,总线型拓扑也存在一些缺点:</p>
+<ol>
+<li>单点故障:如果总线出现故障,整个网络将无法正常运行.</li>
+<li>总线带宽有限:由于所有设备都需要通过总线进行通信,因此总线的带宽可能会成为瓶颈,影响网络性 能.</li>
+<li>数据冲突:当多个设备同时向总线发送数据时,可能会发生数据冲突,导致数据丢失.</li>
+</ol>
+<p>总的来说,总线型拓扑适用于小型网络,具有成本低、易于扩展和高效的传输优势.但在大型网络中,单点 故障和总线带宽等问题可能会限制其应用.它的结构示意图如图所示.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252158760.png" data-fancybox="true"/></div></div>
+
+<h3 id="树形结构"><a href="#树形结构" class="headerlink" title="树形结构"></a>树形结构</h3><p>树型拓扑是一种计算机网络拓扑结构,其结构类似于一棵倒置的树,由一个根节点和若干个子节点组成.每个子节点可以连接若干个其他节点,形成一个子树,整个网络结构就形成了一个树状结构.</p>
+<p>树型拓扑的优点包括:</p>
+<ol>
+<li>灵活性强:树型拓扑可以根据需要增加或删除节点,具有较强的灵活性.</li>
+<li>故障范围小:当一个节点出现故障时,只会影响其下属子树中的设备,不会影响整个网络.</li>
+<li>数据传输高效:由于数据可以沿着树的分支传输,因此数据传输效率较高.</li>
+</ol>
+<p>但是,树型拓扑也存在一些缺点:</p>
+<ol>
+<li>成本较高:相比于其他拓扑结构,树型拓扑所需的线缆数量和端口较多,因此成本较高.</li>
+<li>管理和维护难度较大:由于树型拓扑的结构较为复杂,管理和维护难度较大.</li>
+<li>单点故障:如果根节点出现故障,整个网络将无法正常运行.</li>
+</ol>
+<p>总的来说,树型拓扑适用于中等规模的网络,具有灵活性强、故障范围小和传输效率高的优点.但在大型网 络中,成本和管理维护等问题可能会限制其应用.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252159148.jpeg" data-fancybox="true"/></div></div>
+
+<h3 id="网状结构"><a href="#网状结构" class="headerlink" title="网状结构"></a>网状结构</h3><p>网状拓扑是计算机网络中一种拓扑结构,也被称为星型拓扑.在网状拓扑中,每个节点都与一个中央节点相 连,这个中央节点可以是一个集线器、交换机或路由器.节点之间不直接相连,它们之间的通信需要经过中 央节点进行中转.</p>
+<p>网状拓扑的优点是在出现故障时可以更好地保持网络的可靠性.因为每个节点都与中央节点相连,如果某个 节点出现故障,其他节点仍然可以通过中央节点进行通信.此外,网状拓扑具有良好的扩展性,可以方便地 添加新的节点.</p>
+<p>然而,网状拓扑也存在一些缺点.首先,因为每个节点都需要与中央节点相连,所以需要更多的电缆和设 备,这会增加网络的成本.其次,由于通信需要经过中央节点进行中转,所以在网络中增加节点会增加通信 的延迟.</p>
+<p>网状拓扑在许多局域网和广域网中得到广泛应用,例如以太网和互联网.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252214623.png" data-fancybox="true"/></div></div>
+
+<h2 id="网络相关协议"><a href="#网络相关协议" class="headerlink" title="网络相关协议"></a>网络相关协议</h2><p>网络中常用的协议包括但不限于以下几种:</p>
+<ol>
+<li>TCP&#x2F;IP协议:是互联网最基本的协议,包含了一系列协议,如IP协议、TCP协议、UDP协议等,用于在网络上传输数据.</li>
+<li>HTTP协议:超文本传输协议,是一种用于在计算机网络上传输超文本文档的应用层协议.</li>
+<li>FTP协议:文件传输协议,是一种用于在网络上进行文件传输的标准协议.</li>
+<li>SMTP协议:简单邮件传输协议,是一种用于发送电子邮件的协议.</li>
+<li>POP3协议:邮局协议版本3,是一种用于接收电子邮件的协议.</li>
+<li>DNS协议:域名系统,是一种将域名转换为IP地址的协议,使得用户可以使用易记的域名来访问互联网上的服务.</li>
+</ol>
+<p>这些协议在计算机网络中都扮演着重要的角色,使得不同的设备和系统可以互相通信和交换数据.</p>
+<h3 id="ARP协议-地址解析协议"><a href="#ARP协议-地址解析协议" class="headerlink" title="ARP协议(地址解析协议)"></a>ARP协议(地址解析协议)</h3><p>地址解析协议(英语:Address Resolution Protocol,缩写:ARP)是一个通过解析网络层地址来找寻数据 链路层地址的网络传输协议,它在 IPv4 中极其重要.ARP 是通过网络地址来定位 MAC 地址</p>
+<p>MAC地址又是啥?</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252246438.png" data-fancybox="true"/></div></div>
+
+<blockquote>
+<p>MAC地址(Media Access Control Address)和IP地址(Internet Protocol Address)都是用于网络通信的地址,但它们所代表的不同层次的信息. </p>
+<p>MAC地址是网卡的物理地址,每个网卡都有一个唯一的MAC地址,由48位二进制数表示,通常表示为12位十六进制数,如:00-1C-C0-6E-DE-4A.MAC地址用于在局域网中唯一标识一台设备,设备使用MAC地址进行通信时,直接向网络中的其他设备发送数据包,数据包传输的目标地址即为目标设备的MAC地址. </p>
+</blockquote>
+<p>MAC地址的作用是用于在局域网中唯一标识一个设备,它可以在数据链路层(第二层)上实现设备之间的通信和数据传输.当一个设备要发送数据时,它会将数据包发送到目标设备的MAC地址,数据包会经过多个设备的转发和处理,直到到达目标设备.<br>MAC地址的另一个重要作用是实现网络安全,通过MAC地址过滤可以控制哪些设备可以访问网络和资源.例如,企业可以通过路由器或交换机的MAC地址过滤功能,只允许授权的设备接入局域网,从而提高网络的安全性和管理效率.</p>
+<div class="tag-plugin colorful note" color="red"><div class="body"><p>MAC地址只在局域网内有效，它不具备跨网络的功能。在跨网络通信时，需要使用IP地址和路由器来实现数据的传输和路由。</p></div></div>
+
+<div class="tag-plugin quot"><p class="content" type="text"><span class="empty"></span><span class="text">由于MAC地址不具备跨网络的功能,这个时候就引出了我们的IP地址</span><span class="empty"></span></p></div>
+<div class="tag-plugin quot"><p class="content" type="text"><span class="empty"></span><span class="text">那跨网络又是什么鬼呢?</span><span class="empty"></span></p></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303252247901.jpeg" data-fancybox="true"/></div></div>
+
+<blockquote>
+<p>​	跨网络是指在不同的网络之间进行通信和数据传输.</p>
+<p>​	在计算机网络中,每个网络都有自己的网络地址和标识,网络之间通过路由器进行连接和交换数据.</p>
+<p>​	在跨网络通信时,需要使用IP地址和路由器来实现数据的传输和路由.</p>
+</blockquote>
+<p>通俗来讲,我们整个巢安实验室属于一个大的网络架构,巢安实验室下面直属培训部、教学部、设计部、行政部、每个部门都有不同的IP</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">10.10.10.0/24  <span class="comment"># 培训部</span></span><br><span class="line">10.10.20.0/24  <span class="comment"># 教学部</span></span><br><span class="line">10.10.30.0/24  <span class="comment"># 设计部等等</span></span><br></pre></td></tr></table></figure>
+<p>因为不同部门的IP地址段是不同的,所以不同部门互相访问就做跨网络</p>
+<h3 id="RARP协议-逆地址解析协议"><a href="#RARP协议-逆地址解析协议" class="headerlink" title="RARP协议(逆地址解析协议)"></a>RARP协议(逆地址解析协议)</h3><p>可以把数据链路层MAC48位地址转化为网络层32位地址.</p>
+<h3 id="ICMP协议-因特网控制报文协议"><a href="#ICMP协议-因特网控制报文协议" class="headerlink" title="ICMP协议(因特网控制报文协议)"></a>ICMP协议(因特网控制报文协议)</h3><p>ICMP,全称是 Internet Control Message Protocol,即互联网控制报文协议,所谓控制,就是通过下发指令来感知和控制网络环境,所以它一定是配合一个无法感知网络环境的协议来工作的,这个协议就是IP(包括IPv4和IPv6).</p>
+<p>所以,ICMP通常被认为是IP协议的一部分,它封装在IP层中,使用IP协议进行传输.因此,严格来说, ICMP既不是一个网络层协议,也不是一个传输层协议,而是介于两者之间的一个协议.</p>
+<div class="tag-plugin colorful note" color="red"><div class="body"><p>它的主要功能是传输网络诊断信息</p></div></div>
+
+<p>信息主要包括两类:</p>
+<ol>
+<li><p>查询类报文 :主要用于信息的查询和采集,比如采集传输路径上的每个路由器都是谁,本次传输的报文是否达到目的地等等.</p>
+</li>
+<li><p>差错诊断类报文 :主要用于诊断网络故障,比如传输报文被丢弃的原因是什么等等. <strong>可以报告错误信息或者异常情况</strong>,ICMP报文封装在IP数据报当中.</p>
+</li>
+</ol>
+<p><strong>ICMP协议的应用:</strong></p>
+<ul>
+<li><strong>Ping应用</strong>:网络故障的排查;</li>
+<li><strong>Traceroute应用</strong>:可以探测IP数据报在网络中走过的路径.</li>
+</ul>
+<h3 id="TCP协议-传输控制协议"><a href="#TCP协议-传输控制协议" class="headerlink" title="TCP协议(传输控制协议)"></a>TCP协议(传输控制协议)</h3><p>TCP(Transmission Control Protocol,传输控制协议)是一种面向连接的、可靠的、基于字节流的传输层通信协议.TCP通过三次握手建立连接,保证数据可靠传输,并通过流量控制、拥塞控制等机制维护网络通信的稳定性.TCP协议常用于应用层协议(如HTTP、FTP、Telnet等)的底层传输.</p>
+<h3 id="UDP协议-用户数据报协议"><a href="#UDP协议-用户数据报协议" class="headerlink" title="UDP协议(用户数据报协议)"></a>UDP协议(用户数据报协议)</h3><p>UDP(User Datagram Protocol,用户数据报协议)是一种无连接的、不可靠的传输层协议.UDP协议与 TCP协议不同,它不保证数据传输的可靠性和顺序,也不提供流量控制和拥塞控制等机制.UDP协议适用于对传输速度和实时性要求较高,但对数据可靠性和完整性要求较低的应用场景,如语音、视频、DNS等.由 于UDP协议的简单性和高效性,它在实时传输和广播等方面得到广泛应用.</p>
+<h3 id="TCP协议和UDP协议的区别"><a href="#TCP协议和UDP协议的区别" class="headerlink" title="TCP协议和UDP协议的区别"></a>TCP协议和UDP协议的区别</h3><p>TCP(Transmission Control Protocol,传输控制协议)和UDP(User Datagram Protocol,用户数据报协 议)是两种不同的传输层协议,它们有以下几个主要区别:</p>
+<ol>
+<li>连接方式:TCP是面向连接的协议,UDP是无连接的协议.</li>
+<li>可靠性:TCP提供可靠的数据传输,确保数据按照正确的顺序到达目的地,而UDP不保证数据传输的可靠性.</li>
+<li>传输速度:TCP相对于UDP而言,传输速度较慢,因为它需要在数据传输前进行三次握手、数据分段、 确认等过程,而UDP则不需要这些过程,传输速度较快.</li>
+<li>数据量限制:TCP能够处理的数据量比UDP要大,因为TCP在传输数据时会将数据分段,而UDP没有这个限制.</li>
+<li>应用场景:TCP适用于对数据可靠性和完整性要求较高的应用场景,如网页浏览、文件传输等,而UDP 适用于对数据传输速度和实时性要求较高的应用场景,如视频、音频等.</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th><strong>TCP</strong></th>
+<th><strong>UDP</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">是否连接</td>
+<td>面向连接</td>
+<td>无连接</td>
+</tr>
+<tr>
+<td align="left">传输可靠性</td>
+<td>可靠的</td>
+<td>不可靠的</td>
+</tr>
+<tr>
+<td align="left">应用场景</td>
+<td>传输大量数据</td>
+<td>传输少量数据</td>
+</tr>
+<tr>
+<td align="left">速度</td>
+<td>慢</td>
+<td>快</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>TCP 传输控制协议–面向连接的可靠传输协议</p>
+</li>
+<li><p>UDP 用户数据报文协议–非面向连接的不可靠传输协议</p>
+</li>
+</ul>
+<h3 id="IP协议-因特网互联协议"><a href="#IP协议-因特网互联协议" class="headerlink" title="IP协议(因特网互联协议)"></a>IP协议(因特网互联协议)</h3><p>IP网际协议是 Internet <strong>网络层最核心</strong>的协议.虚拟互联网络的产生:实际的计算机网络错综复杂;物理设备通过使用IP协议,屏蔽了物理网络之间的差异;当网络中主机使用IP协议连接时,无需关注网络细节,于是形成了虚拟网络. IP协议使得复杂的实际网络变为一个虚拟互联的网络;</p>
+<div class="tag-plugin colorful note" color="red"><div class="body"><p>并且解决了在虚拟网络中数据报传输路径的问题.</p></div></div>
+
+<h3 id="HTTP协议-超文本传输协议"><a href="#HTTP协议-超文本传输协议" class="headerlink" title="HTTP协议(超文本传输协议)"></a>HTTP协议(超文本传输协议)</h3><p>HTTP(<code>Hypertext Transfer Protocol</code>,超文本传输协议)是一种应用层协议,用于在Web浏览器和Web服务器之间传输数据.HTTP协议使用客户端-服务器模型,客户端向服务器发送HTTP请求,服务器接收并响应 HTTP请求.HTTP请求由HTTP方法、URL、HTTP版本、请求头和请求体等组成,而HTTP响应则由HTTP版本、状态码、响应头和响应体等组成.HTTP协议的主要功能包括建立连接、传输数据、断开连接等.HTTP 协议常用的方法包括GET、POST、PUT、DELETE等.HTTP协议是Web应用程序开发的基础,也是互联网上 最重要的协议之一.</p>
+<p>是可靠的数据传输协议,浏览器向服务器发收报文前,先建立TCP连接,HTTP使用TCP连接方式(HTTP自身无连接).</p>
+<p>HTTP协议定义了客户端和服务器之间进行通信的规则和格式,其中常用的方法有以下几种:</p>
+<ol>
+<li>GET:<strong>获取资源</strong><ul>
+<li>GET方法用于从服务器请求指定的资源,可以在请求中添加参数来指定资源的具体内容.GET方法是HTTP协议中最常用的方法之一,通常用于获取网页、图片等静态资源.</li>
+</ul>
+</li>
+<li>POST:<strong>提交数据</strong><ul>
+<li>POST方法用于向服务器提交数据,可以向服务器发送大量的数据,如表单数据、文件上传等.POST方法常用于向服务器提交表单数据,如登录、注册等操作.</li>
+</ul>
+</li>
+<li>PUT:<strong>更新资源</strong><ul>
+<li>PUT方法用于向服务器上传新的资源或者更新现有资源,客户端需要向服务器上传整个资源,而不是单独的部分.PUT方法常用于更新文档、图片等资源.</li>
+</ul>
+</li>
+<li>DELETE:<strong>删除资源</strong><ul>
+<li>DELETE方法用于从服务器删除指定的资源,客户端需要向服务器发送要删除的资源的标识.DELETE方法常用于删除文档、图片等资源.</li>
+</ul>
+</li>
+<li>HEAD:获取资源的元信息<ul>
+<li>HEAD方法和GET方法类似,但是它只返回请求的资源的元信息(如资源的类型、大小、修改日期等),而不返回资源本身.HEAD方法常用于检查资源是否存在、是否被修改等操作.</li>
+</ul>
+</li>
+<li>OPTIONS:获取服务器支持的方法 <ul>
+<li>OPTIONS方法用于获取服务器支持的HTTP方法,客户端可以向服务器发送一个OPTIONS请求,以获取服务器支持的所有HTTP方法.OPTIONS方法可以帮助客户端了解服务器的功能和限制,从而更好地进行资源访问. 总之,HTTP协议定义了客户端和服务器之间进行通信的规则和格式,常用的方法包括GET、POST、PUT、DELETE、HEAD和OPTIONS等.不同的方法适用于不同的场景,开发者可以根据具体的需求选择合适的方法.</li>
+</ul>
+</li>
+</ol>
+<p>在HTTP协议中,GET和POST请求中提交的字符串都有长度限制.<br>对于GET请求,由于数据是通过URL传递的,因此URL的长度限制会影响GET请求的字符串长度限制.通常情况下,不同的浏览器和服务器对URL长度的限制不同,但是<mark class="tag-plugin colorful mark" color="red">一般不会超过2048个字符.</mark>如果URL的长度超过限制,就会出现截断或错误的情况.</p>
+<p>对于POST请求,由于数据是通过请求体传递的,因此POST请求的字符串长度限制取决于服务器的配置和应用程序的限制.通常情况下,服务器会设置POST请求的最大限制,<mark class="tag-plugin colorful mark" color="red">一般为2MB到4MB不等.</mark>如果POST请求的字符串长度超过限制,就会出现超时或错误的情况.</p>
+<p>需要注意的是,如果提交的数据量比较大,建议使用POST请求而不是GET请求,因为GET请求的数据是暴露在URL上的,容易被拦截或篡改,而POST请求的数据是加密传输的,相对来说更安全.另外,在实际的应用程序中,应该根据具体情况来限制字符串长度,以避免出现性能和安全问题.</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><span>get和post最根本的区别是什么?</span></summary><div class="body"><ol><li><strong>语义区别</strong>:<ul><li><strong>GET</strong> 请求通常用于请求服务器发送某个资源,用于获取数据,按照HTTP&#x2F;1.1标准,GET请求应该是幂等的,即多次执行同样的GET请求,资源的状态不会改变.</li><li><strong>POST</strong> 请求通常用于向服务器发送数据以创建或更新资源,它不是幂等的,意味着执行相同的多个POST请求,可能会在服务器上创建或修改多次资源.</li></ul></li><li><strong>使用场景</strong>:<ul><li><strong>GET</strong> 请求一般用于请求读取服务器上的某个资源,不应当导致服务器上数据的改变.GET请求可以被缓存,保留在浏览器历史记录中,也可以被书签.</li><li><strong>POST</strong> 请求一般用于提交表单数据或者上传文件,数据在请求体中发送给服务器,因此适合传输大量数据.POST请求不会被缓存,也不会保留在浏览器历史记录中,不能被书签.</li></ul></li><li><strong>数据传输方式</strong>:<ul><li><strong>GET</strong> 请求通过URL传输数据,数据附加在URL之后,因此数据大小受URL长度限制(服务器和浏览器均有限制),且对数据类型有限制,不适合传输敏感信息,因为URL可能会被留在浏览器历史、Web服务器日志等地方.</li><li><strong>POST</strong> 请求把提交的数据放置在HTTP请求的消息体中,没有数据大小限制,可以传输更复杂的数据类型,适合传输敏感信息,因为数据不会被暴露在URL中.</li></ul></li></ol></div></details></div>
+
+<h3 id="常见的HTTP状态码有哪些"><a href="#常见的HTTP状态码有哪些" class="headerlink" title="常见的HTTP状态码有哪些?"></a>常见的HTTP状态码有哪些?</h3><ul>
+<li>200(OK)</li>
+<li>301(Moved Permanently)代表永久性转移</li>
+<li>302(Found)代表暂时性转移</li>
+<li>403(Forbidden)</li>
+<li>404(Not Found)</li>
+<li>502(Bad Gateway)</li>
+</ul>
+<div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://www.cnblogs.com/xflonga/p/9368993.html" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://www.cnblogs.com/xflonga/p/9368993.html</span></div><div class="bottom"><span class="title">https://www.cnblogs.com/xflonga/p/9368993.html</span><span class="cap desc footnote"></span></div></a></div>
+
+<h3 id="Request-Response"><a href="#Request-Response" class="headerlink" title="Request&#x2F;Response"></a>Request&#x2F;Response</h3><p>在Web通信中,<code>request</code> 和 <code>response</code> 是客户端与服务器之间交换信息的两个主要概念:</p>
+<h4 id="Request-请求"><a href="#Request-请求" class="headerlink" title="Request(请求)"></a>Request(请求)</h4><p>当你在浏览器中输入一个网址或者通过一个应用向服务器发送数据时,这个过程就开始了一个<code>request</code>.这是客户端(通常是用户的Web浏览器或应用程序)发起的,目的是从服务器获取信息或请求服务器执行某个操作.一个HTTP请求通常包括以下几个部分:</p>
+<ul>
+<li><strong>HTTP方法</strong>:定义请求的类型,常见的方法有GET、POST、PUT、DELETE等.</li>
+<li><strong>URL&#x2F;URI</strong>:统一资源定位符,指明请求的资源.</li>
+<li><strong>HTTP版本</strong>:指明使用的HTTP协议版本.</li>
+<li><strong>请求头</strong>(Headers):包含请求的元数据,如客户端的类型、接受的响应类型、cookie等.</li>
+<li><strong>请求体</strong>(Body):在某些HTTP方法(如POST或PUT)中,请求体包含发送给服务器的数据.</li>
+</ul>
+<h4 id="Response-响应"><a href="#Response-响应" class="headerlink" title="Response(响应)"></a>Response(响应)</h4><p>当服务器接收并处理完客户端的请求后,它会回送一个<code>response</code>.这是服务器对客户端请求的回应,包含了请求所需的数据或执行结果的状态信息.一个HTTP响应通常包括以下几个部分:</p>
+<ul>
+<li><strong>状态码</strong>:一个三位数的代码,表示请求处理的结果(例如200表示成功,404表示未找到,500表示服务器错误等).</li>
+<li><strong>响应头</strong>(Headers):包含响应的元数据,如内容类型、缓存控制、设置cookie等.</li>
+<li><strong>响应体</strong>(Body):实际的响应数据,比如HTML文档、图片、应用程序数据等.</li>
+</ul>
+<h3 id="DHCP协议"><a href="#DHCP协议" class="headerlink" title="DHCP协议"></a>DHCP协议</h3><p>DHCP(<code>Dynamic Host Configuration Protocol</code>,动态主机配置协议)是一种自动分配IP地址和其他网络配置信息的网络协议.DHCP协议允许计算机自动获取IP地址、网关地址、DNS服务器地址、子网掩码等网络配置信息,从而使计算机无需手动进行网络配置.</p>
+<p>DHCP协议通常由DHCP服务器和DHCP客户端两部分组成.</p>
+<p>DHCP服务器负责为网络中的客户端分配IP地址和其他配置信息,</p>
+<p>DHCP客户端则负责向DHCP服务器发送请求,并接收和应用DHCP服务器分配的配置信息.</p>
+<p>DHCP协议是网络管理和配置的重要工具,它可以大大减轻网络管理员的工作负担,提高网络配置的灵活性和可管理性.</p>
+<h3 id="SSL-TLS协议"><a href="#SSL-TLS协议" class="headerlink" title="SSL&#x2F;TLS协议"></a>SSL&#x2F;TLS协议</h3><p>SSL(<code>Secure Sockets Layer</code>)和TLS(<code>Transport Layer Security</code>)是用于加密通信的协议.</p>
+<p>SSL最初是由Netscape开发的,后来被IETF(Internet Engineering Task Force)更新和标准化为TLS.</p>
+<p>SSL&#x2F;TLS协议的目的是在客户端和服务器之间提供加密通信,以保护敏感信息的传输,如登录凭证、信用卡 信息等.</p>
+<p>SSL&#x2F;TLS协议使用公钥加密算法、对称密钥加密算法和哈希算法来实现加密和身份验证.</p>
+<div class="tag-plugin quot"><p class="content" type="text"><span class="empty"></span><span class="text">那么什么是对称密钥呢?既然都有对称密钥了是不是还会有非对称密钥?</span><span class="empty"></span></p></div>
+
+<p>对称密钥及非对称密钥属于我们的密码学</p>
+<h4 id="密码学基础"><a href="#密码学基础" class="headerlink" title="密码学基础"></a>密码学基础</h4><ul>
+<li>密码学主要由<font color="red">密码编码和密码分析</font>两个部分组成<ul>
+<li><font color="red">密码编码学:</font>研究信息的变换处理以实现信息的安全保护</li>
+<li><font color="red">密码分析学:</font>则研究通过密文获取对应的明文信息</li>
+</ul>
+</li>
+<li>&lt;中华人民共和国密码法&gt;于<font color="red">2020年1月1日</font>起实施.<font color="red">2005年4月1日</font>起国家施行&lt;中华人民共和国电子签名法&gt;.</li>
+</ul>
+<p>密码学相关概念:</p>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>明文</td>
+<td>需要采用密码技术进行保护的消息</td>
+</tr>
+<tr>
+<td>密文</td>
+<td>用密码技术处理过明文的结果,通常称为加密消息</td>
+</tr>
+<tr>
+<td>加密</td>
+<td>将明文变换成密文的过程</td>
+</tr>
+<tr>
+<td>解密</td>
+<td>由密文恢复出原明文的过程</td>
+</tr>
+<tr>
+<td>加密算法</td>
+<td>加密过程所使用的一组操作运算规则</td>
+</tr>
+<tr>
+<td>解密算法</td>
+<td>解密过程所使用的一组操作运算规则</td>
+</tr>
+<tr>
+<td>密钥</td>
+<td>加密和解密算法的操作通常都是在密钥控制下进行的,分别称为加密密钥和解密密钥</td>
+</tr>
+</tbody></table>
+<h4 id="密码体制分类"><a href="#密码体制分类" class="headerlink" title="密码体制分类"></a>密码体制分类</h4><p>密码体制分为<font color="red">私钥和公钥密码体制</font>两种,而介于私钥和公钥之间的密码体制称为<font color="red">混合密码体制</font></p>
+<p>私钥密码体制又称对称密码体制,该体制的特点是<font color="red">加密和解密使用相同的密钥</font>消息的收发双方必须事先通过<font color="red">安全渠道交换密钥</font></p>
+<ul>
+<li>优点:<font color="red">加解密速度快、密文紧凑、使用长密钥时的难破解</font></li>
+<li>缺点:<font color="red">密钥分配问题、密钥管理问题、无法认证源</font></li>
+</ul>
+<p>常见的对称密钥加密算法如下:DES、3DES、AES、RC4&#x2F;5、IDEA</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304082045550.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin colorful note" color="red"><div class="body"><p>甲对乙说,我这有一把锁,以后我们互相传消息,就把消息放盒子里,然后用这个锁锁上再传,这个锁有两把一模一样的钥匙,咱俩一人一把</p></div></div>
+
+<p>公钥密码体制又称为非对称加密体制,就是<font color="red">对数据加密和解密的密钥是不同的</font></p>
+<ul>
+<li>优点:<font color="red">密钥分发方便、密钥保管量少、支持数字签名</font></li>
+<li>缺点:<font color="red">加密速度慢(计算量大,不适合加密大数据)、数据膨胀率高</font></li>
+</ul>
+<p>每个实体有两个密钥:<font color="red">公钥公开,私钥自己保存</font></p>
+<ul>
+<li><font color="red">公钥加密,私钥解密,可实现保密通信</font></li>
+<li><font color="red">私钥加密,公钥解密,可实现数字签名</font></li>
+</ul>
+<div class="tag-plugin colorful note" color="red"><div class="title">甲对乙说,我这里有A型号锁(公钥),对应钥匙A(私钥),我给你一大箱子A锁,但是钥匙A不给你,以后你给我发消息就用A锁锁在盒子里给我,然后我自己用钥匙A就能打开看.</div><div class="body"><p>乙对甲说,我这里有B型号锁,对应钥匙B,我给你一大箱子B锁,但是钥匙B不给你,以后你给我发消息就用B锁锁在盒子里给我,然后我自己用钥匙B就能打开看.</p></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304082105765.png" data-fancybox="true"/></div></div>
+
+<p>混合密码体制:发送方用对称密钥加密需要发送的消息,再用接收方的公钥加密对称密钥,然后一起发送给接收方;接收方先用自己的私钥解密得到对称密钥,然后用对称密钥解密得到明文</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304082113704.png" data-fancybox="true"/></div></div>
+
+<p>SSL&#x2F;TLS协议的基本工作流程如下:</p>
+<ol>
+<li>客户端发起一个加密连接请求,并与服务器协商SSL&#x2F;TLS协议的版本和加密算法等参数.</li>
+<li>服务器回应客户端的请求,并向客户端提供证书,证明其身份和公钥.</li>
+<li>客户端验证服务器的证书,确认服务器的身份和公钥的有效性.</li>
+<li>客户端生成一个随机的对称密钥,使用服务器的公钥进行加密,并将加密后的密钥发送给服务器.</li>
+<li>服务器使用私钥解密客户端发送的对称密钥,并使用对称密钥进行加密通信.</li>
+<li>客户端和服务器使用对称密钥进行通信,保证数据的保密性和完整性.</li>
+</ol>
+<p>SSL&#x2F;TLS协议广泛应用于Web浏览器和服务器之间的安全通信,如HTTPS协议.同时,也可以用于其他应用程序的安全通信,如邮件、即时通信等.</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><span>加密的意义是什么?他是保护网络信息安全基本属性的哪一个属性</span></summary><div class="body"><p>加密的主要意义在于确保信息安全,它涉及到网络信息安全的以下基本属性:</p><ol><li><strong>保密性(Confidentiality)</strong>:加密最直接的意义就是保护数据的保密性,即确保信息只能被授权的用户访问和理解.通过将明文数据转换成只有拥有正确密钥的人才能解密的密文,加密防止未授权的人查看或窃取信息.</li><li><strong>完整性(Integrity)</strong>:虽然加密本身是为了保护数据的保密性,但结合数字签名等技术,它也可以确保信息在传输或存储过程中未被篡改,维护数据的完整性.</li><li><strong>可用性(Availability)</strong>:尽管加密本身不直接确保可用性,但它支持实现高安全性环境,其中数据对授权用户保持可用,而对未授权用户则不可用.</li><li><strong>认证(Authentication)</strong>:加密技术还可以帮助验证通信双方的身份,这是通过公钥基础设施(PKI)和数字证书来实现的.</li><li><strong>不可否认性(Non-repudiation)</strong>:使用数字签名结合加密可以提供不可否认性,确保发送者不能否认其发送的信息.</li></ol></div></details></div>
+
+<h3 id="DNS服务"><a href="#DNS服务" class="headerlink" title="DNS服务"></a>DNS服务</h3><p>DNS(Domain Name System)是一种互联网服务,用于将域名解析成IP地址.它是一个分布式数据库系统,包括域名服务器和DNS客户端,可以将域名转换为对应的IP地址,以便网络设备可以找到相应的服务器.</p>
+<div class="tag-plugin quot"><p class="content" type="text"><span class="empty"></span><span class="text">分布式是个什么鬼?在生活中哪些东西是分布式的?</span><span class="empty"></span></p></div>
+
+<blockquote>
+<p>分布式是指一个系统或服务不是由单一的中心节点来控制和管理,而是由多个节点分布在不同的地方,相互协作和通信来完成整个系统或服务的功能和任务.</p>
+<p>每个节点都可以独立地处理和存储数据,而且节点之间的通信和数据交换是通过网络实现的.</p>
+<p>分布式的好处在于<strong>可以提高系统的可靠性、安全性和可扩展性.</strong></p>
+<p>因为分布式系统中的每个节点都是独立的,所以即使某个节点出现故障,整个系统也不会崩溃.</p>
+<p>同时,由于数据和任务可以分布在多个节点上,所以分布式系统可以处理大量的数据和请求,从而提高系统的可扩展性.另外,分布式系统还可以通过多个节点之间的数据备份和冗余来提高系统的安全性和可靠性.</p>
+<p> 举个例子来说,现在很多大型互联网企业都使用分布式系统来支持其业务,比如搜索引擎、电商平台和社交网络等.这些系统通常由数百或数千个节点组成,每个节点都可以独立地处理和存储数据,同时节点之间通过网络来实现数据交换和通信.这种分布式系统可以处理海量的数据和请求,同时还可以提高系统的可靠性和安全性.</p>
+</blockquote>
+<p>通俗来讲一个篱笆三个桩,一个好汉三个帮.其实分布式系统就是集体的力量,让更多的服务器进行协作,提供更强大的数据处理能力.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303231614285.png" data-fancybox="true"/></div></div>
+
+<p>DNS系统的工作过程可以概括为以下几个步骤:</p>
+<ol>
+<li>DNS客户端将需要解析的域名发送给本地DNS服务器.</li>
+<li>如果本地DNS服务器已经缓存了该域名对应的IP地址,它将直接返回给DNS客户端;否则它将向根域名 服务器发送请求.</li>
+<li>根域名服务器将返回包含所查询域名的顶级域名服务器地址的响应.</li>
+<li>本地DNS服务器将向顶级域名服务器发起查询,以获取下一级域名服务器的地址.</li>
+<li>DNS服务器将向下一级域名服务器发送查询请求,直到找到包含所查询域名的IP地址的域名服务器为 止.</li>
+<li>当找到目标域名的IP地址后,DNS服务器将返回给DNS客户端.</li>
+</ol>
+<p>DNS是互联网的重要基础设施之一,可以加速域名解析,提高网络应用的性能和可靠性.</p>
+<p><strong>DNS(Domain Name System)查询的方式有以下几种:</strong></p>
+<ol>
+<li>递归查询(Recursive Query):递归查询是最常见的DNS查询方式,它是一种从DNS客户端向DNS服 务器发起的请求,要求DNS服务器查找并返回指定域名的IP地址.如果DNS服务器无法解析该域名,它 将继续向其他DNS服务器查询,直到找到指定的IP地址并返回给客户端.</li>
+<li>迭代查询(Iterative Query):迭代查询是一种从DNS客户端向DNS服务器发起的请求,DNS服务器返 回它所知道的最接近目标域名的IP地址.如果DNS服务器无法解析该域名,它会告诉客户端下一个可能 具有相关信息的DNS服务器,并将查询转发给它.客户端将继续向其他DNS服务器进行查询,直到找到 目标域名的IP地址.</li>
+<li>反向查询(Reverse Query):反向查询是一种通过IP地址查找域名的DNS查询方式.DNS客户端将IP 地址反转,并添加”in-addr.arpa”域,然后向DNS服务器发起请求.DNS服务器将返回与该IP地址关联 的域名.</li>
+</ol>
+<p>以上三种DNS查询方式都是DNS解析过程中的常见操作.递归查询是最常用的DNS查询方式,因为它可以在 多个DNS服务器之间传递查询,直到找到正确的IP地址.迭代查询可以在本地DNS服务器上快速解析,但通 常需要多次查询才能找到正确的IP地址.反向查询则是通过IP地址查找域名的一种查询方式.</p>
+<h3 id="TCP-三次握手和四次挥手的过程"><a href="#TCP-三次握手和四次挥手的过程" class="headerlink" title="TCP 三次握手和四次挥手的过程"></a>TCP 三次握手和四次挥手的过程</h3><p><strong>相关名词</strong></p>
+<p>ACK : TCP协议规定,只有ACK&#x3D;1时有效,也规定连接建立后所有发送的报文的ACK必须为1</p>
+<p>SYN(SYNchronization) : 在连接建立时用来同步序号.当SYN&#x3D;1而ACK&#x3D;0时,表明这是一个连接请求报 文.对方若同意建立连接,则应在响应报文中使SYN&#x3D;1和ACK&#x3D;1. 因此,  SYN&#x3D;1就表示这是一个连接请求或连 接接受报文.</p>
+<p>FIN (finis)即完,终结的意思, 用来释放一个连接.当 FIN &#x3D; 1 时,表明此报文段的发送方的数据已经发 送完毕,并要求释放连接.</p>
+<p><strong>TCP三次握手过程:</strong></p>
+<ol>
+<li><p>首先由Client发出请求连接即 SYN&#x3D;1,声明自己的序号是 seq&#x3D;x</p>
+</li>
+<li><p>然后Server 进行回复确认,即 SYN&#x3D;1 ,声明自己的序号是 seq&#x3D;y, 并设置为ack&#x3D;x+1 </p>
+</li>
+<li><p>最后Client 再进行一次确认,设置  ack&#x3D;y+1</p>
+</li>
+</ol>
+ <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202303282214856.png" data-fancybox="true"/></div></div>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;面试常客:为什么需要三次握手?&quot;</span></span><br><span class="line"></span><br><span class="line">第一次握手:客户发送请求,此时服务器知道客户能发; 第二次握手:服务器发送确认,此时客户知道服务器能发能收; 第三次握手:客户发送确认,此时服务器知道客户能收.</span><br><span class="line"></span><br><span class="line">建立连接(三次握手)</span><br><span class="line">--------------------------------------------------------</span><br><span class="line"><span class="comment">#第一次:客户向服务器发送连接请求段,建立连接请求控制段(SYN=1),表示传输的报文段的第一个数据字节的 序列号是x,此序列号代表整个报文段的序号(seq=x);客户端进入 SYN\_SEND (同步发送状态); </span></span><br><span class="line"><span class="comment">#第二次:服务器发回确认报文段,同意建立新连接的确认段(SYN=1),确认序号字段有效(ACK=1),服务器告 诉客户端报文段序号是y(seq=y),表示服务器已经收到客户端序号为x的报文段,准备接受客户端序列号为x+1 的报文段(ack\_seq=x+1);服务器由LISTEN进入SYN\_RCVD (同步收到状态); </span></span><br><span class="line"><span class="comment">#第三次:客户对服务器的同一连接进行确认.确认序号字段有效(ACK=1),客户此次的报文段的序列号是 x+1(seq=x+1),客户期望接受服务器序列号为y+1的报文段(ack\_seq=y+1);当客户发送ack时,客户端进入 ESTABLISHED 状态;当服务收到客户发送的ack后,也进入ESTABLISHED状态;第三次握手可携带数据;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>TCP四次挥手过程:</strong></p>
+<p>1、发送方发送FIN报文:当应用程序完成数据传输后,发送方向接收方发送一个FIN报文,表示数据传输完 成,要求关闭连接.此时,发送方进入FIN_WAIT_1状态,等待接收到确认报文.</p>
+<p>2、接收方发送ACK报文:接收方收到发送方的FIN报文后,向发送方发送一个确认报文,表示已经收到了关 闭连接的请求,此时,接收方进入CLOSE_WAIT状态.</p>
+<p>3、接收方发送FIN报文:接收方在发送ACK报文后,通知自己的应用程序可以关闭连接了,向发送方发送一 个FIN报文,此时,接收方进入LAST_ACK状态. 4、发送方发送ACK报文:发送方收到接收方的FIN报文后,向接收方发送一个确认报文,表示已经收到了关 闭连接的请求,此时,发送方进入TIME_WAIT状态.接收方在收到这个确认报文后,进入CLOSED状态,整 个连接关闭.</p>
+<p>需要注意的是,第四次挥手后,发送方并不是立即进入CLOSED状态,而是等待一段时间(称为2MSL,即两 倍的最长报文段寿命),这是为了保证在这段时间内可以收到可能在传输中丢失的ACK报文.如果在2MSL时 间内没有收到回复,发送方会认为连接已经被完全关闭,进入CLOSED状态.</p>
+<p><strong>为什么需要等待2MSL?</strong></p>
+<ol>
+<li>最后一个报文没有确认;</li>
+<li>确保发送方的ACK可以到达接收方;</li>
+<li>2MSL时间内没有收到,则接收方会重发;</li>
+<li>确保当前连接的所有报文都已经过期.</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">TCP释放连接的四次挥手</span><br><span class="line"><span class="comment">#第一次:客户向服务器发送释放连接报文段,发送端数据发送完毕,请求释放连接(FIN=1),传输的第一个数据 字节的序号是x(seq=x);客户端状态由ESTABLISHED进入FIN\_WAIT\_1(终止等待1状态); </span></span><br><span class="line"><span class="comment">#第二次:服务器向客户发送确认段,确认字号段有效(ACK=1),服务器传输的数据序号是y(seq=y),服务器 期望接收客户数据序号为x+1(ack\_seq=x+1);服务器状态由ESTABLISHED进入CLOSE\_WAIT(关闭等待); 客户端收到ACK段后,由FIN\_WAIT\_1进入FIN\_WAIT\_2; </span></span><br><span class="line"><span class="comment">#第三次:服务器向客户发送释放连接报文段,请求释放连接(FIN=1),确认字号段有效(ACK=1),表示服务器 期望接收客户数据序号为x+1(ack\_seq=x+1);表示自己传输的第一个字节序号是y+1(seq=y+1);服务器状 态由CLOSE\_WAIT 进入 LAST\_ACK (最后确认状态);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#第四次:客户向服务器发送确认段,确认字号段有效(ACK=1),表示客户传输的数据序号是x+1(seq=x+1), 表示客户期望接收服务器数据序号为y+1+1(ack\_seq=y+1+1);客户端状态由FIN\_WAIT\_2进入TIME\_WAIT, 等待2MSL时间,进入CLOSED状态;服务器在收到最后一次ACK后,由LAST\_ACK进入CLOSED;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="IP地址分类-A类、B类、C类地址"><a href="#IP地址分类-A类、B类、C类地址" class="headerlink" title="IP地址分类:A类、B类、C类地址"></a>IP地址分类:A类、B类、C类地址</h3><table>
+<thead>
+<tr>
+<th>IP类别</th>
+<th>地址和二进制格式</th>
+<th>子网掩码及主机数</th>
+<th>适用范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A类</td>
+<td>网络号: 第1段 <br />主机号: 后3段 <br />二进制: 1字节网络 + 3字节主机 <br />最高位: 0 <br />范围: 1.0.0.1 - 126.255.255.254</td>
+<td>子网掩码: 255.0.0.0 &#x2F;8 <br />主机数: 约1.67亿</td>
+<td>大型网络</td>
+</tr>
+<tr>
+<td>B类</td>
+<td>网络号: 前2段 <br />主机号: 后2段 <br />二进制: 2字节网络 + 2字节主机 <br />最高位: 10 <br />范围: 128.0.0.1 - 191.255.255.254</td>
+<td>子网掩码: 255.255.0.0 &#x2F;16 <br />主机数: 约6.5万</td>
+<td>中型网络</td>
+</tr>
+<tr>
+<td>C类</td>
+<td>网络号: 前3段 <br />主机号: 第4段 <br />二进制: 3字节网络 + 1字节主机 <br />最高位: 110 <br />范围: 192.0.0.1 - 223.255.255.254</td>
+<td>子网掩码: 255.255.255.0 &#x2F;24 <br />主机数: 254台</td>
+<td>小型网络</td>
+</tr>
+</tbody></table>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202410090925491.jpg" data-fancybox="true"/></div></div>
+
+<div class="article-footer fs14">
+    <section id="references">
+      <div class="header"><span>参考资料</span></div>
+      <div class="body">
+        <ul>
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000019788537">HTTP 报文及其结构</a></p>
+
+        </li>
+        
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener" href="https://tool.oschina.net/commons?type=2">HTML特殊转义字符对照表</a></p>
+
+        </li>
+        
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xflonga/p/9368993.html">常见的HTTP状态码</a></p>
+
+        </li>
+        </ul>
+      </div>
+    </section>
+    
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2020/06/06/82a73708/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2020/06/06/82a73708/&title=五. 计算机网络基础 - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402071552244.png&summary=
+    总字符数: 39.02K 
+    
+    
+    代码: 1.56K, 文本: 25.86K
+    
+    
+    预计阅读时间: 1.99 小时
+    
+    
+
+
+    
+    
+    
+    
+..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=五. 计算机网络基础 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2020/06/06/82a73708/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2020/06/06/82a73708/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2020/12/21/466824cf/">Security-MySQL提权</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2020/06/05/2d7bc590/">四. Kali Linux安装</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\2020\06\05\2d7bc590\" title="四. Kali Linux安装"><span class="title">四. Kali Linux安装</span></a><a class="item" href="\2020\06\03\46ba4e0f\" title="二. Linux从入门到精通(下)"><span class="title">二. Linux从入门到精通(下)</span></a><a class="item" href="\2020\06\02\5fa17f4e\" title="二. Linux从入门到精通(上)"><span class="title">二. Linux从入门到精通(上)</span></a><a class="item" href="\2021\09\09\84bc0e75\" title="Linux-Opcache参数配置优化加速网站访问"><span class="title">Linux-Opcache参数配置优化加速网站访问</span></a><a class="item" href="\2024\09\24\3c3f9499\" title="CS-Cobalt Strike必备知识"><span class="title">CS-Cobalt Strike必备知识</span></a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body waline'>
+      
+
+<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/tools/">工具</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Web%E8%AF%B7%E6%B1%82%E8%BF%87%E7%A8%8B%E5%89%96%E6%9E%90"><span class="toc-text">Web请求过程剖析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#URL%E6%9E%84%E6%88%90"><span class="toc-text">URL构成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%9F%E5%90%8D"><span class="toc-text">域名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%B7%E6%B1%82%E8%BF%87%E7%A8%8B%E5%89%96%E6%9E%90"><span class="toc-text">请求过程剖析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B8%B2%E6%9F%93%E6%A8%A1%E5%BC%8F"><span class="toc-text">渲染模式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E4%B8%93%E4%B8%9A%E6%9C%AF%E8%AF%AD"><span class="toc-text">网络专业术语</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%BD%91%E7%BB%9C"><span class="toc-text">什么是网络?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFOSI%E4%B8%83%E5%B1%82%E6%A8%A1%E5%9E%8B"><span class="toc-text">什么是OSI七层模型?</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%89%A9%E7%90%86%E5%B1%82"><span class="toc-text">物理层</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82"><span class="toc-text">数据链路层</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E5%B1%82"><span class="toc-text">网络层</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%A0%E8%BE%93%E5%B1%82"><span class="toc-text">传输层</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%9A%E8%AF%9D%E5%B1%82"><span class="toc-text">会话层</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A1%A8%E7%A4%BA%E5%B1%82"><span class="toc-text">表示层</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%B1%82"><span class="toc-text">应用层</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%AF%BB%E5%9D%80-%E4%BB%80%E4%B9%88%E6%98%AF%E8%B7%AF%E7%94%B1"><span class="toc-text">什么是寻址?什么是路由?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%90%86-Proxy-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-text">代理(Proxy)是什么?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E5%B7%A5%E3%80%81%E5%8D%8A%E5%8F%8C%E5%B7%A5%E3%80%81%E5%85%A8%E5%8F%8C%E5%B7%A5%E5%8F%88%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-text">单工、半双工、全双工又是什么?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E6%92%AD%E3%80%81%E5%B9%BF%E6%92%AD%E3%80%81%E7%BB%84%E6%92%AD-%E5%93%AA%E6%AC%BE%E7%94%A8%E6%9D%A5%E8%A1%A8%E7%99%BD%E5%A5%BD%E5%91%A2"><span class="toc-text">单播、广播、组播?哪款用来表白好呢?</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F%E5%88%86%E7%B1%BB"><span class="toc-text">通信方式分类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%95%E6%92%AD"><span class="toc-text">单播</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B9%BF%E6%92%AD-%E7%BB%84%E6%92%AD"><span class="toc-text">广播(组播)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%84%E6%92%AD-%E5%A4%9A%E6%92%AD"><span class="toc-text">组播(多播)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%9E%E5%90%90%E9%87%8F-%E9%9A%BE%E9%81%93%E6%8C%87%E7%9A%84%E6%98%AF%E6%88%91%E4%BB%AC%E5%90%90%E7%9A%84%E9%87%8F%E5%90%97"><span class="toc-text">吞吐量?难道指的是我们吐的量吗?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3"><span class="toc-text">端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#B-S-C-S"><span class="toc-text">B&#x2F;S  C&#x2F;S</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#CS"><span class="toc-text">CS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#BS"><span class="toc-text">BS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-text">小结</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E5%88%86%E7%B1%BB"><span class="toc-text">网络分类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%B0%E7%90%86%E8%8C%83%E5%9B%B4%E5%88%86%E7%B1%BB"><span class="toc-text">地理范围分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E8%80%85%E5%88%86%E7%B1%BB"><span class="toc-text">使用者分类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%91%E5%9B%BE"><span class="toc-text">常见网络拓扑图</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%98%9F%E5%9E%8B%E7%BB%93%E6%9E%84"><span class="toc-text">星型结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%AF%E5%BD%A2%E7%BB%93%E6%9E%84"><span class="toc-text">环形结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BA%BF%E5%9E%8B%E7%BB%93%E6%9E%84"><span class="toc-text">总线型结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%91%E5%BD%A2%E7%BB%93%E6%9E%84"><span class="toc-text">树形结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%8A%B6%E7%BB%93%E6%9E%84"><span class="toc-text">网状结构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3%E5%8D%8F%E8%AE%AE"><span class="toc-text">网络相关协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ARP%E5%8D%8F%E8%AE%AE-%E5%9C%B0%E5%9D%80%E8%A7%A3%E6%9E%90%E5%8D%8F%E8%AE%AE"><span class="toc-text">ARP协议(地址解析协议)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RARP%E5%8D%8F%E8%AE%AE-%E9%80%86%E5%9C%B0%E5%9D%80%E8%A7%A3%E6%9E%90%E5%8D%8F%E8%AE%AE"><span class="toc-text">RARP协议(逆地址解析协议)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ICMP%E5%8D%8F%E8%AE%AE-%E5%9B%A0%E7%89%B9%E7%BD%91%E6%8E%A7%E5%88%B6%E6%8A%A5%E6%96%87%E5%8D%8F%E8%AE%AE"><span class="toc-text">ICMP协议(因特网控制报文协议)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP%E5%8D%8F%E8%AE%AE-%E4%BC%A0%E8%BE%93%E6%8E%A7%E5%88%B6%E5%8D%8F%E8%AE%AE"><span class="toc-text">TCP协议(传输控制协议)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#UDP%E5%8D%8F%E8%AE%AE-%E7%94%A8%E6%88%B7%E6%95%B0%E6%8D%AE%E6%8A%A5%E5%8D%8F%E8%AE%AE"><span class="toc-text">UDP协议(用户数据报协议)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP%E5%8D%8F%E8%AE%AE%E5%92%8CUDP%E5%8D%8F%E8%AE%AE%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">TCP协议和UDP协议的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IP%E5%8D%8F%E8%AE%AE-%E5%9B%A0%E7%89%B9%E7%BD%91%E4%BA%92%E8%81%94%E5%8D%8F%E8%AE%AE"><span class="toc-text">IP协议(因特网互联协议)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP%E5%8D%8F%E8%AE%AE-%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE"><span class="toc-text">HTTP协议(超文本传输协议)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84HTTP%E7%8A%B6%E6%80%81%E7%A0%81%E6%9C%89%E5%93%AA%E4%BA%9B"><span class="toc-text">常见的HTTP状态码有哪些?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Request-Response"><span class="toc-text">Request&#x2F;Response</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Request-%E8%AF%B7%E6%B1%82"><span class="toc-text">Request(请求)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Response-%E5%93%8D%E5%BA%94"><span class="toc-text">Response(响应)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DHCP%E5%8D%8F%E8%AE%AE"><span class="toc-text">DHCP协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SSL-TLS%E5%8D%8F%E8%AE%AE"><span class="toc-text">SSL&#x2F;TLS协议</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%86%E7%A0%81%E5%AD%A6%E5%9F%BA%E7%A1%80"><span class="toc-text">密码学基础</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%86%E7%A0%81%E4%BD%93%E5%88%B6%E5%88%86%E7%B1%BB"><span class="toc-text">密码体制分类</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DNS%E6%9C%8D%E5%8A%A1"><span class="toc-text">DNS服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP-%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B%E7%9A%84%E8%BF%87%E7%A8%8B"><span class="toc-text">TCP 三次握手和四次挥手的过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IP%E5%9C%B0%E5%9D%80%E5%88%86%E7%B1%BB-A%E7%B1%BB%E3%80%81B%E7%B1%BB%E3%80%81C%E7%B1%BB%E5%9C%B0%E5%9D%80"><span class="toc-text">IP地址分类:A类、B类、C类地址</span></a></li></ol></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js`,
+    marked: `https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.27.0" async></script>
+
+<!-- optional -->
+
+  <script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js'
+
+  function load_comment(){
+    if(!document.getElementById("waline_container"))return;
+
+    utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css');
+
+    const el = document.getElementById("waline_container");
+    var path = el.getAttribute('comment_id');
+    if (!path) {
+      path = decodeURI(window.location.pathname);
+    }
+
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+      el: '#waline_container',
+      path: path,
+      
+    }));
+
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    load_comment();
+  });
+
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"></script><script defer src="https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.swiper-slide img, .gallery img ,#waline_container .vcontent img`,
+    css: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css`,
+    js: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || null
+        }
+      });
+    })
+  }
+</script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          loop: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+</div></body></html>

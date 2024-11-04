@@ -1,0 +1,865 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.27.0" theme-name="Stellar" theme-version="1.27.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>Python-Scrapy的基本使用 - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="总字符数: 21.88K                代码: 18.29K, 文本: 1.74K               预计阅读时间: 1.45 小时            scrapy的基本使用 创建一个工程 scrapy startproject filename 必须在spiders这个目录下创建一个爬虫文件 cd proName scrapy genspider spid">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python-Scrapy的基本使用">
+<meta property="og:url" content="https://jiangjiyue.github.io/2020/05/24/48cd9b71/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="总字符数: 21.88K                代码: 18.29K, 文本: 1.74K               预计阅读时间: 1.45 小时            scrapy的基本使用 创建一个工程 scrapy startproject filename 必须在spiders这个目录下创建一个爬虫文件 cd proName scrapy genspider spid">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-05-24T06:57:08.000Z">
+<meta property="article:modified_time" content="2024-02-09T08:13:36.000Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="编程语言">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="爬虫">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <meta name="keywords" content="编程语言,Python,爬虫">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.27.0">
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="导航" href="/sites/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/tools/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
+</div>
+<div class="widgets">
+
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2024/11/04/fe2980d6/"><span class="title">CS-ShellCode加载器</span></a><a class="item title" href="/2023/03/11/247b757/"><span class="title">VulHub-Fastjson漏洞复现</span></a><a class="item title" href="/2023/04/28/76971e68/"><span class="title">VulHub-Tomcat漏洞复现</span></a><a class="item title" href="/2024/07/05/dd58c5ed/"><span class="title">应急响应之Webshell流量分析</span></a><a class="item title" href="/2024/10/27/77c80f0f/"><span class="title">CS-C语言总结</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/Python/">Python</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/Python/%E7%88%AC%E8%99%AB/">爬虫</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2020-05-24T06:57:08.000Z">2020-05-24</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-02-09T08:13:36.000Z">2024-02-09</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>Python-Scrapy的基本使用</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
+    <p>总字符数: 21.88K </p>
+    </div>
+    <div class="cell" style="">
+    <p>代码: 18.29K, 文本: 1.74K</p>
+    </div>
+    <div class="cell" style="">
+    <p>预计阅读时间: 1.45 小时</p>
+    </div>
+    </div>
+
+<h2 id="scrapy的基本使用"><a href="#scrapy的基本使用" class="headerlink" title="scrapy的基本使用"></a>scrapy的基本使用</h2><ul>
+<li>创建一个工程 <code>scrapy startproject filename</code></li>
+<li>必须在<code>spiders</code>这个目录下创建一个爬虫文件<ul>
+<li><code>cd proName</code></li>
+<li><code>scrapy genspider spiderName www.xxx.com</code></li>
+</ul>
+</li>
+<li>执行工程:<code>scrapy crawl spiderName</code></li>
+</ul>
+<h3 id="settings-py"><a href="#settings-py" class="headerlink" title="settings.py"></a>settings.py</h3><ul>
+<li>不遵从<code>rebots</code>协议</li>
+<li><code>ROBOTSTXT_OBEY = False</code></li>
+<li>进行<code>UA</code>伪装</li>
+<li><code>USER_AGENT = &#39;UA&#39;</code></li>
+<li>进行日志等级设定<ul>
+<li><code>LOG_LEVEL = &#39;ERROR&#39;</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="scrapy解析"><a href="#scrapy解析" class="headerlink" title="scrapy解析"></a>scrapy解析</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">parse</span>(<span class="params">self, response</span>):</span><br><span class="line">    <span class="comment"># 解析:作者的名称+段子的内容</span></span><br><span class="line">    div_list = response.xpath(<span class="string">&#x27;//div[@class=&quot;col1 old-style-col1&quot;]/div&#x27;</span>)</span><br><span class="line">    <span class="keyword">for</span> div <span class="keyword">in</span> div_list:</span><br><span class="line">        <span class="comment"># xpath返回的是列表, 但是列表元素一定是Selector类型的对象想要取得内容可以直接.extract()</span></span><br><span class="line">        <span class="comment"># .extract可以将Selector对象中的data参数存储的字符串提取出来</span></span><br><span class="line">        <span class="comment"># 只要能保证返回的列表里只有一个内容就可以使用.extract_first否则还是使用[下标]取出</span></span><br><span class="line">        <span class="comment"># .extract_first将列表中的第0个取出</span></span><br><span class="line">        author = div.xpath(<span class="string">&#x27;./div[1]/a[2]/h2/text()&#x27;</span>).extract_first()</span><br><span class="line">        <span class="comment"># 列表调用了.extract之后, 则表示将列表中每一个Selector对象中的data对应的字符串提取了出来</span></span><br><span class="line">        content = div.xpath(<span class="string">&#x27;./a[1]/div/span//text()&#x27;</span>).extract()</span><br><span class="line">        content = <span class="string">&#x27;&#x27;</span>.join(content)  <span class="comment"># 将列表转换为字符串</span></span><br><span class="line">        <span class="built_in">print</span>(author, content)</span><br></pre></td></tr></table></figure>
+
+<h3 id="scrapy持久化存储"><a href="#scrapy持久化存储" class="headerlink" title="scrapy持久化存储"></a>scrapy持久化存储</h3><ul>
+<li><p>基于终端指令:</p>
+<ul>
+<li>要求:只可以将<code>parse</code>方法的返回值存储到本地的文本文件中</li>
+<li><code>scrapy crawl qiubai -o ./qiubai.csv</code></li>
+<li>注意:持久化存储对应的文本文件类型只可以为:<code>&#39;json&#39;,&#39;jsonlines&#39;,&#39;jl&#39;,&#39;csv&#39;,&#39;xml&#39;,&#39;marshal&#39;,&#39;pickle&#39;</code></li>
+<li>好处:简洁高效便捷</li>
+<li>缺点:局限性较强(数据值可以存储到指定后缀名文件中)</li>
+</ul>
+</li>
+<li><p>基于管道</p>
+<ul>
+<li><p>编码流程:</p>
+</li>
+<li><p>数据解析</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#qiubai.py 文件名</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> scrapy <span class="keyword">from</span> qiubaiPro.items <span class="keyword">import</span> QiubaiproItem<span class="comment">#导入item类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">QiubaiSpider</span>(scrapy.Spider):</span><br><span class="line">    name = <span class="string">&#x27;qiubai&#x27;</span></span><br><span class="line">    <span class="comment"># allowed_domains = [&#x27;www.xxx.com&#x27;]</span></span><br><span class="line">    start_urls = [<span class="string">&#x27;https://www.qiushibaike.com/text/&#x27;</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">parse</span>(<span class="params">self, response</span>):</span><br><span class="line">        <span class="comment"># 解析:作者的名称+段子的内容</span></span><br><span class="line">        div_list = response.xpath(<span class="string">&#x27;//div[@class=&quot;col1 old-style-col1&quot;]/div&#x27;</span>)</span><br><span class="line">        <span class="keyword">for</span> div <span class="keyword">in</span> div_list:</span><br><span class="line">            <span class="comment"># xpath返回的是列表, 但是列表元素一定是Selector类型的对象想要取得内容可以直接.extract()</span></span><br><span class="line">            <span class="comment"># .extract可以将Selector对象中的data参数存储的字符串提取出来</span></span><br><span class="line">            <span class="comment"># 只要能保证返回的列表里只有一个内容就可以使用.extract_first否则还是使用[下标]取出</span></span><br><span class="line">            <span class="comment"># .extract_first将列表中的第0个取出</span></span><br><span class="line">          <span class="comment"># 匿名用户和正常用户的用户名不在同一个div中所以使用管道符分割,来写2个xpath表达式</span></span><br><span class="line">        author = div.xpath(<span class="string">&#x27;./div[1]/a[2]/h2/text()  ./div[1]/span[2]/h2/text()&#x27;</span>).extract_first()</span><br><span class="line">            <span class="comment"># 列表调用了.extract之后, 则表示将列表中每一个Selector对象中的data对应的字符串提取了出来</span></span><br><span class="line">            content = div.xpath(<span class="string">&#x27;./a[1]/div/span//text()&#x27;</span>).extract()</span><br><span class="line">            content = <span class="string">&#x27;&#x27;</span>.join(content)  <span class="comment"># 将列表转换为字符串</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在<code>item</code>类中定义相关的属性</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#items.py 文件名</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Define here the models for your scraped items</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># See documentation in:</span></span><br><span class="line"><span class="comment"># https://docs.scrapy.org/en/latest/topics/items.html</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> scrapy</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">QiubaiproItem</span>(scrapy.Item):</span><br><span class="line">    <span class="comment"># define the fields for your item here like:</span></span><br><span class="line">    author = scrapy.Field()<span class="comment">#定义author属性</span></span><br><span class="line">    content = scrapy.Field()<span class="comment">#定义content属性</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将解析的数据封装存储到<code>item</code>类型的对象中</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#qiubai.py 文件名</span></span><br><span class="line">item = QiubaiproItem()<span class="comment">#实例化对象</span></span><br><span class="line">item[<span class="string">&#x27;author&#x27;</span>] = author<span class="comment">#将author存储到item对象中</span></span><br><span class="line">item[<span class="string">&#x27;content&#x27;</span>] = content<span class="comment">#将content存储到item对象中</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将<code>item</code>类型的对象提交给管道进行持久化存储的操作</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将item提交给了管道</span></span><br><span class="line"><span class="keyword">yield</span> item</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在管道类的<code>process_item</code>中要将其接收到的<code>item</code>对象中存储的数据进行持久化存储操作</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#pipelines.py 文件名</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Define your item pipelines here</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Don&#x27;t forget to add your pipeline to the ITEM_PIPELINES setting</span></span><br><span class="line"><span class="comment"># See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># useful for handling different item types with a single interface</span></span><br><span class="line"><span class="keyword">from</span> itemadapter <span class="keyword">import</span> ItemAdapter</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">QiubaiproPipeline</span>:</span><br><span class="line">    <span class="comment"># 专门用来处理item类型对象</span></span><br><span class="line">    <span class="comment"># 该方法可以接收爬虫文件提交过来的item对象</span></span><br><span class="line">    <span class="comment"># 该方法每接收到一个item就会被调用一次</span></span><br><span class="line">    fp = <span class="literal">None</span></span><br><span class="line">    <span class="comment"># 重写父类的一个方法:该方法只在开始爬虫的时候被调用一次</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">open_spider</span>(<span class="params">self, spider</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;打开文件&#x27;</span>)</span><br><span class="line">        self.fp = <span class="built_in">open</span>(<span class="string">&#x27;./qiubai.txt&#x27;</span>, <span class="string">&#x27;w&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">process_item</span>(<span class="params">self, item, spider</span>):</span><br><span class="line">        author = item[<span class="string">&#x27;author&#x27;</span>]</span><br><span class="line">        content = item[<span class="string">&#x27;content&#x27;</span>]</span><br><span class="line">        self.fp.write(author+<span class="string">&#x27;:&#x27;</span>+content+<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> item</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">close_spider</span>(<span class="params">self, spider</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;关闭文件&#x27;</span>)</span><br><span class="line">        self.fp.close()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在配置文件中开启管道好处:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#setting.py 文件名</span></span><br><span class="line"><span class="comment">#将以下内容取消注释,300代表优先级,数字越小优先级越高,一个键值对应一个管道类</span></span><br><span class="line">ITEM_PIPELINES = &#123;</span><br><span class="line">    <span class="string">&#x27;qiubaiPro.pipelines.QiubaiproPipeline&#x27;</span>: <span class="number">300</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>优点:</p>
+<ul>
+<li>通用性强</li>
+</ul>
+</li>
+<li><p>缺点:</p>
+<ul>
+<li>操作繁琐</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>测试题</p>
+<ul>
+<li>将爬取到的数据一份存储到本地一份存储到数据库,如何实现?</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#settings.py 文件名</span></span><br><span class="line"></span><br><span class="line">ITEM_PIPELINES = &#123;</span><br><span class="line">    <span class="string">&#x27;qiubaiPro.pipelines.QiubaiproPipeline&#x27;</span>: <span class="number">300</span>,</span><br><span class="line">    <span class="string">&#x27;qiubaiPro.pipelines.mysqlPileLine&#x27;</span>: <span class="number">301</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#pipelines.py 文件名</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Define your item pipelines here</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Don&#x27;t forget to add your pipeline to the ITEM_PIPELINES setting</span></span><br><span class="line"><span class="comment"># See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># useful for handling different item types with a single interface</span></span><br><span class="line"><span class="keyword">from</span> itemadapter <span class="keyword">import</span> ItemAdapter</span><br><span class="line"><span class="keyword">import</span> pymysql</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">QiubaiproPipeline</span>:</span><br><span class="line">    <span class="comment"># 专门用来处理item类型对象</span></span><br><span class="line">    <span class="comment"># 该方法可以接收爬虫文件提交过来的item对象</span></span><br><span class="line">    <span class="comment"># 该方法每接收到一个item就会被调用一次</span></span><br><span class="line">    fp = <span class="literal">None</span></span><br><span class="line">    <span class="comment"># 重写父类的一个方法:该方法只在开始爬虫的时候被调用一次</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">open_spider</span>(<span class="params">self, spider</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;打开文件&#x27;</span>)</span><br><span class="line">        self.fp = <span class="built_in">open</span>(<span class="string">&#x27;./qiubai.txt&#x27;</span>, <span class="string">&#x27;w&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">process_item</span>(<span class="params">self, item, spider</span>):</span><br><span class="line">        author = item[<span class="string">&#x27;author&#x27;</span>]</span><br><span class="line">        content = item[<span class="string">&#x27;content&#x27;</span>]</span><br><span class="line">        self.fp.write(author+<span class="string">&#x27;:&#x27;</span>+content+<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> item  <span class="comment"># return item就会传递给下一个即将被执行的管道类</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">close_spider</span>(<span class="params">self, spider</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;关闭文件&#x27;</span>)</span><br><span class="line">        self.fp.close()</span><br><span class="line">        <span class="comment"># 管道文件中一个管道类对应将一组数据存储到一个平台或者载体中</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">class</span> <span class="title class_">mysqlPileLine</span>:</span><br><span class="line">            conn = <span class="literal">None</span></span><br><span class="line">            cursor = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">def</span> <span class="title function_">open_spider</span>(<span class="params">self, spider</span>):</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27;正在连接数据库&#x27;</span>)</span><br><span class="line">                self.conn = pymysql.Connect(</span><br><span class="line">                    host=<span class="string">&#x27;127.0.0.1&#x27;</span>, port=<span class="number">3306</span>, user=<span class="string">&#x27;root&#x27;</span>, password=<span class="string">&#x27;123456789&#x27;</span>, db=<span class="string">&#x27;qiubai&#x27;</span>, charset=<span class="string">&quot;utf8&quot;</span>)</span><br><span class="line"></span><br><span class="line">                <span class="keyword">def</span> <span class="title function_">process_item</span>(<span class="params">self, item, spider</span>):</span><br><span class="line">                    <span class="built_in">print</span>(<span class="string">&#x27;正在写入数据&#x27;</span>)</span><br><span class="line">                    self.cursor = self.conn.cursor()</span><br><span class="line">                    <span class="keyword">try</span>:</span><br><span class="line">                        self.cursor.execute(<span class="string">&#x27;insert into qiubai values(&quot;%s&quot;,&quot;%s&quot;)&#x27;</span> %</span><br><span class="line">                                            (item[<span class="string">&quot;author&quot;</span>], item[<span class="string">&quot;content&quot;</span>]))</span><br><span class="line">                        self.conn.commit()</span><br><span class="line">                        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">                            <span class="built_in">print</span>(e)</span><br><span class="line">                            self.conn.rollback</span><br><span class="line">                            <span class="keyword">return</span> item</span><br><span class="line"></span><br><span class="line">                        <span class="keyword">def</span> <span class="title function_">close_spider</span>(<span class="params">self, spider</span>):</span><br><span class="line">                            <span class="built_in">print</span>(<span class="string">&#x27;正在关闭连接&#x27;</span>)</span><br><span class="line">                            self.cursor.close()</span><br><span class="line">                            self.conn.close()</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>爬虫文件提交的<code>item</code>类型的对象最终会提交给哪一个管道类?<ul>
+<li>爬虫文件提交的<code>item</code>只会给管道文件中第一个被执行的管道类接收</li>
+<li>第一个管道类中的<code>process_item</code>中的<code>return item</code>表示将<code>item</code>传递给下一个即将被执行的管道类</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="基于Spider的全站数据爬取"><a href="#基于Spider的全站数据爬取" class="headerlink" title="基于Spider的全站数据爬取"></a>基于Spider的全站数据爬取</h3><h4 id="什么是全站数据爬取"><a href="#什么是全站数据爬取" class="headerlink" title="什么是全站数据爬取"></a>什么是全站数据爬取</h4><p> 就是将网站中某板块下的全部页码对应的页面数据爬取下来</p>
+<ul>
+<li>需求:爬取校花网中的照片的名称</li>
+</ul>
+<ul>
+<li>实现方式:<ul>
+<li>自行手动进行请求发送(推荐)</li>
+<li>将所有页面的<code>url</code>添加到<code>start_urls</code>列表中(不推荐,如果页码有上万个呢?)</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#xiaohua.py</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> scrapy</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">XiaohuaSpider</span>(scrapy.Spider):</span><br><span class="line">    name = <span class="string">&#x27;xiaohua&#x27;</span></span><br><span class="line">    <span class="comment"># allowed_domains = [&#x27;www.xxx.com&#x27;]</span></span><br><span class="line">    start_urls = [<span class="string">&#x27;http://www.521609.com/tuku/index.html&#x27;</span>]</span><br><span class="line">    <span class="comment"># 生成一个通用的url模板(不可变)</span></span><br><span class="line">    url = <span class="string">&#x27;http://www.521609.com/tuku/index_%d.html&#x27;</span></span><br><span class="line">    page_num = <span class="number">2</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">parse</span>(<span class="params">self, response</span>):</span><br><span class="line">        li_list = response.xpath(<span class="string">&#x27;//ul[@class=&quot;pbl &quot;]/li&#x27;</span>)</span><br><span class="line">        <span class="keyword">for</span> li <span class="keyword">in</span> li_list:</span><br><span class="line">            img_name = li.xpath(<span class="string">&#x27;./a/p/text()&#x27;</span>).extract_first()</span><br><span class="line">            <span class="built_in">print</span>(img_name)</span><br><span class="line">        <span class="keyword">if</span> self.page_num &lt;= <span class="number">51</span>:</span><br><span class="line">            <span class="built_in">print</span>(self.page_num)</span><br><span class="line">            new_url = <span class="built_in">format</span>(self.url % self.page_num)</span><br><span class="line">            <span class="comment"># 手动请求发送:callbak回调函数是专门用于数据解析</span></span><br><span class="line">            self.page_num += <span class="number">1</span></span><br><span class="line">            <span class="keyword">yield</span> scrapy.Request(url=new_url, callback =self.parse)</span><br></pre></td></tr></table></figure>
+
+<h3 id="请求传参"><a href="#请求传参" class="headerlink" title="请求传参"></a>请求传参</h3><ul>
+<li>使用场景:如果爬取的解析数据不在同一张页面中.(深度爬取)</li>
+</ul>
+<h3 id="图片数据爬取之ImagesPipeline"><a href="#图片数据爬取之ImagesPipeline" class="headerlink" title="图片数据爬取之ImagesPipeline"></a>图片数据爬取之ImagesPipeline</h3><ul>
+<li><p>基于<code>scrapy</code>爬取字符串类型的数据和爬取图片类型的数据区别?</p>
+<ul>
+<li>字符串:只需要<code>xpath</code>进行解析且提交管道进行持久化存储</li>
+<li>图片:<code>xpath</code>解析出图片的<code>src</code>属性值.单独对图片地址发起请求获取图片二进制类型的数据</li>
+</ul>
+</li>
+<li><p><code>ImagesPipeline</code>:</p>
+<ul>
+<li>只需要将<code>img</code>的<code>src</code>的属性值进行解析,将属性值封装到<code>item</code>并提交给管道,管道就会对图片的<code>src</code>进行请求发送获取图片的二进制类型的数据,且还会帮我们进行持久化存储</li>
+</ul>
+</li>
+<li><p>需求:爬取站长素材中的高清图片</p>
+</li>
+<li><p>使用流程:</p>
+<ul>
+<li>数据解析(地址的地址)</li>
+<li>将存储文件地址的<code>item</code>提交到指定的管道类</li>
+<li>在管道文件中定制一个基于<code>ImagesPipeLine</code>的一个管道类</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#pipelines.py</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Define your item pipelines here</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Don&#x27;t forget to add your pipeline to the ITEM_PIPELINES setting</span></span><br><span class="line"><span class="comment"># See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># useful for handling different item types with a single interface</span></span><br><span class="line"><span class="keyword">from</span> itemadapter <span class="keyword">import</span> ItemAdapter</span><br><span class="line"><span class="keyword">from</span> scrapy.pipelines.images <span class="keyword">import</span> ImagesPipeline</span><br><span class="line"><span class="keyword">import</span> scrapy</span><br><span class="line"><span class="comment"># class ZhanzhangproPipeline:</span></span><br><span class="line"><span class="comment">#     def process_item(self, item, spider):</span></span><br><span class="line"><span class="comment">#         return item</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">imgsPileLine</span>(<span class="title class_ inherited__">ImagesPipeline</span>):</span><br><span class="line">    <span class="comment"># 就是可以根据图片地址进行图片数据的请求</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get_media_requests</span>(<span class="params">self, item, info</span>):</span><br><span class="line">        <span class="keyword">yield</span> scrapy.Request(item[<span class="string">&#x27;src&#x27;</span>])</span><br><span class="line">    <span class="comment"># 指定图片存储的路径</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">file_path</span>(<span class="params">self, request, response=<span class="literal">None</span>, info=<span class="literal">None</span></span>):</span><br><span class="line">        imgName = request.url.split(<span class="string">&#x27;/&#x27;</span>)[-<span class="number">1</span>]</span><br><span class="line">        <span class="keyword">return</span> imgName</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">item_completed</span>(<span class="params">self, results, item, info</span>):</span><br><span class="line">        <span class="keyword">return</span> item  <span class="comment"># 返回给下一个即将被执行的管道类</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>修改<code>serrings.py</code>配置文件</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#serrings.py</span></span><br><span class="line"><span class="comment">#指定图片存储的目录</span></span><br><span class="line">IMAGES_STORE = <span class="string">&#x27;./imgs&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>指定开启的管道类:定制的管道类</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">serrings.py</span><br><span class="line"></span><br><span class="line">ITEM_PIPELINES = &#123;</span><br><span class="line">    <span class="string">&#x27;zhanzhangPro.pipelines.imgsPileLine&#x27;</span>: <span class="number">300</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="中间件"><a href="#中间件" class="headerlink" title="中间件"></a>中间件</h3><ul>
+<li><p>下载中间件</p>
+<ul>
+<li><p>位置:引擎和下载器之间</p>
+</li>
+<li><p>作用:批量拦截到整个工程中所有的请求和响应</p>
+</li>
+<li><p>拦截请求</p>
+</li>
+<li><p><code>UA</code>伪装</p>
+</li>
+<li><p>代理<code>IP</code></p>
+</li>
+<li><p>拦截响应:</p>
+</li>
+<li><p>篡改响应数据,响应对象</p>
+</li>
+<li><p>设置<code>UA</code>伪装以及代理<code>IP</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#middlewares.py</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Define here the models for your spider middleware</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># See documentation in:</span></span><br><span class="line"><span class="comment"># https://docs.scrapy.org/en/latest/topics/spider-middleware.html</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> scrapy <span class="keyword">import</span> signals</span><br><span class="line"></span><br><span class="line"><span class="comment"># useful for handling different item types with a single interface</span></span><br><span class="line"><span class="keyword">from</span> itemadapter <span class="keyword">import</span> is_item, ItemAdapter</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">QiubaiproDownloaderMiddleware</span>:</span><br><span class="line">    user_agent_list = [</span><br><span class="line">        <span class="string">&quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 &quot;</span></span><br><span class="line">        <span class="string">&quot;(KHTML, like Gecko) Chrome/22.0.1207.1 Safari/537.1&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Mozilla/5.0 (X11; CrOS i686 2268.111.0) AppleWebKit/536.11 &quot;</span></span><br><span class="line">        <span class="string">&quot;(KHTML, like Gecko) Chrome/20.0.1132.57 Safari/536.11&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.6 &quot;</span></span><br><span class="line">        <span class="string">&quot;(KHTML, like Gecko) Chrome/20.0.1092.0 Safari/536.6&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Mozilla/5.0 (Windows NT 6.2) AppleWebKit/536.6 &quot;</span></span><br><span class="line">        <span class="string">&quot;(KHTML, like Gecko) Chrome/20.0.1090.0 Safari/536.6&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.1 &quot;</span></span><br><span class="line">        <span class="string">&quot;(KHTML, like Gecko) Chrome/19.77.34.5 Safari/537.1&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/536.5 &quot;</span></span><br><span class="line">        <span class="string">&quot;(KHTML, like Gecko) Chrome/19.0.1084.9 Safari/536.5&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Mozilla/5.0 (Windows NT 6.0) AppleWebKit/536.5 &quot;</span></span><br><span class="line">        <span class="string">&quot;(KHTML, like Gecko) Chrome/19.0.1084.36 Safari/536.5&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.3 &quot;</span></span><br><span class="line">        <span class="string">&quot;(KHTML, like Gecko) Chrome/19.0.1063.0 Safari/536.3&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Mozilla/5.0 (Windows NT 5.1) AppleWebKit/536.3 &quot;</span></span><br><span class="line">        <span class="string">&quot;(KHTML, like Gecko) Chrome/19.0.1063.0 Safari/536.3&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_0) AppleWebKit/536.3 &quot;</span></span><br><span class="line">        <span class="string">&quot;(KHTML, like Gecko) Chrome/19.0.1063.0 Safari/536.3&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Mozilla/5.0 (Windows NT 6.2) AppleWebKit/536.3 &quot;</span></span><br><span class="line">        <span class="string">&quot;(KHTML, like Gecko) Chrome/19.0.1062.0 Safari/536.3&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.3 &quot;</span></span><br><span class="line">        <span class="string">&quot;(KHTML, like Gecko) Chrome/19.0.1062.0 Safari/536.3&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Mozilla/5.0 (Windows NT 6.2) AppleWebKit/536.3 &quot;</span></span><br><span class="line">        <span class="string">&quot;(KHTML, like Gecko) Chrome/19.0.1061.1 Safari/536.3&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.3 &quot;</span></span><br><span class="line">        <span class="string">&quot;(KHTML, like Gecko) Chrome/19.0.1061.1 Safari/536.3&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Mozilla/5.0 (Windows NT 6.1) AppleWebKit/536.3 &quot;</span></span><br><span class="line">        <span class="string">&quot;(KHTML, like Gecko) Chrome/19.0.1061.1 Safari/536.3&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Mozilla/5.0 (Windows NT 6.2) AppleWebKit/536.3 &quot;</span></span><br><span class="line">        <span class="string">&quot;(KHTML, like Gecko) Chrome/19.0.1061.0 Safari/536.3&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.24 &quot;</span></span><br><span class="line">        <span class="string">&quot;(KHTML, like Gecko) Chrome/19.0.1055.1 Safari/535.24&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/535.24 &quot;</span></span><br><span class="line">        <span class="string">&quot;(KHTML, like Gecko) Chrome/19.0.1055.1 Safari/535.24&quot;</span></span><br><span class="line">    ]</span><br><span class="line">    <span class="comment"># 可被选用的代理IP</span></span><br><span class="line">    PROXY_http = [</span><br><span class="line">        <span class="string">&#x27;153.180.102.104:80&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;195.208.131.189:56055&#x27;</span>,</span><br><span class="line">    ]</span><br><span class="line">    PROXY_https = [</span><br><span class="line">        <span class="string">&#x27;120.83.49.90:9000&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;95.189.112.214:35508&#x27;</span>,</span><br><span class="line">    ]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 拦截请求</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">process_request</span>(<span class="params">self, request, spider</span>):</span><br><span class="line">        <span class="comment"># UA伪装</span></span><br><span class="line">        request.headers[<span class="string">&#x27;User-Agent&#x27;</span>] = random.choice(self.user_agent_list)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 拦截所有的响应</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">process_response</span>(<span class="params">self, request, response, spider</span>):</span><br><span class="line">        <span class="comment"># Called with the response returned from the downloader.</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># Must either;</span></span><br><span class="line">        <span class="comment"># - return a Response object</span></span><br><span class="line">        <span class="comment"># - return a Request object</span></span><br><span class="line">        <span class="comment"># - or raise IgnoreRequest</span></span><br><span class="line">        <span class="keyword">return</span> response</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 拦截发生异常的请求</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">process_exception</span>(<span class="params">self, request, exception, spider</span>):</span><br><span class="line">        <span class="comment"># 发生请求异常后设置代理</span></span><br><span class="line">        <span class="comment"># 对拦截到请求的url进行判断(协议头到底是http还是https)</span></span><br><span class="line">        <span class="comment"># request.url返回值:http://www.xxx.com</span></span><br><span class="line">        <span class="keyword">if</span> request.url.split(<span class="string">&#x27;:&#x27;</span>)[<span class="number">0</span>] == <span class="string">&#x27;https&#x27;</span>:  <span class="comment"># 请求的协议头</span></span><br><span class="line">            ip = random.choice(self.PROXY_https)</span><br><span class="line">            request.meta[<span class="string">&#x27;proxy&#x27;</span>] = <span class="string">&#x27;https://&#x27;</span>+ip</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            ip = random.choice(self.PROXY_http)</span><br><span class="line">            request.meta[<span class="string">&#x27;proxy&#x27;</span>] = <span class="string">&#x27;http://&#x27;</span> + ip</span><br><span class="line">        <span class="keyword">return</span> request  <span class="comment"># 将修正之后的请求对象进行重新的请求发送</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在<code>settings.py</code>中开启下载中间件</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">DOWNLOADER_MIDDLEWARES = &#123;</span><br><span class="line">   <span class="string">&#x27;qiubaiPro.middlewares.QiubaiproDownloaderMiddleware&#x27;</span>: <span class="number">543</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>需求:爬取网易新闻中的新闻数据(标题和内容)</p>
+<ul>
+<li>通过网易新闻的首页解析出五大板块对应的详情页<code>URL</code>(没有动态加载)</li>
+<li>每一个板块对应的新闻标题都是动态加载出来的(动态加载)</li>
+<li>通过解析出每一条新闻详情页的<code>url</code>获取详情页的页面源码,解析出新闻内容</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#settings.py</span></span><br><span class="line"><span class="comment">#基本操作</span></span><br><span class="line">USER_AGENT = <span class="string">&#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36&#x27;</span></span><br><span class="line"><span class="comment"># Obey robots.txt rules</span></span><br><span class="line">ROBOTSTXT_OBEY = <span class="literal">False</span></span><br><span class="line">LOG_LEVEL = <span class="string">&#x27;ERROR&#x27;</span></span><br><span class="line"><span class="comment">#开启中间件拦截</span></span><br><span class="line">DOWNLOADER_MIDDLEWARES = &#123;</span><br><span class="line">    <span class="string">&#x27;wangyiPro.middlewares.WangyiproDownloaderMiddleware&#x27;</span>: <span class="number">543</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#开启管道</span></span><br><span class="line">ITEM_PIPELINES = &#123;</span><br><span class="line">    <span class="string">&#x27;wangyiPro.pipelines.WangyiproPipeline&#x27;</span>: <span class="number">300</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#wangyi.py</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> scrapy</span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">from</span> wangyiPro.items <span class="keyword">import</span> WangyiproItem</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">WangyiSpider</span>(scrapy.Spider):</span><br><span class="line">    name = <span class="string">&#x27;wangyi&#x27;</span></span><br><span class="line">    <span class="comment"># allowed_domains = [&#x27;https://news.163.com/&#x27;]</span></span><br><span class="line">    start_urls = [<span class="string">&#x27;https://news.163.com/&#x27;</span>]</span><br><span class="line">    models_urls = []  <span class="comment"># 存储五个板块对应详情页的url</span></span><br><span class="line">    <span class="comment"># 解析五大板块对应详情页的url</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 实例化一个浏览器对象</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># 后面是你的浏览器驱动位置,记得前面加r&#x27;&#x27;,&#x27;r&#x27;是防止字符转义的</span></span><br><span class="line">        self.bro = webdriver.Chrome(</span><br><span class="line">            executable_path=<span class="string">r&#x27;D:\Learning world\personal project\personal project\Python\爬虫\scrapy\wangyiPro\wangyiPro\chromedriver.exe&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">parse</span>(<span class="params">self, response</span>):</span><br><span class="line">        li_list = response.xpath(<span class="string">&#x27;//div[@class=&quot;ns_area list&quot;]/ul/li&#x27;</span>)</span><br><span class="line">        alist = [<span class="number">3</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]</span><br><span class="line">        <span class="keyword">for</span> index <span class="keyword">in</span> alist:</span><br><span class="line">            model_url = li_list[index].xpath(<span class="string">&#x27;./a/@href&#x27;</span>).extract_first()</span><br><span class="line">            self.models_urls.append(model_url)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 依次对每一个板块对应的页面进行请求</span></span><br><span class="line">        <span class="keyword">for</span> url <span class="keyword">in</span> self.models_urls:  <span class="comment"># 对每一个板块的url进行请求发送</span></span><br><span class="line">            <span class="keyword">yield</span> scrapy.Request(url=url, callback=self.parse_model)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 每一个板块对应的新闻标题相关的内容都是动态加载</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">parse_model</span>(<span class="params">self, response</span>):  <span class="comment"># 解析每一个板块页面中对应新闻的标题和新闻详情页的url</span></span><br><span class="line">        div_list = response.xpath(<span class="string">&#x27;//div[@class=&quot;ndi_main&quot;]/div&#x27;</span>)</span><br><span class="line">        <span class="keyword">for</span> div <span class="keyword">in</span> div_list:</span><br><span class="line">            title = div.xpath(<span class="string">&#x27;./div/div[1]/h3/a/text()&#x27;</span>).extract_first()</span><br><span class="line">            new_detail_url = div.xpath(</span><br><span class="line">                <span class="string">&#x27;./div/div[1]/h3/a/@href&#x27;</span>).extract_first()</span><br><span class="line">            item = WangyiproItem()</span><br><span class="line">            item[<span class="string">&#x27;title&#x27;</span>] = title</span><br><span class="line">            <span class="comment"># 对新闻详情页的url发起请求</span></span><br><span class="line">            <span class="keyword">yield</span> scrapy.Request(url=new_detail_url, callback=self.parse_detail, meta=&#123;<span class="string">&#x27;item&#x27;</span>: item&#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">parse_detail</span>(<span class="params">self, response</span>):</span><br><span class="line">        content = response.xpath(</span><br><span class="line">            <span class="string">&#x27;//div[@class=&quot;post_body&quot;]/p/text()&#x27;</span>).extract()</span><br><span class="line">        content = <span class="string">&#x27;&#x27;</span>.join(content)</span><br><span class="line">        item = response.meta[<span class="string">&#x27;item&#x27;</span>]</span><br><span class="line">        item[<span class="string">&#x27;content&#x27;</span>] = content</span><br><span class="line">        <span class="keyword">yield</span> item</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">closed</span>(<span class="params">self, spider</span>):</span><br><span class="line">        self.bro.quit()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#middlewares.py</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Define here the models for your spider middleware</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># See documentation in:</span></span><br><span class="line"><span class="comment"># https://docs.scrapy.org/en/latest/topics/spider-middleware.html</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> scrapy <span class="keyword">import</span> signals</span><br><span class="line"></span><br><span class="line"><span class="comment"># useful for handling different item types with a single interface</span></span><br><span class="line"><span class="keyword">from</span> itemadapter <span class="keyword">import</span> is_item, ItemAdapter</span><br><span class="line"><span class="keyword">from</span> scrapy.http <span class="keyword">import</span> HtmlResponse</span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">WangyiproDownloaderMiddleware</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">process_request</span>(<span class="params">self, request, spider</span>):</span><br><span class="line">        <span class="comment"># Called for each request that goes through the downloader</span></span><br><span class="line">        <span class="comment"># middleware.</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># Must either:</span></span><br><span class="line">        <span class="comment"># - return None: continue processing this request</span></span><br><span class="line">        <span class="comment"># - or return a Response object</span></span><br><span class="line">        <span class="comment"># - or return a Request object</span></span><br><span class="line">        <span class="comment"># - or raise IgnoreRequest: process_exception() methods of</span></span><br><span class="line">        <span class="comment">#   installed downloader middleware will be called</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 通过该方法拦截五大板块对应的响应对象,进行篡改</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">process_response</span>(<span class="params">self, request, response, spider</span>):  <span class="comment"># spider表示的是爬虫对象</span></span><br><span class="line">        bro = spider.bro  <span class="comment"># 获取了在爬虫类中定义的浏览器对象</span></span><br><span class="line">        <span class="comment"># 挑选出指定的响应对象进行篡改</span></span><br><span class="line">        <span class="comment"># 通过url指定request</span></span><br><span class="line">        <span class="comment"># 通过request指定response</span></span><br><span class="line">        <span class="keyword">if</span> request.url <span class="keyword">in</span> spider.models_urls:</span><br><span class="line">            bro.get(request.url)  <span class="comment"># 五个板块对应的url进行请求</span></span><br><span class="line">            sleep(<span class="number">2</span>)</span><br><span class="line">            page_text = bro.page_source  <span class="comment"># 包含了动态加载的新闻数据</span></span><br><span class="line">            <span class="comment"># response  # 五大板块对应的响应对象</span></span><br><span class="line">            <span class="comment"># 针对定位到的response进行篡改</span></span><br><span class="line">            <span class="comment"># 实例化新的相应对象,符合需求:包含动态加载出的新闻数据,替代原来不满足需求的响应对象</span></span><br><span class="line">            <span class="comment"># 如何获取动态加载出的新闻数据呢?</span></span><br><span class="line">            <span class="comment"># 基于selenium便捷的获取动态加载数据</span></span><br><span class="line">            new_response = HtmlResponse(</span><br><span class="line">                url=request.url, body=page_text, encoding=<span class="string">&#x27;utf-8&#x27;</span>, request=request)</span><br><span class="line">            <span class="keyword">return</span> new_response</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># response  # 其他请求对应的响应对象</span></span><br><span class="line">            <span class="keyword">return</span> response</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">process_exception</span>(<span class="params">self, request, exception, spider</span>):</span><br><span class="line">        <span class="comment"># Called when a download handler or a process_request()</span></span><br><span class="line">        <span class="comment"># (from other downloader middleware) raises an exception.</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># Must either:</span></span><br><span class="line">        <span class="comment"># - return None: continue processing this exception</span></span><br><span class="line">        <span class="comment"># - return a Response object: stops process_exception() chain</span></span><br><span class="line">        <span class="comment"># - return a Request object: stops process_exception() chain</span></span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#items.py</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> scrapy</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">WangyiproItem</span>(scrapy.Item):</span><br><span class="line">    <span class="comment"># define the fields for your item here like:</span></span><br><span class="line">    title = scrapy.Field()</span><br><span class="line">    content = scrapy.Field()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#pipelines.py</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Define your item pipelines here</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Don&#x27;t forget to add your pipeline to the ITEM_PIPELINES setting</span></span><br><span class="line"><span class="comment"># See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># useful for handling different item types with a single interface</span></span><br><span class="line"><span class="keyword">from</span> itemadapter <span class="keyword">import</span> ItemAdapter</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">WangyiproPipeline</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">process_item</span>(<span class="params">self, item, spider</span>):</span><br><span class="line">        <span class="built_in">print</span>(item)</span><br></pre></td></tr></table></figure>
+
+<h3 id="CrawlSpider类"><a href="#CrawlSpider类" class="headerlink" title="CrawlSpider类"></a>CrawlSpider类</h3><p><code>CrawlSpider类:Spider</code>的一个子类</p>
+<ul>
+<li>全站数据爬取的方式<ul>
+<li>基于<code>Spider</code>手动请求</li>
+<li>基于<code>CrawlSpider</code></li>
+</ul>
+</li>
+<li><code>CrawlSpider</code>的使用:<ul>
+<li>创建一个工程</li>
+<li><code>cd xxx</code></li>
+<li>创建爬虫文件(与之前不一样,基于<code>CrawlSpider</code>子类)</li>
+<li><code>scrapy genspider -t crawl name www.xxx.com</code></li>
+<li><code>LinkExtractor</code>(链接提取器):<ul>
+<li>作用:根据指定规则(<code>allow=&quot;正则&quot;</code>)进行指定链接的提取</li>
+</ul>
+</li>
+<li><code>Rule</code>(规则解析器)<ul>
+<li>作用:将链接提取器提取到的链接进行指定规则(<code>callback</code>的解析操作)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="分布式爬虫"><a href="#分布式爬虫" class="headerlink" title="分布式爬虫"></a>分布式爬虫</h2><h3 id="分布式爬虫的概念"><a href="#分布式爬虫的概念" class="headerlink" title="分布式爬虫的概念"></a>分布式爬虫的概念</h3><p>我们需要搭建一个分布式的集群,让其对一组资源进行分布联合爬取</p>
+<h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><p>提升爬取数据的效率</p>
+<h3 id="如何实现分布式"><a href="#如何实现分布式" class="headerlink" title="如何实现分布式"></a>如何实现分布式</h3><ul>
+<li>安装<code>scrapy-redis</code>的组件</li>
+<li>原生的<code>scrapy</code>是不可以实现分布式爬虫的,必须要让<code>scrapy</code>结合着<code>scrapy-redis</code>组件一起实现分布式爬虫</li>
+<li>为什么原生的<code>scrapy</code>不可以实现分布式?<ul>
+<li>调度器不可以被分布式集群共享</li>
+<li>管道不可以被分布式集群共享</li>
+</ul>
+</li>
+<li><code>scrapy-redis</code>组件作用<ul>
+<li>可以给原生的<code>scrapy</code>框架提供可以被共享的管道和调度器</li>
+</ul>
+</li>
+<li>实现流程<ul>
+<li><p>创建一个工程</p>
+</li>
+<li><p>创建一个基于<code>CrawlSpider</code>的爬虫文件</p>
+</li>
+<li><p>修改当前的爬虫文件</p>
+</li>
+<li><p>导包</p>
+<ul>
+<li><code>from scrapy_redis.spiders import RedisCrawlSpider</code></li>
+</ul>
+</li>
+<li><p>将<code>start_urls</code>和<code>allowed_domains</code>进行注释</p>
+</li>
+<li><p>添加一个新属性:与之代替的是<code>redis_key=&#39;sun&#39;</code>可以被共享的调度器队列的名称</p>
+</li>
+<li><p>编写数据解析相关的操作</p>
+</li>
+<li><p>将当前爬虫类的父类修改成<code>RedisCrawlSpider</code></p>
+</li>
+<li><p>修改配置文件<code>settings.py</code></p>
+<ul>
+<li>指定使用可以被共享的管道</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ITEM_PIPELINES = &#123;</span><br><span class="line">    <span class="string">&#x27;scrapy_redis.pipelines.RedisPipeline&#x27;</span>:<span class="number">400</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>指定调度器</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#增加了一个去重容器类的配置,作用使用Redis的set集合来存储请求的指纹数据,从而实现请求去重的持久化</span></span><br><span class="line">DUPEFILTER_CLASS = <span class="string">&quot;scrapy_redis.dupefilter.RFPDupeFilter&quot;</span></span><br><span class="line"><span class="comment">#使用scrapy-redis组件自己的调度器</span></span><br><span class="line">SCHEDULER=<span class="string">&quot;scrapy_redis.scheduler.Scheduler&quot;</span></span><br><span class="line"><span class="comment">#配置调度器是否要持久化,也就是当爬虫结束了,要不要清空Redis中请求队列和去重指纹的set.True=保留,False=清空</span></span><br><span class="line">SCHEDULER_PERSIST=TRUE</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>指定<code>redis</code>服务器</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#setting.py</span></span><br><span class="line"></span><br><span class="line">REDIS_HOST = <span class="string">&#x27;redis服务器的ip地址&#x27;</span></span><br><span class="line">REDIS_PORT = <span class="number">6379</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>redis</code>相关操作配置</p>
+<ul>
+<li>配置`redis`的配置文件</li>
+<li><code>linux/mac:redis.conf</code></li>
+<li><code>windows:redis.windows.conf</code></li>
+<li>打开配置文件修改<ul>
+<li>将<code>bind 127.0.0.1</code>进行删除</li>
+<li>关闭保护模式:<code>protected_mode yes</code>改为<code>no</code></li>
+</ul>
+</li>
+<li>结合着配置文件开启<code>redis</code>服务<ul>
+<li><code>redis-server</code>配置文件</li>
+<li>启动客户端</li>
+<li><code>redis-cli</code></li>
+</ul>
+</li>
+<li>执行工程</li>
+<li><code>scrapy runspider xxx.py</code>(爬虫源文件名称)</li>
+<li>向调度器的队列中放入一个起始的<code>url</code></li>
+<li>调度器的队列在redis的客户端中<ul>
+<li><code>lpush sun(爬虫文件中的redis_key) www.xxx.com(起始的url)</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<div class="article-footer fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2020/05/24/48cd9b71/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2020/05/24/48cd9b71/&title=Python-Scrapy的基本使用 - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401270953542.png&summary=
+    总字符数: 21.88K 
+    
+    
+    代码: 18.29K, 文本: 1.74K
+    
+    
+    预计阅读时间: 1.45 小时
+    
+    
+
+scrapy的基本使用
+创建一个工程 sc..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=Python-Scrapy的基本使用 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2020/05/24/48cd9b71/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2020/05/24/48cd9b71/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2020/06/01/f5d15284/">一. 计算机基础知识</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2019/12/24/384da78c/">Python-模糊查询批量修改文件名</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\2019\12\24\384da78c\" title="Python-模糊查询批量修改文件名"><span class="title">Python-模糊查询批量修改文件名</span></a><a class="item" href="\2021\09\03\468ad79b\" title="Python-爬取中关村手机排行榜并对其可视化"><span class="title">Python-爬取中关村手机排行榜并对其可视化</span></a><a class="item" href="\2021\05\24\f21126ec\" title="Python-数据分析及可视化"><span class="title">Python-数据分析及可视化</span></a><a class="item" href="\2024\02\01\6b028c3f\" title="Python-从入门到精通"><span class="title">Python-从入门到精通</span></a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body waline'>
+      
+
+<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/tools/">工具</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#scrapy%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="toc-text">scrapy的基本使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#settings-py"><span class="toc-text">settings.py</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#scrapy%E8%A7%A3%E6%9E%90"><span class="toc-text">scrapy解析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#scrapy%E6%8C%81%E4%B9%85%E5%8C%96%E5%AD%98%E5%82%A8"><span class="toc-text">scrapy持久化存储</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8ESpider%E7%9A%84%E5%85%A8%E7%AB%99%E6%95%B0%E6%8D%AE%E7%88%AC%E5%8F%96"><span class="toc-text">基于Spider的全站数据爬取</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%85%A8%E7%AB%99%E6%95%B0%E6%8D%AE%E7%88%AC%E5%8F%96"><span class="toc-text">什么是全站数据爬取</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%B7%E6%B1%82%E4%BC%A0%E5%8F%82"><span class="toc-text">请求传参</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BE%E7%89%87%E6%95%B0%E6%8D%AE%E7%88%AC%E5%8F%96%E4%B9%8BImagesPipeline"><span class="toc-text">图片数据爬取之ImagesPipeline</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E9%97%B4%E4%BB%B6"><span class="toc-text">中间件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CrawlSpider%E7%B1%BB"><span class="toc-text">CrawlSpider类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%88%AC%E8%99%AB"><span class="toc-text">分布式爬虫</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%88%AC%E8%99%AB%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="toc-text">分布式爬虫的概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%9C%E7%94%A8"><span class="toc-text">作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F"><span class="toc-text">如何实现分布式</span></a></li></ol></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js`,
+    marked: `https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.27.0" async></script>
+
+<!-- optional -->
+
+  <script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js'
+
+  function load_comment(){
+    if(!document.getElementById("waline_container"))return;
+
+    utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css');
+
+    const el = document.getElementById("waline_container");
+    var path = el.getAttribute('comment_id');
+    if (!path) {
+      path = decodeURI(window.location.pathname);
+    }
+
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+      el: '#waline_container',
+      path: path,
+      
+    }));
+
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    load_comment();
+  });
+
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"></script><script defer src="https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.swiper-slide img, .gallery img ,#waline_container .vcontent img`,
+    css: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css`,
+    js: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || null
+        }
+      });
+    })
+  }
+</script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          loop: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+</div></body></html>

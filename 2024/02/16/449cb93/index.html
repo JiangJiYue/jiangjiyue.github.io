@@ -1,0 +1,1029 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.27.0" theme-name="Stellar" theme-version="1.27.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>Security-主动信息收集 - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="总字符数: 21.79K                代码: 12.88K, 文本: 4.42K               预计阅读时间: 1.25 小时              主动信息收集的原理全球网络攻防实时地图通以下链接，我们可以发现，现在这个安静的网站环境下，一直存在着攻击和渗透。   https:&#x2F;&#x2F;ssa.yundun.com&#x2F;cchttps:&#x2F;&#x2F;ssa.yundun">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Security-主动信息收集">
+<meta property="og:url" content="https://jiangjiyue.github.io/2024/02/16/449cb93/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="总字符数: 21.79K                代码: 12.88K, 文本: 4.42K               预计阅读时间: 1.25 小时              主动信息收集的原理全球网络攻防实时地图通以下链接，我们可以发现，现在这个安静的网站环境下，一直存在着攻击和渗透。   https:&#x2F;&#x2F;ssa.yundun.com&#x2F;cchttps:&#x2F;&#x2F;ssa.yundun">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202306051016521.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051236300.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051237220.png">
+<meta property="og:image" content="https://github-readme-stats.xaoxuu.com/api/pin/?username=rtcatc&repo=Packer-Fuzzer&theme=dark&show_owner=true">
+<meta property="og:image" content="https://github-readme-stats.xaoxuu.com/api/pin/?username=Threezh1&repo=JSFinder&theme=dark&show_owner=true">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202312151520132.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051417165.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051418648.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051418919.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051419324.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051419311.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051420288.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051420229.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051421892.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051422452.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051423756.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051253550.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051302692.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051305112.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051322710.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051436708.jpeg">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202312151521284.png">
+<meta property="article:published_time" content="2024-02-16T03:55:15.000Z">
+<meta property="article:modified_time" content="2024-08-12T11:57:54.000Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="信息安全">
+<meta property="article:tag" content="信息收集">
+<meta property="article:tag" content="渗透测试">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202306051016521.png">
+  
+  
+  
+  <meta name="keywords" content="信息安全,信息收集,渗透测试">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.27.0">
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="导航" href="/sites/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/tools/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
+</div>
+<div class="widgets">
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">专栏：Security-Base</span></div><div class="widget-body"><a class="item" href="/2024/02/08/c44eef61/"><span class="title">Security-会话授权</span></a><a class="item" href="/2024/02/10/c44eef61/"><span class="title">Security-网安专业术语篇</span></a><a class="item" href="/2024/02/12/7564e3ff/"><span class="title">Security-全方位探索网络安全</span></a><a class="item" href="/2024/02/14/dbeaca23/"><span class="title">Security-被动信息收集</span></a><a class="item active" href="/2024/02/16/449cb93/"><span class="title">Security-主动信息收集</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a><a class="item" href="/2024/02/20/449cb93/"><span class="title">Security-WebShell介绍及使用</span></a><a class="item" href="/2024/02/22/449cb93/"><span class="title">Security-反弹Shell大全及使用</span></a></div></widget>
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2024/11/04/fe2980d6/"><span class="title">CS-ShellCode加载器</span></a><a class="item title" href="/2023/03/11/247b757/"><span class="title">VulHub-Fastjson漏洞复现</span></a><a class="item title" href="/2023/04/28/76971e68/"><span class="title">VulHub-Tomcat漏洞复现</span></a><a class="item title" href="/2024/07/05/dd58c5ed/"><span class="title">应急响应之Webshell流量分析</span></a><a class="item title" href="/2024/10/27/77c80f0f/"><span class="title">CS-C语言总结</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/topic">专栏</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/2024/02/08/c44eef61/">Security-Base</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2024-02-16T03:55:15.000Z">2024-02-16</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-08-12T11:57:54.000Z">2024-08-12</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>Security-主动信息收集</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
+    <p>总字符数: 21.79K </p>
+    </div>
+    <div class="cell" style="">
+    <p>代码: 12.88K, 文本: 4.42K</p>
+    </div>
+    <div class="cell" style="">
+    <p>预计阅读时间: 1.25 小时</p>
+    </div>
+    </div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202306051016521.png" data-fancybox="true"/></div></div>
+
+<h2 id="主动信息收集的原理"><a href="#主动信息收集的原理" class="headerlink" title="主动信息收集的原理"></a>主动信息收集的原理</h2><h3 id="全球网络攻防实时地图"><a href="#全球网络攻防实时地图" class="headerlink" title="全球网络攻防实时地图"></a>全球网络攻防实时地图</h3><p>通以下链接，我们可以发现，现在这个安静的网站环境下，一直存在着攻击和渗透。 </p>
+ <div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://ssa.yundun.com/cc" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://ssa.yundun.com/cc</span></div><div class="bottom"><span class="title">https://ssa.yundun.com/cc</span><span class="cap desc footnote"></span></div></a></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051236300.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://cybermap.kaspersky.com/cn" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://cybermap.kaspersky.com/cn</span></div><div class="bottom"><span class="title">https://cybermap.kaspersky.com/cn</span><span class="cap desc footnote"></span></div></a></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051237220.png" data-fancybox="true"/></div></div>
+
+<h2 id="主动信息收集的特点"><a href="#主动信息收集的特点" class="headerlink" title="主动信息收集的特点"></a>主动信息收集的特点</h2><ol>
+<li>直接与目标系统交互通信</li>
+<li>无法避免留下访问的痕迹</li>
+<li>使用受控的第三方电脑进行探测，使用代理或已经被控制的机器，做好被封杀的准备</li>
+<li>扫描发送不同的探测，根据返回结果判断目标状态</li>
+</ol>
+<h2 id="扫描敏感目录-文件"><a href="#扫描敏感目录-文件" class="headerlink" title="扫描敏感目录&#x2F;文件"></a>扫描敏感目录&#x2F;文件</h2><blockquote>
+<p>扫描敏感目录需要强大的字典，需要平时积累，拥有强大的字典能够更高效地找出网站的管理后台，敏感文件常见的如**.git文件泄露，.svn文件泄露，phpinfo泄露,robots.txt,网站banner,网站后台,测试文件,备份,github源码,JS敏感文件,网页源代码**等，这一步一半交给各类扫描器就可以了，将目标站点输入到域名中，选择对应字典类型，就可以开始扫描了，十分方便。</p>
+</blockquote>
+<h3 id="JS敏感文件"><a href="#JS敏感文件" class="headerlink" title="JS敏感文件"></a>JS敏感文件</h3><div class="tag-plugin ghcard"><a class="ghcard" rel="external nofollow noopener noreferrer noopener" target="_blank" href="https://github.com/rtcatc/Packer-Fuzzer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://github-readme-stats.xaoxuu.com/api/pin/?username=rtcatc&repo=Packer-Fuzzer&theme=dark&show_owner=true"/></a></div>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">python3 PackerFuzzer.py -u https://www.liaoxuefeng.com</span><br><span class="line"><span class="comment"># 查看报告</span></span><br><span class="line"><span class="built_in">cd</span> reports</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin ghcard"><a class="ghcard" rel="external nofollow noopener noreferrer noopener" target="_blank" href="https://github.com/Threezh1/JSFinder"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://github-readme-stats.xaoxuu.com/api/pin/?username=Threezh1&repo=JSFinder&theme=dark&show_owner=true"/></a></div>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 建议使用 -ou 和 -os 来指定保存 URL 和子域名的文件名</span></span><br><span class="line">python3 JSFinder.py -u http://www.jiangjiyue.com -d -ou mi_url.txt -os mi_subdomain.txt</span><br></pre></td></tr></table></figure>
+
+<h3 id="dirsearch"><a href="#dirsearch" class="headerlink" title="dirsearch"></a>dirsearch</h3><blockquote>
+<p> dirsearch是一个基于python3的命令行工具，常用于暴力扫描页面结构，包括网页中的目录和文件。</p>
+<p>相比其他扫描工具disearch的特点是：</p>
+<ul>
+<li>支持HTTP代理</li>
+<li>多线程</li>
+<li>支持多种形式的网页（asp,php）</li>
+<li>生成报告（纯文本，JSON）</li>
+<li>启发式检测无效的网页</li>
+<li>递归扫描</li>
+<li>用户代理随机化</li>
+<li>批量处理</li>
+<li>扫描器与字典（注：字典必须是文本文件）</li>
+</ul>
+</blockquote>
+<h4 id="简单使用"><a href="#简单使用" class="headerlink" title="简单使用"></a>简单使用</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">dirsearch -u https://target </span><br><span class="line">dirsearch -e php,html,js -u https://target</span><br><span class="line"> </span><br><span class="line">dirsearch -e * -u https://target -w /path/to/wordlist</span><br><span class="line"><span class="comment"># 参数</span></span><br><span class="line"><span class="comment"># -e 扫描网站需要指定网站的脚本类型,*为全部类型的脚本</span></span><br><span class="line"><span class="comment"># -u 指定域名</span></span><br><span class="line"><span class="comment"># -w 设置字典</span></span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202312151520132.png" data-fancybox="true"/></div></div>
+
+<p>图中，每一列的含义分别是：扫描时间，状态码，大小，扫描的目录，重定向的地址</p>
+<h4 id="参数列表"><a href="#参数列表" class="headerlink" title="参数列表"></a>参数列表</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">-h, --<span class="built_in">help</span> <span class="comment"># 查看帮助</span></span><br><span class="line">-u URL, --url=URL <span class="comment"># 设置url</span></span><br><span class="line">-L URLLIST, --url-list=URLLIST <span class="comment"># 设置url列表</span></span><br><span class="line">-e EXTENSIONS, --extensions=EXTENSIONS <span class="comment"># 网站脚本类型</span></span><br><span class="line">-w WORDLIST, --wordlist=WORDLIST <span class="comment"># 设置字典</span></span><br><span class="line">-l, --lowercase <span class="comment"># 小写</span></span><br><span class="line">-f, --force-extensions <span class="comment"># 强制扩展字典里的每个词条</span></span><br><span class="line">-s DELAY, --delay=DELAY <span class="comment"># 设置请求之间的延时</span></span><br><span class="line">-r, --recursive Bruteforce recursively <span class="comment"># 递归地扫描</span></span><br><span class="line">–scan-subdir=SCANSUBDIRS, --scan-subdirs=SCANSUBDIRS <span class="comment"># 扫描给定的url的子目录(用逗号隔开)</span></span><br><span class="line">–exclude-subdir=EXCLUDESUBDIRS, --exclude-subdirs=EXCLUDESUBDIRS <span class="comment"># 在递归过程中排除指定的子目录扫描(用逗号隔开)</span></span><br><span class="line">-t THREADSCOUNT, --threads=THREADSCOUNT <span class="comment"># 设置扫描线程</span></span><br><span class="line">-x EXCLUDESTATUSCODES, --exclude-status=EXCLUDESTATUSCODES <span class="comment"># 排除指定的网站状态码(用逗号隔开)</span></span><br><span class="line">-c COOKIE, --cookie=COOKIE <span class="comment"># 设置cookie</span></span><br><span class="line">–ua=USERAGENT, --user-agent=USERAGENT <span class="comment"># 设置用户代理</span></span><br><span class="line">-F, --follow-redirects <span class="comment"># 跟随地址重定向扫描</span></span><br><span class="line">-H HEADERS, --header=HEADERS <span class="comment"># 设置请求头</span></span><br><span class="line">–random-agents, --random-user-agents <span class="comment"># 设置随机代理</span></span><br><span class="line">–<span class="built_in">timeout</span>=TIMEOUT <span class="comment"># 设置超时时间</span></span><br><span class="line">–ip=IP <span class="comment"># 设置代理IP地址</span></span><br><span class="line">–proxy=HTTPPROXY, --http-proxy=HTTPPROXY <span class="comment"># 设置http代理。例如127.0.0.1:8080</span></span><br><span class="line">–max-retries=MAXRETRIES <span class="comment"># 设置最大的重试次数</span></span><br><span class="line">-b, --request-by-hostname <span class="comment"># 通过主机名请求速度，默认通过IP</span></span><br><span class="line">–simple-report=SIMPLEOUTPUTFILE <span class="comment"># 保存结果，发现的路径</span></span><br><span class="line">–plain-text-report=PLAINTEXTOUTPUTFILE <span class="comment"># 保存结果，发现的路径和状态码</span></span><br><span class="line">–json-report=JSONOUTPUTFILE <span class="comment"># 以json格式保存结果</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Dirbuster"><a href="#Dirbuster" class="headerlink" title="Dirbuster"></a>Dirbuster</h3><blockquote>
+<p>DirBuster支持全部的Web目录扫描方式。它既支持网页爬虫方式扫描，也支持基于字典暴力扫描，还支持纯暴力扫描。该工具使用Java语言编写，提供命令行（Headless）和图形界面（GUI）两种模式。其中，图形界面模式功能更为强大。用户不仅可以指定纯暴力扫描的字符规则，还可以设置以URL模糊方式构建网页路径。同时，用户还对网页解析方式进行各种定制，提高网址解析效率。</p>
+</blockquote>
+<h4 id="启动dirbuster"><a href="#启动dirbuster" class="headerlink" title="启动dirbuster"></a>启动dirbuster</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[/home]</span><br><span class="line">└─<span class="comment"># dirbuster                      </span></span><br><span class="line">Command <span class="string">&#x27;dirbuster&#x27;</span> not found, but can be installed with:</span><br><span class="line">apt install dirbuster</span><br><span class="line">Do you want to install it? (N/y)</span><br><span class="line"><span class="comment"># 如果出现以上内容,输入y回车安装即可</span></span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051417165.png" data-fancybox="true"/></div></div>
+
+<h4 id="设置相关参数"><a href="#设置相关参数" class="headerlink" title="设置相关参数"></a>设置相关参数</h4><ol>
+<li>目标ip地址或域名，默认80端口，特殊端口需要加到后面</li>
+</ol>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051418648.png" data-fancybox="true"/></div></div>
+
+<ol start="2">
+<li>请求方式，用get方式或者HEAD加GET自动切换</li>
+</ol>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051418919.png" data-fancybox="true"/></div></div>
+
+<ol start="3">
+<li><p>选择线程数，用于执行暴力破解的线程数完全取决于计算机的硬件</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051419324.png" data-fancybox="true"/></div></div>
+
+
+</li>
+<li><p>选择字典类型，字典列表目录为:<code>/usr/share/dirbuster/wordlists</code></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051419311.png" data-fancybox="true"/></div></div>
+</li>
+<li><p>自动生成,和步骤4二选一,建议使用字典</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051420288.png" data-fancybox="true"/></div></div>
+</li>
+<li><p>选择扫描方式</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051420229.png" data-fancybox="true"/></div></div>
+</li>
+<li><p>如果用URL Fuzz，可以指定目录，指定扫描admin目录下面的所有文件,<strong>dir代表字典的每一行</strong></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051421892.png" data-fancybox="true"/></div></div>
+</li>
+<li><p>点击开始</p>
+</li>
+</ol>
+<h4 id="查看结果"><a href="#查看结果" class="headerlink" title="查看结果"></a>查看结果</h4><ol>
+<li><p><code>Scan Information</code>:扫描信息</p>
+</li>
+<li><p><code>Results -List View</code>:结果列表</p>
+</li>
+<li><p><code>Results -Tree View</code>:结果树</p>
+</li>
+<li><p><code>Errors</code>:错误</p>
+</li>
+</ol>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051422452.png" data-fancybox="true"/></div></div>
+
+<ol start="5">
+<li><p>为确定文件是否存在，最常见的响应如下所示</p>
+<ul>
+<li><p>200:文件存在；</p>
+</li>
+<li><p>404:服务器中不存在该文件；</p>
+</li>
+<li><p>301:这是重定向到给定的URL；</p>
+</li>
+<li><p>401:访问此文件需要身份验证；</p>
+</li>
+<li><p>403:请求有效但服务器拒绝响应。</p>
+</li>
+</ul>
+</li>
+</ol>
+<h4 id="导出结果"><a href="#导出结果" class="headerlink" title="导出结果"></a>导出结果</h4><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051423756.png" data-fancybox="true"/></div></div>
+
+<h3 id="dirb"><a href="#dirb" class="headerlink" title="dirb"></a>dirb</h3><blockquote>
+<p>dirb是一个基于字典的web目录扫描工具，采用递归的方式来获取更多的目录，可以查找到已知的和隐藏的目录，它还支持代理和http认证限制访问的网站在渗透测试过程中，是一个非常好用的工具</p>
+</blockquote>
+<h4 id="dirb命令参数"><a href="#dirb命令参数" class="headerlink" title="dirb命令参数"></a>dirb命令参数</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">格式：dirb &lt;url_base&gt; [&lt;wordlist_file(s)&gt;] [options]</span><br><span class="line">-a 设置user-agent</span><br><span class="line">-p &lt;proxy[:port]&gt;设置代理</span><br><span class="line">-c 设置cookie</span><br><span class="line">-z 添加毫秒延迟，避免洪水攻击</span><br><span class="line">-o 输出结果</span><br><span class="line">-X 在每个字典的后面添加一个后缀</span><br><span class="line">-H 添加请求头</span><br><span class="line">-i 不区分大小写搜索</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dirb http://192.168.64.170 -w /usr/share/wordlists/dirb/big.txt</span><br></pre></td></tr></table></figure>
+
+<h2 id="基于ping命令的探测"><a href="#基于ping命令的探测" class="headerlink" title="基于ping命令的探测"></a>基于ping命令的探测</h2><blockquote>
+<p>PING命令也延伸出了很多其他的命令，如ARPING、FPING、HPING等</p>
+</blockquote>
+<h3 id="ping"><a href="#ping" class="headerlink" title="ping"></a>ping</h3><blockquote>
+<p>PING命令是我们常用的判断主机之间网络是否畅通，同样也是能判断我们的目标主机是否存活</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[/home]</span><br><span class="line">└─<span class="comment"># ping www.baidu.com -c 4</span></span><br><span class="line">PING www.a.shifen.com (180.101.50.188) 56(84) bytes of data.</span><br><span class="line">64 bytes from 180.101.50.188 (180.101.50.188): icmp_seq=1 ttl=51 time=35.0 ms</span><br><span class="line">64 bytes from 180.101.50.188 (180.101.50.188): icmp_seq=2 ttl=51 time=35.1 ms</span><br><span class="line">64 bytes from 180.101.50.188 (180.101.50.188): icmp_seq=3 ttl=51 time=35.0 ms</span><br><span class="line">64 bytes from 180.101.50.188 (180.101.50.188): icmp_seq=4 ttl=51 time=35.2 ms</span><br><span class="line"></span><br><span class="line">--- www.a.shifen.com ping statistics ---</span><br><span class="line">4 packets transmitted, 4 received, 0% packet loss, time 3004ms</span><br><span class="line">rtt min/avg/max/mdev = 34.986/35.067/35.152/0.060 ms</span><br></pre></td></tr></table></figure>
+
+<h3 id="ARPING"><a href="#ARPING" class="headerlink" title="ARPING"></a>ARPING</h3><h4 id="ARP协议概述"><a href="#ARP协议概述" class="headerlink" title="ARP协议概述"></a>ARP协议概述</h4><blockquote>
+<p>ARP协议是“Address Resolution Protocol”（地址解析协议）的缩写。计算机通过 ARP协议将IP地址转换成MAC地址。</p>
+</blockquote>
+<h4 id="ARP协议工作原理"><a href="#ARP协议工作原理" class="headerlink" title="ARP协议工作原理"></a>ARP协议工作原理</h4><blockquote>
+<p>在以太网中，数据传输的目标地址是MAC地址，一个主机要和另一个主机进行直接通信，必须要知道目标主机的MAC地址。</p>
+<p>计算机使用者通常只知道目标机器的IP信息，”地址解析”就是主机在发送帧前将目标IP地址转换成目标MAC地址的过程。</p>
+<p>简单地说，ARP协议主要负责将局域网中的32位IP地址转换为对应的48位物理地址，即网卡的MAC地址，保障通信顺利进行。</p>
+</blockquote>
+<ol>
+<li>windows下查看MAC地址:<code>ipconfig /all</code></li>
+</ol>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051253550.png" data-fancybox="true"/></div></div>
+
+<ol start="2">
+<li><p>使用arping命令查看局域网中的IP是否有冲突</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">└─<span class="comment"># arping 192.168.2.107</span></span><br><span class="line">ARPING 192.168.2.107</span><br><span class="line">Timeout</span><br><span class="line">Timeout</span><br><span class="line">Timeout</span><br><span class="line"><span class="comment"># 注意:按CTRL+C结束arping命令</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="netdiscover"><a href="#netdiscover" class="headerlink" title="netdiscover"></a>netdiscover</h3><blockquote>
+<p>netdiscover是一个主动&#x2F;被动的ARP侦查工具.使用netdiscover工具可以在网络上扫描IP地址,检查在线主机或搜索为它们发送的ARP请求。</p>
+</blockquote>
+<h4 id="主动模式"><a href="#主动模式" class="headerlink" title="主动模式"></a>主动模式</h4><blockquote>
+<p>主动模式顾名思义就是主动的探测发现网络内主机，但是这种方式往往会引起网络管理员的注意</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[/home]</span><br><span class="line">└─<span class="comment"># netdiscover -i eth0 -r 192.168.2.0/24</span></span><br><span class="line"><span class="comment"># 参数:</span></span><br><span class="line"><span class="comment"># -i 设备:您的网络设备 这里是指定网口为eth0,范围192.168.2.0/24</span></span><br><span class="line"><span class="comment"># -r 范围:扫描指定范围而不是自动扫描</span></span><br><span class="line"><span class="comment"># /24/16/8,子网掩码   三个255是/24</span></span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051302692.png" data-fancybox="true"/></div></div>
+
+<h4 id="被动模式"><a href="#被动模式" class="headerlink" title="被动模式"></a>被动模式</h4><blockquote>
+<p>被动模式的方法更加隐蔽，但是速度会比较慢，网卡被设置为混杂模式来侦听网络内的arp数据包进行被动式探测，这种方式就需要网络内设备发送arp包才能被探测到。</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[/home]</span><br><span class="line">└─<span class="comment"># netdiscover -p                       </span></span><br><span class="line"><span class="comment"># 参数:</span></span><br><span class="line"><span class="comment"># -p 被动模式:不发送任何东西，只有sniffnet</span></span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051305112.png" data-fancybox="true"/></div></div>
+
+<h3 id="arp-scan"><a href="#arp-scan" class="headerlink" title="arp-scan"></a>arp-scan</h3><blockquote>
+<p>arp-scan是Kali Linux自带的一款ARP扫描工具。该工具可以进行单一目标扫描，也可以进行批量扫描。</p>
+<p>同时，该工具会自动解析Mac地址，给出MAC对应的硬件厂商，帮助用户确认目标。</p>
+</blockquote>
+<h4 id="指令介绍"><a href="#指令介绍" class="headerlink" title="指令介绍"></a>指令介绍</h4><table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>参数含义</th>
+<th>使用示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-f</code></td>
+<td>从指定文件中读取主机名或地址</td>
+<td><code>arp-scan -f ip.txt</code></td>
+</tr>
+<tr>
+<td><code>-l</code></td>
+<td>从网络接口配置生成地址</td>
+<td><code>arp-scan -l</code></td>
+</tr>
+<tr>
+<td><code>-i</code></td>
+<td>各扫描之间的时间差</td>
+<td><code>arp-scan -l -i 1000</code></td>
+</tr>
+<tr>
+<td><code>-r</code></td>
+<td>每个主机扫描次数</td>
+<td><code>arp-scan -l -r 5</code></td>
+</tr>
+<tr>
+<td><code>-V</code></td>
+<td>显示程序版本并退出</td>
+<td><code>arp-scan -l -V</code></td>
+</tr>
+<tr>
+<td><code>-t</code></td>
+<td>设置主机超时时间</td>
+<td><code>arp-scan -t 1000 192.168.2.0/24</code></td>
+</tr>
+<tr>
+<td><code>-I</code></td>
+<td>使用网络接口</td>
+<td><code>arp-scan -I eth0 -l</code></td>
+</tr>
+<tr>
+<td><code>-g</code></td>
+<td>不显示重复的数据</td>
+<td><code>arp-scan -l -g</code></td>
+</tr>
+<tr>
+<td><code>-D</code></td>
+<td>显示数据包往返时间</td>
+<td><code>arp-scan -l -D</code></td>
+</tr>
+</tbody></table>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[/home]</span><br><span class="line">└─<span class="comment"># arp-scan -l         </span></span><br><span class="line">Interface: eth0, <span class="built_in">type</span>: EN10MB, MAC: 00:0c:29:3e:50:4d, IPv4: 192.168.2.106</span><br><span class="line">Starting arp-scan 1.9.7 with 256 hosts (https://github.com/royhills/arp-scan)</span><br><span class="line">192.168.2.1     2c:b2:1a:0c:d4:49       Phicomm (Shanghai) Co., Ltd.</span><br><span class="line">192.168.2.104   84:14:4d:f7:61:b0       (Unknown)</span><br><span class="line">192.168.2.180   2a:3e:a4:7a:f0:e6       (Unknown: locally administered)</span><br><span class="line">192.168.2.201   96:89:f9:d7:d9:7b       (Unknown: locally administered)</span><br><span class="line"></span><br><span class="line">4 packets received by filter, 0 packets dropped by kernel</span><br><span class="line">Ending arp-scan 1.9.7: 256 hosts scanned <span class="keyword">in</span> 1.920 seconds (133.33 hosts/sec). 4 responded</span><br></pre></td></tr></table></figure>
+
+<h3 id="FPING"><a href="#FPING" class="headerlink" title="FPING"></a>FPING</h3><blockquote>
+<p>Fping就是ping命令的加强版他可以对一个IP段进行ping扫描，而ping命令本身是不可以对网段进行扫描的</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[/home]</span><br><span class="line">└─<span class="comment"># fping -ag 192.168.2.0/24 &gt; fping.txt</span></span><br><span class="line">或</span><br><span class="line">┌──(root㉿kali)-[/home]</span><br><span class="line">└─<span class="comment"># fping -ag 192.168.2.1 192.168.2.254 &gt; fping.txt</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 参数说明:</span></span><br><span class="line">-a          表示只显示存活主机</span><br><span class="line">-g          表示对地址段进行扫描，如果不加可以对某个IP进行扫描</span><br><span class="line">&gt; fping.txt 表示将扫描的结果重定向到fping.txt ，原因是如果扫描一个网段的话输出结果是非常多的,我们输出重定向到文件中只会获得存活的主机信息。</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051322710.png" data-fancybox="true"/></div></div>
+
+<h2 id="Nmap"><a href="#Nmap" class="headerlink" title="Nmap"></a>Nmap</h2><blockquote>
+<p>Nmap 是一个网络连接端扫描软件，用来扫描网上电脑开放的网络连接端。确定哪些服务运行在哪些连接端，并且推断计算机运行哪个操作系统（这是亦称 fingerprinting）。它是网络管理员必用的软件之一，以及用以评估网络系统安全。它不局限于仅仅收集信息和枚举，同时可以用来作为一个漏洞探测器或安全扫描器。</p>
+</blockquote>
+<h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><p>Nmap 对于网络检查的作用，应该相当于网址导航、搜索引擎的作用：入口。</p>
+<ul>
+<li>检测活在网络上的主机（主机发现）</li>
+<li>检测主机上开放的端口（端口发现或枚举）</li>
+<li>检测到相应的端口（服务发现）的软件和版本</li>
+<li>检测操作系统，硬件地址，以及软件版本</li>
+<li>检测脆弱性的漏洞（Nmap 的脚本）</li>
+</ul>
+<p>Nmap 使用不同的技术来执行扫描，包括：TCP 的 connect 扫描，TCP 反向的 ident 扫描，FTP 反弹扫描等。所有这些扫描的类型有自己的优点和缺点。</p>
+<h3 id="目标探测"><a href="#目标探测" class="headerlink" title="目标探测"></a>目标探测</h3><blockquote>
+<p>目标探测的目的主要有 2 个：</p>
+<ul>
+<li>判断是否存活</li>
+<li>获取端口的开放情况</li>
+</ul>
+<p><code>-P*</code> 选项（用于选择 ping 的类型）可以结合使用。可以通过使用不同的 TCP 端口&#x2F;标志位和 ICMP 码来发送许多探测报文，增加穿透防火墙的机会。注意，即使指定了 <code>-P*</code> 选项，在局域网中，默认通过 ARP（<code>-PR</code>）来探测目标，因为它总是更快更有效。</p>
+</blockquote>
+<ol>
+<li><code>-sn</code> 不进行端口扫描(Ping 扫描):此选项告诉 Nmap 在主机发现后不进行端口扫描，只打印出探测到的可用主机。</li>
+<li><code>-sP</code>该选项告诉 Nmap 仅仅进行 ping 扫描（主机发现），然后打印出对扫描做出响应的那些主机。没有进一步的测试（如端口扫描或者操作系统探测）。相当于执行了 <code>ping xxxx</code>。当目标为整个局域网的时候，这个方法类似 ping 广播地址，但是它更可靠，因为许多主机对广播请求不响应。同 <code>-sn</code></li>
+<li><code>-Pn</code>:该选项完全跳过 Nmap 目标存活判断，即认为每个目标都是存活的。一般来说，Nmap 首先判断目标是否存活，如果存活再进行进一步的探测，如端口扫描、版本探测、或者操作系统探测等等。用 <code>-P0</code> 会使得 Nmap 对每一个目标都直接进行所要求的扫描。</li>
+<li><code>-PU</code>: UDP ping，它发送一个空的（除非指定了 <code>--data-length</code>）UDP报文到给定的端口</li>
+<li><code>-PR</code> :ARP Ping</li>
+<li><code>--system-dns</code>:默认情况下，Nmap 通过直接发送查询到你的主机上配置的域名服务器来解析域名。为了提高性能会并发执行许多请求（一般几十个）。如果您希望使用系统自带的解析器，就指定该选项（原理是通过调用 <code>getnameinfo()</code> 函数，调用一次解析一个 IP）</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. nmap扫描局域网存活主机与主机名</span></span><br><span class="line">nmap -sP 192.168.1.0/24  </span><br><span class="line">nmap -sP -PI -PT 192.168.1.0/24</span><br></pre></td></tr></table></figure>
+
+<h3 id="端口扫描"><a href="#端口扫描" class="headerlink" title="端口扫描"></a>端口扫描</h3><table>
+<thead>
+<tr>
+<th>状态</th>
+<th>详细的参数说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Open</td>
+<td>端口开启，数据有到达主机，有程序在端口上监控</td>
+</tr>
+<tr>
+<td>Closed</td>
+<td>端口关闭，数据有到达主机，没有程序在端口上监控</td>
+</tr>
+<tr>
+<td>Filtered</td>
+<td>数据没有到达主机，返回的结果为空，数据被防火墙或者是IDS过滤</td>
+</tr>
+<tr>
+<td>UnFiltered</td>
+<td>数据有到达主机，但是不能识别端口的当前状态</td>
+</tr>
+<tr>
+<td>Open|Filtered</td>
+<td>端口没有返回值，主要发生在UDP、IP、FIN、NULL和Xmas扫描中</td>
+</tr>
+<tr>
+<td>Closed|Filtered</td>
+<td>只发生在IP ID idle扫描</td>
+</tr>
+</tbody></table>
+<ol>
+<li><p><code>--script=</code> 表示启用脚本扫描。具体而言，它会使用 <code>default</code> 和 <code>safe</code> 脚本组合，用于对目标进行扫描和信息收集。</p>
+<ol>
+<li><code>auth</code> 处理身份验证</li>
+<li><code>broadcast</code> 网络广播</li>
+<li><code>brute</code> 暴力猜解</li>
+<li><code>default</code> 默认</li>
+<li><code>discovery</code> 服务发现</li>
+<li><code>dos</code> 拒绝服务</li>
+<li><code>exploit</code>漏洞利用</li>
+<li><code>external</code> 外部扩展</li>
+<li><code>fuzzer</code> 模糊测试</li>
+<li><code>intrusive</code> 扫描可能造成不良后果</li>
+<li><code>malware</code> 检测后门</li>
+<li><code>safe</code> 扫描危害较小</li>
+<li><code>version</code> 版本识别</li>
+<li><code>vuln</code> 漏洞检测</li>
+</ol>
+</li>
+<li><p><code>-sS</code> TCP SYN 扫描执行得很快</p>
+</li>
+<li><p><code>-sT</code> <code>TCP connect()</code> 扫描:当 SYN 扫描不能用，例如当用户没有权限发送原始报文或者扫描 IPv6 网络时，TCP 扫描默认使用 TCP Connect() 扫描</p>
+</li>
+<li><p><code>-sU</code>: UDP 扫描</p>
+</li>
+<li><p><code>-P &lt;port ranges&gt;</code> 只扫描指定的端口:该选项指明你想扫描的端口，覆盖默认值。单个端口加上连字符表示端口范围（如 <code>1-1023</code>）也可以。</p>
+</li>
+<li><p><code>-p-</code>:全端口扫描</p>
+</li>
+</ol>
+<h3 id="服务和版本探测"><a href="#服务和版本探测" class="headerlink" title="服务和版本探测"></a>服务和版本探测</h3><ol>
+<li><code>-sV</code>: 打开版本探测。也可以用<code>-A</code>同时打开操作系统探测和版本探测。</li>
+<li><code>--allports</code> 不排除端口:默认情况下，Nmap 版本探测会跳过 TCP 端口 9100</li>
+</ol>
+<h3 id="操作系统探测"><a href="#操作系统探测" class="headerlink" title="操作系统探测"></a>操作系统探测</h3><ol>
+<li><code>-O</code> 启用操作系统检测.也可以使用<code>-A</code>来同时启用操作系统检测和版本检测</li>
+</ol>
+<h3 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h3><ol>
+<li><code>-oN &lt;filespec&gt;</code>:要求将标准输出直接写入指定的文件。如上所述，这个格式与交互式输出略有不同。</li>
+<li><code>-oX &lt;filespec&gt;</code>:要求 XML 输出直接写入指定的文件</li>
+<li><code>-oA &lt;basename&gt;</code>: 输出至所有格式</li>
+<li><code>--append-output</code>: 在输出文件中添加:当使用文件作为输出格式，如<code>-oX</code>或<code>-oN</code>，默认该文件被覆盖。如果希望文件保留现有内容，将结果添加在现有文件后面，就使用<code>--append-output</code>选项。所有指定的输出文件都被添加。但对于<code>XML</code>（<code>-oX</code>）扫描输出文件无效，无法正常解析，需要手工修改</li>
+</ol>
+<h3 id="激进扫描模式"><a href="#激进扫描模式" class="headerlink" title="激进扫描模式"></a>激进扫描模式</h3><blockquote>
+<p><code>-A</code>:这个选项启用额外的高级和高强度选项，目前还未确定代表 的内容。目前，这个选项启用了操作系统检测（<code>-O</code>）和版本扫描（<code>-sV</code>），以后会增加更多的功能。目的是启用一个全面的扫描选项集合，不需要用户记忆大量的选项。这个选项仅仅启用功能，不包含用于可能所需要的时间选项（如 <code>-T4</code>）或细节选项（<code>-v</code>）</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># nmap 扫描ip所开放的端口</span></span><br><span class="line">nmap -sT -sV -Pn -v 192.168.1.12 -p-</span><br><span class="line"><span class="comment"># 参数:</span></span><br><span class="line"><span class="comment"># -p- 表示全端口 计算机共有端口65535个</span></span><br><span class="line"><span class="comment"># -sT 表示扫描用的是Tcp扫描</span></span><br><span class="line"><span class="comment"># -sV 表示显示服务版本号</span></span><br><span class="line"><span class="comment"># -Pn 应当表示被扫描的机器与你本机的三次握手</span></span><br><span class="line"><span class="comment"># -v  表示详细信息</span></span><br><span class="line">nmap -p80 [域名] 对某个端口进行探测</span><br><span class="line">nmap -p80,135 [域名] 对某几个端口进行探测</span><br><span class="line">nmap -p1-100 [域名] 对某个端口范围进行探测</span><br><span class="line">nmap -p- [域名] 对所有端口范围进行探测</span><br><span class="line">nmap -p T:25,U:53 [域名] 指定协议探测端口</span><br><span class="line">nmap -p smtp [域名] 通过协议名来扫描端口</span><br><span class="line">nmap -p s* [域名] 通过名称范围扫描</span><br><span class="line">nmap -p [1-65535] [域名] 扫描注册在nmap中的端口</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用nmap进行半连接扫描"><a href="#使用nmap进行半连接扫描" class="headerlink" title="使用nmap进行半连接扫描"></a>使用nmap进行半连接扫描</h3><p><strong>nmap扫描类型主要有TCP的全连接扫描（会在被扫描机器留下记录），半连接扫描（不会留下记录）</strong></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202304051436708.jpeg" data-fancybox="true"/></div></div>
+
+
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[/home]</span><br><span class="line">└─<span class="comment"># nmap -sS 154.40.42.101 -p80,443,9090,8080 </span></span><br><span class="line">Starting Nmap 7.92 ( https://nmap.org ) at 2023-04-05 13:49 CST</span><br><span class="line">Nmap scan report <span class="keyword">for</span> 154.40.42.101</span><br><span class="line">Host is up (0.19s latency).</span><br><span class="line"></span><br><span class="line">PORT     STATE    SERVICE</span><br><span class="line">80/tcp   open     http</span><br><span class="line">443/tcp  filtered https</span><br><span class="line">8080/tcp open     http-proxy</span><br><span class="line">9090/tcp open     zeus-admin</span><br><span class="line"></span><br><span class="line">Nmap <span class="keyword">done</span>: 1 IP address (1 host up) scanned <span class="keyword">in</span> 1.48 seconds</span><br><span class="line"></span><br><span class="line"><span class="comment"># 参数:</span></span><br><span class="line"><span class="comment"># -sS 表示使用SYN进行半连接扫描</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="masscan"><a href="#masscan" class="headerlink" title="masscan"></a>masscan</h2><blockquote>
+<p>masscan是为了尽可能快速的扫描整个互联网而创建的，根据其作者robert graham描述<br>可以不到6分钟内完成每秒大约1000万个数据包</p>
+</blockquote>
+<h3 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 单端口扫描</span></span><br><span class="line">masscan 10.10.10.0/24 -p443</span><br><span class="line"></span><br><span class="line"><span class="comment"># 多端口扫描</span></span><br><span class="line">masscan 10.10.10.0/24 -p80,443</span><br><span class="line"></span><br><span class="line"><span class="comment"># 扫描一系列端口</span></span><br><span class="line">masscan 10.10.10.0/24 -p22-25</span><br><span class="line"></span><br><span class="line"><span class="comment"># 快速扫描</span></span><br><span class="line"><span class="comment"># 默认情况下，masscan扫描的速度为每秒100个数据包，为了增加这一点，只需提供该-rate选项并指定一个值</span></span><br><span class="line">masscan 10.10.10.0/24 --top-ports 100 --rate 100000</span><br><span class="line"></span><br><span class="line"><span class="comment"># 排除目标</span></span><br><span class="line"><span class="comment"># 为了更好的，愉快的玩耍，必要时要对扫描目标进行排除</span></span><br><span class="line">masscan 10.10.10.0/24 --top-ports 100 --excludefile exclude.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 保存扫描结果</span></span><br><span class="line"><span class="comment"># 可以使用标准的unix重定向器将扫描结果输入到一个文件中</span></span><br><span class="line">masscan 10.10.10.0/24 --top-ports 100 &gt; result.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 支持的输出格式</span></span><br><span class="line"><span class="comment"># -oX filename : 将扫描结果保存到xml格式的文件中</span></span><br><span class="line"><span class="comment"># -oG filename : 将扫描结果保存到grepable格式的文件中</span></span><br><span class="line"><span class="comment"># -oJ filename : 将扫描结果保存到json格式的文件中</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取Banner</span></span><br><span class="line">masscan 10.10.10.0/24 -p80 --banners --source-ip x.x.x.x</span><br><span class="line"><span class="comment"># 扫描10.10.10.x网段80端口的开放信息，并且获取banner信息 –source-ip 是指定源IP，这个ip必须指定独立有效的IP地址。</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="命令行模式详细参数"><a href="#命令行模式详细参数" class="headerlink" title="命令行模式详细参数"></a>命令行模式详细参数</h3><p>以下为扩展内容</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&lt;ip/range&gt; IP地址范围，有三种有效格式，1、单独的IPv4地址 2、类似<span class="string">&quot;10.0.0.1-10.0.0.233&quot;</span>的范围地址 3、CIDR地址 类似于<span class="string">&quot;0.0.0.0/0&quot;</span>，多个目标可以用都好隔开</span><br><span class="line">-p &lt;ports,--ports &lt;ports&gt;&gt; 指定端口进行扫描</span><br><span class="line">--banners 获取banner信息，支持少量的协议</span><br><span class="line">--rate &lt;packets-per-second&gt; 指定发包的速率</span><br><span class="line">-c &lt;filename&gt;, --conf &lt;filename&gt; 读取配置文件进行扫描</span><br><span class="line">--<span class="built_in">echo</span> 将当前的配置重定向到一个配置文件中</span><br><span class="line">-e &lt;ifname&gt; , --adapter &lt;ifname&gt; 指定用来发包的网卡接口名称</span><br><span class="line">--adapter-ip &lt;ip-address&gt; 指定发包的IP地址</span><br><span class="line">--adapter-port &lt;port&gt; 指定发包的源端口</span><br><span class="line">--adapter-mac &lt;mac-address&gt; 指定发包的源MAC地址</span><br><span class="line">--router-mac &lt;mac address&gt; 指定网关的MAC地址</span><br><span class="line">--exclude &lt;ip/range&gt; IP地址范围黑名单，防止masscan扫描</span><br><span class="line">--excludefile &lt;filename&gt; 指定IP地址范围黑名单文件</span><br><span class="line">--includefile，-iL &lt;filename&gt; 读取一个范围列表进行扫描</span><br><span class="line">--ping 扫描应该包含ICMP回应请求</span><br><span class="line">--append-output 以附加的形式输出到文件</span><br><span class="line">--iflist 列出可用的网络接口，然后退出</span><br><span class="line">--retries 发送重试的次数，以1秒为间隔</span><br><span class="line">--nmap 打印与nmap兼容的相关信息</span><br><span class="line">--http-user-agent &lt;user-agent&gt; 设置user-agent字段的值</span><br><span class="line">--show [open,close] 告诉要显示的端口状态，默认是显示开放端口</span><br><span class="line">--noshow [open,close] 禁用端口状态显示</span><br><span class="line">--pcap &lt;filename&gt; 将接收到的数据包以libpcap格式存储</span><br><span class="line">--regress 运行回归测试，测试扫描器是否正常运行</span><br><span class="line">--ttl &lt;num&gt; 指定传出数据包的TTL值，默认为255</span><br><span class="line">--<span class="built_in">wait</span> &lt;seconds&gt; 指定发送完包之后的等待时间，默认为10秒</span><br><span class="line">--offline 没有实际的发包，主要用来测试开销</span><br><span class="line">-sL 不执行扫描，主要是生成一个随机地址列表</span><br><span class="line">--readscan &lt;binary-files&gt; 读取从-oB生成的二进制文件，可以转化为XML或者JSON格式.</span><br><span class="line">--connection-timeout &lt;secs&gt; 抓取banners时指定保持TCP连接的最大秒数，默认是30秒。</span><br></pre></td></tr></table></figure>
+
+<h2 id="nc"><a href="#nc" class="headerlink" title="nc"></a>nc</h2><blockquote>
+<p>nc是netcat的简写，有着网络界的瑞士军刀美誉。因为它短小精悍、功能实用，被设计为一个简单、可靠的网络工具</p>
+</blockquote>
+<h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><ol>
+<li>实现任意TCP&#x2F;UDP端口的侦听，nc可以作为server以TCP或UDP方式侦听指定端口</li>
+<li>端口的扫描，nc可以作为client发起TCP或UDP连接</li>
+<li>机器之间传输文件</li>
+<li>机器之间网络测速</li>
+</ol>
+<h3 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -n   直接使用IP地址，而不通过域名服务器</span></span><br><span class="line"><span class="comment"># -v   显示指令执行过程</span></span><br><span class="line"><span class="comment"># -w 表示超时时间</span></span><br><span class="line"><span class="comment"># -z  表示使用输入/输出模式，只在扫描通信端口时使用</span></span><br><span class="line"></span><br><span class="line">┌──(root㉿kali)-[/home]</span><br><span class="line">└─<span class="comment"># nc -nv -w 1 -z 154.40.42.101 80-90 </span></span><br><span class="line">(UNKNOWN) [154.40.42.101] 90 (?) : No route to host</span><br><span class="line">(UNKNOWN) [154.40.42.101] 89 (?) : Connection timed out</span><br><span class="line">(UNKNOWN) [154.40.42.101] 88 (kerberos) : No route to host</span><br><span class="line">(UNKNOWN) [154.40.42.101] 87 (?) : No route to host</span><br><span class="line">(UNKNOWN) [154.40.42.101] 86 (?) : Connection timed out</span><br><span class="line">(UNKNOWN) [154.40.42.101] 85 (?) : No route to host</span><br><span class="line">(UNKNOWN) [154.40.42.101] 84 (?) : Connection timed out</span><br><span class="line">(UNKNOWN) [154.40.42.101] 83 (?) : No route to host</span><br><span class="line">(UNKNOWN) [154.40.42.101] 82 (?) : Connection timed out</span><br><span class="line">(UNKNOWN) [154.40.42.101] 81 (?) : No route to host</span><br><span class="line">(UNKNOWN) [154.40.42.101] 80 (http) open</span><br></pre></td></tr></table></figure>
+
+<h2 id="wafw00f"><a href="#wafw00f" class="headerlink" title="wafw00f"></a>wafw00f</h2><blockquote>
+<p>Web应用防护系统(也称为:网站应用级入侵防御系统)。英文：Web Application Firewall，简称： WAF）。利用国际上公认的一种说法：Web应用防火墙是通过执行一系列针对HTTP&#x2F;HTTPS的安全策略来专门为Web应用提供保护的一款产品。</p>
+<p>在KaliLinux中提供了一款防火墙探测工具“wafw00f”，这个工具可以通过发送正常以及不正常甚至是包含恶意代码的HTTP请求，来探测网站是否存在防火墙，并识别该防火墙的厂商及类型。</p>
+</blockquote>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202312151521284.png" data-fancybox="true"/></div></div>
+
+<h3 id="wafw00f常用指令"><a href="#wafw00f常用指令" class="headerlink" title="wafw00f常用指令"></a>wafw00f常用指令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[/opt/TOP10]</span><br><span class="line">└─<span class="comment"># wafw00f -h</span></span><br><span class="line">Usage: wafw00f url1 [url2 [url3 ... ]]</span><br><span class="line">example: wafw00f http://www.victim.org/</span><br><span class="line"></span><br><span class="line">用法：wafw00f url1 [url2 [url3 ... ]]</span><br><span class="line">示例：wafw00f http://www.victim.org/</span><br><span class="line"></span><br><span class="line">选项：</span><br><span class="line">-h, --<span class="built_in">help</span>            显示帮助信息并退出</span><br><span class="line">-v, --verbose         启用详细模式，多个-v选项增加详细程度</span><br><span class="line">-a, --findall         查找与签名匹配的所有WAF，不在第一个匹配上停止测试</span><br><span class="line">-r, --noredirect      不跟随3xx响应的重定向</span><br><span class="line">-t TEST, --<span class="built_in">test</span>=TEST  测试特定的WAF</span><br><span class="line">-o OUTPUT, --output=OUTPUT</span><br><span class="line">将输出写入csv、json或文本文件中，具体格式取决于文件扩展名。对于标准输出，请指定-作为文件名。</span><br><span class="line">-f FORMAT, --format=FORMAT</span><br><span class="line">强制输出格式为csv、json或文本。</span><br><span class="line">-i INPUT, --input-file=INPUT</span><br><span class="line">从文件中读取目标。输入格式可以是csv、json或文本。对于csv和json，需要一个“url”列名或元素。</span><br><span class="line">-l, --list            列出WAFW00F能够检测到的所有WAF</span><br><span class="line">-p PROXY, --proxy=PROXY</span><br><span class="line">使用HTTP代理执行请求，例如：http://hostname:8080，socks5://hostname:1080，http://user:pass@hostname:8080</span><br><span class="line">-V, --version         打印当前版本的WafW00f并退出。</span><br><span class="line">-H HEADERS, --headers=HEADERS        通过文本文件传递自定义标头，以覆盖默认的标头设置。</span><br></pre></td></tr></table></figure>
+
+<h3 id="测试单个-URL"><a href="#测试单个-URL" class="headerlink" title="测试单个 URL"></a>测试单个 URL</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[/opt/TOP10]</span><br><span class="line">└─<span class="comment"># wafw00f https://icp.chinaz.com/ </span></span><br><span class="line"></span><br><span class="line">                   ______</span><br><span class="line">                  /      \                                                                                                                                  </span><br><span class="line">                 (  Woof! )                                                                                                                                 </span><br><span class="line">                  \  ____/                      )                                                                                                           </span><br><span class="line">                  ,,                           ) (_                                                                                                         </span><br><span class="line">             .-. -    _______                 ( |__|                                                                                                        </span><br><span class="line">            ()``; |==|_______)                .)|__|                                                                                                        </span><br><span class="line">            / (<span class="string">&#x27;        /|\                  (  |__|                                                                                                        </span></span><br><span class="line"><span class="string">        (  /  )        / | \                  . |__|                                                                                                        </span></span><br><span class="line"><span class="string">         \(_)_))      /  |  \                   |__|                                                                                                        </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">                    ~ WAFW00F : v2.2.0 ~</span></span><br><span class="line"><span class="string">    The Web Application Firewall Fingerprinting Toolkit                                                                                                     </span></span><br><span class="line"><span class="string">                                                                                                                                                            </span></span><br><span class="line"><span class="string">[*] Checking https://icp.chinaz.com/</span></span><br><span class="line"><span class="string">[+] Generic Detection results:</span></span><br><span class="line"><span class="string">[-] No WAF detected by the generic detection</span></span><br><span class="line"><span class="string">[~] Number of requests: 7</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="常见的waf拦截页面（83个国内外WAF）"><a href="#常见的waf拦截页面（83个国内外WAF）" class="headerlink" title="常见的waf拦截页面（83个国内外WAF）"></a>常见的waf拦截页面（83个国内外WAF）</h3><div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://github.com/stamparm/identYwaf/tree/master/screenshots" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://github.com/stamparm/identYwaf/tree/master/screenshots</span></div><div class="bottom"><span class="title">https://github.com/stamparm/identYwaf/tree/master/screenshots</span><span class="cap desc footnote"></span></div></a></div>
+
+<h2 id="enum4linux"><a href="#enum4linux" class="headerlink" title="enum4linux"></a>enum4linux</h2><h3 id="enum4linux介绍"><a href="#enum4linux介绍" class="headerlink" title="enum4linux介绍"></a>enum4linux介绍</h3><blockquote>
+<p>Enum4linux是一个用于枚举来自Windows和Samba系统的信息的工具。</p>
+<p>它是用Perl编写的，基本上是一个包装Samba工具smbclient，rpclient，net和nmblookup。</p>
+<p>工具的用法可以在下面找到例子，以前版本的工具可以在页面底部找到。</p>
+<p>dnstracer用于获取给定主机名从给定域名服务器（DNS）的信息，并跟随DNS服务器链得到权威结果。</p>
+</blockquote>
+<p>主要特性:</p>
+<ol>
+<li>RID循环（当Windows 2000上的RestrictAnonymous设置为1时）</li>
+<li>用户列表（当Windows 2000上的RestrictAnonymous设置为0时）</li>
+<li>组成员信息列表</li>
+<li>共享枚举</li>
+<li>检测主机是否在工作组或域中</li>
+<li>识别远程操作系统</li>
+<li>密码策略检索（使用polenum）</li>
+</ol>
+<h3 id="enum4linux功能"><a href="#enum4linux功能" class="headerlink" title="enum4linux功能"></a>enum4linux功能</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[/opt/TOP10]</span><br><span class="line">└─<span class="comment"># enum4linux -h                        </span></span><br><span class="line">enum4linux v0.9.1 (http://labs.portcullis.co.uk/application/enum4linux/)</span><br><span class="line">Copyright (C) 2011 Mark Lowe (mrl@portcullis-security.com)</span><br><span class="line"></span><br><span class="line">简单的封装了在samba包中的工具，以提供类似的enum.exe功能（以前从www.bindview.com）。 为了方便起见，还增加了一些附加功能，例如RID循环。</span><br><span class="line">用法: ./enum4linux.pl [选项] ip地址</span><br><span class="line">枚举选项：</span><br><span class="line">     -U        获取用户列表</span><br><span class="line">     -M        获取机器列表*</span><br><span class="line">     -S        获取共享列表</span><br><span class="line">     -P        获取密码策略信息</span><br><span class="line">     -G        获取组和成员列表</span><br><span class="line">     -d        详述适用于-U和-S</span><br><span class="line">     -u user   用户指定要使用的用户名（默认<span class="string">&quot;&quot;</span>）</span><br><span class="line">     -p pass   指定要使用的密码（默认为<span class="string">&quot;&quot;</span>）</span><br><span class="line">以下选项是enum.exe未实现的: -L, -N, -D, -f</span><br><span class="line">其他选项:</span><br><span class="line">    -a        做所有简单枚举（-U -S -G -P -r -o -n -i），如果您没有提供任何其他选项，则启用此选项</span><br><span class="line">    -h        显示此帮助消息并退出</span><br><span class="line">    -r        通过RID循环枚举用户</span><br><span class="line">    -R range  RID范围要枚举（默认值：500-550,1000-1050，隐含-r）</span><br><span class="line">    -K n      继续搜索RID，直到n个连续的RID与用户名不对应，Impies RID范围结束于999999.对DC有用</span><br><span class="line">    -l        通过LDAP 389 / TCP获取一些（有限的）信息（仅适用于DN）</span><br><span class="line">    -s        文件暴力猜测共享名称</span><br><span class="line">    -k user   远程系统上存在的用户（默认值：administrator，guest，krbtgt，domain admins，root，bin，none）</span><br><span class="line">              用于获取sid与“lookupsid known_username”</span><br><span class="line">              使用逗号尝试几个用户：“-k admin，user1，user2”</span><br><span class="line">    -o        获取操作系统信息</span><br><span class="line">    -i        获取打印机信息</span><br><span class="line">    -w wrkg   手动指定工作组（通常自动找到）</span><br><span class="line">    -n        做一个nmblookup（类似于nbtstat）</span><br><span class="line">    -v        详细输出，显示正在运行的完整命令（net，rpcclient等）</span><br><span class="line">RID循环应从Windows（或Samba）主机中提取一个用户列表，其中限制匿名设置为1（Windows NT和2000）或启用“网络访问：允许匿名SID /名称转换”（XP，2003）。</span><br><span class="line">注意：Samba服务器通常似乎有RID在范围3000-3050。</span><br><span class="line">依赖性信息：您将需要安装samba包，因为此脚本基本上只是一个包装rpcclient，net，nmblookup和smbclient。 Polenum从http://labs.portcullis.co.uk/application/polenum/需要获取密码政策信息。</span><br></pre></td></tr></table></figure>
+
+<h3 id="enum4linux用法示例"><a href="#enum4linux用法示例" class="headerlink" title="enum4linux用法示例"></a>enum4linux用法示例</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[/home/]</span><br><span class="line">└─$ enum4linux -A 10.10.10.9</span><br><span class="line">Starting enum4linux v0.9.1 ( http://labs.portcullis.co.uk/application/enum4linux/ ) on Fri Aug  4 20:29:56 2023</span><br><span class="line"></span><br><span class="line"> =========================================( Target Information )=========================================</span><br><span class="line"></span><br><span class="line">Target ........... 10.10.10.9</span><br><span class="line">RID Range ........ 500-550,1000-1050</span><br><span class="line">Username ......... <span class="string">&#x27;&#x27;</span></span><br><span class="line">Password ......... <span class="string">&#x27;&#x27;</span></span><br><span class="line">Known Usernames .. administrator, guest, krbtgt, domain admins, root, bin, none</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> =============================( Enumerating Workgroup/Domain on 10.10.10.9 )=============================</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[+] Got domain/workgroup name: MYGROUP</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> ====================================( Session Check on 10.10.10.9 )====================================</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[+] Server 10.10.10.9 allows sessions using username <span class="string">&#x27;&#x27;</span>, password <span class="string">&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> =================================( Getting domain SID <span class="keyword">for</span> 10.10.10.9 )=================================</span><br><span class="line"></span><br><span class="line">Domain Name: MYGROUP</span><br><span class="line">Domain Sid: (NULL SID)</span><br><span class="line"></span><br><span class="line">[+] Can<span class="string">&#x27;t determine if host is part of domain or part of a workgroup</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">enum4linux complete on Fri Aug  4 20:29:56 2023</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="CTF-Show-WP"><a href="#CTF-Show-WP" class="headerlink" title="CTF-Show WP"></a>CTF-Show WP</h2><div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://www.cnblogs.com/sakura--tears/p/17148300.html" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://www.cnblogs.com/sakura--tears/p/17148300.html</span></div><div class="bottom"><span class="title">https://www.cnblogs.com/sakura--tears/p/17148300.html</span><span class="cap desc footnote"></span></div></a></div>
+
+<div class="article-footer fs14">
+    <section id="references">
+      <div class="header"><span>参考资料</span></div>
+      <div class="body">
+        <ul>
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener" href="https://forum.butian.net/share/150">浅谈信息收集</a></p>
+
+        </li>
+        </ul>
+      </div>
+    </section>
+    
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2024/02/16/449cb93/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2024/02/16/449cb93/&title=Security-主动信息收集 - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402161144322.png&summary=
+    总字符数: 21.79K 
+    
+    
+    代码: 12.88K, 文本: 4.42K
+    
+    
+    预计阅读时间: 1.25 小时
+    
+    
+
+
+
+主动信息收集的原理全球网络攻防实时地图..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=Security-主动信息收集 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2024/02/16/449cb93/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2024/02/16/449cb93/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2024/02/18/693474ed/">Linux-Shell编程从0到1</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2024/02/14/dbeaca23/">Security-被动信息收集</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\2024\02\08\c44eef61\" title="Security-会话授权"><span class="title">Security-会话授权</span></a><a class="item" href="\2024\02\10\c44eef61\" title="Security-网安专业术语篇"><span class="title">Security-网安专业术语篇</span></a><a class="item" href="\2024\02\12\7564e3ff\" title="Security-全方位探索网络安全"><span class="title">Security-全方位探索网络安全</span></a><a class="item" href="\2024\02\14\dbeaca23\" title="Security-被动信息收集"><span class="title">Security-被动信息收集</span></a><a class="item" href="\2024\09\24\3c3f9499\" title="CS-Cobalt Strike必备知识"><span class="title">CS-Cobalt Strike必备知识</span></a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body waline'>
+      
+
+<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/tools/">工具</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E5%8A%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%9A%84%E5%8E%9F%E7%90%86"><span class="toc-text">主动信息收集的原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%A8%E7%90%83%E7%BD%91%E7%BB%9C%E6%94%BB%E9%98%B2%E5%AE%9E%E6%97%B6%E5%9C%B0%E5%9B%BE"><span class="toc-text">全球网络攻防实时地图</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E5%8A%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E7%9A%84%E7%89%B9%E7%82%B9"><span class="toc-text">主动信息收集的特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%AB%E6%8F%8F%E6%95%8F%E6%84%9F%E7%9B%AE%E5%BD%95-%E6%96%87%E4%BB%B6"><span class="toc-text">扫描敏感目录&#x2F;文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#JS%E6%95%8F%E6%84%9F%E6%96%87%E4%BB%B6"><span class="toc-text">JS敏感文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dirsearch"><span class="toc-text">dirsearch</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8"><span class="toc-text">简单使用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E5%88%97%E8%A1%A8"><span class="toc-text">参数列表</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dirbuster"><span class="toc-text">Dirbuster</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8dirbuster"><span class="toc-text">启动dirbuster</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0"><span class="toc-text">设置相关参数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E7%BB%93%E6%9E%9C"><span class="toc-text">查看结果</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%BC%E5%87%BA%E7%BB%93%E6%9E%9C"><span class="toc-text">导出结果</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dirb"><span class="toc-text">dirb</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#dirb%E5%91%BD%E4%BB%A4%E5%8F%82%E6%95%B0"><span class="toc-text">dirb命令参数</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8Eping%E5%91%BD%E4%BB%A4%E7%9A%84%E6%8E%A2%E6%B5%8B"><span class="toc-text">基于ping命令的探测</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ping"><span class="toc-text">ping</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ARPING"><span class="toc-text">ARPING</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ARP%E5%8D%8F%E8%AE%AE%E6%A6%82%E8%BF%B0"><span class="toc-text">ARP协议概述</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ARP%E5%8D%8F%E8%AE%AE%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-text">ARP协议工作原理</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#netdiscover"><span class="toc-text">netdiscover</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BB%E5%8A%A8%E6%A8%A1%E5%BC%8F"><span class="toc-text">主动模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A2%AB%E5%8A%A8%E6%A8%A1%E5%BC%8F"><span class="toc-text">被动模式</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#arp-scan"><span class="toc-text">arp-scan</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%87%E4%BB%A4%E4%BB%8B%E7%BB%8D"><span class="toc-text">指令介绍</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FPING"><span class="toc-text">FPING</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nmap"><span class="toc-text">Nmap</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E7%82%B9"><span class="toc-text">特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%AE%E6%A0%87%E6%8E%A2%E6%B5%8B"><span class="toc-text">目标探测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F"><span class="toc-text">端口扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E5%92%8C%E7%89%88%E6%9C%AC%E6%8E%A2%E6%B5%8B"><span class="toc-text">服务和版本探测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%8E%A2%E6%B5%8B"><span class="toc-text">操作系统探测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%93%E5%87%BA"><span class="toc-text">输出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BF%80%E8%BF%9B%E6%89%AB%E6%8F%8F%E6%A8%A1%E5%BC%8F"><span class="toc-text">激进扫描模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8nmap%E8%BF%9B%E8%A1%8C%E5%8D%8A%E8%BF%9E%E6%8E%A5%E6%89%AB%E6%8F%8F"><span class="toc-text">使用nmap进行半连接扫描</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#masscan"><span class="toc-text">masscan</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="toc-text">基本使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%A8%A1%E5%BC%8F%E8%AF%A6%E7%BB%86%E5%8F%82%E6%95%B0"><span class="toc-text">命令行模式详细参数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nc"><span class="toc-text">nc</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%9C%E7%94%A8"><span class="toc-text">作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E6%95%B0"><span class="toc-text">参数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#wafw00f"><span class="toc-text">wafw00f</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#wafw00f%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4"><span class="toc-text">wafw00f常用指令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E5%8D%95%E4%B8%AA-URL"><span class="toc-text">测试单个 URL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84waf%E6%8B%A6%E6%88%AA%E9%A1%B5%E9%9D%A2%EF%BC%8883%E4%B8%AA%E5%9B%BD%E5%86%85%E5%A4%96WAF%EF%BC%89"><span class="toc-text">常见的waf拦截页面（83个国内外WAF）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#enum4linux"><span class="toc-text">enum4linux</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#enum4linux%E4%BB%8B%E7%BB%8D"><span class="toc-text">enum4linux介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#enum4linux%E5%8A%9F%E8%83%BD"><span class="toc-text">enum4linux功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#enum4linux%E7%94%A8%E6%B3%95%E7%A4%BA%E4%BE%8B"><span class="toc-text">enum4linux用法示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CTF-Show-WP"><span class="toc-text">CTF-Show WP</span></a></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js`,
+    marked: `https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.27.0" async></script>
+
+<!-- optional -->
+
+  <script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js'
+
+  function load_comment(){
+    if(!document.getElementById("waline_container"))return;
+
+    utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css');
+
+    const el = document.getElementById("waline_container");
+    var path = el.getAttribute('comment_id');
+    if (!path) {
+      path = decodeURI(window.location.pathname);
+    }
+
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+      el: '#waline_container',
+      path: path,
+      
+    }));
+
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    load_comment();
+  });
+
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"></script><script defer src="https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.swiper-slide img, .gallery img ,#waline_container .vcontent img`,
+    css: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css`,
+    js: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || null
+        }
+      });
+    })
+  }
+</script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          loop: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+</div></body></html>

@@ -1,0 +1,1882 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.27.0" theme-name="Stellar" theme-version="1.27.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>应急响应之Windows - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="总字符数: 28.89K               代码: 6.84K, 文本: 5.58K               预计阅读时间: 54 分钟             当企业发生黑客入侵、系统崩溃或其它影响业务正常运行的安全事件时,急需第一时间进行处理,使企业的网络信息系统在最短时间内恢复正常工作,进一步查找入侵来源,还原入侵事故过程,同时给出解决方案与防范措施,为企业挽回或减少">
+<meta property="og:type" content="article">
+<meta property="og:title" content="应急响应之Windows">
+<meta property="og:url" content="https://jiangjiyue.github.io/2024/07/08/b7b8d727/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="总字符数: 28.89K               代码: 6.84K, 文本: 5.58K               预计阅读时间: 54 分钟             当企业发生黑客入侵、系统崩溃或其它影响业务正常运行的安全事件时,急需第一时间进行处理,使企业的网络信息系统在最短时间内恢复正常工作,进一步查找入侵来源,还原入侵事故过程,同时给出解决方案与防范措施,为企业挽回或减少">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407040913960.jpg">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407101049269.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407101049782.png">
+<meta property="og:image" content="https://github-readme-stats.xaoxuu.com/api/pin/?username=AonCyberLabs&repo=Windows-Exploit-Suggester&theme=dark&show_owner=true">
+<meta property="og:image" content="https://github-readme-stats.xaoxuu.com/api/pin/?username=peass-ng&repo=PEASS-ng&theme=dark&show_owner=true">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202306262005576.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051937269.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041911477.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041913278.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051919583.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051921594.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051923051.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051924129.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051929117.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051925983.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051930847.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051930958.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051935147.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051937925.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041914044.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407090750697.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202306261931794.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202306261940016.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202306261944205.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407140837080.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211072213355.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041918644.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202306261959492.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202306262000594.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041919997.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202306261956364.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202306261957571.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051833790.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051838034.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051903959.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051903552.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041951100.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041951181.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041952119.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041953325.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031839779.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031839364.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031843997.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031839370.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031839011.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041358118.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041545856.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041549792.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041550907.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041954224.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041848192.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041848864.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211101913649.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211101918738.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211101933198.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211101934908.png">
+<meta property="article:published_time" content="2024-07-08T05:34:49.000Z">
+<meta property="article:modified_time" content="2024-10-09T01:37:38.000Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="应急响应">
+<meta property="article:tag" content="Windows">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407040913960.jpg">
+  
+  
+  
+  <meta name="keywords" content="应急响应,Windows">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.27.0">
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="导航" href="/sites/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/tools/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
+</div>
+<div class="widgets">
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">专栏：EmergencyResponse</span></div><div class="widget-body"><a class="item" href="/2024/07/03/ac635236/"><span class="title">应急响应-从攻击谈防守</span></a><a class="item" href="/2024/07/04/dd58c5ed/"><span class="title">应急响应之Wireshark流量分析</span></a><a class="item" href="/2024/07/05/dd58c5ed/"><span class="title">应急响应之Webshell流量分析</span></a><a class="item" href="/2024/07/06/9e820566/"><span class="title">应急响应之日志分析</span></a><a class="item" href="/2024/07/07/4677b70c/"><span class="title">应急响应之Splunk</span></a><a class="item active" href="/2024/07/08/b7b8d727/"><span class="title">应急响应之Windows</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a><a class="item" href="/2024/07/09/69563a36/"><span class="title">应急响应靶机训练-Web1</span></a><a class="item" href="/2024/07/10/f05f6b8c/"><span class="title">应急响应靶机训练-Web2</span></a><a class="item" href="/2024/07/11/87585b1a/"><span class="title">应急响应靶机训练-Web3</span></a><a class="item" href="/2024/07/12/b7b8d727/"><span class="title">应急响应之Linux</span></a><a class="item" href="/2024/07/16/29554557/"><span class="title">应急响应靶机训练-Linux1</span></a><a class="item" href="/2024/07/17/b05c14ed/"><span class="title">应急响应靶机训练-Linux2</span></a></div></widget>
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2024/11/04/fe2980d6/"><span class="title">CS-ShellCode加载器</span></a><a class="item title" href="/2023/03/11/247b757/"><span class="title">VulHub-Fastjson漏洞复现</span></a><a class="item title" href="/2023/04/28/76971e68/"><span class="title">VulHub-Tomcat漏洞复现</span></a><a class="item title" href="/2024/07/05/dd58c5ed/"><span class="title">应急响应之Webshell流量分析</span></a><a class="item title" href="/2024/10/27/77c80f0f/"><span class="title">CS-C语言总结</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/topic">专栏</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/2024/07/03/ac635236/">EmergencyResponse</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2024-07-08T05:34:49.000Z">2024-07-08</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-10-09T01:37:38.000Z">2024-10-09</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>应急响应之Windows</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
+    <p>总字符数: 28.89K</p>
+    </div>
+    <div class="cell" style="">
+    <p>代码: 6.84K, 文本: 5.58K</p>
+    </div>
+    <div class="cell" style="">
+    <p>预计阅读时间: 54 分钟</p>
+    </div>
+    </div>
+
+<blockquote>
+<p>当企业发生黑客入侵、系统崩溃或其它影响业务正常运行的安全事件时,急需第一时间进行处理,使企业的网络信息系统在最短时间内恢复正常工作,进一步查找入侵来源,还原入侵事故过程,同时给出解决方案与防范措施,为企业挽回或减少经济损失</p>
+</blockquote>
+<p>常见的应急响应事件分类:</p>
+<ol>
+<li><p>web入侵:网页挂马、主页篡改、Webshell</p>
+</li>
+<li><p>系统入侵:病毒木马、勒索软件、远控后门</p>
+</li>
+<li><p>网络攻击:DDOS攻击、DNS劫持、ARP欺骗</p>
+</li>
+</ol>
+<h2 id="0x01-入侵排查思路"><a href="#0x01-入侵排查思路" class="headerlink" title="0x01 入侵排查思路"></a>0x01 入侵排查思路</h2><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407040913960.jpg" data-fancybox="true"/></div></div>
+<p>在简单做完定向分析并取证后,如果客户直接把系统重置了就不需要下一步了,如果客户要求从头到尾把系统排查一下那么就利用工具和手法进行排查。</p>
+<p>对账户、进程、端口、服务、启动项、计划任务、文件、日志进行逐个检测,</p>
+<h3 id="系统基本信息"><a href="#系统基本信息" class="headerlink" title="系统基本信息"></a>系统基本信息</h3><p>将隐藏文件和后缀名显示打开!!!</p>
+<ol>
+<li><p><code>msinfo32</code>查看Windows信息</p>
+<ol>
+<li>硬件信息</li>
+<li>运行任务</li>
+<li>服务</li>
+<li>系统驱动程序</li>
+<li>加载的模块</li>
+<li>启动程序</li>
+</ol>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407101049269.png" data-fancybox="true"/></div></div>
+</li>
+<li><p><code>systeminfo</code></p>
+<ol>
+<li>查看补丁是否齐全,是否存在<code>ms08-067</code>相关漏洞<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407101049782.png" data-fancybox="true"/></div></div></li>
+<li>工具<div class="tag-plugin ghcard"><a class="ghcard" rel="external nofollow noopener noreferrer noopener" target="_blank" href="https://github.com/AonCyberLabs/Windows-Exploit-Suggester"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://github-readme-stats.xaoxuu.com/api/pin/?username=AonCyberLabs&repo=Windows-Exploit-Suggester&theme=dark&show_owner=true"/></a></div>
+<div class="tag-plugin ghcard"><a class="ghcard" rel="external nofollow noopener noreferrer noopener" target="_blank" href="https://github.com/peass-ng/PEASS-ng"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://github-readme-stats.xaoxuu.com/api/pin/?username=peass-ng&repo=PEASS-ng&theme=dark&show_owner=true"/></a></div></li>
+</ol>
+</li>
+</ol>
+<h3 id="查找可疑目录及文件"><a href="#查找可疑目录及文件" class="headerlink" title="查找可疑目录及文件"></a>查找可疑目录及文件</h3><h4 id="相关目录"><a href="#相关目录" class="headerlink" title="相关目录"></a>相关目录</h4><table>
+<thead>
+<tr>
+<th>下载目录</th>
+<th>回收站文件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Temp</td>
+<td>History</td>
+</tr>
+<tr>
+<td>应用程序打开历史</td>
+<td>搜索历史</td>
+</tr>
+<tr>
+<td>Lnk</td>
+<td>驱动:(cmd&gt;Drivequery)日期</td>
+</tr>
+<tr>
+<td>进程dll关联查询(tasklist -m)</td>
+<td>共享文件(cmd&gt;Net share)</td>
+</tr>
+<tr>
+<td>最近的文件(资源管理器&gt;%UserProfile%\Recent)</td>
+<td>文件更新</td>
+</tr>
+<tr>
+<td>已安装文件,控制面板或者(regedit&gt;\software\Microsoft\Windows\CurrentVersion\Uninstall\)</td>
+<td></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Directory</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>C:\Windows\System32\drivers\etc\hosts</td>
+<td>DNS文件</td>
+</tr>
+<tr>
+<td>C:\Windows\System32\drivers\etc\networks</td>
+<td>网络配置文件</td>
+</tr>
+<tr>
+<td>C:\Windows\System32\config\SAM</td>
+<td>用户名及密码文件</td>
+</tr>
+<tr>
+<td>C:\Windows\System32\config\SECURITY</td>
+<td>Security日志文件</td>
+</tr>
+<tr>
+<td>C:\Windows\System32\config\SOFTWARE</td>
+<td>Software日志文件</td>
+</tr>
+<tr>
+<td>C:\Windows\System32\config\SYSTEM</td>
+<td>System日志文件</td>
+</tr>
+<tr>
+<td>C:\Windows\System32\config\winevt\</td>
+<td>Windows事件日志</td>
+</tr>
+<tr>
+<td>C:\Windows\repair\SAM</td>
+<td>用户名及密码备份文件</td>
+</tr>
+</tbody></table>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检查方法</span></span><br><span class="line">a. 查看用户目录,新建账号会在这个目录生成一个用户目录,查看是否有新建用户目录.</span><br><span class="line"><span class="comment"># Window 2003:</span></span><br><span class="line">C:\Documents and Settings</span><br><span class="line"><span class="comment"># Window 2008 R2:</span></span><br><span class="line">C:\Users\</span><br><span class="line">b. 单击【开始】&gt;【运行】,输入</span><br><span class="line">   C:\Documents and Settings\Administrator\Recent</span><br><span class="line">   C:\Documents and Settings\Default User\Recent</span><br><span class="line">   %UserProfile%\Recent</span><br><span class="line">分析最近打开分析可疑文件.</span><br><span class="line">c. 在服务器各个目录,可根据文件夹内文件列表时间进行排序,查找可疑文件.</span><br><span class="line">d. forfiles /?</span><br><span class="line"></span><br><span class="line">FORFILES [/P pathname] [/M searchmask] [/S]</span><br><span class="line">         [/C <span class="built_in">command</span>] [/D [+ | -] &#123;yyyy/MM/dd | <span class="built_in">dd</span>&#125;]</span><br><span class="line"></span><br><span class="line">描述:</span><br><span class="line">    选择一个文件(或一组文件)并在那个文件上</span><br><span class="line">    执行一个命令。这有助于批处理作业。</span><br><span class="line"></span><br><span class="line">参数列表:</span><br><span class="line">    /P    pathname      表示开始搜索的路径。默认文件夹是当前工作的</span><br><span class="line">                        目录 (.)。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    /M    searchmask    根据搜索掩码搜索文件。默认搜索掩码是 <span class="string">&#x27;*&#x27;</span>。</span><br><span class="line"></span><br><span class="line">    /S                  指导 forfiles 递归到子目录。像 <span class="string">&quot;DIR /S&quot;</span>。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    /C    <span class="built_in">command</span>       表示为每个文件执行的命令。命令字符串应该</span><br><span class="line">                        用双引号括起来。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                        默认命令是 <span class="string">&quot;cmd /c echo @file&quot;</span>。下列变量</span><br><span class="line">                        可以用在命令字符串中:</span><br><span class="line"></span><br><span class="line">                        @file    - 返回文件名。</span><br><span class="line">                        @fname   - 返回不带扩展名的文件名。</span><br><span class="line"></span><br><span class="line">                        @ext     - 只返回文件的扩展名。</span><br><span class="line"></span><br><span class="line">                        @path    - 返回文件的完整路径。</span><br><span class="line">                        @relpath - 返回文件的相对路径。</span><br><span class="line"></span><br><span class="line">                        @isdir   - 如果文件类型是目录，返回 <span class="string">&quot;TRUE&quot;</span>；</span><br><span class="line">                                   如果是文件，返回 <span class="string">&quot;FALSE&quot;</span>。</span><br><span class="line">                        @fsize   - 以字节为单位返回文件大小。</span><br><span class="line"></span><br><span class="line">                        @fdate   - 返回文件上一次修改的日期。</span><br><span class="line"></span><br><span class="line">                        @ftime   - 返回文件上一次修改的时间。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                        要在命令行包括特殊字符，字符请以 0xHH</span><br><span class="line">                        形式使用十六进制代码(例如，0x09 为 tab)。</span><br><span class="line"></span><br><span class="line">                        内部 CMD.exe 命令前面应以 <span class="string">&quot;cmd /c&quot;</span> 开始。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    /D    <span class="built_in">date</span>          选择文件，其上一次修改日期大于或等于 (+)，</span><br><span class="line">                        或者小于或等于 (-) 用 <span class="string">&quot;yyyy/MM/dd&quot;</span> 格式指定的日期;</span><br><span class="line"></span><br><span class="line">                        或选择文件，其上一次修改日期大于或等于 (+)</span><br><span class="line">                        当前日期加 <span class="string">&quot;dd&quot;</span> 天，或者小于或等于 (-) 当前</span><br><span class="line"></span><br><span class="line">                        日期减 <span class="string">&quot;dd&quot;</span> 天。有效的 <span class="string">&quot;dd&quot;</span> 天数可以是</span><br><span class="line">                        0 - 32768 范围内的任何数字。如果没有指定，</span><br><span class="line"></span><br><span class="line">                        <span class="string">&quot;+&quot;</span> 被当作默认符号。</span><br><span class="line"></span><br><span class="line">    /?                  显示此帮助消息。</span><br><span class="line"></span><br><span class="line">示例:</span><br><span class="line">    FORFILES /?</span><br><span class="line">    FORFILES</span><br><span class="line">    FORFILES /P C:\WINDOWS /S /M DNS*.*</span><br><span class="line">    FORFILES /S /M *.txt /C <span class="string">&quot;cmd /c type @file | more&quot;</span></span><br><span class="line">    FORFILES /P C:\ /S /M *.bat</span><br><span class="line">    FORFILES /D -30 /M *.exe</span><br><span class="line">             /C <span class="string">&quot;cmd /c echo @path 0x09 在 30 前就被更改。&quot;</span></span><br><span class="line">    FORFILES /D 2001/01/01</span><br><span class="line">             /C <span class="string">&quot;cmd /c echo @fname 在 2001年1月1日就是新的。&quot;</span></span><br><span class="line">    FORFILES /D +2024/7/18 /C <span class="string">&quot;cmd /c echo @fname 今天是新的。&quot;</span></span><br><span class="line">    FORFILES /M *.exe /D +1</span><br><span class="line">    FORFILES /S /M *.doc /C <span class="string">&quot;cmd /c echo @fsize&quot;</span></span><br><span class="line">    FORFILES /M *.txt /C <span class="string">&quot;cmd /c if @isdir==FALSE notepad.exe @file&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="后门查杀"><a href="#后门查杀" class="headerlink" title="后门查杀"></a>后门查杀</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动项</span></span><br><span class="line">HKEY_LOCAL_MACHINE\SOFTWARE\Microft\windows\currentversion\run</span><br><span class="line"><span class="comment"># 用户登录</span></span><br><span class="line">HKCU\Environment</span><br><span class="line">HKLM\SOFTWARE\Microft\Windows NT\CurrentVersion\Winlogon\Userinit</span><br><span class="line"><span class="comment"># 定时任务/计划任务</span></span><br><span class="line">1. 单击[开始]&gt;[设置]&gt;[控制面板]&gt;[任务计划],查看计划任务属性,便可以发现木马文件的路径</span><br><span class="line">2. 单击[开始]&gt;[运行];输入cmd,然后输入at,检查计算机与网络上的其它计算机之间的会话或计划任务,如有,则确认是否为正常连接</span><br><span class="line"><span class="comment"># 服务自启动</span></span><br><span class="line">1. 单击[开始]&gt;[运行],输入services.msc,注意服务状态和启动类型,检查是否有异常服务</span><br><span class="line"><span class="comment"># dll劫持</span></span><br><span class="line">HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlset\Control\SessionManager\ExcludeFromKnownDlls</span><br><span class="line"><span class="comment"># COM劫持</span></span><br><span class="line">%APPDATA%\Roaming\Microsoft\Installer\&#123;BCDE0395-E52F-467C-8E3D-C4579291692E&#125;\</span><br></pre></td></tr></table></figure>
+<h4 id="程序运行记录"><a href="#程序运行记录" class="headerlink" title="程序运行记录"></a>程序运行记录</h4><p>使用<code>WinPrefetchView</code>解析<code>Prefetch</code>文件夹中的<code>.pf</code>文件取证。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202306262005576.png" data-fancybox="true"/></div></div>
+
+<h3 id="检查系统账号安全"><a href="#检查系统账号安全" class="headerlink" title="检查系统账号安全"></a>检查系统账号安全</h3><ol>
+<li><p>查看服务器是否有弱口令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检查方法:</span></span><br><span class="line">据实际情况咨询相关服务器管理员</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看服务器是否存在可疑账号、新增账号.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检查方法:</span></span><br><span class="line">lusrmgr.msc 查看是否有新增/可疑的账号</span><br><span class="line">net  localgroup administrators</span><br><span class="line">wmic UserAccount get</span><br><span class="line">在管理员群组的（Administrators）里如有新增账户,请立即禁用或删除掉.</span><br><span class="line">使用D盾、HM查杀工具,集成了对克隆账号检测的功能.</span><br></pre></td></tr></table></figure>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051937269.png" data-fancybox="true"/></div></div>
+</li>
+<li><p>结合日志,查看管理员登录时间、用户名是否存在异常.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检查方法:</span></span><br><span class="line">a. Win+R打开运行,输入<span class="string">&quot;eventvwr.msc&quot;</span>,回车运行,打开<span class="string">&quot;事件查看器&quot;</span></span><br><span class="line">b. 导出Windows日志--安全,利用LogParser进行分析</span><br><span class="line">LogParser.exe -i:EVT <span class="string">&quot;SELECT TimeGenerated AS LoginTime, EXTRACT_TOKEN(Strings, 5, &#x27;|&#x27;) AS username FROM C:\Users\Administrator\Desktop\Security.evtx WHERE EventID = 4624&quot;</span></span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041911477.png" data-fancybox="true"/></div></div>
+</li>
+<li><p>wmic命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wmic useraccount get Name,SID</span><br></pre></td></tr></table></figure>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041913278.png" data-fancybox="true"/></div></div></li>
+</ol>
+<h4 id="隐藏账号-番外篇"><a href="#隐藏账号-番外篇" class="headerlink" title="隐藏账号-番外篇"></a>隐藏账号-番外篇</h4><p>window 隐藏系统用户操作,CMD命令行下,建立了一个用户名为<code>youzi$</code>,密码为<code>youzi$</code>的简单隐藏账户,并且把该隐藏账户提升为了管理员权限.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051919583.png" data-fancybox="true"/></div></div>
+<mark class="tag-plugin colorful mark" color="red">CMD命令行使用net user,看不到test$这个账号,但在控制面板和本地用户和组是可以显示此用户</mark>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051921594.png" data-fancybox="true"/></div></div>
+<p><strong>克隆账号制作过程:</strong></p>
+<ol>
+<li>“开始”→“运行”,输入<code>regedit</code>后回车,需要到<code>HKEY_LOCAL_MACHINE\SAM\SAM</code>,单机右建权限,给予<code>administrator</code>用户完全控制以及读取的权限,在后面打勾就行.然后关闭注册表编辑器,再次打开即可<br><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051923051.png" data-fancybox="true"/></div></div><br><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051924129.png" data-fancybox="true"/></div></div></li>
+<li>来到注册表编辑器的<code>HKEY_LOCAL_MACHINE\SAM\SAM\Domains\Account\Users\Names</code>处,点击<code>youzi$</code>用户,得到在右边显示的键值中的”类型”一项显示为<code>0x3F9</code>,找到箭头所指目录.<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051929117.png" data-fancybox="true"/></div></div></li>
+<li>找到<code>administrator</code>所对应的的项为<code>000001F4</code>,将<code>00001F4</code>的F值复制到<code>000003F9</code>的F值中,保存.<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051925983.png" data-fancybox="true"/></div></div></li>
+<li>分别<code>youzi$</code>和<code>000003F9</code>导出到桌面,删除<code>youzi$</code>用户<code>net user youzi$ /del</code><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051930847.png" data-fancybox="true"/></div></div>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051930958.png" data-fancybox="true"/></div></div></li>
+<li>将刚才导出的两个后缀为.reg的注册表项导入注册表中.这样所谓的隐藏账户就创建好了.<mark class="tag-plugin colorful mark" color="red">PS:不管你是在命令提示符下输入net user 或者在系统用户管理界面都是看不到test$这个账户的,只有在注册表中才能看得到</mark>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051935147.png" data-fancybox="true"/></div></div>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051937925.png" data-fancybox="true"/></div></div></li>
+</ol>
+<h3 id="检查异常端口、进程"><a href="#检查异常端口、进程" class="headerlink" title="检查异常端口、进程"></a>检查异常端口、进程</h3><ol>
+<li><p>检查端口连接情况,是否有远程连接、可疑连接.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检查方法:</span></span><br><span class="line"><span class="comment"># 注意以下状态的网络连接：</span></span><br><span class="line">   - ESTABLISHED: 连接建立数据传输</span><br><span class="line">   - LISTEN: 监听中等待连接</span><br><span class="line">a. netstat -ano</span><br><span class="line">b. 根据netstat定位出的pid,再通过tasklist命令进行进程定位</span><br><span class="line">tasklist | findstr <span class="string">&quot;PID&quot;</span></span><br><span class="line"><span class="comment"># 注册表查看RDP端口.</span></span><br><span class="line">HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp</span><br></pre></td></tr></table></figure>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041914044.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407090750697.png" data-fancybox="true"/></div></div>
+<p><code>Tcpview</code>、火绒剑、命令行下<code>netstat -ano</code>：</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202306261931794.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202306261940016.png" data-fancybox="true"/></div></div>
+
+<p><code>DNSQuerySniffer</code>：DNS解析查询工具。可以通过此工具确定访问恶意域名的端口号,该工具还可以将主机访问过的所有域名记录下来。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202306261944205.png" data-fancybox="true"/></div></div>
+</li>
+<li><p>进程</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检查方法:</span></span><br><span class="line">a. 开始--运行--输入</span><br><span class="line">msinfo32</span><br><span class="line">依次点击<span class="string">&quot;软件环境→正在运行任务&quot;</span>就可以查看到进程的详细信息,比如进程路径、进程ID、文件创建日期、启动时间等.</span><br><span class="line">b. 打开D盾查杀工具,进程查看,关注没有签名信息的进程.</span><br><span class="line">c. 通过微软官方提供的ProcessExplorer等工具进行排查.</span><br><span class="line">d. 查看可疑的进程及其子进程.可以通过观察以下内容:</span><br><span class="line">	1. 没有签名验证信息的进程</span><br><span class="line">	2. 没有描述信息的进程</span><br><span class="line">	3. 进程的属主</span><br><span class="line">	4. 进程的路径是否合法</span><br><span class="line">	5. CPU或内存资源占用长时间过高的进程</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>小技巧:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">a. 查看端口对应的PID: netstat -ano | findstr <span class="string">&quot;port&quot;</span></span><br><span class="line">b. 查看进程对应的PID: 任务管理器--查看--选择列--PID</span><br><span class="line">或者 tasklist | findstr <span class="string">&quot;PID&quot;</span></span><br><span class="line">c. 查看进程对应的程序位置:</span><br><span class="line">	1. 任务管理器--选择对应进程--右键打开文件位置</span><br><span class="line"> 	2. cmd输入wmic process</span><br><span class="line">d. tasklist /svc  <span class="comment"># 进程--PID--服务</span></span><br><span class="line">e. 查看Windows服务所对应的端口:</span><br><span class="line">   %system%/system32/drivers/etc/services</span><br><span class="line"><span class="comment"># 一般 %system% 就是C:\Windows</span></span><br><span class="line">f. <span class="comment"># 查询对应进程的详细信息</span></span><br><span class="line"><span class="comment"># 进程的标题或名称,进程启动时使用的命令行,创建进程的类的名称,进程创建的日期和时间,客户端超级计算机的创建类名（通常与 CreationClassName 相同）,计算机的名称,进程的描述,进程的可执行文件路径,进程的执行状态（例如：正在运行、停止等）,进程句柄的十六进制表示,进程当前打开的句柄数量,安装日期,进程在内核模式下运行的总时间,进程可使用的最大工作集大小（内存页数）,进程可使用的最小工作集大小（内存页数）,进程的名称,操作系统创建的类的名称,操作系统的名称,其他操作计数,其他传输计数,进程引起的页面错误次数,进程使用的页面文件大小,创建此进程的父进程的ID</span></span><br><span class="line"><span class="comment"># Caption,CommandLine,CreationClassName,CreationDate,CSCreationClassName,CSName,Description,ExecutablePath,ExecutionState,Handle,HandleCount,InstallDate,KernelModeTime,MaximumWorkingSetSize,MinimumWorkingSetSize,Name,OSCreationClassName,OSName,OtherOperationCount,OtherTransferCount,PageFaults,PageFileUsage,ParentProcessId</span></span><br><span class="line"></span><br><span class="line">wmic process get Caption,CommandLine,ExecutablePath,InstallDate,Name,ProcessId /format:csv | findstr <span class="string">&quot;phpstudy&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># format:</span></span><br><span class="line"><span class="comment"># /FORMAT:CSV          逗号分隔值格式</span></span><br><span class="line"><span class="comment"># /FORMAT:HTML         超文本标记语言格式</span></span><br><span class="line"><span class="comment"># /FORMAT:LIST         以列表形式输出（默认格式）</span></span><br><span class="line"><span class="comment"># /FORMAT:MOF          管理对象格式</span></span><br><span class="line"><span class="comment"># /FORMAT:RAWXML       原始XML格式</span></span><br><span class="line"><span class="comment"># /FORMAT:TABLE        以表格形式输出</span></span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407140837080.png" data-fancybox="true"/></div></div>
+</li>
+<li><p>WinRM端口复用连接排查</p>
+<ul>
+<li><p>在默认情况下,WinRM服务的端口为5985,但可通过配置将其改成80端口</p>
+</li>
+<li><p>在排查时,可使用命令<code>winrm enumerate winrm/config/listener</code>查看是否启动服务,当存在返回信息时,则说明服务运行中,当无返回信息时,则服务关闭</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211072213355.png" data-fancybox="true"/></div></div>
+</li>
+<li><p>关闭服务命令</p>
+<ul>
+<li><p>cmd:<code>winrm delete winrm/config/Listener?Address=*+Transport=HTTP</code></p>
+</li>
+<li><p>powershell</p>
+<ul>
+<li><code>Set-Service -Name winrm -StartupType Disabled</code></li>
+<li><code>Stop-Service winrm</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="检查启动项、计划任务、服务"><a href="#检查启动项、计划任务、服务" class="headerlink" title="检查启动项、计划任务、服务"></a>检查启动项、计划任务、服务</h3><blockquote>
+<p>什么是Windows启动项？</p>
+<ul>
+<li>开机的时候系统会在前台或者后台运行的程序</li>
+</ul>
+<p>什么是Windows启动项后门？</p>
+<p>Windows启动项后门也是攻击者常用的权限维持方式，大体上可以分为两种。</p>
+<ul>
+<li>一是重启电脑时自启动后门程序实现权限维持；</li>
+<li>二是点击某应用、服务、程序时自启动后门程序实现权限维持。</li>
+</ul>
+<p>什么是计划任务？</p>
+<ul>
+<li>一般是指在操作系统中设置定时任务</li>
+<li>计划任务是系统的常见功能，利用任务计划功能，可以将任何脚本、程序或文档安排在某个最方便的时间运行。</li>
+</ul>
+<p>什么是计划任务后门？</p>
+<ul>
+<li>计划任务是经常被攻击者拿来利用的控制点，计划任务可以让目标主机在特定的时间执行我们预先准备的后门程序从而帮助我们进行权限维持。</li>
+</ul>
+<p>什么是Windows服务？</p>
+<ul>
+<li>Windows 会话中可运行的可执行应用程序</li>
+<li>在Windows系统中还有一个重要的机制，就是服务。通常大部分的服务都拥有SYSTEM权限，如果攻击者利用Windows的服务机制创建一个后门服务，那么这个后门将比一般的持久化方法更为强健。</li>
+</ul>
+</blockquote>
+<ol>
+<li><p>检查服务器是否有异常的启动项</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检查方法:</span></span><br><span class="line">a. 登录服务器,单击【开始】&gt;【所有程序】&gt;【启动】,默认情况下此目录在是一个空目录,</span><br><span class="line">确认是否有非业务程序在该目录下.</span><br><span class="line">b. 单击开始菜单&gt;【运行】,输入msconfig,查看是否存在命名异常的启动项目,</span><br><span class="line">是则取消勾选命名异常的启动项目,并到命令中显示的路径删除文件.</span><br><span class="line">c. 单击【开始】&gt;【运行】,输入regedit,打开注册表,</span><br><span class="line">查看开机启动项是否正常,特别注意如下注册表项:</span><br><span class="line"> HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run</span><br><span class="line"> HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Runonce</span><br><span class="line"> HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\RunServices</span><br><span class="line"> HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\RunServicesOnce</span><br><span class="line"> HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\policies\Explorer\Run</span><br><span class="line"> HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run</span><br><span class="line"> HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\RunOnce</span><br><span class="line"> HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\RunServices</span><br><span class="line"> HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\RunServicesOnce</span><br><span class="line"> (ProfilePath)\Start Menu\Programs\Startup 启动项</span><br><span class="line">检查右侧是否有启动异常的项目,如有请删除,并建议安装杀毒软件进行病毒查杀,清除残留病毒或木马.</span><br><span class="line"></span><br><span class="line"><span class="comment"># 注册表目录含义</span></span><br><span class="line"><span class="comment"># 此处存储的信息可确保在Windows资源管理器中执行时打开正确的程序.它还包含有关拖放规则、快捷方法和用户界面信息的更多详细信息</span></span><br><span class="line">HKEY_CLASSES_ROOT(HKCR)</span><br><span class="line"><span class="comment"># 包含当前登录系统的用户的配置信息，有用户的文件夹、屏幕颜色和控制面板设置</span></span><br><span class="line">HKEY_CLASSES_USER(HKCU)</span><br><span class="line"><span class="comment"># 包含运行操作系统的计算机硬件特定信息，有系统上安装的驱动器列表及已安装硬件和应用程序的通用配置</span></span><br><span class="line">HKEY_LOCAL_MACHINE(HKLM)</span><br><span class="line"><span class="comment"># 包含系统上所有用户配置文件的配置信息，有应用程序配置和可视配置</span></span><br><span class="line">HKEY_USERS(HKU)</span><br><span class="line"><span class="comment"># 存储有关系统当前配置的信息</span></span><br><span class="line">HKEY_CLASSES_CONFIG(HCU)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 注册表操作命令</span></span><br><span class="line">1. reg add添加注册表</span><br><span class="line">2. reg delete删除注册表</span><br><span class="line">3. reg query返回注册表的子项下的项和下一层项的列表</span><br><span class="line"></span><br><span class="line">d. 利用安全软件查看启动项、开机时间管理等.</span><br><span class="line">e. 组策略,运行gpedit.msc.</span><br><span class="line">f. msconfig 图形化查看启动项</span><br></pre></td></tr></table></figure>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041918644.png" data-fancybox="true"/></div></div>
+
+<p><code>autoruns</code>:检查启动项、计划任务、服务最推荐的工具。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202306261959492.png" data-fancybox="true"/></div></div>
+
+<p>WMI后门：无文件,相对来说难以排查,但也可以使用<code>autoruns</code>排查。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202306262000594.png" data-fancybox="true"/></div></div>
+</li>
+<li><p>检查计划任务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检查方法:</span></span><br><span class="line">a. 单击【开始】&gt;【设置】&gt;【控制面板】&gt;【任务计划】</span><br><span class="line">查看计划任务属性,便可以发现木马文件的路径.</span><br><span class="line">b. taskschd.msc</span><br><span class="line">c. compmgmt.msc</span><br><span class="line">d. schtasks</span><br><span class="line">e. powershell输入Get-ScheduledTask</span><br><span class="line">f. C:\Windows\System32\Tasks\</span><br><span class="line">g. C:\Windows\SysWOW64\Tasks\</span><br><span class="line">h. C:\Windows\tasks\</span><br></pre></td></tr></table></figure>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041919997.png" data-fancybox="true"/></div></div>
+</li>
+<li><p>服务自启动</p>
+<blockquote>
+<p>服务可以理解为运行在后台的进程，这些服务可以在计算机启动时自动启动，也可以暂停和重新启动，而且不显示任何用户界面</p>
+<p>服务作为一种运行在后台的进程，是恶意软件常用的贮存方法</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检查方法:</span></span><br><span class="line">单击【开始】&gt;【运行】,输入services.msc,注意服务状态和启动类型</span><br><span class="line">检查是否有异常服务.</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="进程分析"><a href="#进程分析" class="headerlink" title="进程分析"></a>进程分析</h3><blockquote>
+<p>Windows进程排查，主要是找到恶意进程的PID，程序路径有时还需要找到PPID(PID的父进程)，及程序加载的DLL</p>
+</blockquote>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">1.</span> 任务管理器</span><br><span class="line"><span class="bullet">2.</span> tasklist命令</span><br><span class="line"><span class="bullet">	1.</span> tasklist /svc 查看进程服务</span><br><span class="line"><span class="bullet">	2.</span> tasklist /m 查看加载dll的恶意进程</span><br><span class="line"><span class="bullet">	3.</span> tasklist /m dll文件名 指定dll的调用情况</span><br><span class="line"><span class="bullet">	4.</span> tasklist过滤器  tasklist /fi &#x27;pid eq 992&#x27; eq表示等于</span><br><span class="line"><span class="bullet">	5.</span> 可以先使用netstat -ano查看端口连接信息，然后使用tasklist | findstr进行排查</span><br><span class="line"><span class="bullet">3.</span> powershell</span><br><span class="line"><span class="bullet">	1.</span> 用途在存在守护进程的进程，确认子父进程的关系</span><br><span class="line"><span class="bullet">	2.</span> Get-WmiObject Win32<span class="emphasis">_Process | select Name,ProcessId,ParentProcessId,Path</span></span><br><span class="line"><span class="emphasis">4. wmic命令</span></span><br><span class="line"><span class="emphasis">	1. 以csv格式列出所有信息</span></span><br><span class="line"><span class="emphasis">      wmic process list full /format:csv</span></span><br><span class="line"><span class="emphasis">	2. 以csv格式显示进程的名称、父进程ID、进程ID  </span></span><br><span class="line"><span class="emphasis">      wmic process get name，parentprocessid，processid /format:csv</span></span><br></pre></td></tr></table></figure>
+<p>主要注意点大致就是：<strong>没有厂商名字</strong>、没有<strong>签名验证信息</strong>、没有<strong>描述信息</strong>的可疑进程。还有典型的挖矿现象(CPU 或内存资源占用长时间过高)的进程。</p>
+<p>​	<code>Pchunter</code>：黑色为微软官方进程,蓝色为外界安装软件进程,红色为可疑进程,同时注意进程参数<br>​	<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202306261956364.png" data-fancybox="true"/></div></div><br>​	<code>process Explorer</code>:进程浏览器。界面功能从左到右为：<code>Process进程</code>、<code>CPU占比</code>、<code>Private Bytes提交大小</code>、<code>Working Set(工作设置、内存)</code>、<code>PID</code>、<code>Description描述</code>、<code>Company Name</code>公司名。<br>​	小技巧：被注入的进程属性里会多出<code>.NET Assemblies</code> 和 <code>.NET Performance</code>两个菜单<br>​	<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202306261957571.png" data-fancybox="true"/></div></div></p>
+<h3 id="文件痕迹排查"><a href="#文件痕迹排查" class="headerlink" title="文件痕迹排查"></a>文件痕迹排查</h3><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">1.</span> 敏感目录</span><br><span class="line"><span class="bullet">	1.</span> 各个盘符的tmp/temp相关目录  恶意程序投放的文件一般都会在路径相对统一的文件夹下，而临时目录相对统一</span><br><span class="line"><span class="bullet">	2.</span> 浏览器记录:人工入侵事件，入侵者会下载后续入侵的相关工具</span><br><span class="line"><span class="bullet">	3.</span> Recent文件 位置：Everything全盘搜索即可 Recent文件主要存储了最近运行文件的快捷方式，可通过分析最近运行的文件，排查可疑文件</span><br><span class="line"><span class="bullet">	4.</span> Prefetch预读取文件夹 位置：%SystemRoot%\Prefetch\ 用来存放系统已访问过的文件的预读取信息，扩展名位pf</span><br><span class="line"><span class="bullet">	5.</span> Amcache.hve文件可以查询应用程序的执行路径、上次执行的时间以及SHA1值</span><br><span class="line"><span class="bullet">2.</span> 时间查找</span><br><span class="line"><span class="bullet">	1.</span> 简介：安全事件发生后，需要确认事件发生的时间点，然后排查时间点前后文件变动情况，缩小排查范围</span><br><span class="line"><span class="bullet">	2.</span> 列出攻击日期内新增的文件，从而发现相关的恶意软件 </span><br><span class="line"><span class="bullet">		1.</span> forfiles命令查找对应条件的文件</span><br><span class="line"><span class="bullet">		2.</span> 使用everything对该时间段的文件进行排查</span><br><span class="line"><span class="bullet">	3.</span> 对文件的创建时间、修改时间、访问时间进行排查 查看文件属性，查看创建时间和修改时间是否存在逻辑上的问题，如果存在则该文件需要重点排查</span><br><span class="line"><span class="bullet">3.</span> webshell使用D盾、HwsKill、WebShellKill等webshell扫描工具进行扫描</span><br></pre></td></tr></table></figure>
+
+<h3 id="辅助功能镜像劫持-Shift粘贴键后门"><a href="#辅助功能镜像劫持-Shift粘贴键后门" class="headerlink" title="辅助功能镜像劫持-Shift粘贴键后门"></a>辅助功能镜像劫持-Shift粘贴键后门</h3><blockquote>
+<p>什么是Shift粘贴键后门？</p>
+<ul>
+<li>Shift粘滞键是当用户连按5次shift就会自动弹出的一个程序，其实不光是粘滞键，还有各种辅助功能，这类辅助功能都拥有一个特点就是当用户未进行登录时也可以触发。所以攻击者很有可能通过篡改这些辅助功能的指向程序来达到权限维持的目的。    （辅助功能镜像劫持是一样的原理）</li>
+</ul>
+</blockquote>
+<p>为了使电脑更易于使用和访问，Windows 添加了一些辅助功能。这些功能可以在用户登录之前以组合键启动。根据这个特征，一些恶意软件无需登录到系统，通过远程桌面协议就可以执行恶意代码。<br>比如最常见的按5下shift出现的粘滞键Sethc.exe，还有Windows + U组合键时启动的utilman.exe程序<br>还有:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">屏幕键盘: C:\Windows\System32\osk.exe</span><br><span class="line">放大镜: C:\Windows\System32\Magnify.exe</span><br><span class="line">旁白: C:\Windows\System32\Narrator.exe</span><br><span class="line">显示切换器 C:\Windows\System32\DisplaySwitch.exe</span><br><span class="line">应用切换器: C:\Windows\System32\AtBroker.exe</span><br></pre></td></tr></table></figure>
+<h4 id="低版本"><a href="#低版本" class="headerlink" title="低版本"></a>低版本</h4><p>在较早的 Windows 版本，只需要进行简单的二进制文件替换，比如经典的shift后门是将<code>C:\Windows\System32\sethc.exe</code>替换为<code>cmd.exe</code>。<br>仅限<mark class="tag-plugin colorful mark" color="warning">windows 2003、xp系统</mark></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">copy c:\windows\system32\sethc.exe c:\windows\system32\sethc.exe.bak</span><br><span class="line">copy c:\windows\system32\cmd.exe c:\windows\system32\sethc.exe</span><br></pre></td></tr></table></figure>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051833790.png" data-fancybox="true"/></div></div>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051838034.png" data-fancybox="true"/></div></div>
+
+<h4 id="高版本"><a href="#高版本" class="headerlink" title="高版本"></a>高版本</h4><p>我们需要用到IFEO,即映像劫持</p>
+<h5 id="什么是IFEO"><a href="#什么是IFEO" class="headerlink" title="什么是IFEO"></a>什么是IFEO</h5><p>所谓的IFEO就是Image File Execution Options，直译过来就是映像劫持。它又被称为“重定向劫持”（Redirection Hijack），它和“映像劫持”（Image Hijack，或IFEO Hijack）只是称呼不同，实际上都是一样的技术手段。白话来讲就是做某个操作的时候被拦截下来，干了别的事。</p>
+<p>当我们双击运行程序时，系统会查询该IFEO注册表，如果发现存在和该程序名称完全相同的子键，就查询对应子健中包含的“debugger”键值名，如果该参数不为空，系统则会把 Debugger 参数里指定的程序文件名作为用户试图启动的程序执行请求来处理。这样成功执行的是遭到“劫持”的虚假程序。</p>
+<h5 id="命令行修改"><a href="#命令行修改" class="headerlink" title="命令行修改"></a>命令行修改</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 需要管理员权限</span></span><br><span class="line"><span class="comment"># 在以下注册表中的sethc.exe项添加一个Debugger字符值（REG_SZ），并且赋值为cmd.exe的执行路径为C:\windows\system32\cmd.exe，如图:</span></span><br><span class="line">REG ADD <span class="string">&quot;HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\sethc.exe&quot;</span> /v Debugger /t REG_SZ /d <span class="string">&quot;C:\windows\system32\cmd.exe&quot;</span></span><br></pre></td></tr></table></figure>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051903959.png" data-fancybox="true"/></div></div>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211051903552.png" data-fancybox="true"/></div></div>
+
+<h2 id="0x02-Windows日志及工具"><a href="#0x02-Windows日志及工具" class="headerlink" title="0x02 Windows日志及工具"></a>0x02 Windows日志及工具</h2><h3 id="Windows日志介绍"><a href="#Windows日志介绍" class="headerlink" title="Windows日志介绍"></a>Windows日志介绍</h3><p>依赖的服务：EventLog服务</p>
+<p>位置:</p>
+<ul>
+<li><p>Windows 2000 &#x2F; Server2003 &#x2F; Windows XP ：<code>%SystemRoot%\System32\Config\*.evtx</code></p>
+</li>
+<li><p>Windows Vista &#x2F; 7 &#x2F; 10 &#x2F; Server2008 及以上版本： <code>%SystemRoot%\System32\Winevt\Logs\*.evtx</code></p>
+</li>
+</ul>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041951100.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041951181.png" data-fancybox="true"/></div></div>
+
+<h3 id="Windows日志分类"><a href="#Windows日志分类" class="headerlink" title="Windows日志分类"></a>Windows日志分类</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>系统日志（System.evtx）</td>
+<td>系统日志包含由Windows系统组件记录的事件，记录系统进程和设备 驱动程序的活动。由它审核的系统事件包括启动失败的设备驱动程序、硬件错误、重复的IP地址 以及服务启动、暂停和停止。</td>
+</tr>
+<tr>
+<td>应用程序日志（Application.evtx）</td>
+<td>记录程序在运行过程中的日志信息。</td>
+</tr>
+<tr>
+<td><mark class="tag-plugin colorful mark" color="red">安全日志（Security.evtx)</mark></td>
+<td><mark class="tag-plugin colorful mark" color="red">安全日志记录各种系统审核和安全处理，包括用户权限的变化、文件 和目录的访问、打印以及用户系统登陆和注销，如有效或无效的登陆尝试、与资源使用有关的事 件。管理员有按需要指定安全日志中要记录的事件类型。</mark></td>
+</tr>
+</tbody></table>
+<h4 id="系统日志"><a href="#系统日志" class="headerlink" title="系统日志"></a>系统日志</h4><blockquote>
+<p>简介：主要指Windows系统中的各个组件在运行中产生的各种事件</p>
+<ol>
+<li>系统驱动在运行中出现的问题</li>
+<li>操作系统的多种组件在运行中出现的各种问题</li>
+<li>应用软件在运行中出现的重大问题</li>
+</ol>
+<p>问题包括：数据丢失、错误，以及系统崩溃行为</p>
+</blockquote>
+<ol>
+<li><code>Windows2000-WindowsServer2003</code>:<code>C:\WINDOWS\System32\config\SysEvent.evt</code></li>
+<li><code>WindowsVista-Win10以及WindowsServer2008</code>:<code>%SystemRoot%\System32\Winevt\Logs\System.evt</code></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 分析方法:</span></span><br><span class="line">a. 前提:开启审核策略,若日后系统出现故障、安全事故则可以查看系统的日志文件,排除故障,追查入侵者的信息等.</span><br><span class="line">b. Win+R打开运行,输入<span class="string">&quot;eventvwr.msc&quot;</span>,回车运行,打开<span class="string">&quot;事件查看器&quot;</span>.</span><br><span class="line">C. 导出应用程序日志、安全日志、系统日志,利用LogParser进行分析.</span><br></pre></td></tr></table></figure>
+
+<h4 id="安全日志"><a href="#安全日志" class="headerlink" title="安全日志"></a>安全日志</h4><blockquote>
+<p>简介：记录系统各种安全事件</p>
+<ol>
+<li>各种登录与退出系统的成功或不成功的信息</li>
+<li>对系统中各种重要资源的操作，如对系统文件的创建、删除、修改等操作</li>
+</ol>
+</blockquote>
+<ol>
+<li><code>Windows2000-WindowsServer2003</code>:<code>C:\WINDOWS\System32\config\SecEvent.evt</code></li>
+<li><code>WindowsVista-Win10以及WindowsServer2008</code>:<code>%SystemRoot%\System32\Winevt\Logs\Security.evt</code></li>
+</ol>
+<h4 id="应用程序日志"><a href="#应用程序日志" class="headerlink" title="应用程序日志"></a>应用程序日志</h4><blockquote>
+<p>简介：各类应用程序产生的各类事件:登录、退出等日志</p>
+</blockquote>
+<ol>
+<li><code>Windows2000-WindowsServer2003</code>:<code>C:\WINDOWS\System32\config\AppEvent.evt</code></li>
+<li><code>WindowsVista-Win10以及WindowsServer2008</code>:<code>%SystemRoot%\System32\Winevt\Logs\Application.evt</code></li>
+</ol>
+<mark class="tag-plugin colorful mark" color="warning">在默认情况下， Windows日志仅仅记录一些特定日志，因为Windows日志中每种日志的大小默认为 20M，超过大小之后会覆盖最早的日志记录。如果我们需要记录详细的安全日志，则需要通过修改本地策略或者在高级审核策略配置中来启用其他项的日志记录功能。</mark>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041952119.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041953325.png" data-fancybox="true"/></div></div>
+
+<h3 id="Windows事件ID"><a href="#Windows事件ID" class="headerlink" title="Windows事件ID"></a>Windows事件ID</h3><h4 id="审核策略更改"><a href="#审核策略更改" class="headerlink" title="审核策略更改"></a>审核策略更改</h4><blockquote>
+<p>此安全设置确定 OS 是否对尝试更改用户权限分 配策略、审核策略、帐户策略或信任策略的每 一个实例进行审核.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th align="center">类别</th>
+<th align="center">子类别</th>
+<th align="center">默认状态</th>
+<th align="center">对应高级审核策略配置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">审核策略更改</td>
+<td align="center">审核审核策略更改</td>
+<td align="center">成功</td>
+<td align="center">策略更改</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核身份验证策略更改</td>
+<td align="center">成功</td>
+<td align="center">策略更改</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核授权策略更改</td>
+<td align="center">无审核</td>
+<td align="center">策略更改</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核筛选平台策略更改</td>
+<td align="center">无审核</td>
+<td align="center">策略更改</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核 MPSSVC 规则级策略更改</td>
+<td align="center">无审核</td>
+<td align="center">策略更改</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核其他策略更改事件</td>
+<td align="center">无审核</td>
+<td align="center">策略更改</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="center"><strong>子类别</strong></th>
+<th align="center"><strong>默认状态</strong></th>
+<th align="center"><strong>事件ID</strong></th>
+<th align="center"><strong>事件说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">审核审核策略更改</td>
+<td align="center">成功</td>
+<td align="center">4715</td>
+<td align="center">对象的审核策略 (SACL) 已更改.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">4719</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">系统审核策略已更改.</mark></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4817</td>
+<td align="center">对象的审核设置已更改.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4902</td>
+<td align="center">创建了每用户审核策略表.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4904</td>
+<td align="center">已尝试注册安全事件源.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4905</td>
+<td align="center">已尝试取消注册安全事件源.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4906</td>
+<td align="center">CrashOnAuditFail 值已更改.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4907</td>
+<td align="center">对象的审核设置已更改.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4908</td>
+<td align="center">特殊组登录表已修改.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4912</td>
+<td align="center">每用户审核策略已更改.</td>
+</tr>
+<tr>
+<td align="center">审核身份验证策略更改</td>
+<td align="center">成功</td>
+<td align="center">4713</td>
+<td align="center">Kerberos 策略已更改.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4716</td>
+<td align="center">可信域信息已修改.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4717</td>
+<td align="center">系统安全访问被授予一个帐户.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4718</td>
+<td align="center">系统安全访问权限已从帐户中删除</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4739</td>
+<td align="center">域策略已更改.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4864</td>
+<td align="center">检测到命名空间冲突.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4865</td>
+<td align="center">添加了受信任的林信息条目.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4866</td>
+<td align="center">删除了受信任的林信息条目.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">成功</td>
+<td align="center">4867</td>
+<td align="center">受信任的林信息条目已修改.</td>
+</tr>
+</tbody></table>
+<h4 id="审核登录事件"><a href="#审核登录事件" class="headerlink" title="审核登录事件"></a>审核登录事件</h4><blockquote>
+<p>此安全设置确定 OS 是否对尝试登录此计算机 或从中注销的用户的每个实例进行审核.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th align="center"><strong>类别</strong></th>
+<th align="center"><strong>子类别</strong></th>
+<th align="center"><strong>默认状态</strong></th>
+<th align="center">对应高级审核策略配置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">审核登录事件</td>
+<td align="center">审核账户锁定</td>
+<td align="center">成功</td>
+<td align="center">登录&#x2F;注销</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核 IPsec 扩展模式</td>
+<td align="center">无审核</td>
+<td align="center">登录&#x2F;注销</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核 IPsec 主模式</td>
+<td align="center">无审核</td>
+<td align="center">登录&#x2F;注销</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核 IPsec 快速模式</td>
+<td align="center">无审核</td>
+<td align="center">登录&#x2F;注销</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核注销</td>
+<td align="center">成功</td>
+<td align="center">登录&#x2F;注销</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核登录</td>
+<td align="center">客户端:成功<br />服务器:成功和失败</td>
+<td align="center">登录&#x2F;注销</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核网络策略服务器</td>
+<td align="center">成功和失败</td>
+<td align="center">登录&#x2F;注销</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核其他登录&#x2F;注销事件</td>
+<td align="center">无审核</td>
+<td align="center">登录&#x2F;注销</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核特别登录</td>
+<td align="center">成功</td>
+<td align="center">登录&#x2F;注销</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="center">子类别</th>
+<th align="center">默认状态</th>
+<th align="center">事件ID</th>
+<th align="center">事件说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">审核账户锁定</td>
+<td align="center">成功</td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">4625</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">帐户登录失败.</mark></td>
+</tr>
+<tr>
+<td align="center">审核注销</td>
+<td align="center">成功</td>
+<td align="center">4634</td>
+<td align="center">帐户已注销.</td>
+</tr>
+<tr>
+<td align="center">审核注销</td>
+<td align="center">成功</td>
+<td align="center">4647</td>
+<td align="center">用户发起的注销.</td>
+</tr>
+<tr>
+<td align="center">审核登录</td>
+<td align="center">客户端PC: 成功<br />服务器: 成功和失败</td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">4624</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">帐户登录成功.</mark></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">4625</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">帐户登录失败.</mark></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4648</td>
+<td align="center">尝试使用显式凭据登录.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4675</td>
+<td align="center">SID 被过滤.</td>
+</tr>
+<tr>
+<td align="center">审核网络策略服务器</td>
+<td align="center">成功和失败</td>
+<td align="center"></td>
+<td align="center">网络策略服务器授予用户访问权限.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">6273</td>
+<td align="center">网络策略服务器拒绝访问用户.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">6274</td>
+<td align="center">网络策略服务器放弃了对用户的请求.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">6275</td>
+<td align="center">网络策略服务器丢弃了用户的计费请求.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">6276</td>
+<td align="center">网络策略服务器隔离了一个用户.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">6277</td>
+<td align="center">网络策略服务器授予用户访问权限,但由于主机不符合定义的健康策略而使其处于试用状态.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">6278</td>
+<td align="center">网络策略服务器授予用户完全访问权限,因为主机符合定义的健康策略.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">6279</td>
+<td align="center">由于多次失败的身份验证尝试,网络策略服务器锁定了用户帐户.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">6280</td>
+<td align="center">网络策略服务器解锁了用户帐户.</td>
+</tr>
+<tr>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">审核特别登录</mark></td>
+<td align="center">成功</td>
+<td align="center">4964</td>
+<td align="center">已将特殊组分配给新登录</td>
+</tr>
+</tbody></table>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031839779.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031839364.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031843997.png" data-fancybox="true"/></div></div>
+
+<table>
+<thead>
+<tr>
+<th><strong>登录类型</strong></th>
+<th><strong>描述</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><mark class="tag-plugin colorful mark" color="red">2</mark></td>
+<td><mark class="tag-plugin colorful mark" color="red">交互式登录(Interactive)</mark></td>
+<td><mark class="tag-plugin colorful mark" color="red">用户在本地进行登录.</mark></td>
+</tr>
+<tr>
+<td><mark class="tag-plugin colorful mark" color="red">3</mark></td>
+<td><mark class="tag-plugin colorful mark" color="red">网络(Network)</mark></td>
+<td><mark class="tag-plugin colorful mark" color="red">最常见的情况就是连接到共享文件夹或共享打印机时.</mark></td>
+</tr>
+<tr>
+<td>4</td>
+<td>批处理(Batch)</td>
+<td>通常表明某计划任 务启动.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>服务(Service)</td>
+<td>每种服务都被配置 在某个特定的用户 账号下运行.</td>
+</tr>
+<tr>
+<td>7</td>
+<td>解锁(Unlock)</td>
+<td>屏保解锁.</td>
+</tr>
+<tr>
+<td>8</td>
+<td>网络明文(NetworkCleartext)</td>
+<td>登录的密码在网络 上是通过明文传输 的,如FTP.</td>
+</tr>
+<tr>
+<td>9</td>
+<td>新凭证(NewCredentials)</td>
+<td>使用带&#x2F;Netonly参数 的RUNAS命令运行一 个程序.</td>
+</tr>
+<tr>
+<td><mark class="tag-plugin colorful mark" color="red">10</mark></td>
+<td><mark class="tag-plugin colorful mark" color="red">远程交互(RemoteInteractive)</mark></td>
+<td><mark class="tag-plugin colorful mark" color="red">通过终端服务、远程桌面或远程协助访问计算机.</mark></td>
+</tr>
+<tr>
+<td>11</td>
+<td>缓存交互(CachedInteractive)</td>
+<td>以一个域用户登录而又没有域控制器可用</td>
+</tr>
+</tbody></table>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031839370.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407031839011.png" data-fancybox="true"/></div></div>
+
+<table>
+<thead>
+<tr>
+<th align="center">地位和子状态码</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">0xc0000064</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">用户名不存在</mark></td>
+</tr>
+<tr>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">0xc000006a</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">用户名是正确的,但密码是错误的</mark></td>
+</tr>
+<tr>
+<td align="center">0xc0000234</td>
+<td align="center">用户当前锁定</td>
+</tr>
+<tr>
+<td align="center">0xc0000072</td>
+<td align="center">帐户目前禁用</td>
+</tr>
+<tr>
+<td align="center">0xc000006f</td>
+<td align="center">用户试图登录天的外周或时间限制</td>
+</tr>
+<tr>
+<td align="center">0xc0000070</td>
+<td align="center">工作站的限制</td>
+</tr>
+<tr>
+<td align="center">0xc0000193</td>
+<td align="center">帐号过期</td>
+</tr>
+<tr>
+<td align="center">0xc0000071</td>
+<td align="center">过期的密码</td>
+</tr>
+<tr>
+<td align="center">0xc0000133</td>
+<td align="center">时钟之间的直流和其他电脑太不同步</td>
+</tr>
+<tr>
+<td align="center">0xc0000224</td>
+<td align="center">在下次登录用户需要更改密码</td>
+</tr>
+<tr>
+<td align="center">0xc0000225</td>
+<td align="center">显然一个缺陷在Windows和不是一个风险</td>
+</tr>
+<tr>
+<td align="center">0xc000015b</td>
+<td align="center">没有被授予该用户请求登录类型(又名登录 正确的)在这台机器</td>
+</tr>
+<tr>
+<td align="center">0xc000006d</td>
+<td align="center">似乎是由于系统问题和不安全</td>
+</tr>
+</tbody></table>
+<h4 id="审核账户管理"><a href="#审核账户管理" class="headerlink" title="审核账户管理"></a>审核账户管理</h4><blockquote>
+<p>此安全设置确定是否审核计算机上的每个帐户管理事件.帐户管理事件示例包括:</p>
+<ul>
+<li>创建、更改或删除用户帐户或组.</li>
+<li>重命名、禁用或启用用户帐户.</li>
+<li>设置或更改密码.</li>
+</ul>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th align="center">类别</th>
+<th align="center">子类别</th>
+<th align="center">默认状态</th>
+<th align="center">对应本地审核策略</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">帐户管理</td>
+<td align="center">审核应用组程序管理</td>
+<td align="center">无审核</td>
+<td align="center">审核账户管理</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核计算机帐户管理</td>
+<td align="center">无审核</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核通讯组管理</td>
+<td align="center">无审核</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核其他账户管理事件</td>
+<td align="center">无审核</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核安全组管理</td>
+<td align="center">成功</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">审核用户账户管理</td>
+<td align="center">成功</td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="center"><strong>子类别</strong></th>
+<th align="center"><strong>默认状态</strong></th>
+<th align="center"><strong>事件ID</strong></th>
+<th align="center"><strong>事件</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">审核安全组管理</td>
+<td align="center">成功</td>
+<td align="center">4727</td>
+<td align="center">已创建启用安全性的全局组.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">4728</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">一个成员被添加到启用安全的全局组中.</mark></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">4729</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">成员已从启用安全的全局组中删除.</mark></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4730</td>
+<td align="center">已删除启用安全的全局组.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4731</td>
+<td align="center">已创建启用安全性的本地组.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">4732</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">一个成员被添加到启用安全的本地组.</mark></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">4733</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">成员已从启用安全的本地组中删除.</mark></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4734</td>
+<td align="center">已删除启用安全的本地组.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4735</td>
+<td align="center">已更改启用安全的本地组.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4737</td>
+<td align="center">已更改启用安全的全局组.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4754</td>
+<td align="center">已创建启用安全的通用组.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4755</td>
+<td align="center">已更改启用安全的通用组.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">4756</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">一个成员被添加到启用安全的通用组.</mark></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">4757</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">成员已从启用安全的通用组中删除.</mark></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4758</td>
+<td align="center">已删除启用安全的通用组.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4764</td>
+<td align="center">组的类型已更改.</td>
+</tr>
+<tr>
+<td align="center">审核用户账户管理</td>
+<td align="center">成功</td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">4720</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">已创建用户帐户.</mark></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">4722</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">已启用用户帐户.</mark></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4723</td>
+<td align="center">试图更改帐户的密码.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">4724</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">已尝试重置帐户密码.</mark></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4725</td>
+<td align="center">用户帐户被禁用.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">4726</mark></td>
+<td align="center"><mark class="tag-plugin colorful mark" color="red">用户帐户被删除.</mark></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4738</td>
+<td align="center">用户帐户已更改.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4740</td>
+<td align="center">用户帐户被锁定.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4765</td>
+<td align="center">SID 历史记录已添加到帐户</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4766</td>
+<td align="center">尝试向帐户添加 SID 历史记录失败.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4767</td>
+<td align="center">用户帐户已解锁.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4780</td>
+<td align="center">ACL 是在作为管理员组成员的帐户上设置的.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4781</td>
+<td align="center">帐户名称已更改：</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">4794</td>
+<td align="center">已尝试设置目录服务还原模式.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">5376</td>
+<td align="center">凭据管理器凭据已备份.</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">5377</td>
+<td align="center">凭据管理器凭据是从备份中恢复的.</td>
+</tr>
+</tbody></table>
+<h5 id="远程登录事件"><a href="#远程登录事件" class="headerlink" title="远程登录事件"></a>远程登录事件</h5><p>当通过远程桌面协议（RDP）进行远程登录时，会在源主机和目的主机上生成一系列事件。以下是与RDP远程登录相关的重要事件ID及其含义，这些事件可以在Windows安全日志和远程连接日志中找到。</p>
+<h6 id="安全日志（Security-evtx）"><a href="#安全日志（Security-evtx）" class="headerlink" title="安全日志（Security.evtx）"></a>安全日志（Security.evtx）</h6><table>
+<thead>
+<tr>
+<th>事件ID</th>
+<th>描述</th>
+<th>重点说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>4624</td>
+<td>账户成功登录</td>
+<td>表明有账户成功通过RDP登录</td>
+</tr>
+<tr>
+<td>4648</td>
+<td>使用明文凭证尝试登录</td>
+<td>可能表明凭证被窃取或滥用</td>
+</tr>
+<tr>
+<td>4778</td>
+<td>重新连接到一台Windows主机的会话</td>
+<td>表明会话被重新连接</td>
+</tr>
+<tr>
+<td>4779</td>
+<td>断开到一台Windows主机的会话</td>
+<td>表明会话被断开</td>
+</tr>
+</tbody></table>
+<h6 id="远程连接日志"><a href="#远程连接日志" class="headerlink" title="远程连接日志"></a>远程连接日志</h6><p><code>应用程序和服务日志</code>-&gt;<code>Microsoft</code>-&gt;<code>Windows</code>-&gt;<code>TerminalServices</code>-&gt;<code>RemoteConnectionManager</code>-&gt;<code>Operational</code></p>
+<table>
+<thead>
+<tr>
+<th>事件ID</th>
+<th>描述</th>
+<th>重点说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1149</td>
+<td>用户认证成功</td>
+<td>表明用户通过RDP认证成功</td>
+</tr>
+<tr>
+<td>21</td>
+<td>远程桌面服务：会话登录成功</td>
+<td>表明RDP会话登录成功</td>
+</tr>
+<tr>
+<td>24</td>
+<td>远程桌面服务：会话已断开连接</td>
+<td>表明RDP会话被断开</td>
+</tr>
+<tr>
+<td>25</td>
+<td>远程桌面服务：会话重新连接成功</td>
+<td>表明RDP会话被重新连接</td>
+</tr>
+</tbody></table>
+<h6 id="登录类型"><a href="#登录类型" class="headerlink" title="登录类型"></a>登录类型</h6><table>
+<thead>
+<tr>
+<th>登录类型</th>
+<th>描述</th>
+<th>重点说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>10</td>
+<td>RemoteInteractive</td>
+<td>专用于RDP登录</td>
+</tr>
+<tr>
+<td>12</td>
+<td>CachedRemoteInteractive</td>
+<td>表明使用了缓存的RDP登录信息</td>
+</tr>
+</tbody></table>
+<h3 id="Log-Parser"><a href="#Log-Parser" class="headerlink" title="Log Parser"></a>Log Parser</h3><ol>
+<li><code>-i</code> 参数表示输入格式，可以接受以下值：<ul>
+<li><code>EVT</code>: 表示输入格式为 Windows Event Log 格式 (.evt 或 .evtx 文件)。</li>
+<li><code>CSV</code>: 表示输入格式为逗号分隔值 (CSV) 文件。</li>
+<li><code>IISW3C</code>: 表示输入格式为 IIS (Internet Information Services) W3C 扩展日志文件格式。</li>
+<li><code>TSV</code>: 表示输入格式为制表符分隔值 (TSV) 文件。</li>
+<li><code>TEXTLINE</code>: 表示输入格式为文本文件，每行作为一个数据行。</li>
+<li><code>TEXTWORD</code>: 表示输入格式为文本文件，每个单词作为一个数据行。</li>
+</ul>
+</li>
+<li><code>-o</code> 参数表示输出格式，可以接受以下值：<ul>
+<li><code>DATAGRID</code>: 表示输出结果以数据网格形式显示，适合交互式探索和查看。</li>
+<li><code>CSV</code>: 表示输出结果为逗号分隔值 (CSV) 格式，适合导出和后续处理。</li>
+<li><code>TSV</code>: 表示输出结果为制表符分隔值 (TSV) 格式。</li>
+<li><code>XML</code>: 表示输出结果为 XML 格式。</li>
+<li><code>SQL</code>: 表示输出结果为 SQL 数据库表格格式。</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 图形化</span></span><br><span class="line"><span class="comment"># 默认安装到C:\Program Files (x86)\Log Parser 2.2</span></span><br><span class="line"><span class="comment"># 将日志拷贝出来在进行操作</span></span><br><span class="line">LogParser.exe <span class="literal">-i</span>:EVT <span class="literal">-o</span>:DATAGRID <span class="string">&quot;SELECT * FROM C:\Users\Administrator\Desktop\Security.evtx&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 分析IIS日志</span></span><br><span class="line">LogParser.exe <span class="string">&quot;select time, c-ip,cs-uri-stem,cs-uri-query, sc-status, time-taken from C:\Users\Administrator\Desktop\ex170818.log where cs-uri-query like &#x27;%and%&#x27; &quot;</span> <span class="literal">-o</span>:datagrid</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用SQL语句统计实现我们需要的数据。</span></span><br><span class="line"></span><br><span class="line">LogParser.exe <span class="literal">-i</span>:IISW3C <span class="literal">-o</span>:DATAGRID <span class="string">&quot;SELECT c-ip,COUNT(c-ip) FROM C:\Users\Administrator\Desktop\ex170818.log GROUP BY c-ip ORDER BY COUNT(c-iP) DESC&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 将结果数据导出到csv中</span></span><br><span class="line"></span><br><span class="line">LogParser.exe <span class="literal">-i</span>:IISW3C <span class="literal">-o</span>:csv <span class="string">&quot;SELECT c-ip,COUNT(c-ip) into 1.csv FROM C:\Users\Administrator\Desktop\ex170818.log GROUP BY c-ip ORDER BY COUNT(c-iP) DESC&quot;</span></span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041358118.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041545856.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041549792.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041550907.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041954224.png" data-fancybox="true"/></div></div>
+
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在入侵事件中，我们经常会需要查找&quot;post&quot;请求，判断是否有上传木马文件等行为，或者访问页面中包含&quot;user&quot;、&quot;manager&quot;、&quot;admin&quot;等类似管理员的字段判断是否访问了后台管理页面。</span></span><br><span class="line">LogParser.exe <span class="literal">-i</span>:IISW3C <span class="literal">-o</span>:DATAGRID <span class="string">&quot;SELECT * FROM C:\Users\Administrator\Desktop\ex170818.log WHERE cs-method=&#x27;POST&#x27;&quot;</span></span><br><span class="line">LogParser.exe <span class="literal">-i</span>:IISW3C <span class="literal">-o</span>:DATAGRID <span class="string">&quot;SELECT * FROM C:\Users\Administrator\Desktop\ex170818.log WHERE cs-uri-stem LIKE &#x27;%admin%&#x27;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041848192.png" data-fancybox="true"/></div></div>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041848864.png" data-fancybox="true"/></div></div>
+
+<h3 id="LogParser-Studio"><a href="#LogParser-Studio" class="headerlink" title="LogParser Studio"></a>LogParser Studio</h3><a class="tag-plugin colorful button" color="theme" title="官网" target="_blank" rel="noopener" href="https://techcommunity.microsoft.com/t5/exchange-team-blog/introducing-log-parser-studio/ba-p/601131"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg><span>官网</span></a>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211101913649.png" data-fancybox="true"/></div></div>
+
+<ol>
+<li>打开需要分析的日志文件<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211101918738.png" data-fancybox="true"/></div></div></li>
+<li>选中需要分析的日志文件，接着新建一个查询<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211101933198.png" data-fancybox="true"/></div></div></li>
+<li>我们还是以刚才统计出访问次数最多的IP地址及次数为例子<br><code>SELECT top 10 c-ip,count(c-ip) FROM &#39;[LOGFILEPATH]&#39; GROUP BY c-ip ORDER BY COUNT(c-iP) DESC</code></li>
+<li>然后点击我们的执行按钮，即可输出结果<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202211101934908.png" data-fancybox="true"/></div></div>
+这里注意<code>LogParser Studio</code>与<code>LogParser</code>有几个区别：</li>
+<li>输入文件类型：<code>LogParser Studio</code>已经预先选择输入文件类型，查询语句不需要再定义</li>
+<li>输出文件类型：<code>LogParser Studio</code>默认使用窗口展示数据，如需指定其他输出文件类型或者导出文件，需要在语句中定义</li>
+<li>也可将我们自定义的SQL语句，保存加入到库中，方便下次使用</li>
+<li>也可点击相应的按钮将查询统计的数据导出。</li>
+</ol>
+
+<div class="article-footer fs14">
+    <section id="references">
+      <div class="header"><span>参考资料</span></div>
+      <div class="body">
+        <ul>
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-server/identity/securing-privileged-access/reference-tools-logon-types">微软-管理工具和登录类型</a></p>
+
+        </li>
+        
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/sysinternals/downloads/">微软-实用工具套件</a></p>
+
+        </li>
+        
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/2524">Windows 系统安全事件应急响应</a></p>
+
+        </li>
+        
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener" href="https://github.com/Bypass007/Emergency-Response-Notes">Bypass007-应急响应实战笔记</a></p>
+
+        </li>
+        
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener" href="https://www.ired.team/offensive-security/persistence">Windows持久性-红队笔记</a></p>
+
+        </li>
+        
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener" href="https://swisskyrepo.github.io/PayloadsAllTheThings/Methodology%20and%20Resources/Windows%20-%20Persistence/">Windows持久性</a></p>
+
+        </li>
+        </ul>
+      </div>
+    </section>
+    
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2024/07/08/b7b8d727/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2024/07/08/b7b8d727/&title=应急响应之Windows - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202407041858113.png&summary=
+    总字符数: 28.89K
+    
+    
+    代码: 6.84K, 文本: 5.58K
+    
+    
+    预计阅读时间: 54 分钟
+    
+    
+
+
+当企业发生黑客入侵、系统崩溃或其它影响业务正常运..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=应急响应之Windows - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2024/07/08/b7b8d727/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2024/07/08/b7b8d727/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2024/07/09/69563a36/">应急响应靶机训练-Web1</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2024/07/07/4677b70c/">应急响应之Splunk</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\2024\07\03\ac635236\" title="应急响应-从攻击谈防守"><span class="title">应急响应-从攻击谈防守</span></a><a class="item" href="\2024\07\09\69563a36\" title="应急响应靶机训练-Web1"><span class="title">应急响应靶机训练-Web1</span></a><a class="item" href="\2024\07\11\87585b1a\" title="应急响应靶机训练-Web3"><span class="title">应急响应靶机训练-Web3</span></a><a class="item" href="\2024\07\10\f05f6b8c\" title="应急响应靶机训练-Web2"><span class="title">应急响应靶机训练-Web2</span></a><a class="item" href="\2024\09\24\3c3f9499\" title="CS-Cobalt Strike必备知识"><span class="title">CS-Cobalt Strike必备知识</span></a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body waline'>
+      
+
+<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/tools/">工具</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-%E5%85%A5%E4%BE%B5%E6%8E%92%E6%9F%A5%E6%80%9D%E8%B7%AF"><span class="toc-text">0x01 入侵排查思路</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E5%9F%BA%E6%9C%AC%E4%BF%A1%E6%81%AF"><span class="toc-text">系统基本信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E5%8F%AF%E7%96%91%E7%9B%AE%E5%BD%95%E5%8F%8A%E6%96%87%E4%BB%B6"><span class="toc-text">查找可疑目录及文件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E7%9B%AE%E5%BD%95"><span class="toc-text">相关目录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%8E%E9%97%A8%E6%9F%A5%E6%9D%80"><span class="toc-text">后门查杀</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A8%8B%E5%BA%8F%E8%BF%90%E8%A1%8C%E8%AE%B0%E5%BD%95"><span class="toc-text">程序运行记录</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A3%80%E6%9F%A5%E7%B3%BB%E7%BB%9F%E8%B4%A6%E5%8F%B7%E5%AE%89%E5%85%A8"><span class="toc-text">检查系统账号安全</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9A%90%E8%97%8F%E8%B4%A6%E5%8F%B7-%E7%95%AA%E5%A4%96%E7%AF%87"><span class="toc-text">隐藏账号-番外篇</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A3%80%E6%9F%A5%E5%BC%82%E5%B8%B8%E7%AB%AF%E5%8F%A3%E3%80%81%E8%BF%9B%E7%A8%8B"><span class="toc-text">检查异常端口、进程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A3%80%E6%9F%A5%E5%90%AF%E5%8A%A8%E9%A1%B9%E3%80%81%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E3%80%81%E6%9C%8D%E5%8A%A1"><span class="toc-text">检查启动项、计划任务、服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E5%88%86%E6%9E%90"><span class="toc-text">进程分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%97%95%E8%BF%B9%E6%8E%92%E6%9F%A5"><span class="toc-text">文件痕迹排查</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%85%E5%8A%A9%E5%8A%9F%E8%83%BD%E9%95%9C%E5%83%8F%E5%8A%AB%E6%8C%81-Shift%E7%B2%98%E8%B4%B4%E9%94%AE%E5%90%8E%E9%97%A8"><span class="toc-text">辅助功能镜像劫持-Shift粘贴键后门</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%8E%E7%89%88%E6%9C%AC"><span class="toc-text">低版本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%AB%98%E7%89%88%E6%9C%AC"><span class="toc-text">高版本</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFIFEO"><span class="toc-text">什么是IFEO</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E4%BF%AE%E6%94%B9"><span class="toc-text">命令行修改</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-Windows%E6%97%A5%E5%BF%97%E5%8F%8A%E5%B7%A5%E5%85%B7"><span class="toc-text">0x02 Windows日志及工具</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Windows%E6%97%A5%E5%BF%97%E4%BB%8B%E7%BB%8D"><span class="toc-text">Windows日志介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Windows%E6%97%A5%E5%BF%97%E5%88%86%E7%B1%BB"><span class="toc-text">Windows日志分类</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E6%97%A5%E5%BF%97"><span class="toc-text">系统日志</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E6%97%A5%E5%BF%97"><span class="toc-text">安全日志</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E6%97%A5%E5%BF%97"><span class="toc-text">应用程序日志</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Windows%E4%BA%8B%E4%BB%B6ID"><span class="toc-text">Windows事件ID</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%A1%E6%A0%B8%E7%AD%96%E7%95%A5%E6%9B%B4%E6%94%B9"><span class="toc-text">审核策略更改</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%A1%E6%A0%B8%E7%99%BB%E5%BD%95%E4%BA%8B%E4%BB%B6"><span class="toc-text">审核登录事件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%A1%E6%A0%B8%E8%B4%A6%E6%88%B7%E7%AE%A1%E7%90%86"><span class="toc-text">审核账户管理</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%BF%9C%E7%A8%8B%E7%99%BB%E5%BD%95%E4%BA%8B%E4%BB%B6"><span class="toc-text">远程登录事件</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Log-Parser"><span class="toc-text">Log Parser</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LogParser-Studio"><span class="toc-text">LogParser Studio</span></a></li></ol></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js`,
+    marked: `https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.27.0" async></script>
+
+<!-- optional -->
+
+  <script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js'
+
+  function load_comment(){
+    if(!document.getElementById("waline_container"))return;
+
+    utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css');
+
+    const el = document.getElementById("waline_container");
+    var path = el.getAttribute('comment_id');
+    if (!path) {
+      path = decodeURI(window.location.pathname);
+    }
+
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+      el: '#waline_container',
+      path: path,
+      
+    }));
+
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    load_comment();
+  });
+
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"></script><script defer src="https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.swiper-slide img, .gallery img ,#waline_container .vcontent img`,
+    css: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css`,
+    js: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || null
+        }
+      });
+    })
+  }
+</script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          loop: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+</div></body></html>

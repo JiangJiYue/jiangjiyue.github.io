@@ -1,0 +1,962 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.27.0" theme-name="Stellar" theme-version="1.27.0">
+  
+  <meta name="generator" content="Hexo 7.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>Linux-Web服务器搭建的艺术 - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="总字符数: 22.19K                代码: 13.09K, 文本: 2.54K               预计阅读时间: 1.13 小时            引言: LAMP架构是目前成熟的企业网站应用模式之一,指的是协同工作的一整台系统和相关软件,能够提供动态web站点服务及其应用开发环境,LAMP是一个缩写词,具体包括Linux操作系统,Apache网站服务器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux-Web服务器搭建的艺术">
+<meta property="og:url" content="https://jiangjiyue.github.io/2024/01/28/afbfc1f7/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="总字符数: 22.19K                代码: 13.09K, 文本: 2.54K               预计阅读时间: 1.13 小时            引言: LAMP架构是目前成熟的企业网站应用模式之一,指的是协同工作的一整台系统和相关软件,能够提供动态web站点服务及其应用开发环境,LAMP是一个缩写词,具体包括Linux操作系统,Apache网站服务器">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307091902406.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307091903408.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307091903223.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307091904534.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307091910708.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307091911657.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305161458778.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305161459190.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305161500796.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305161500073.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305161500238.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307091918712.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307091918305.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305161504683.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307091928513.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305161522161.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305161510555.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307091931984.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305161527578.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305161543077.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307091954995.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305181928050.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305181929611.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305181931846.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305181932074.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307091957629.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307091959895.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092002018.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092003211.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092006942.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092007488.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092014153.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092014831.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092015505.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092017515.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092017012.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092018347.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092022215.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092022464.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092025442.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092028417.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092030027.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092030657.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092031568.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092033940.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092033837.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092034546.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092035597.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092036711.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092036147.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092036980.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092050301.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092040524.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092052186.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092054803.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092055730.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092055161.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092058072.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092058806.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092059192.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092101005.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092117782.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092117326.png">
+<meta property="article:published_time" content="2024-01-28T04:55:18.000Z">
+<meta property="article:modified_time" content="2024-02-09T08:13:36.000Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="Centos">
+<meta property="article:tag" content="Mysql">
+<meta property="article:tag" content="数据库">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="PHP">
+<meta property="article:tag" content="Apache">
+<meta property="article:tag" content="OpenResty">
+<meta property="article:tag" content="SSL">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307091902406.png">
+  
+  
+  
+  <meta name="keywords" content="Centos,Mysql,数据库,Linux,PHP,Apache,OpenResty,SSL">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.27.0">
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="导航" href="/sites/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/tools/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
+</div>
+<div class="widgets">
+
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2024/11/04/fe2980d6/"><span class="title">CS-ShellCode加载器</span></a><a class="item title" href="/2023/03/11/247b757/"><span class="title">VulHub-Fastjson漏洞复现</span></a><a class="item title" href="/2023/04/28/76971e68/"><span class="title">VulHub-Tomcat漏洞复现</span></a><a class="item title" href="/2024/07/05/dd58c5ed/"><span class="title">应急响应之Webshell流量分析</span></a><a class="item title" href="/2024/10/27/77c80f0f/"><span class="title">CS-C语言总结</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="javaScript:hud.toast('你在听🎵啦啦啦~');" rel="noopener noreferrer"><i class="fa-solid fa-music"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/">安全运维</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/%E5%AE%89%E5%85%A8%E8%BF%90%E7%BB%B4/Web%E6%9C%8D%E5%8A%A1%E5%99%A8/">Web服务器</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2024-01-28T04:55:18.000Z">2024-01-28</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-02-09T08:13:36.000Z">2024-02-09</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>Linux-Web服务器搭建的艺术</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
+    <p>总字符数: 22.19K </p>
+    </div>
+    <div class="cell" style="">
+    <p>代码: 13.09K, 文本: 2.54K</p>
+    </div>
+    <div class="cell" style="">
+    <p>预计阅读时间: 1.13 小时</p>
+    </div>
+    </div>
+
+<h2 id="引言"><a href="#引言" class="headerlink" title="引言:"></a>引言:</h2><blockquote>
+<p>LAMP<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=%E6%9E%B6%E6%9E%84&spm=1001.2101.3001.7020" title="架构">架构</a>是目前成熟的企业网站应用模式之一,指的是协同工作的一整台系统和相关软件,能够提供动态web站点服务及其应用开发环境,LAMP是一个缩写词,具体包括<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F&spm=1001.2101.3001.7020" title="Linux操作系统">Linux操作系统</a>,Apache网站服务器,MySQL数据库服务器,PHP(或perl,Python)网页编程语言</p>
+</blockquote>
+<h2 id="一、LAMP概述"><a href="#一、LAMP概述" class="headerlink" title="一、LAMP概述"></a>一、LAMP概述</h2><p>LAMP架构是目前成熟的企业网站应用模式之一,指的是协同工作的一整套系统和相关软件,能够提供动态Web站点服务及其应用开发环境.LAMP是一个缩写词,具体包括Linux操作系统、Apache网站服务器、MySQL数据库服务器、PHP(或Perl、Python)网页编程语言.</p>
+<h3 id="1、各组件作用"><a href="#1、各组件作用" class="headerlink" title="1、各组件作用"></a>1、各组件作用</h3><table>
+<thead>
+<tr>
+<th>组件</th>
+<th>代号</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Linux</td>
+<td>L</td>
+<td>作为LAMP架构的基础,提供用于支撑Web站点的操作系统,能够与其他三个组件提供更好的稳定性,兼容性(AMP组件也支持Windows、UNIX等平台).</td>
+</tr>
+<tr>
+<td>Apache</td>
+<td>A</td>
+<td>作为LAMP架构的前端,是一款功能强大,稳定性好的Web服务器程序,该服务器直接面向用户提供网站访问,发送网页,图片等文件内容.(静态页面—&gt;静态请求 http)</td>
+</tr>
+<tr>
+<td>MySQL</td>
+<td>M</td>
+<td>作为LAMP架构的后端,是一款流行的开源关系数据库系统.在企业网站、业务系统等应用中,各种账户信息、产品信息,客户资料、业务数据等都可以存储到MySQL数据库,其他程序可以通过SQL语句来查询,更改这些信息.(数据库—&gt;数据储存&#x2F;读取)</td>
+</tr>
+<tr>
+<td>PHP&#x2F;Perl&#x2F;Python</td>
+<td>P</td>
+<td>作为三种开发动态网页的编程语言,负责解释动态网页文件,负责沟通Web服务器和数据库系统以协同工作,并提供Web应用程序的开发和运行环境.其中PHP是一种被广泛应用的开放源代码的多用途脚本语言,它可以嵌入到HTML中,尤其适合于Web应用开发.(动态页面—-&gt;动态请求 http)</td>
+</tr>
+</tbody></table>
+<h3 id="2、各组件安装顺序"><a href="#2、各组件安装顺序" class="headerlink" title="2、各组件安装顺序"></a>2、各组件安装顺序</h3><p>在构建LAMP平台时,各组件的安装顺序依次为Linux、Apache、MySQL、PHP.其中Apache和MySQL的安装并没有严格的顺序,PHP环境的安装一般放到最后安装,负责沟通 Web 服务器和数据库系统以协同工作.</p>
+<h3 id="3-数据流向"><a href="#3-数据流向" class="headerlink" title="3.数据流向"></a>3.数据流向</h3><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307091902406.png" data-fancybox="true"/></div></div>
+
+<h2 id="二、编译安装Apache-httpd服务"><a href="#二、编译安装Apache-httpd服务" class="headerlink" title="二、编译安装Apache httpd服务"></a>二、编译安装Apache httpd服务</h2><h3 id="1-关闭防火墙-将安装Apache所需软件包传到-opt目录下"><a href="#1-关闭防火墙-将安装Apache所需软件包传到-opt目录下" class="headerlink" title="1.关闭防火墙,将安装Apache所需软件包传到&#x2F;opt目录下"></a>1.关闭防火墙,将安装Apache所需软件包传到&#x2F;opt目录下</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop firewalld</span><br><span class="line">systemctl <span class="built_in">disable</span> firewalld</span><br><span class="line"><span class="comment"># 关闭selinuc</span></span><br><span class="line">vim /etc/selinux/config</span><br><span class="line"></span><br><span class="line">SELINUX=enforcing</span><br><span class="line"><span class="comment"># 改成disable</span></span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307091903408.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307091903223.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin link dis-select"><a class="link-card plain" title="" href="https://archive.apache.org/dist/apr/apr-1.6.2.tar.gz" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon"><div class="left"><span class="title">https://archive.apache.org/dist/apr/apr-1.6.2.tar.gz</span><span class="cap link footnote">https://archive.apache.org/dist/apr/apr-1.6.2.tar.gz</span></div><div class="right"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div></div></a></div>
+
+<div class="tag-plugin link dis-select"><a class="link-card plain" title="" href="https://archive.apache.org/dist/apr/apr-util-1.6.0.tar.gz" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon"><div class="left"><span class="title">https://archive.apache.org/dist/apr/apr-util-1.6.0.tar.gz</span><span class="cap link footnote">https://archive.apache.org/dist/apr/apr-util-1.6.0.tar.gz</span></div><div class="right"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div></div></a></div>
+
+<div class="tag-plugin link dis-select"><a class="link-card plain" title="" href="https://archive.apache.org/dist/httpd/httpd-2.4.29.tar.gz" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon"><div class="left"><span class="title">https://archive.apache.org/dist/httpd/httpd-2.4.29.tar.gz</span><span class="cap link footnote">https://archive.apache.org/dist/httpd/httpd-2.4.29.tar.gz</span></div><div class="right"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div></div></a></div>
+
+<p>apr组件包用于支持Apache上层应用跨平台,提供底层接口库,能有效的降低并发连接数、降低进程和减少访问堵塞.</p>
+<h3 id="2-安装环境依赖包"><a href="#2-安装环境依赖包" class="headerlink" title="2.安装环境依赖包"></a>2.安装环境依赖包</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">yum -y install \</span><br><span class="line">gcc \                           <span class="comment">#C语言的编译器</span></span><br><span class="line">gcc-c++ \                       <span class="comment">#C++的编译器</span></span><br><span class="line">make \                          <span class="comment">#源代码编译器(源代码转换成二进制文件)</span></span><br><span class="line">pcre \                          <span class="comment">#pcre是一个Perl函数库,包括perl 兼容的正则表达式库</span></span><br><span class="line">pcre-devel \                    <span class="comment">#perl的接口开发包</span></span><br><span class="line">expat-devel \                   <span class="comment">#用于支持网站解析HTML、XML文件</span></span><br><span class="line">perl                            <span class="comment">#perl语言编译</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># yum remove -y httpd  # 删除旧版本的httpd</span></span><br><span class="line">yum -y install gcc gcc-c++ make pcre pcre-devel expat-devel perl</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307091904534.png" data-fancybox="true"/></div></div>
+
+<h3 id="3-配置软件模块"><a href="#3-配置软件模块" class="headerlink" title="3.配置软件模块"></a>3.配置软件模块</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt/lamp/apache/</span><br><span class="line">tar zxf apr-1.6.2.tar.gz</span><br><span class="line">tar zxf apr-util-1.6.0.tar.gz</span><br><span class="line">tar zxf httpd-2.4.29.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="built_in">mv</span> apr-1.6.2 /opt/lamp/apache/httpd-2.4.29/srclib/apr</span><br><span class="line"><span class="built_in">mv</span> apr-util-1.6.0 /opt/lamp/apache/httpd-2.4.29/srclib/apr-util</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> httpd-2.4.29/</span><br><span class="line">./configure \</span><br><span class="line">--prefix=/usr/local/httpd \ <span class="comment">#指定将 httpd 服务程序的安装路径</span></span><br><span class="line">--enable-so \               <span class="comment">#启用动态加载模块支持,使 httpd 具备进一步扩展功能的能力</span></span><br><span class="line">--enable-rewrite \          <span class="comment">#启用网页地址重写功能,用于网站优化、防盗链及目录迁移维护</span></span><br><span class="line">--enable-charset-lite \     <span class="comment">#启动字符集支持,以便支持使用各种字符集编码的页面</span></span><br><span class="line">--enable-cgi                <span class="comment">#启用CGI(通用网关接口)脚本程序支持,便于网站的外部扩展应用访问能力</span></span><br><span class="line"></span><br><span class="line">./configure --prefix=/usr/local/httpd --enable-so --enable-rewrite --enable-charset-lite --enable-cgi</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307091910708.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307091911657.png" data-fancybox="true"/></div></div>
+
+<h3 id="4-编译及安装"><a href="#4-编译及安装" class="headerlink" title="4.编译及安装"></a>4.编译及安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j 2 &amp;&amp; make install           <span class="comment">#make -j 2  表示开2核同时进行编译</span></span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305161458778.png" data-fancybox="true"/></div></div>
+
+<h3 id="5-优化配置文件路径-并把httpd服务的可执行程序文件放入路径环境变量的目录中便于系统识别"><a href="#5-优化配置文件路径-并把httpd服务的可执行程序文件放入路径环境变量的目录中便于系统识别" class="headerlink" title="5.优化配置文件路径,并把httpd服务的可执行程序文件放入路径环境变量的目录中便于系统识别"></a>5.优化配置文件路径,并把httpd服务的可执行程序文件放入路径环境变量的目录中便于系统识别</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s /usr/local/httpd/conf/httpd.conf /etc/</span><br><span class="line"><span class="built_in">ln</span> -s /usr/local/httpd/bin/* /usr/local/bin/</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305161459190.png" data-fancybox="true"/></div></div>
+
+<h3 id="6-添加httpd系统服务"><a href="#6-添加httpd系统服务" class="headerlink" title="6.添加httpd系统服务"></a>6.添加httpd系统服务</h3><p><strong>方法一:</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> /usr/local/httpd/bin/apachectl /etc/init.d/httpd   <span class="comment">#用于service服务管理</span></span><br><span class="line"><span class="built_in">chmod</span> +x /etc/init.d/httpd</span><br><span class="line">vi /etc/init.d/httpd                  <span class="comment">#在第一行后插入新行,添加此三行内容</span></span><br><span class="line"><span class="comment"># chkconfig: 35 85 21                 #35级别自动运行  第85个启动 第21个关闭</span></span><br><span class="line"><span class="comment"># description: Apache is a World Wide Web server</span></span><br><span class="line"></span><br><span class="line">chkconfig --add httpd                 <span class="comment">#将httpd服务加入到service管理器</span></span><br><span class="line"></span><br><span class="line">systemctl start httpd.service</span><br><span class="line">或</span><br><span class="line">service httpd start</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305161500796.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305161500073.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305161500238.png" data-fancybox="true"/></div></div>
+
+<p><strong>方法二:</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">vim /lib/systemd/system/httpd.service</span><br><span class="line"></span><br><span class="line">[Unit]</span><br><span class="line">Description=The Apache HTTP Server              <span class="comment">#描述</span></span><br><span class="line">After=network.target                            <span class="comment">#描述服务类别</span></span><br><span class="line">[Service]</span><br><span class="line">Type=forking                                    <span class="comment">#后台运行方式</span></span><br><span class="line">PIDFile=/usr/local/httpd/logs/httpd.pid         <span class="comment">#PID文件位置</span></span><br><span class="line">ExecStart=/usr/local/bin/apachectl <span class="variable">$OPTIONS</span>     <span class="comment">#启动服务</span></span><br><span class="line">ExecReload=/bin/kill -HUP <span class="variable">$MAINPID</span>              <span class="comment">#根据PID重载配置</span></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line"></span><br><span class="line">systemctl start httpd.service</span><br><span class="line">systemctl <span class="built_in">enable</span> httpd.service</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307091918712.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307091918305.png" data-fancybox="true"/></div></div>
+
+<h3 id="7-修改httpd-服务配置文件"><a href="#7-修改httpd-服务配置文件" class="headerlink" title="7.修改httpd 服务配置文件"></a>7.修改httpd 服务配置文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/httpd.conf</span><br><span class="line"><span class="comment"># 52行--修改</span></span><br><span class="line">Listen 192.168.64.170:80</span><br><span class="line"><span class="comment"># 197行--取消注释,修改</span></span><br><span class="line">ServerName 192.168.64.170:80</span><br><span class="line"></span><br><span class="line"><span class="comment"># 221行--默认首页存放路径</span></span><br><span class="line">DocumentRoot <span class="string">&quot;/usr/local/httpd/htdocs&quot;</span></span><br><span class="line"><span class="comment"># 255行--默认首页文件名设置</span></span><br><span class="line">DirectoryIndex index.html</span><br><span class="line"></span><br><span class="line">httpd -t  或 apachectl -t      <span class="comment">#检查配置文件的配置项是否有误</span></span><br><span class="line"><span class="built_in">cat</span> /usr/local/httpd/htdocs/index.html</span><br><span class="line">systemctl restart httpd.service</span><br></pre></td></tr></table></figure>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305161504683.png" data-fancybox="true"/></div></div>
+
+<h3 id="浏览器访问验证"><a href="#浏览器访问验证" class="headerlink" title="浏览器访问验证"></a>浏览器访问验证</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.64.170</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307091928513.png" data-fancybox="true"/></div></div>
+
+<h2 id="三、编译安装mysqld-服务"><a href="#三、编译安装mysqld-服务" class="headerlink" title="三、编译安装mysqld 服务"></a>三、编译安装mysqld 服务</h2><h3 id="1-下载相关文件"><a href="#1-下载相关文件" class="headerlink" title="1.下载相关文件"></a>1.下载相关文件</h3><div class="tag-plugin link dis-select"><a class="link-card plain" title="" href="https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.18.tar.gz" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon"><div class="left"><span class="title">https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.18.tar.gz</span><span class="cap link footnote">https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.18.tar.gz</span></div><div class="right"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div></div></a></div>
+
+<div class="tag-plugin link dis-select"><a class="link-card plain" title="" href="https://downloads.sourceforge.net/project/boost/boost/1.59.0/boost_1_59_0.tar.gz" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon"><div class="left"><span class="title">https://downloads.sourceforge.net/project/boost/boost/1.59.0/boost_1_59_0.tar.gz</span><span class="cap link footnote">https://downloads.sourceforge.net/project/boost/boost/1.59.0/boost_1_59_0.tar.gz</span></div><div class="right"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div></div></a></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305161522161.png" data-fancybox="true"/></div></div>
+
+<h3 id="2-安装环境依赖包-1"><a href="#2-安装环境依赖包-1" class="headerlink" title="2.安装环境依赖包"></a>2.安装环境依赖包</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">yum -y install \</span><br><span class="line">gcc \</span><br><span class="line">gcc-c++ \</span><br><span class="line">ncurses \           <span class="comment">#字符终端下图形互动功能的动态库</span></span><br><span class="line">ncurses-devel \     <span class="comment">#ncurses开发包</span></span><br><span class="line">bison \             <span class="comment">#语法分析器</span></span><br><span class="line">cmake               <span class="comment">#mysql需要用cmake编译安装</span></span><br><span class="line">yum -y install gcc gcc-c++ ncurses ncurses-devel bison cmake</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305161510555.png" data-fancybox="true"/></div></div>
+
+<h3 id="3-配置软件模块-1"><a href="#3-配置软件模块-1" class="headerlink" title="3.配置软件模块"></a>3.配置软件模块</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt/lamp/mysql</span><br><span class="line"></span><br><span class="line">tar -zxvf mysql-5.7.18.tar.gz</span><br><span class="line">tar -zxvf boost_1_59_0.tar.gz</span><br><span class="line"><span class="built_in">mv</span> /opt/lamp/mysql/boost_1_59_0 /usr/local/boost    <span class="comment">#重命名</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> mysql-5.7.18/</span><br><span class="line">cmake \</span><br><span class="line">-DCMAKE_INSTALL_PREFIX=/usr/local/mysql \           <span class="comment">#指定mysql的安装路径</span></span><br><span class="line">-DMYSQL_UNIX_ADDR=/usr/local/mysql/mysql.sock \     <span class="comment">#指定mysql进程监听套接字文件(数据库连接文件)的存储路径           </span></span><br><span class="line">-DSYSCONFDIR=/etc \                                 <span class="comment">#指定配置文件的存储路径</span></span><br><span class="line">-DSYSTEMD_PID_DIR=/usr/local/mysql \                <span class="comment">#指定进程文件的存储路径</span></span><br><span class="line">-DDEFAULT_CHARSET=utf8  \                           <span class="comment">#指定默认使用的字符集编码,如 utf8</span></span><br><span class="line">-DDEFAULT_COLLATION=utf8_general_ci \               <span class="comment">#指定默认使用的字符集校对规则</span></span><br><span class="line">-DWITH_EXTRA_CHARSETS=all \                         <span class="comment">#指定支持其他字符集编码</span></span><br><span class="line">-DWITH_INNOBASE_STORAGE_ENGINE=1 \                  <span class="comment">#安装INNOBASE存储引擎</span></span><br><span class="line">-DWITH_ARCHIVE_STORAGE_ENGINE=1 \                   <span class="comment">#安装ARCHIVE存储引擎 </span></span><br><span class="line">-DWITH_BLACKHOLE_STORAGE_ENGINE=1 \                 <span class="comment">#安装BLACKHOLE存储引擎 </span></span><br><span class="line">-DWITH_PERFSCHEMA_STORAGE_ENGINE=1 \                <span class="comment">#安装FEDERATED存储引擎 </span></span><br><span class="line">-DMYSQL_DATADIR=/usr/local/mysql/data \             <span class="comment">#指定数据库文件的存储路径</span></span><br><span class="line">-DWITH_BOOST=/usr/local/boost \                     <span class="comment">#指定boost的路径,若使用mysql-boost集成包安装则</span></span><br><span class="line">-DWITH_BOOST=boost</span><br><span class="line">-DWITH_SYSTEMD=1                                    <span class="comment">#生成便于systemctl管理的文件</span></span><br></pre></td></tr></table></figure>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307091931984.png" data-fancybox="true"/></div></div>
+
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">cmake \</span><br><span class="line">-DCMAKE_INSTALL_PREFIX=/usr/local/mysql \</span><br><span class="line">-DMYSQL_UNIX_ADDR=/usr/local/mysql/mysql.sock \</span><br><span class="line">-DSYSCONFDIR=/etc \</span><br><span class="line">-DSYSTEMD_PID_DIR=/usr/local/mysql \</span><br><span class="line">-DDEFAULT_CHARSET=utf8  \</span><br><span class="line">-DDEFAULT_COLLATION=utf8_general_ci \</span><br><span class="line">-DWITH_EXTRA_CHARSETS=all \</span><br><span class="line">-DWITH_INNOBASE_STORAGE_ENGINE=1 \</span><br><span class="line">-DWITH_ARCHIVE_STORAGE_ENGINE=1 \</span><br><span class="line">-DWITH_BLACKHOLE_STORAGE_ENGINE=1 \</span><br><span class="line">-DWITH_PERFSCHEMA_STORAGE_ENGINE=1 \</span><br><span class="line">-DMYSQL_DATADIR=/usr/local/mysql/data \</span><br><span class="line">-DWITH_BOOST=/usr/local/boost \</span><br><span class="line">-DWITH_SYSTEMD=1</span><br></pre></td></tr></table></figure>
+
+<p>**存储引擎选项:**MYISAM,MERGE,MEMORY,和CSV引擎是默认编译到服务器中,并不需要明确地安装.<br>静态编译一个存储引擎到服务器,使用-DWITH_engine_STORAGE_ENGINE&#x3D; 1<br>可用的存储引擎值有:ARCHIVE, BLACKHOLE, EXAMPLE, FEDERATED, INNOBASE (InnoDB), PARTITION (partitioning support), 和PERFSCHEMA (Performance Schema)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">注意:如果在CMAKE的过程中有报错,当报错解决后,需要把源码目录中的CMakeCache.txt文件删除,然后再重新CMAKE,否则错误依旧</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-编译及安装-1"><a href="#4-编译及安装-1" class="headerlink" title="4.编译及安装"></a>4.编译及安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make &amp;&amp; make install</span><br><span class="line"><span class="comment"># 需要长时间等待</span></span><br></pre></td></tr></table></figure>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305161527578.png" data-fancybox="true"/></div></div>
+
+<h3 id="5-创建mysql用户"><a href="#5-创建mysql用户" class="headerlink" title="5.创建mysql用户"></a>5.创建mysql用户</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">useradd -M -s /sbin/nologin  mysql</span><br></pre></td></tr></table></figure>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305161543077.png" data-fancybox="true"/></div></div>
+
+<h3 id="6-修改mysql-配置文件"><a href="#6-修改mysql-配置文件" class="headerlink" title="6.修改mysql 配置文件"></a>6.修改mysql 配置文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/my.cnf                           <span class="comment">#删除原配置项,再重新添加下面内容</span></span><br><span class="line">[client]                                  <span class="comment">#客户端设置</span></span><br><span class="line">port = 3306</span><br><span class="line">socket=/usr/local/mysql/mysql.sock      </span><br><span class="line"></span><br><span class="line">[mysqld]                                  <span class="comment">#服务全局设置</span></span><br><span class="line">user = mysql                              <span class="comment">#设置管理用户</span></span><br><span class="line">basedir=/usr/local/mysql                  <span class="comment">#指定数据库的安装目录</span></span><br><span class="line">datadir=/usr/local/mysql/data             <span class="comment">#指定数据库文件的存储路径</span></span><br><span class="line">port = 3306                               <span class="comment">#指定端口</span></span><br><span class="line">character-set-server=utf8                 <span class="comment">#设置服务器字符集编码格式为utf8</span></span><br><span class="line">pid-file = /usr/local/mysql/mysqld.pid    <span class="comment">#指定pid 进程文件路径</span></span><br><span class="line">socket=/usr/local/mysql/mysql.sock        <span class="comment">#指定数据库连接文件</span></span><br><span class="line">bind-address = 0.0.0.0                    <span class="comment">#设置监听地址,0.0.0.0代表允许所有,如允许多个IP需空格隔开</span></span><br><span class="line">skip-name-resolve                         <span class="comment">#禁用DNS解析</span></span><br><span class="line">max_connections=2048                      <span class="comment">#设置mysql的最大连接数</span></span><br><span class="line">default-storage-engine=INNODB             <span class="comment">#指定默认存储引擎</span></span><br><span class="line">max_allowed_packet=16M                    <span class="comment">#设置数据库接收的数据包大小的最大值</span></span><br><span class="line">server-id = 1                             <span class="comment">#指定服务ID号</span></span><br><span class="line">sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_AUTO_VALUE_ON_ZERO,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,PIPES_AS_CONCAT,ANSI_QUOTES</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307091954995.png" data-fancybox="true"/></div></div>
+
+<p><strong>sql_mode常用值如下:</strong> </p>
+<table>
+<thead>
+<tr>
+<th>设置项</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>NO_ENGINE_SUBSTITUTION</code></td>
+<td>如果需要的存储引擎被禁用或未编译,那么抛出错误.不设置此值时,用默认的存储引擎替代,并抛出一个异常</td>
+</tr>
+<tr>
+<td><code>STRICT_TRANS_TABLES</code></td>
+<td>在该模式下,如果一个值不能插入到一个事务表中,则中断当前的操作,对非事务表不做限制</td>
+</tr>
+<tr>
+<td><code>NO_AUTO_CREATE_USER</code></td>
+<td>禁止GRANT语句创建密码为空的用户</td>
+</tr>
+<tr>
+<td><code>NO_AUTO_VALUE_ON_ZERO</code></td>
+<td>如果插入值为0的数据,自增长列将不会产生新的序列值,而是接受0这个值.默认情况下,自增长列是从1开始的,插入值为0的数据通常会报错</td>
+</tr>
+<tr>
+<td><code>NO_ZERO_IN_DATE</code></td>
+<td>不允许在日期值中使用月或日部分的零值</td>
+</tr>
+<tr>
+<td><code>NO_ZERO_DATE</code></td>
+<td>不允许向表中插入零日期(‘0000-00-00’),如果尝试这样做,将会抛出错误而不是警告</td>
+</tr>
+<tr>
+<td><code>ERROR_FOR_DIVISION_BY_ZERO</code></td>
+<td>在INSERT或UPDATE过程中,如果数据被零除,则产生错误而非警告.默认情况下,当数据被零除时,MySQL返回NULL</td>
+</tr>
+<tr>
+<td><code>PIPES_AS_CONCAT</code></td>
+<td>将&quot;||&quot;视为字符串的连接操作符而非逻辑或运算符,这与Oracle数据库的行为一致,并且类似于字符串的拼接函数CONCAT</td>
+</tr>
+<tr>
+<td><code>ANSI_QUOTES</code></td>
+<td>当启用ANSI_QUOTES时,不能使用双引号来引用字符串,因为它会被解释为标识符(如表名或列名)</td>
+</tr>
+</tbody></table>
+<h3 id="7-更改mysql安装目录和配置文件的属主属组"><a href="#7-更改mysql安装目录和配置文件的属主属组" class="headerlink" title="7.更改mysql安装目录和配置文件的属主属组"></a>7.更改mysql安装目录和配置文件的属主属组</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chown</span> -R mysql:mysql /usr/local/mysql</span><br><span class="line"><span class="built_in">chown</span> mysql:mysql /etc/my.cnf</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305181928050.png" data-fancybox="true"/></div></div>
+
+<h3 id="8-设置路径环境变量"><a href="#8-设置路径环境变量" class="headerlink" title="8.设置路径环境变量"></a>8.设置路径环境变量</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export PATH=/usr/local/mysql/bin:/usr/local/mysql/lib:$PATH&#x27;</span> &gt;&gt; /etc/profile	</span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305181929611.png" data-fancybox="true"/></div></div>
+
+<h3 id="9-初始化数据库"><a href="#9-初始化数据库" class="headerlink" title="9.初始化数据库"></a>9.初始化数据库</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/local/mysql/bin/</span><br><span class="line">./mysqld \</span><br><span class="line">--initialize-insecure \				<span class="comment">#生成初始化密码为空</span></span><br><span class="line">--user=mysql \                      <span class="comment">#指定管理用户</span></span><br><span class="line">--basedir=/usr/local/mysql \        <span class="comment">#指定数据库的安装目录</span></span><br><span class="line">--datadir=/usr/local/mysql/data		<span class="comment">#指定数据库文件的存储路径</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/local/mysql/bin/</span><br><span class="line">./mysqld \</span><br><span class="line">--initialize-insecure \</span><br><span class="line">--user=mysql \</span><br><span class="line">--basedir=/usr/local/mysql \</span><br><span class="line">--datadir=/usr/local/mysql/data</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305181931846.png" data-fancybox="true"/></div></div>
+
+<h3 id="10-添加mysqld系统服务"><a href="#10-添加mysqld系统服务" class="headerlink" title="10.添加mysqld系统服务"></a>10.添加mysqld系统服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> /usr/local/mysql/usr/lib/systemd/system/mysqld.service /usr/lib/systemd/system/		<span class="comment">#用于systemctl服务管理</span></span><br><span class="line">systemctl daemon-reload         <span class="comment">#刷新识别     </span></span><br><span class="line">systemctl start mysqld.service  <span class="comment">#开启服务</span></span><br><span class="line">systemctl <span class="built_in">enable</span> mysqld         <span class="comment">#开机自启动</span></span><br><span class="line">netstat -anpt | grep 3306       <span class="comment">#查看端口</span></span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202305181932074.png" data-fancybox="true"/></div></div>
+
+<h3 id="11-修改mysql-的登录密码"><a href="#11-修改mysql-的登录密码" class="headerlink" title="11.修改mysql 的登录密码"></a>11.修改mysql 的登录密码</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqladmin -u root -p password <span class="string">&quot;123456&quot;</span> 	<span class="comment">#给root账号设置密码为123456,提示输入的是原始密码(为空)</span></span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307091957629.png" data-fancybox="true"/></div></div>
+
+<h3 id="12-授权远程登录"><a href="#12-授权远程登录" class="headerlink" title="12.授权远程登录"></a>12.授权远程登录</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysql <span class="operator">-</span>u root <span class="operator">-</span>p</span><br><span class="line"><span class="keyword">grant</span> <span class="keyword">all</span> privileges <span class="keyword">on</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">to</span> <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;%&#x27;</span> identified <span class="keyword">by</span> <span class="string">&#x27;123456&#x27;</span>;</span><br><span class="line"><span class="comment">--授予root用户可以在所有终端远程登录,使用的密码是123456,并对所有数据库和所有表有操作权限</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">show</span> databases;			<span class="comment">--查看当前已有的数据库</span></span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307091959895.png" data-fancybox="true"/></div></div>
+
+
+
+<h2 id="四、编译安装PHP-解析环境"><a href="#四、编译安装PHP-解析环境" class="headerlink" title="四、编译安装PHP 解析环境"></a>四、编译安装PHP 解析环境</h2><h3 id="1-下载相关文件-1"><a href="#1-下载相关文件-1" class="headerlink" title="1.下载相关文件"></a>1.下载相关文件</h3><div class="tag-plugin link dis-select"><a class="link-card plain" title="" href="https://museum.php.net/php7/php-7.1.24.tar.gz" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon"><div class="left"><span class="title">https://museum.php.net/php7/php-7.1.24.tar.gz</span><span class="cap link footnote">https://museum.php.net/php7/php-7.1.24.tar.gz</span></div><div class="right"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div></div></a></div>
+
+<div class="tag-plugin link dis-select"><a class="link-card rich" title="" href="https://gitee.com/3dming/DiscuzL/attach_files" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon,desc"><div class="top"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg"></div><span class="cap link footnote">https://gitee.com/3dming/DiscuzL/attach_files</span></div><div class="bottom"><span class="title">https://gitee.com/3dming/DiscuzL/attach_files</span><span class="cap desc footnote"></span></div></a></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092002018.png" data-fancybox="true"/></div></div>
+
+<h3 id="2-安装GD库和GD库关联程序-用来处理和生成图片"><a href="#2-安装GD库和GD库关联程序-用来处理和生成图片" class="headerlink" title="2.安装GD库和GD库关联程序,用来处理和生成图片"></a>2.安装GD库和GD库关联程序,用来处理和生成图片</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install gd libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel libxml2 libxml2-devel zlib zlib-devel curl curl-devel openssl openssl-devel</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092003211.png" data-fancybox="true"/></div></div>
+
+<h3 id="3-配置软件模块-2"><a href="#3-配置软件模块-2" class="headerlink" title="3.配置软件模块"></a>3.配置软件模块</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt/lamp/php</span><br><span class="line">tar -zxvf php-7.1.24.tar.gz</span><br><span class="line"><span class="built_in">cd</span> php-7.1.24/</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">./configure \</span><br><span class="line">--prefix=/usr/local/php7 \							<span class="comment">#指定将 PHP 程序的安装路径</span></span><br><span class="line">--with-apxs2=/usr/local/httpd/bin/apxs \			<span class="comment">#指定Apache httpd服务提供的apxs 模块支持程序的文件位置</span></span><br><span class="line">--with-mysql-sock=/usr/local/mysql/mysql.sock \		<span class="comment">#指定mysql 数据库连接文件的存储路径</span></span><br><span class="line">--with-config-file-path=/usr/local/php7				<span class="comment">#设置 PHP 的配置文件 php.ini 将要存放的位置</span></span><br><span class="line">--with-mysqli \										<span class="comment">#添加 MySQL 扩展支持 #mysqli扩展技术不仅可以调用MySQL的存储过程、处理MySQL事务,而且还可以使访问数据库工作变得更加稳定</span></span><br><span class="line">--with-zlib \										<span class="comment">#支持zlib功能,提供数据压缩</span></span><br><span class="line">--with-curl \										<span class="comment">#开启curl扩展功能,实现HTTP的Get下载和Post请求的方法</span></span><br><span class="line">--with-gd \											<span class="comment">#激活gd 库的支持</span></span><br><span class="line">--with-jpeg-dir \									<span class="comment">#激活jpeg 的支持</span></span><br><span class="line">--with-png-dir \									<span class="comment">#激活png 的支持</span></span><br><span class="line">--with-freetype-dir \</span><br><span class="line">--with-openssl \</span><br><span class="line">--enable-mbstring \									<span class="comment">#启用多字节字符串功能,以便支持中文等代码</span></span><br><span class="line">--enable-xml \										<span class="comment">#开启扩展性标记语言模块</span></span><br><span class="line">--enable-session \									<span class="comment">#会话</span></span><br><span class="line">--enable-ftp \										<span class="comment">#文本传输协议</span></span><br><span class="line">--enable-pdo \										<span class="comment">#函数库</span></span><br><span class="line">--enable-tokenizer \								<span class="comment">#令牌解释器</span></span><br><span class="line">--enable-zip										<span class="comment">#ZIP压缩格式</span></span><br><span class="line">--enable-fpm										<span class="comment"># php-fpm 与nignx联动</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure --prefix=/usr/local/php7 --with-apxs2=/usr/local/httpd/bin/apxs --with-mysql-sock=/usr/local/mysql/mysql.sock --with-config-file-path=/usr/local/php7 --with-mysqli --with-zlib --with-curl --with-gd --with-jpeg-dir --with-png-dir --with-freetype-dir --with-openssl --enable-mbstring --enable-xml --enable-session --enable-ftp --enable-pdo --enable-tokenizer --enable-zip --enable-fpm</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092006942.png" data-fancybox="true"/></div></div>
+
+<h3 id="4-编译及安装-2"><a href="#4-编译及安装-2" class="headerlink" title="4.编译及安装"></a>4.编译及安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092007488.png" data-fancybox="true"/></div></div>
+
+<h3 id="5-复制模版文件作为PHP-的主配置文件-并进行修改"><a href="#5-复制模版文件作为PHP-的主配置文件-并进行修改" class="headerlink" title="5.复制模版文件作为PHP 的主配置文件,并进行修改"></a>5.复制模版文件作为PHP 的主配置文件,并进行修改</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#在测试环境时使用php.ini-development文件,而在生产环境时使用php.ini-production文件</span></span><br><span class="line"><span class="built_in">cp</span> /opt/lamp/php/php-7.1.24/php.ini-development /usr/local/php7/php.ini	</span><br><span class="line"><span class="built_in">cp</span> /usr/local/php7/etc/php-fpm.conf.default /usr/local/php7/etc/php-fpm.conf</span><br><span class="line"><span class="built_in">cp</span> /usr/local/php7/etc/php-fpm.d/www.conf.default /usr/local/php7/etc/php-fpm.d/www.conf</span><br><span class="line"></span><br><span class="line">vim /usr/local/php7/php.ini</span><br><span class="line">--939行--取消注释,修改</span><br><span class="line">date.timezone = Asia/Shanghai</span><br><span class="line">--1170行--修改</span><br><span class="line">mysqli.default_socket = /usr/local/mysql/mysql.sock</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092014153.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092014831.png" data-fancybox="true"/></div></div>
+
+<h3 id="6-优化把PHP-的可执行程序文件放入路径环境变量的目录中便于系统识别"><a href="#6-优化把PHP-的可执行程序文件放入路径环境变量的目录中便于系统识别" class="headerlink" title="6.优化把PHP 的可执行程序文件放入路径环境变量的目录中便于系统识别"></a>6.优化把PHP 的可执行程序文件放入路径环境变量的目录中便于系统识别</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s /usr/local/php7/bin/* /usr/local/bin/</span><br><span class="line"><span class="built_in">ln</span> -s /usr/local/php7/sbin/php-fpm /usr/sbin/php7-fpm</span><br><span class="line">php -m 			<span class="comment">#查看PHP 加载了哪些模块</span></span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092015505.png" data-fancybox="true"/></div></div>
+
+<h3 id="7-修改httpd服务的配置文件-让apache支持PHP"><a href="#7-修改httpd服务的配置文件-让apache支持PHP" class="headerlink" title="7.修改httpd服务的配置文件,让apache支持PHP"></a>7.修改httpd服务的配置文件,让apache支持PHP</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/httpd.conf </span><br><span class="line">---160行检查支持php7的模块是否存在------</span><br><span class="line">LoadModule php7_module        modules/libphp7.so</span><br><span class="line"></span><br><span class="line">--256行--修改首页文件名设置</span><br><span class="line">DirectoryIndex index.html index.php</span><br><span class="line"></span><br><span class="line">--397行--插入以下内容</span><br><span class="line">AddType application/x-httpd-php .php</span><br><span class="line">AddType application/x-httpd-php-source .phps</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092017515.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092017012.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092018347.png" data-fancybox="true"/></div></div>
+
+<h3 id="8-验证PHP测试页"><a href="#8-验证PHP测试页" class="headerlink" title="8.验证PHP测试页"></a>8.验证PHP测试页</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rm</span> -rf /usr/local/httpd/htdocs/index.html</span><br><span class="line">vim /usr/local/httpd/htdocs/index.php</span><br><span class="line">&lt;?php</span><br><span class="line">phpinfo();</span><br><span class="line">?&gt;</span><br><span class="line"></span><br><span class="line">systemctl restart httpd.service</span><br><span class="line"><span class="comment"># 启动fpm</span></span><br><span class="line">php7-fpm</span><br><span class="line">浏览器访问</span><br><span class="line">http://192.168.64.170/</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092022215.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092022464.png" data-fancybox="true"/></div></div>
+
+<h2 id="五、安装论坛"><a href="#五、安装论坛" class="headerlink" title="五、安装论坛"></a>五、安装论坛</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br><span class="line"></span><br><span class="line">mysql&gt; CREATE DATABASE dz;</span><br><span class="line"></span><br><span class="line"><span class="comment">#把dz数据库里面所有表的权限授予给dz,并设置密码</span></span><br><span class="line"><span class="comment"># mysql&gt; GRANT all ON dz.* TO &#x27;dz&#x27;@&#x27;%&#x27; IDENTIFIED BY &#x27;123456&#x27;;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#刷新数据库</span></span><br><span class="line">mysql&gt;flush privileges;</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> /opt/lamp</span><br><span class="line"><span class="comment">#解压论坛压缩包</span></span><br><span class="line">unzip Discuz-X3.4-SC-GBK-v20230315.zip -d /opt/dz</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> /opt/dz</span><br><span class="line"><span class="comment">#上传站点更新包</span></span><br><span class="line"><span class="built_in">cp</span> -r upload/* /usr/local/httpd/htdocs/</span><br><span class="line"></span><br><span class="line"><span class="comment">#切换论坛目录</span></span><br><span class="line"><span class="built_in">cd</span> /usr/local/httpd/htdocs/</span><br><span class="line"></span><br><span class="line"><span class="comment">#更改论坛目录属主(httpd安装若改配置文件为apache,则下方命令将daemon改为apache,并创建apache用户)</span></span><br><span class="line"><span class="built_in">chown</span> -R daemon ./config</span><br><span class="line"><span class="built_in">chown</span> -R daemon ./data</span><br><span class="line"><span class="built_in">chown</span> -R daemon ./uc_client</span><br><span class="line"><span class="built_in">chown</span> -R daemon ./uc_server/data</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">数据库服务器:localhost  <span class="comment">#本地架设就用localhost,如果不是在本机上就要填写IP地址和端口号</span></span><br><span class="line">数据库名字:bbs</span><br><span class="line">数据库用户名:bbuser</span><br><span class="line">数据库密码:自行输入</span><br><span class="line">管理员账号:admin</span><br><span class="line">管理员密码:自行输入 </span><br></pre></td></tr></table></figure>
+
+<h3 id="1-创建一个数据库"><a href="#1-创建一个数据库" class="headerlink" title="1.创建一个数据库"></a>1.创建一个数据库</h3><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092025442.png" data-fancybox="true"/></div></div>
+
+<h3 id="2-解压论坛压缩包"><a href="#2-解压论坛压缩包" class="headerlink" title="2.解压论坛压缩包"></a>2.解压论坛压缩包</h3><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092028417.png" data-fancybox="true"/></div></div>
+
+<h3 id="3-上传站点更新包"><a href="#3-上传站点更新包" class="headerlink" title="3.上传站点更新包"></a>3.上传站点更新包</h3><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092030027.png" data-fancybox="true"/></div></div>
+
+<h3 id="4-更改论坛目录属主"><a href="#4-更改论坛目录属主" class="headerlink" title="4.更改论坛目录属主"></a>4.更改论坛目录属主</h3><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092030657.png" data-fancybox="true"/></div></div>
+
+<h3 id="5-验证是否能登陆并注册用户"><a href="#5-验证是否能登陆并注册用户" class="headerlink" title="5.验证是否能登陆并注册用户"></a>5.验证是否能登陆并注册用户</h3><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092031568.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092033940.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092033837.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092034546.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092035597.png" data-fancybox="true"/></div></div>
+
+
+
+
+
+
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092036711.png" data-fancybox="true"/></div></div> <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092036147.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092036980.png" data-fancybox="true"/></div></div>
+
+<h2 id="六、编译安装Nginx-Openresty服务-扩展与Apache二选一"><a href="#六、编译安装Nginx-Openresty服务-扩展与Apache二选一" class="headerlink" title="六、编译安装Nginx-Openresty服务(扩展与Apache二选一)"></a>六、编译安装Nginx-Openresty服务(扩展与Apache二选一)</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载依赖环境</span></span><br><span class="line">yum install -y deltarpm gcc gcc-c++ unixODBC-devel httpd mysql-devel libcurl libcurl-devel libevent libevent-devel curl-devel libxml2  libxml2-devel  net-snmp-devel pcre-devel  java-devel openssl-devel perl-ExtUtils-Embed at python subversion gperf make rpm-build git bzip2-devel gd gd-devel t1lib t1lib-devel GeoIP-devel libatomic_ops-devel zlib-devel unzip libstdc++* net-snmp net-snmp* gmp gmp-devel openldap openldap-devel libpcap-devel glib2-devel GeoIP-devel vim wget git libtool make automake mlocate pam-devel unzip screen openssl iptables-services bash-completion*  libxslt*  curl net-tools libssh2-devel</span><br><span class="line"><span class="comment">#进入opt目录</span></span><br><span class="line"><span class="built_in">cd</span> /opt</span><br><span class="line"><span class="comment">#下载Openresty二进制文件</span></span><br><span class="line">wget https://openresty.org/download/openresty-1.21.4.1.tar.gz </span><br><span class="line"><span class="comment">#解压压缩包</span></span><br><span class="line">tar -zxvf openresty-1.21.4.1.tar.gz</span><br><span class="line"><span class="comment">#进入到openresty-1.21.4.1/目录</span></span><br><span class="line"><span class="built_in">cd</span> openresty-1.21.4.1/</span><br><span class="line"></span><br><span class="line"><span class="comment">#准备编译参数</span></span><br><span class="line">./configure --prefix=/usr/local/nginx --sbin-path=/usr/sbin/nginx --conf-path=/usr/local/nginx/nginx.conf --pid-path=/var/run/nginx.pid --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --lock-path=/var/lock/nginx.lock --with-luajit --with-http_gunzip_module --with-pcre --with-pcre-jit --with-http_perl_module --with-ld-opt=<span class="string">&quot;-Wl,-rpath,/usr/local/nginx/luajit/lib -Wl,-E&quot;</span> --with-http_realip_module --with-http_secure_link_module --with-http_slice_module --with-http_ssl_module --with-http_stub_status_module --with-http_sub_module --with-http_v2_module --with-http_addition_module --with-http_xslt_module --with-http_image_filter_module --with-http_geoip_module --with-http_dav_module --with-http_flv_module --with-http_mp4_module --with-http_gzip_static_module --with-http_auth_request_module --with-http_random_index_module --with-select_module --with-poll_module --with-file-aio --with-http_degradation_module --with-libatomic --http-client-body-temp-path=/var/tmp/nginx/client_body --http-proxy-temp-path=/var/tmp/nginx/proxy --http-fastcgi-temp-path=/var/tmp/nginx/fastcgi --http-uwsgi-temp-path=/var/tmp/nginx/uwsgi --http-scgi-temp-path=/var/tmp/nginx/scgi</span><br><span class="line"><span class="comment">#编译&amp;安装</span></span><br><span class="line">make&amp;&amp;make install</span><br><span class="line"><span class="comment"># 检查环境</span></span><br><span class="line">nginx -t</span><br><span class="line"><span class="comment"># 创建相关文件和文件夹</span></span><br><span class="line"><span class="built_in">mkdir</span> -p /var/tmp/nginx/client_body</span><br><span class="line"><span class="built_in">mkdir</span> -p /usr/local/nginx/nginx/logs/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动nginx</span></span><br><span class="line">nginx</span><br><span class="line"><span class="comment"># 停止nginx</span></span><br><span class="line">nginx -s stop</span><br><span class="line"></span><br><span class="line"><span class="comment"># 访问http://192.168.64.170/</span></span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092050301.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092040524.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092052186.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092054803.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092055730.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092055161.png" data-fancybox="true"/></div></div>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将dz的源代码复制到nginx默认的网站根目录里</span></span><br><span class="line"><span class="built_in">cp</span> -r /usr/lcoal/httpd/htdocs/* /usr/local/nginx/nginx/html</span><br><span class="line"><span class="comment">#编辑nginx.conf配置文件</span></span><br><span class="line">vim /usr/local/nginx/nginx.conf</span><br><span class="line"></span><br><span class="line"><span class="comment">#nginx.conf配置项</span></span><br><span class="line"> location / &#123;</span><br><span class="line"> 			<span class="comment"># 如果安装dz论坛的话,把下方的html改成dz论坛所在的绝对路径,或者将文件都移动到/usr/local/nginx/nginx/html/</span></span><br><span class="line"> 			<span class="comment"># 记得重新赋予权限</span></span><br><span class="line">            root   html;</span><br><span class="line">            index  index.html index.htm index.php;</span><br><span class="line">        &#125;</span><br><span class="line"> location ~ \.php$ &#123;</span><br><span class="line">            root           html;</span><br><span class="line">            fastcgi_pass   127.0.0.1:9000;</span><br><span class="line">            fastcgi_index  index.php;</span><br><span class="line">            fastcgi_param  SCRIPT_FILENAME  <span class="variable">$document_root</span>/<span class="variable">$fastcgi_script_name</span>;</span><br><span class="line">            include        fastcgi_params;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#检查nginx配置文件是否正确</span></span><br><span class="line">nginx -t</span><br><span class="line"></span><br><span class="line"><span class="comment">#启动nginx</span></span><br><span class="line">nginx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重新赋予权限</span></span><br><span class="line"><span class="built_in">chown</span> -R nobody ./config</span><br><span class="line"><span class="built_in">chown</span> -R nobody ./data</span><br><span class="line"><span class="built_in">chown</span> -R nobody ./uc_client</span><br><span class="line"><span class="built_in">chown</span> -R nobody ./uc_server/data</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092058072.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092058806.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092059192.png" data-fancybox="true"/></div></div>
+
+<p><strong>上面图片里倒数第三行多了个;记得删掉</strong></p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092101005.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092117782.png" data-fancybox="true"/></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307092117326.png" data-fancybox="true"/></div></div>
+
+<h2 id="七、总结"><a href="#七、总结" class="headerlink" title="七、总结"></a>七、总结</h2><p><strong>1.Apache编译安装方法</strong></p>
+<p><strong>2.httpd服务支持的虚拟主机类型</strong></p>
+<p><strong>3.MySQL数据库编译安装方法</strong></p>
+<p><strong>4.构建PHP运行环境的方法</strong></p>
+<p><strong>5.部署及使用phpMyAdmin系统的方法</strong></p>
+<p><strong>6.Nginx编译安装方法</strong></p>
+
+<div class="article-footer fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2024/01/28/afbfc1f7/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2024/01/28/afbfc1f7/&title=Linux-Web服务器搭建的艺术 - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401271250757.png&summary=
+    总字符数: 22.19K 
+    
+    
+    代码: 13.09K, 文本: 2.54K
+    
+    
+    预计阅读时间: 1.13 小时
+    
+    
+
+引言:
+LAMP架构是目前成熟的企业网站应..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=Linux-Web服务器搭建的艺术 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2024/01/28/afbfc1f7/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2024/01/28/afbfc1f7/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2024/01/29/2e455f59/">Linux-MySQL从入门到精通(上)</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2024/01/27/81fbba05/">Linux-Web服务器的概念</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="\2024\01\27\81fbba05\" title="Linux-Web服务器的概念"><span class="title">Linux-Web服务器的概念</span></a><a class="item" href="\2024\01\29\2e455f59\" title="Linux-MySQL从入门到精通(上)"><span class="title">Linux-MySQL从入门到精通(上)</span></a><a class="item" href="\2024\01\31\375e6e18\" title="Linux-MySQL从入门到精通(下)"><span class="title">Linux-MySQL从入门到精通(下)</span></a><a class="item" href="\2021\09\07\fc81f96\" title="Linux-Mysql主主架构"><span class="title">Linux-Mysql主主架构</span></a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body waline'>
+      
+
+<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/tools/">工具</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%A8%80"><span class="toc-text">引言:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81LAMP%E6%A6%82%E8%BF%B0"><span class="toc-text">一、LAMP概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81%E5%90%84%E7%BB%84%E4%BB%B6%E4%BD%9C%E7%94%A8"><span class="toc-text">1、各组件作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81%E5%90%84%E7%BB%84%E4%BB%B6%E5%AE%89%E8%A3%85%E9%A1%BA%E5%BA%8F"><span class="toc-text">2、各组件安装顺序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%95%B0%E6%8D%AE%E6%B5%81%E5%90%91"><span class="toc-text">3.数据流向</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85Apache-httpd%E6%9C%8D%E5%8A%A1"><span class="toc-text">二、编译安装Apache httpd服务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%85%B3%E9%97%AD%E9%98%B2%E7%81%AB%E5%A2%99-%E5%B0%86%E5%AE%89%E8%A3%85Apache%E6%89%80%E9%9C%80%E8%BD%AF%E4%BB%B6%E5%8C%85%E4%BC%A0%E5%88%B0-opt%E7%9B%AE%E5%BD%95%E4%B8%8B"><span class="toc-text">1.关闭防火墙,将安装Apache所需软件包传到&#x2F;opt目录下</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E4%BE%9D%E8%B5%96%E5%8C%85"><span class="toc-text">2.安装环境依赖包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E9%85%8D%E7%BD%AE%E8%BD%AF%E4%BB%B6%E6%A8%A1%E5%9D%97"><span class="toc-text">3.配置软件模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E7%BC%96%E8%AF%91%E5%8F%8A%E5%AE%89%E8%A3%85"><span class="toc-text">4.编译及安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E4%BC%98%E5%8C%96%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%B7%AF%E5%BE%84-%E5%B9%B6%E6%8A%8Ahttpd%E6%9C%8D%E5%8A%A1%E7%9A%84%E5%8F%AF%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E6%96%87%E4%BB%B6%E6%94%BE%E5%85%A5%E8%B7%AF%E5%BE%84%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E7%9A%84%E7%9B%AE%E5%BD%95%E4%B8%AD%E4%BE%BF%E4%BA%8E%E7%B3%BB%E7%BB%9F%E8%AF%86%E5%88%AB"><span class="toc-text">5.优化配置文件路径,并把httpd服务的可执行程序文件放入路径环境变量的目录中便于系统识别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E6%B7%BB%E5%8A%A0httpd%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1"><span class="toc-text">6.添加httpd系统服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E4%BF%AE%E6%94%B9httpd-%E6%9C%8D%E5%8A%A1%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-text">7.修改httpd 服务配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E8%AE%BF%E9%97%AE%E9%AA%8C%E8%AF%81"><span class="toc-text">浏览器访问验证</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85mysqld-%E6%9C%8D%E5%8A%A1"><span class="toc-text">三、编译安装mysqld 服务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%B8%8B%E8%BD%BD%E7%9B%B8%E5%85%B3%E6%96%87%E4%BB%B6"><span class="toc-text">1.下载相关文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E4%BE%9D%E8%B5%96%E5%8C%85-1"><span class="toc-text">2.安装环境依赖包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E9%85%8D%E7%BD%AE%E8%BD%AF%E4%BB%B6%E6%A8%A1%E5%9D%97-1"><span class="toc-text">3.配置软件模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E7%BC%96%E8%AF%91%E5%8F%8A%E5%AE%89%E8%A3%85-1"><span class="toc-text">4.编译及安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%88%9B%E5%BB%BAmysql%E7%94%A8%E6%88%B7"><span class="toc-text">5.创建mysql用户</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E4%BF%AE%E6%94%B9mysql-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-text">6.修改mysql 配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E6%9B%B4%E6%94%B9mysql%E5%AE%89%E8%A3%85%E7%9B%AE%E5%BD%95%E5%92%8C%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E7%9A%84%E5%B1%9E%E4%B8%BB%E5%B1%9E%E7%BB%84"><span class="toc-text">7.更改mysql安装目录和配置文件的属主属组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-%E8%AE%BE%E7%BD%AE%E8%B7%AF%E5%BE%84%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-text">8.设置路径环境变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-%E5%88%9D%E5%A7%8B%E5%8C%96%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-text">9.初始化数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-%E6%B7%BB%E5%8A%A0mysqld%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1"><span class="toc-text">10.添加mysqld系统服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#11-%E4%BF%AE%E6%94%B9mysql-%E7%9A%84%E7%99%BB%E5%BD%95%E5%AF%86%E7%A0%81"><span class="toc-text">11.修改mysql 的登录密码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-%E6%8E%88%E6%9D%83%E8%BF%9C%E7%A8%8B%E7%99%BB%E5%BD%95"><span class="toc-text">12.授权远程登录</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85PHP-%E8%A7%A3%E6%9E%90%E7%8E%AF%E5%A2%83"><span class="toc-text">四、编译安装PHP 解析环境</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%B8%8B%E8%BD%BD%E7%9B%B8%E5%85%B3%E6%96%87%E4%BB%B6-1"><span class="toc-text">1.下载相关文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%AE%89%E8%A3%85GD%E5%BA%93%E5%92%8CGD%E5%BA%93%E5%85%B3%E8%81%94%E7%A8%8B%E5%BA%8F-%E7%94%A8%E6%9D%A5%E5%A4%84%E7%90%86%E5%92%8C%E7%94%9F%E6%88%90%E5%9B%BE%E7%89%87"><span class="toc-text">2.安装GD库和GD库关联程序,用来处理和生成图片</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E9%85%8D%E7%BD%AE%E8%BD%AF%E4%BB%B6%E6%A8%A1%E5%9D%97-2"><span class="toc-text">3.配置软件模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E7%BC%96%E8%AF%91%E5%8F%8A%E5%AE%89%E8%A3%85-2"><span class="toc-text">4.编译及安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%A4%8D%E5%88%B6%E6%A8%A1%E7%89%88%E6%96%87%E4%BB%B6%E4%BD%9C%E4%B8%BAPHP-%E7%9A%84%E4%B8%BB%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-%E5%B9%B6%E8%BF%9B%E8%A1%8C%E4%BF%AE%E6%94%B9"><span class="toc-text">5.复制模版文件作为PHP 的主配置文件,并进行修改</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E4%BC%98%E5%8C%96%E6%8A%8APHP-%E7%9A%84%E5%8F%AF%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E6%96%87%E4%BB%B6%E6%94%BE%E5%85%A5%E8%B7%AF%E5%BE%84%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E7%9A%84%E7%9B%AE%E5%BD%95%E4%B8%AD%E4%BE%BF%E4%BA%8E%E7%B3%BB%E7%BB%9F%E8%AF%86%E5%88%AB"><span class="toc-text">6.优化把PHP 的可执行程序文件放入路径环境变量的目录中便于系统识别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E4%BF%AE%E6%94%B9httpd%E6%9C%8D%E5%8A%A1%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-%E8%AE%A9apache%E6%94%AF%E6%8C%81PHP"><span class="toc-text">7.修改httpd服务的配置文件,让apache支持PHP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-%E9%AA%8C%E8%AF%81PHP%E6%B5%8B%E8%AF%95%E9%A1%B5"><span class="toc-text">8.验证PHP测试页</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%AE%89%E8%A3%85%E8%AE%BA%E5%9D%9B"><span class="toc-text">五、安装论坛</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-text">1.创建一个数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%A7%A3%E5%8E%8B%E8%AE%BA%E5%9D%9B%E5%8E%8B%E7%BC%A9%E5%8C%85"><span class="toc-text">2.解压论坛压缩包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E4%B8%8A%E4%BC%A0%E7%AB%99%E7%82%B9%E6%9B%B4%E6%96%B0%E5%8C%85"><span class="toc-text">3.上传站点更新包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%9B%B4%E6%94%B9%E8%AE%BA%E5%9D%9B%E7%9B%AE%E5%BD%95%E5%B1%9E%E4%B8%BB"><span class="toc-text">4.更改论坛目录属主</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E9%AA%8C%E8%AF%81%E6%98%AF%E5%90%A6%E8%83%BD%E7%99%BB%E9%99%86%E5%B9%B6%E6%B3%A8%E5%86%8C%E7%94%A8%E6%88%B7"><span class="toc-text">5.验证是否能登陆并注册用户</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85Nginx-Openresty%E6%9C%8D%E5%8A%A1-%E6%89%A9%E5%B1%95%E4%B8%8EApache%E4%BA%8C%E9%80%89%E4%B8%80"><span class="toc-text">六、编译安装Nginx-Openresty服务(扩展与Apache二选一)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E6%80%BB%E7%BB%93"><span class="toc-text">七、总结</span></a></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js`,
+    marked: `https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+    
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function(response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function(data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function(error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+  };
+</script>
+
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.27.0" async></script>
+
+<!-- optional -->
+
+  <script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js'
+
+  function load_comment(){
+    if(!document.getElementById("waline_container"))return;
+
+    utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css');
+
+    const el = document.getElementById("waline_container");
+    var path = el.getAttribute('comment_id');
+    if (!path) {
+      path = decodeURI(window.location.pathname);
+    }
+
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+      el: '#waline_container',
+      path: path,
+      
+    }));
+
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    load_comment();
+  });
+
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"></script><script defer src="https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.swiper-slide img, .gallery img ,#waline_container .vcontent img`,
+    css: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css`,
+    js: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || null
+        }
+      });
+    })
+  }
+</script><script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          loop: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+<script type="text/javascript" src="/js/darkmode.js"></script>
+</div></body></html>
