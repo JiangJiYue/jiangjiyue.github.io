@@ -89,7 +89,6 @@ function formatThreats() {
     var content = input.value.trim(); // 移除内容前后的空白
     var lines = content.split('\n').map(item => item.trim()); // 移除每个元素前后的空白
     lines = lines.filter(line => line !== ''); // 去除空行
-    console.log(lines)
     // 将每行数据转换为描述文本
     var descriptions = lines.map((line, index) => {
         // 分割行为事件和次数
@@ -98,7 +97,7 @@ function formatThreats() {
         var count = parseInt(parts[1], 10);
 
         // 格式化描述，最后一个事件后面不加顿号
-        return `${threat} ${count}次${index < lines.length - 1 ? '、' : ''}`;
+        return `${threat.toLowerCase()} ${count}次${index < lines.length - 1 ? '、' : ''}`;
     });
     // 移除最后一个顿号
     var result = descriptions.join('');
