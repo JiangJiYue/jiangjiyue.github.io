@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.27.0" theme-name="Stellar" theme-version="1.27.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.29.1" theme-name="Stellar" theme-version="1.29.1">
   
   <meta name="generator" content="Hexo 7.3.0">
   <meta http-equiv='x-dns-prefetch-control' content='on' />
@@ -14,17 +14,18 @@
   <meta name="HandheldFriendly" content="True" >
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="theme-color" content="#f8f8f8">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
+  <meta name="theme-color" content="#f9fafb">
   
   <title>MiddlewareDocs：一. Nginx从入门到精通(上) - SafeKiller Zone</title>
 
   
-    <meta name="description" content="总字符数: 8.92K                代码: 2.68K, 文本: 3.27K               预计阅读时间: 26 分钟             examples目录中的示例模拟了工作中的一些常用实战场景,并且都可以通过脚本一键式启动,让您可以快速看到演示效果.  Nginx 简介什么是 NginxNginx (engine x) 是一款轻量级的 Web 服">
+    <meta name="description" content="总字符数: 8.07K 代码: 2.68K, 文本: 3.21K预计阅读时间: 26 分钟             Examples目录中的示例模拟了工作中的一些常用实战场景,并且都可以通过脚本一键式启动,让您可以快速看到演示效果.  Nginx 简介什么是 NginxNginx (Engine X) 是一款轻量级的 Web 服务器 、反向代理服务器及电子邮件(IMAP&#x2F;POP">
 <meta property="og:type" content="website">
 <meta property="og:title" content="一. Nginx从入门到精通(上)">
 <meta property="og:url" content="https://jiangjiyue.github.io/wiki/MiddlewareDocs/%E4%B8%80.%20Nginx%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A(%E4%B8%8A).html">
 <meta property="og:site_name" content="SafeKiller Zone">
-<meta property="og:description" content="总字符数: 8.92K                代码: 2.68K, 文本: 3.27K               预计阅读时间: 26 分钟             examples目录中的示例模拟了工作中的一些常用实战场景,并且都可以通过脚本一键式启动,让您可以快速看到演示效果.  Nginx 简介什么是 NginxNginx (engine x) 是一款轻量级的 Web 服">
+<meta property="og:description" content="总字符数: 8.07K 代码: 2.68K, 文本: 3.21K预计阅读时间: 26 分钟             Examples目录中的示例模拟了工作中的一些常用实战场景,并且都可以通过脚本一键式启动,让您可以快速看到演示效果.  Nginx 简介什么是 NginxNginx (Engine X) 是一款轻量级的 Web 服务器 、反向代理服务器及电子邮件(IMAP&#x2F;POP">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402102136343.png">
 <meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402102136739.png">
@@ -46,7 +47,7 @@
 <meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307111807831.png">
 <meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307111808301.png">
 <meta property="article:published_time" content="2024-01-25T23:43:45.000Z">
-<meta property="article:modified_time" content="2024-02-10T13:38:04.000Z">
+<meta property="article:modified_time" content="2025-05-13T00:28:48.451Z">
 <meta property="article:author" content="Kill3r">
 <meta property="article:tag" content="安全运维">
 <meta property="article:tag" content="中间件">
@@ -64,7 +65,8 @@
     <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
   
 
-  <link rel="stylesheet" href="/css/main.css?v=1.27.0">
+  <link rel="stylesheet" href="/css/main.css?v=1.29.1">
+
 
   
     <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
@@ -93,11 +95,11 @@
 
 <widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">Nginx</span></div><div class="widget-body fs14"><a class="link active" href="/wiki/MiddlewareDocs/%E4%B8%80.%20Nginx%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A(%E4%B8%8A).html#start"><span class="toc-text">一. Nginx从入门到精通(上)</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a><a class="link" href="/wiki/MiddlewareDocs/%E4%B8%80.%20Nginx%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A(%E4%B8%8B).html"><span class="toc-text">一. Nginx从入门到精通(下)</span></a><a class="link" href="/wiki/MiddlewareDocs/%E4%BA%8C.%20Nginx%20%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3.html"><span class="toc-text">二. Nginx 配置文件详解</span></a><a class="link" href="/wiki/MiddlewareDocs/%E4%B8%89.%20Nginx-Examples%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E.html"><span class="toc-text">三. Nginx-Examples使用说明</span></a></div><div class="widget-header dis-select"><span class="name">Apache</span></div><div class="widget-body fs14"><a class="link" href="/wiki/MiddlewareDocs/%E5%9B%9B.%20Apache%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A.html"><span class="toc-text">四. Apache从入门到精通</span></a></div><div class="widget-header dis-select"><span class="name">Tomcat</span></div><div class="widget-body fs14"><a class="link" href="/wiki/MiddlewareDocs/%E4%BA%94.%20Tomcat%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A.html"><span class="toc-text">五. Tomcat从入门到精通</span></a></div></widget>
 
-<widget class="widget-wrapper post-card"><div class="widget-header dis-select"><span class="name">更多：DevOps</span></div><div class="widget-body"><a class="item wiki" href="/wiki/API-Gateway/%E4%B8%80.%20%E6%BC%AB%E8%B0%88Nginx%E7%BD%91%E5%85%B3.html"><span class="title">微服务API网关框架</span><span class="excerpt">探索微服务API网关的世界 - 我的学习和实践笔记。一起学习如何设计、搭建并优化API网关。</span></a><a class="item wiki" href="/wiki/MonitoringTechDocs/%E4%B8%80.%20Zabbix%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.html"><span class="title">监控系统技术框架</span><span class="excerpt">探索监控系统技术的世界 - 学习和实践笔记。一起学习如何设计、部署并优化监控环境。</span></a><a class="item wiki" href="/wiki/VirtDocs/%E4%B8%80.%20Esxi%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B.html"><span class="title">虚拟化技术框架</span><span class="excerpt">探索虚拟化技术的世界 - 我的学习和实践笔记。一起学习如何设计、部署并优化虚拟化环境。</span></a></div></widget>
+<widget class="widget-wrapper post-card"><div class="widget-header dis-select"><span class="name">更多：DevOps</span></div><div class="widget-body"><a class="item wiki" href="/wiki/API-Gateway/%E4%B8%80.%20%E6%BC%AB%E8%B0%88Nginx%E7%BD%91%E5%85%B3.html"><span class="title">微服务API网关框架</span><span class="excerpt">探索微服务API网关的世界 - 我的学习和实践笔记。一起学习如何设计、搭建并优化API网关。</span></a></div></widget>
 
-<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/wiki/VulnerabilityInsightDocs/%E4%BA%94.%20XSS%E8%B7%A8%E7%AB%99%E8%84%9A%E6%9C%AC.html"><span class="title"><strong>VulnerabilityInsightDocs</strong><span class="dot"></span>五. XSS跨站脚本</span></a><a class="item title" href="/wiki/VirtDocs/%E4%B8%89.%20%E5%A4%A7%E5%9E%8B%E5%88%86%E5%B8%83%E5%BC%8Fk8s%E9%9B%86%E7%BE%A4%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A.html"><span class="title"><strong>VirtDocs</strong><span class="dot"></span>三. 大型分布式k8s集群从入门到精通</span></a><a class="item title" href="/wiki/VirtDocs/%E4%BA%8C.%20Docker%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A.html"><span class="title"><strong>VirtDocs</strong><span class="dot"></span>二. Docker从入门到精通</span></a><a class="item title" href="/wiki/VulnerabilityInsightDocs/%E4%BA%8C.%20%E5%9C%A8%E7%BA%BF%E5%AF%86%E7%A0%81%E7%A0%B4%E8%A7%A3.html"><span class="title"><strong>VulnerabilityInsightDocs</strong><span class="dot"></span>二. 在线密码破解</span></a><a class="item title" href="/wiki/VulnerabilityInsightDocs/%E5%8D%81%E5%9B%9B.%20%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E.html"><span class="title"><strong>VulnerabilityInsightDocs</strong><span class="dot"></span>十四. 逻辑漏洞</span></a></div></widget>
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/wiki/API-Gateway/%E4%BA%94.%20Openresty%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B.html"><span class="title"><strong>API-Gateway</strong><span class="dot"></span>五.openresty执行流程</span></a><a class="item title" href="/wiki/API-Gateway/%E5%9B%9B.%20OpenResty%E4%B8%AD%E4%BD%BF%E7%94%A8MySql.html"><span class="title"><strong>API-Gateway</strong><span class="dot"></span>四.OpenResty中使用mysql</span></a><a class="item title" href="/wiki/API-Gateway/%E4%BA%8C.%20Nginx%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86.html"><span class="title"><strong>API-Gateway</strong><span class="dot"></span>二.Nginx相关知识</span></a><a class="item title" href="/wiki/API-Gateway/%E4%B8%80.%20%E6%BC%AB%E8%B0%88Nginx%E7%BD%91%E5%85%B3.html"><span class="title"><strong>API-Gateway</strong><span class="dot"></span>一.漫谈Nginx网关</span></a><a class="item title" href="/wiki/MiddlewareDocs/%E4%BA%94.%20Tomcat%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A.html"><span class="title"><strong>MiddlewareDocs</strong><span class="dot"></span>五. Tomcat从入门到精通</span></a></div></widget>
 </div>
-<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a></div></footer>
 </div></aside><div class="l_main" id="main">
 
 
@@ -108,7 +110,7 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
 <span class="sep"></span><a class="cap breadcrumb" id="menu" href="/wiki">文档</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/wiki/MiddlewareDocs/%E4%B8%80.%20Nginx%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A(%E4%B8%8A).html">MiddlewareDocs</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2024-02-10T13:38:04.000Z">2024-02-10</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2025-05-13T00:28:48.451Z">2025-05-13</time></span></div></div></div>
     
     <div class="bottom only-title">
       
@@ -120,82 +122,86 @@
     
   </div>
   </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
-    <p>总字符数: 8.92K </p>
-    </div>
-    <div class="cell" style="">
-    <p>代码: 2.68K, 文本: 3.27K</p>
-    </div>
-    <div class="cell" style="">
-    <p>预计阅读时间: 26 分钟</p>
+    <!-- Cell --><p>总字符数: 8.07K </p><!-- Cell --><p>代码: 2.68K, 文本: 3.21K</p><!-- Cell --><p>预计阅读时间: 26 分钟</p>
     </div>
     </div>
 
 <blockquote>
-<p><strong>examples</strong>目录中的示例模拟了工作中的一些常用实战场景,并且都可以通过脚本一键式启动,让您可以快速看到演示效果.</p>
+<p><strong>Examples</strong>目录中的示例模拟了工作中的一些常用实战场景,并且都可以通过脚本一键式启动,让您可以快速看到演示效果.</p>
 </blockquote>
-<h2 id="Nginx-简介"><a href="#Nginx-简介" class="headerlink" title="Nginx 简介"></a>Nginx 简介</h2><h3 id="什么是-Nginx"><a href="#什么是-Nginx" class="headerlink" title="什么是 Nginx"></a>什么是 Nginx</h3><p><strong>Nginx (engine x)</strong> 是一款轻量级的 Web 服务器 、反向代理服务器及电子邮件(IMAP&#x2F;POP3)代理服务器.</p>
+<h2 id="Nginx-简介"><a href="#Nginx-简介" class="headerlink" title="Nginx 简介"></a>Nginx 简介</h2><h3 id="什么是-Nginx"><a href="#什么是-Nginx" class="headerlink" title="什么是 Nginx"></a>什么是 Nginx</h3><p><strong>Nginx (Engine X)</strong> 是一款轻量级的 Web 服务器 、反向代理服务器及电子邮件(IMAP&#x2F;POP3)代理服务器.</p>
 <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402102136343.png" data-fancybox="true"/></div></div>
 
-<h3 id="什么是反向代理"><a href="#什么是反向代理" class="headerlink" title="什么是反向代理"></a>什么是反向代理</h3><p>反向代理(Reverse Proxy)方式是指以代理服务器来接受 internet 上的连接请求,然后将请求转发给内部网络上的服务器,并将从服务器上得到的结果返回给 internet 上请求连接的客户端,此时代理服务器对外就表现为一个反向代理服务器.</p>
+<h3 id="什么是反向代理"><a href="#什么是反向代理" class="headerlink" title="什么是反向代理"></a>什么是反向代理</h3><p>反向代理(Reverse Proxy)方式是指以代理服务器来接受 Internet 上的连接请求,然后将请求转发给内部网络上的服务器,并将从服务器上得到的结果返回给 Internet 上请求连接的客户端,此时代理服务器对外就表现为一个反向代理服务器.</p>
 <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402102136739.png" data-fancybox="true"/></div></div>
 
 <h3 id="Ngnix-特点"><a href="#Ngnix-特点" class="headerlink" title="Ngnix 特点"></a>Ngnix 特点</h3><ul>
 <li>模块化设计:良好的扩展性,可以通过模块方式进行功能扩展.</li>
-<li>高可靠性:主控进程和 worker 是同步实现的,一个 worker 出现问题,会立刻启动另一个 worker.</li>
-<li>内存消耗低:一万个长连接(keep-alive),仅消耗 2.5MB 内存.</li>
+<li>高可靠性:主控进程和 Worker 是同步实现的,一个 Worker 出现问题,会立刻启动另一个 Worker.</li>
+<li>内存消耗低:一万个长连接(Keep-Alive),仅消耗 2.5MB 内存.</li>
 <li>支持热部署:不用停止服务器,实现更新配置文件,更换日志文件、更新服务器程序版本.</li>
 <li>并发能力强:官方数据每秒支持 5 万并发;</li>
 <li>功能丰富:优秀的反向代理功能和灵活的负载均衡策略</li>
 </ul>
 <h3 id="Nginx-功能"><a href="#Nginx-功能" class="headerlink" title="Nginx 功能"></a>Nginx 功能</h3><ul>
-<li>支持静态资源的 web 服务器.</li>
-<li>http,smtp,pop3 协议的反向代理服务器、缓存、负载均衡;</li>
-<li>支持 FASTCGI(fpm)</li>
-<li>支持模块化,过滤器(让文本可以实现压缩,节约带宽),ssl 及图像大小调整.</li>
+<li>支持静态资源的 Web 服务器.</li>
+<li>Http,Smtp,POP3 协议的反向代理服务器、缓存、负载均衡;</li>
+<li>支持 FASTCGI(Fpm)</li>
+<li>支持模块化,过滤器(让文本可以实现压缩,节约带宽),Ssl 及图像大小调整.</li>
 <li>内置的健康检查功能</li>
-<li>基于名称和 ip 的虚拟主机</li>
+<li>基于名称和 Ip 的虚拟主机</li>
 <li>定制访问日志</li>
 <li>支持平滑升级</li>
 <li>支持 KEEPALIVE</li>
-<li>支持 url rewrite</li>
+<li>支持 Url Rewrite</li>
 <li>支持路径别名</li>
 <li>支持基于 IP 和用户名的访问控制.</li>
 <li>支持传输速率限制,支持并发数限制.</li>
 </ul>
-<h3 id="Nginx-性能"><a href="#Nginx-性能" class="headerlink" title="Nginx 性能"></a>Nginx 性能</h3><p>Nginx 的高并发,官方测试支持 5 万并发连接.实际生产环境能到 2-3 万并发连接数.10000 个非活跃的 HTTP keep-alive 连接仅占用约 2.5MB 内存.三万并发连接下,10 个 Nginx 进程,消耗内存 150M.淘宝 tengine 团队测试结果是”24G 内存机器上,处理并发请求可达 200 万”.</p>
+<h3 id="Nginx-性能"><a href="#Nginx-性能" class="headerlink" title="Nginx 性能"></a>Nginx 性能</h3><p>Nginx 的高并发,官方测试支持 5 万并发连接.实际生产环境能到 2-3 万并发连接数.10000 个非活跃的 HTTP Keep-Alive 连接仅占用约 2.5MB 内存.三万并发连接下,10 个 Nginx 进程,消耗内存 150M.淘宝 Tengine 团队测试结果是”24G 内存机器上,处理并发请求可达 200 万”.</p>
 <h2 id="Ngnix-架构"><a href="#Ngnix-架构" class="headerlink" title="Ngnix 架构"></a>Ngnix 架构</h2><h3 id="主从模式"><a href="#主从模式" class="headerlink" title="主从模式"></a>主从模式</h3><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402102136031.png" data-fancybox="true"/></div></div>
 
-<div class="tag-plugin colorful note" color="red"><div class="title">Nginx</div><div class="body"><p>采用一主多从的主从架构</p></div></div>
+<div class="tag-plugin colorful note" color="red"><div class="body"><p>nginx采用一主多从的主从架构</p></div></div>
 
-<p>但是这里 master 是使用 root 身份启动的,因为 nginx 要工作在 80 端口.而只有管理员才有权限启动小于低于 1023 的端口.master 主要是负责的作用只是启动 worker,加载配置文件,负责系统的平滑升级.其它的工作是交给 worker.那么当 worker 被启动之后,也只是负责一些 web 最简单的工作,而其他的工作都是有 worker 中调用的模块来实现的.</p>
-<p>模块之间是以流水线的方式实现功能的.流水线,指的是一个用户请求,由多个模块组合各自的功能依次实现完成的.比如:第一个模块只负责分析请求首部,第二个模块只负责查找数据,第三个模块只负责压缩数据,依次完成各自工作.来实现整个工作的完成.</p>
-<p>他们是如何实现热部署的呢?其实是这样的,我们前面说 master 不负责具体的工作,而是调用 worker 工作,他只是负责读取配置文件,因此当一个模块修改或者配置文件发生变化,是由 master 进行读取,因此此时不会影响到 worker 工作.在 master 进行读取配置文件之后,不会立即的把修改的配置文件告知 worker.而是让被修改的 worker 继续使用老的配置文件工作,当 worker 工作完毕之后,直接Down掉这个子进程,更换新的子进程,使用新的规则.</p>
-<h3 id="sendfile-机制"><a href="#sendfile-机制" class="headerlink" title="sendfile 机制"></a>sendfile 机制</h3><div class="tag-plugin colorful note" color="red"><div class="title">Nginx</div><div class="body"><p>支持 sendfile 机制</p></div></div>
+<p>但是这里 Master 是使用 Root 身份启动的,因为 Nginx 要工作在 80 端口.而只有管理员才有权限启动小于低于 1023 的端口.Master 主要是负责的作用只是启动 Worker,加载配置文件,负责系统的平滑升级.其它的工作是交给 Worker.那么当 Worker 被启动之后,也只是负责一些 Web 最简单的工作,而其他的工作都是有 Worker 中调用的模块来实现的.</p>
+<p>模块之间是以流水线的方式实现功能的.流水线指的是一个用户请求,由多个模块组合各自的功能依次实现完成的.比如:第一个模块只负责分析请求首部,第二个模块只负责查找数据,第三个模块只负责压缩数据,依次完成各自工作.来实现整个工作的完成.</p>
+<p>他们是如何实现热部署的呢?其实是这样的,我们前面说 Master 不负责具体的工作,而是调用 Worker 工作,他只是负责读取配置文件,因此当一个模块修改或者配置文件发生变化,是由 Master 进行读取,因此此时不会影响到 Worker 工作.在 Master 进行读取配置文件之后,不会立即的把修改的配置文件告知 Worker.而是让被修改的 Worker 继续使用老的配置文件工作,当 Worker 工作完毕之后,直接Down掉这个子进程,更换新的子进程,使用新的规则.</p>
+<h3 id="Sendfile-机制"><a href="#Sendfile-机制" class="headerlink" title="Sendfile 机制"></a>Sendfile 机制</h3><div class="tag-plugin colorful note" color="red"><div class="body"><p>Nginx支持Sendfile机制</p></div></div>
 
-<p>所谓 Sendfile 机制,是指:用户将请求发给内核,内核根据用户的请求调用相应用户进程,进程在处理时需要资源.此时再把请求发给内核(进程没有直接 IO 的能力),由内核加载数据.内核查找到数据之后,会把数据复制给用户进程,由用户进程对数据进行封装,之后交给内核,内核在进行 tcp&#x2F;ip 首部的封装,最后再发给客户端.这个功能用户进程只是发生了一个封装报文的过程,却要绕一大圈.因此 nginx 引入了 sendfile 机制,使得内核在接受到数据之后,不再依靠用户进程给予封装,而是自己查找自己封装,减少了一个很长一段时间的浪费,这是一个提升性能的核心点.</p>
+<p>所谓 Sendfile 机制是指用户将请求发给内核,内核根据用户的请求调用相应用户进程,进程在处理时需要资源.此时再把请求发给内核(进程没有直接 IO 的能力),由内核加载数据.内核查找到数据之后,会把数据复制给用户进程,由用户进程对数据进行封装,之后交给内核,内核在进行 Tcp&#x2F;Ip 首部的封装,最后再发给客户端.这个功能用户进程只是发生了一个封装报文的过程,却要绕一大圈.因此 Nginx 引入了 Sendfile 机制,使得内核在接受到数据之后,不再依靠用户进程给予封装,而是自己查找自己封装,减少了一个很长一段时间的浪费,这是一个提升性能的核心点.</p>
 <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401262010481.png" data-fancybox="true"/></div></div>
 
 <p>以上内容摘自网友发布的文章,简单一句话是资源的处理,直接通过内核层进行数据传递,避免了数据传递到应用层,应用层再传递到内核层的开销.</p>
-<p>目前高并发的处理,一般都采用 sendfile 模式.通过直接操作内核层数据,减少应用与内核层数据传递.</p>
-<h3 id="I-O-复用机制"><a href="#I-O-复用机制" class="headerlink" title="I&#x2F;O 复用机制"></a>I&#x2F;O 复用机制</h3><div class="tag-plugin colorful note" color="red"><div class="title">Nginx</div><div class="body"><p>通信模型采用 I&#x2F;O 复用机制</p></div></div>
+<p>目前高并发的处理,一般都采用 Sendfile 模式.通过直接操作内核层数据,减少应用与内核层数据传递.</p>
+<h3 id="I-O-复用机制"><a href="#I-O-复用机制" class="headerlink" title="I&#x2F;O 复用机制"></a>I&#x2F;O 复用机制</h3><div class="tag-plugin colorful note" color="red"><div class="body"><p>Nginx通信模型采用I&#x2F;O复用机制</p></div></div>
 
-<p>开发模型:epoll 和 kqueue.</p>
-<p>支持的事件机制:kqueue、epoll、rt signals、&#x2F;dev&#x2F;poll 、event ports、select 以及 poll.</p>
-<p>支持的 kqueue 特性包括 EV_CLEAR、EV_DISABLE、NOTE_LOWAT、EV_EOF,可用数据的数量,错误代码.</p>
-<p>支持 sendfile、sendfile64 和 sendfilev;文件 AIO;DIRECTIO;支持 Accept-filters 和 TCP_DEFER_ACCEP.</p>
+<p>开发模型:Epoll 和 Kqueue.</p>
+<p>支持的事件机制:Kqueue、Epoll、Rt Signals、&#x2F;Dev&#x2F;Poll 、Event Ports、Select 以及 Poll.</p>
+<p>支持的 Kqueue 特性包括 EV_CLEAR、EV_DISABLE、NOTE_LOWAT、EV_EOF,可用数据的数量,错误代码.</p>
+<p>支持 Sendfile、sendfile64 和 Sendfilev;文件 AIO;DIRECTIO;支持 Accept-Filters 和 TCP_DEFER_ACCEP.</p>
 <p>以上概念较多,大家自行百度或谷歌,知识领域是网络通信(BIO,NIO,AIO)和多线程方面的知识.</p>
-<h2 id="Nginx-负载均衡-SLB"><a href="#Nginx-负载均衡-SLB" class="headerlink" title="Nginx 负载均衡(SLB)"></a>Nginx 负载均衡(SLB)</h2><p>nginx 的负载均衡策略可以划分为两大类:内置策略和扩展策略.内置策略包含加权轮询和 ip hash,在默认情况下这两种策略会编译进 nginx 内核,只需在 nginx 配置中指明参数即可.扩展策略有很多,如 fair、通用 hash、consistent hash 等,默认不编译进 nginx 内核.由于在 nginx 版本升级中负载均衡的代码没有本质性的变化,因此下面将以 nginx 1.0.15 稳定版为例,从源码角度分析各个策略.</p>
-<h3 id="加权轮询"><a href="#加权轮询" class="headerlink" title="加权轮询"></a>加权轮询</h3><div class="tag-plugin colorful note" color="red"><div class="title">Nginx</div><div class="body"><p>支持加权轮询（Weighted Round Robin）负载均衡.</p></div></div>
+<h2 id="Nginx-负载均衡-SLB"><a href="#Nginx-负载均衡-SLB" class="headerlink" title="Nginx 负载均衡(SLB)"></a>Nginx 负载均衡(SLB)</h2><p>Nginx 的负载均衡策略可以划分为两大类:</p>
+<ul>
+<li>内置策略</li>
+<li>扩展策略.</li>
+</ul>
+<p>内置策略包含加权轮询和 Ip Hash,在默认情况下这两种策略会编译进 Nginx 内核,只需在 Nginx 配置中指明参数即可.</p>
+<p>扩展策略有很多,如 Fair、通用 Hash、Consistent Hash 等,默认不编译进 Nginx 内核.由于在 Nginx 版本升级中负载均衡的代码没有本质性的变化,因此下面将以 Nginx 1.0.15 稳定版为例,从源码角度分析各个策略.</p>
+<h3 id="加权轮询"><a href="#加权轮询" class="headerlink" title="加权轮询"></a>加权轮询</h3><div class="tag-plugin colorful note" color="red"><div class="body"><p>Nginx支持加权轮训(Weighted-Round-Robin)负载均衡.</p></div></div>
 
 <p>轮询的原理很简单,首先我们介绍一下轮询的基本流程.如下是处理一次请求的流程图:</p>
 <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401262011078.png" data-fancybox="true"/></div></div>
 
-<p>图中有两点需要注意,第一,如果可以把加权轮询算法分为先深搜索和先广搜索,那么 nginx 采用的是先深搜索算法,即将首先将请求都分给高权重的机器,直到该机器的权值降到了比其他机器低,才开始将请求分给下一个高权重的机器;第二,当所有后端机器都 down 掉时,nginx 会立即将所有机器的标志位清成初始状态,以避免造成所有的机器都处在 timeout 的状态,从而导致整个前端被夯住.</p>
-<h3 id="Ip-Hash"><a href="#Ip-Hash" class="headerlink" title="Ip Hash"></a>Ip Hash</h3><div class="tag-plugin colorful note" color="red"><div class="title">Nginx</div><div class="body"><p>支持 Ip Hash 负载均衡</p></div></div>
+<p>图中有两点需要注意</p>
+<ol>
+<li>如果可以把加权轮询算法分为先深搜索和先广搜索,那么 Nginx 采用的是先深搜索算法,即将首先将请求都分给高权重的机器,直到该机器的权值降到了比其他机器低,才开始将请求分给下一个高权重的机器;</li>
+<li>当所有后端机器都 Down 掉时,Nginx 会立即将所有机器的标志位清成初始状态,以避免造成所有的机器都处在 Timeout 的状态,从而导致整个前端被夯住.</li>
+</ol>
+<h3 id="Ip-Hash"><a href="#Ip-Hash" class="headerlink" title="Ip Hash"></a>Ip Hash</h3><div class="tag-plugin colorful note" color="red"><div class="body"><p>Nginx支持IP-Hash负载均衡</p></div></div>
 
 <p>通过 Ip Hash 这种负载均衡策略,可以实现会话粘滞.</p>
-<h3 id="Fair"><a href="#Fair" class="headerlink" title="Fair"></a>Fair</h3><p>fair 策略是扩展策略,默认不被编译进 nginx 内核.其原理是根据后端服务器的响应时间判断负载情况,从中选出负载最轻的机器进行分流.这种策略具有很强的自适应性,但是实际的网络环境往往不是那么简单,因此要慎用.</p>
-<h3 id="通用-Hash、一致性-Hash"><a href="#通用-Hash、一致性-Hash" class="headerlink" title="通用 Hash、一致性 Hash"></a>通用 Hash、一致性 Hash</h3><p>这两种也是扩展策略,在具体的实现上有些差别,通用 hash 比较简单,可以以 nginx 内置的变量为 key 进行 hash,一致性 hash 采用了 nginx 内置的一致性 hash 环,可以支持 memcache.</p>
+<h3 id="Fair"><a href="#Fair" class="headerlink" title="Fair"></a>Fair</h3><p>Fair 策略是扩展策略,默认不被编译进 Nginx 内核.其原理是根据后端服务器的响应时间判断负载情况,从中选出负载最轻的机器进行分流.这种策略具有很强的自适应性,但是实际的网络环境往往不是那么简单,因此要慎用.</p>
+<h3 id="通用-Hash、一致性-Hash"><a href="#通用-Hash、一致性-Hash" class="headerlink" title="通用 Hash、一致性 Hash"></a>通用 Hash、一致性 Hash</h3><p>这两种也是扩展策略,在具体的实现上有些差别,通用 Hash 比较简单,可以以 Nginx 内置的变量为 Key 进行 Hash,一致性 Hash 采用了 Nginx 内置的一致性 Hash 环,可以支持 Memcache.</p>
 <h2 id="Nginx-场景"><a href="#Nginx-场景" class="headerlink" title="Nginx 场景"></a>Nginx 场景</h2><p>Ngnix 一般作为入口负载均衡或内部负载均衡,结合反向代理服务器使用.以下架构示例,仅供参考,具体使用根据场景而定.</p>
 <h3 id="入口负载均衡架构"><a href="#入口负载均衡架构" class="headerlink" title="入口负载均衡架构"></a>入口负载均衡架构</h3><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401262011383.png" data-fancybox="true"/></div></div>
 
@@ -208,7 +214,7 @@
 <p>分布式系统中,应用只部署一台服务器会存在单点故障,负载均衡同样有类似的问题.一般可采用主备或负载均衡设备集群的方式节约单点故障或高并发请求分流.</p>
 <p>Ngnix 高可用,至少包含两个 Ngnix 服务器,一台主服务器,一台备服务器,之间使用 Keepalived 做健康监控和故障检测.开放 VIP 端口,通过防火墙进行外部映射.</p>
 <p>DNS 解析公网的 IP 实际为 VIP.</p>
-<h2 id="Nginx-入门"><a href="#Nginx-入门" class="headerlink" title="Nginx 入门"></a>Nginx 入门</h2><h3 id="Nginx安装"><a href="#Nginx安装" class="headerlink" title="Nginx安装"></a>Nginx安装</h3><h4 id="普通安装"><a href="#普通安装" class="headerlink" title="普通安装"></a>普通安装</h4><h5 id="Windows-安装"><a href="#Windows-安装" class="headerlink" title="Windows 安装"></a>Windows 安装</h5><p>(1)进入<a target="_blank" rel="noopener" href="https://nginx.org/en/download.html">官方下载地址</a>,选择合适版本(nginx&#x2F;Windows-xxx).</p>
+<h2 id="Nginx-入门"><a href="#Nginx-入门" class="headerlink" title="Nginx 入门"></a>Nginx 入门</h2><h3 id="Nginx安装"><a href="#Nginx安装" class="headerlink" title="Nginx安装"></a>Nginx安装</h3><h4 id="普通安装"><a href="#普通安装" class="headerlink" title="普通安装"></a>普通安装</h4><h5 id="Windows-安装"><a href="#Windows-安装" class="headerlink" title="Windows 安装"></a>Windows 安装</h5><p>(1)进入<a target="_blank" rel="noopener" href="https://nginx.org/En/Download.Html">官方下载地址</a>,选择合适版本(Nginx&#x2F;Windows-Xxx).</p>
 <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202402102137801.png" data-fancybox="true"/></div></div>
 
 <p>(2)解压到本地</p>
@@ -219,9 +225,9 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">start nginx</span><br><span class="line">nginx.exe -s stop</span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p>注:Nginx &#x2F; Win32 是运行在一个控制台程序,而非 windows 服务方式的.服务器方式目前还是开发尝试中.</p>
+<p>注:Nginx &#x2F; Win32 是运行在一个控制台程序,而非 Windows 服务方式的.服务器方式目前还是开发尝试中.</p>
 </blockquote>
-<h4 id="Linux-安装"><a href="#Linux-安装" class="headerlink" title="Linux 安装"></a>Linux 安装</h4><h5 id="rpm-包方式"><a href="#rpm-包方式" class="headerlink" title="rpm 包方式"></a>rpm 包方式</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入工作目录</span></span><br><span class="line"><span class="built_in">cd</span> /opt</span><br><span class="line"><span class="comment"># 进入下载页面:http://nginx.org/packages/选择合适版本下载</span></span><br><span class="line">wget http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm</span><br><span class="line"><span class="comment"># 安装 nginx rpm 包  nginx rpm 包实际上安装的是 nginx 的 yum 源.</span></span><br><span class="line">rpm -ivh nginx-*.rpm</span><br><span class="line"><span class="comment"># 正式安装 rpm 包</span></span><br><span class="line">yum install nginx -y</span><br><span class="line"><span class="comment"># 启动nginx</span></span><br><span class="line">systemctl start nginx.service</span><br><span class="line"><span class="comment"># 防火墙放行80端口</span></span><br><span class="line">firewall-cmd --zone=public --add-port=80/tcp --permanent</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+<h4 id="Linux-安装"><a href="#Linux-安装" class="headerlink" title="Linux 安装"></a>Linux 安装</h4><h5 id="Rpm-包方式"><a href="#Rpm-包方式" class="headerlink" title="Rpm 包方式"></a>Rpm 包方式</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入工作目录</span></span><br><span class="line"><span class="built_in">cd</span> /opt</span><br><span class="line"><span class="comment"># 进入下载页面:http://nginx.org/packages/选择合适版本下载</span></span><br><span class="line">wget http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm</span><br><span class="line"><span class="comment"># 安装 nginx rpm 包  nginx rpm 包实际上安装的是 nginx 的 yum 源.</span></span><br><span class="line">rpm -ivh nginx-*.rpm</span><br><span class="line"><span class="comment"># 正式安装 rpm 包</span></span><br><span class="line">yum install nginx -y</span><br><span class="line"><span class="comment"># 启动nginx</span></span><br><span class="line">systemctl start nginx.service</span><br><span class="line"><span class="comment"># 防火墙放行80端口</span></span><br><span class="line">firewall-cmd --zone=public --add-port=80/tcp --permanent</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
 
 <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307111732331.png" data-fancybox="true"/></div></div>
 
@@ -251,18 +257,20 @@
 <li><p>重新启动服务:<code>docker restart my-nginx</code></p>
 </li>
 <li><p>查看正在运行的容器:<code>docker ps</code></p>
-<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307111806675.png" data-fancybox="true"/></div></div></li>
+</li>
 </ul>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307111806675.png" data-fancybox="true"/></div></div>
+
 <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307111807831.png" data-fancybox="true"/></div></div>
 
 <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202307111808301.png" data-fancybox="true"/></div></div>
 
 <h4 id="脚本"><a href="#脚本" class="headerlink" title="脚本"></a>脚本</h4><blockquote>
-<p>CentOS7 环境安装脚本:<a target="_blank" rel="noopener" href="https://github.com/dunwu/linux-tutorial/tree/master/codes/linux/soft">软件运维配置脚本集合</a></p>
+<p>CentOS7 环境安装脚本:<a target="_blank" rel="noopener" href="https://github.com/Dunwu/Linux-Tutorial/Tree/Master/Codes/Linux/Soft">软件运维配置脚本集合</a></p>
 </blockquote>
 <p><strong>安装说明</strong></p>
 <ul>
-<li>采用编译方式安装 Nginx, 并将其注册为 systemd 服务</li>
+<li>采用编译方式安装 Nginx, 并将其注册为 Systemd 服务</li>
 <li>安装路径为:<code>/usr/local/nginx</code></li>
 <li>默认下载安装 <code>1.16.0</code> 版本</li>
 </ul>
@@ -277,14 +285,16 @@
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh nginx-install.sh [version]</span><br></pre></td></tr></table></figure>
 
-<h3 id="Nginx常用命令"><a href="#Nginx常用命令" class="headerlink" title="Nginx常用命令"></a>Nginx常用命令</h3><p>nginx 的使用比较简单,就是几条命令.</p>
+<h3 id="Nginx常用命令"><a href="#Nginx常用命令" class="headerlink" title="Nginx常用命令"></a>Nginx常用命令</h3><p>Nginx 的使用比较简单,就是几条命令.</p>
 <p>常用到的命令如下:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">nginx -s stop       快速关闭Nginx,可能不保存相关信息,并迅速终止web服务.</span><br><span class="line">nginx -s quit       平稳关闭Nginx,保存相关信息,有安排的结束web服务.</span><br><span class="line">nginx -s reload     因改变了Nginx相关配置,需要重新加载配置而重载.</span><br><span class="line">nginx -s reopen     重新打开日志文件.</span><br><span class="line">nginx -c filename   为 Nginx 指定一个配置文件,来代替缺省的.</span><br><span class="line">nginx -t            不运行,仅仅测试配置文件.nginx 将检查配置文件的语法的正确性,并尝试打开配置文件中所引用到的文件.</span><br><span class="line">nginx -v            显示 nginx 的版本.</span><br><span class="line">nginx -V            显示 nginx 的版本,编译器版本和配置参数.</span><br></pre></td></tr></table></figure>
 
-<p>如果不想每次都敲命令,可以在 nginx 安装目录下新添一个启动批处理文件<strong>startup.bat</strong>,双击即可运行.内容如下:</p>
+<p>如果不想每次都敲命令,可以在 Nginx 安装目录下新添一个启动批处理文件<strong>Startup.Bat</strong>,双击即可运行.内容如下:</p>
 <figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"><span class="comment">rem 如果启动前已经启动nginx并记录下pid文件,会kill指定进程</span></span><br><span class="line">nginx.exe -s stop</span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">rem 测试配置文件语法正确性</span></span><br><span class="line">nginx.exe -t -c conf/nginx.conf</span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">rem 显示版本信息</span></span><br><span class="line">nginx.exe -v</span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">rem 按照指定配置去启动nginx</span></span><br><span class="line">nginx.exe -c conf/nginx.conf</span><br></pre></td></tr></table></figure>
 
-<p>如果是运行在 Linux 下,写一个 shell 脚本,大同小异</p>
+<p>如果是运行在 Linux 下,写一个 Shell 脚本,大同小异</p>
+
+<div class="article-footer fs14"></div>
 </article>
 <div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"></div><div class="item" id="next"><div class="note">接下来阅读</div><a href="/wiki/MiddlewareDocs/%E4%B8%80.%20Nginx%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A(%E4%B8%8B).html">一. Nginx从入门到精通(下)</a></div></section></div>
 
@@ -325,9 +335,9 @@
 
 
 
-<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Nginx-%E7%AE%80%E4%BB%8B"><span class="toc-text">Nginx 简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-Nginx"><span class="toc-text">什么是 Nginx</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86"><span class="toc-text">什么是反向代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ngnix-%E7%89%B9%E7%82%B9"><span class="toc-text">Ngnix 特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nginx-%E5%8A%9F%E8%83%BD"><span class="toc-text">Nginx 功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nginx-%E6%80%A7%E8%83%BD"><span class="toc-text">Nginx 性能</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ngnix-%E6%9E%B6%E6%9E%84"><span class="toc-text">Ngnix 架构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F"><span class="toc-text">主从模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sendfile-%E6%9C%BA%E5%88%B6"><span class="toc-text">sendfile 机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#I-O-%E5%A4%8D%E7%94%A8%E6%9C%BA%E5%88%B6"><span class="toc-text">I&#x2F;O 复用机制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nginx-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1-SLB"><span class="toc-text">Nginx 负载均衡(SLB)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E6%9D%83%E8%BD%AE%E8%AF%A2"><span class="toc-text">加权轮询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ip-Hash"><span class="toc-text">Ip Hash</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Fair"><span class="toc-text">Fair</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E7%94%A8-Hash%E3%80%81%E4%B8%80%E8%87%B4%E6%80%A7-Hash"><span class="toc-text">通用 Hash、一致性 Hash</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nginx-%E5%9C%BA%E6%99%AF"><span class="toc-text">Nginx 场景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%A5%E5%8F%A3%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E6%9E%B6%E6%9E%84"><span class="toc-text">入口负载均衡架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E9%83%A8%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E6%9E%B6%E6%9E%84"><span class="toc-text">内部负载均衡架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ngnix-%E9%AB%98%E5%8F%AF%E7%94%A8"><span class="toc-text">Ngnix 高可用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nginx-%E5%85%A5%E9%97%A8"><span class="toc-text">Nginx 入门</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Nginx%E5%AE%89%E8%A3%85"><span class="toc-text">Nginx安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%99%AE%E9%80%9A%E5%AE%89%E8%A3%85"><span class="toc-text">普通安装</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Windows-%E5%AE%89%E8%A3%85"><span class="toc-text">Windows 安装</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Linux-%E5%AE%89%E8%A3%85"><span class="toc-text">Linux 安装</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#rpm-%E5%8C%85%E6%96%B9%E5%BC%8F"><span class="toc-text">rpm 包方式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E6%96%B9%E5%BC%8F"><span class="toc-text">源码编译方式</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Docker-%E5%AE%89%E8%A3%85"><span class="toc-text">Docker 安装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%84%9A%E6%9C%AC"><span class="toc-text">脚本</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nginx%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-text">Nginx常用命令</span></a></li></ol></li></ol></div><div class="widget-footer">
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Nginx-%E7%AE%80%E4%BB%8B"><span class="toc-text">Nginx 简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-Nginx"><span class="toc-text">什么是 Nginx</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86"><span class="toc-text">什么是反向代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ngnix-%E7%89%B9%E7%82%B9"><span class="toc-text">Ngnix 特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nginx-%E5%8A%9F%E8%83%BD"><span class="toc-text">Nginx 功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nginx-%E6%80%A7%E8%83%BD"><span class="toc-text">Nginx 性能</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ngnix-%E6%9E%B6%E6%9E%84"><span class="toc-text">Ngnix 架构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F"><span class="toc-text">主从模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Sendfile-%E6%9C%BA%E5%88%B6"><span class="toc-text">Sendfile 机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#I-O-%E5%A4%8D%E7%94%A8%E6%9C%BA%E5%88%B6"><span class="toc-text">I&#x2F;O 复用机制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nginx-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1-SLB"><span class="toc-text">Nginx 负载均衡(SLB)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E6%9D%83%E8%BD%AE%E8%AF%A2"><span class="toc-text">加权轮询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ip-Hash"><span class="toc-text">Ip Hash</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Fair"><span class="toc-text">Fair</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E7%94%A8-Hash%E3%80%81%E4%B8%80%E8%87%B4%E6%80%A7-Hash"><span class="toc-text">通用 Hash、一致性 Hash</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nginx-%E5%9C%BA%E6%99%AF"><span class="toc-text">Nginx 场景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%A5%E5%8F%A3%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E6%9E%B6%E6%9E%84"><span class="toc-text">入口负载均衡架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E9%83%A8%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E6%9E%B6%E6%9E%84"><span class="toc-text">内部负载均衡架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ngnix-%E9%AB%98%E5%8F%AF%E7%94%A8"><span class="toc-text">Ngnix 高可用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nginx-%E5%85%A5%E9%97%A8"><span class="toc-text">Nginx 入门</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Nginx%E5%AE%89%E8%A3%85"><span class="toc-text">Nginx安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%99%AE%E9%80%9A%E5%AE%89%E8%A3%85"><span class="toc-text">普通安装</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Windows-%E5%AE%89%E8%A3%85"><span class="toc-text">Windows 安装</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Linux-%E5%AE%89%E8%A3%85"><span class="toc-text">Linux 安装</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Rpm-%E5%8C%85%E6%96%B9%E5%BC%8F"><span class="toc-text">Rpm 包方式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E6%96%B9%E5%BC%8F"><span class="toc-text">源码编译方式</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Docker-%E5%AE%89%E8%A3%85"><span class="toc-text">Docker 安装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%84%9A%E6%9C%AC"><span class="toc-text">脚本</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nginx%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-text">Nginx常用命令</span></a></li></ol></li></ol></div><div class="widget-footer">
 
-<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10.46 1.25h3.08c1.603 0 2.86 0 3.864.095c1.023.098 1.861.3 2.6.752a5.75 5.75 0 0 1 1.899 1.899c.452.738.654 1.577.752 2.6c.095 1.004.095 2.261.095 3.865v1.067c0 1.141 0 2.036-.05 2.759c-.05.735-.153 1.347-.388 1.913a5.75 5.75 0 0 1-3.112 3.112c-.805.334-1.721.408-2.977.43a10.81 10.81 0 0 0-.929.036c-.198.022-.275.054-.32.08c-.047.028-.112.078-.224.232c-.121.166-.258.396-.476.764l-.542.916c-.773 1.307-2.69 1.307-3.464 0l-.542-.916a10.605 10.605 0 0 0-.476-.764c-.112-.154-.177-.204-.224-.232c-.045-.026-.122-.058-.32-.08c-.212-.023-.49-.03-.93-.037c-1.255-.021-2.171-.095-2.976-.429A5.75 5.75 0 0 1 1.688 16.2c-.235-.566-.338-1.178-.389-1.913c-.049-.723-.049-1.618-.049-2.76v-1.066c0-1.604 0-2.86.095-3.865c.098-1.023.3-1.862.752-2.6a5.75 5.75 0 0 1 1.899-1.899c.738-.452 1.577-.654 2.6-.752C7.6 1.25 8.857 1.25 10.461 1.25M6.739 2.839c-.914.087-1.495.253-1.959.537A4.25 4.25 0 0 0 3.376 4.78c-.284.464-.45 1.045-.537 1.96c-.088.924-.089 2.11-.089 3.761v1c0 1.175 0 2.019.046 2.685c.045.659.131 1.089.278 1.441a4.25 4.25 0 0 0 2.3 2.3c.515.214 1.173.294 2.429.316h.031c.398.007.747.013 1.037.045c.311.035.616.104.909.274c.29.17.5.395.682.645c.169.232.342.525.538.856l.559.944a.52.52 0 0 0 .882 0l.559-.944c.196-.331.37-.624.538-.856c.182-.25.392-.476.682-.645c.293-.17.598-.24.909-.274c.29-.032.639-.038 1.037-.045h.032c1.255-.022 1.913-.102 2.428-.316a4.25 4.25 0 0 0 2.3-2.3c.147-.352.233-.782.278-1.441c.046-.666.046-1.51.046-2.685v-1c0-1.651 0-2.837-.089-3.762c-.087-.914-.253-1.495-.537-1.959a4.25 4.25 0 0 0-1.403-1.403c-.464-.284-1.045-.45-1.96-.537c-.924-.088-2.11-.089-3.761-.089h-3c-1.651 0-2.837 0-3.762.089" clip-rule="evenodd"/><path fill="currentColor" d="M9 11a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg><span>参与讨论</span></a></div></widget>
 </div></aside><div class='float-panel blur'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
@@ -346,6 +356,9 @@
       day: `天前`,
     },
     root : `/`,
+    tag_plugins: {
+      chat: Object.assign({"api":"https://siteinfo.listentothewind.cn/api/v1"}),
+    }
   };
 
   // required plugins (only load if needs)
@@ -353,7 +366,7 @@
     ctx.search = {};
     ctx.search.service = `local_search`;
     if (ctx.search.service == 'local_search') {
-      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"skip_search":null,"codeblock":true,"sort":"-date"}`);
       ctx.search[ctx.search.service] = service_obj;
     }
   }
@@ -362,14 +375,54 @@
     cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
   };
   const deps = {
-    jquery: `https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js`,
-    marked: `https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js`
+    jquery: `https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js`,
+    marked: `https://cdn.jsdelivr.net/npm/marked@13.0.1/lib/marked.umd.min.js`
   }
   
 
 </script>
 
 <script type="text/javascript">
+  function RunItem() {
+    this.list = []; // 存放回调函数
+    this.start = () => {
+      for (var i = 0; i < this.list.length; i++) {
+        this.list[i].run();
+      }
+    };
+    this.push = (fn, name, setRequestAnimationFrame = true) => {
+      let myfn = fn
+      if (setRequestAnimationFrame) {
+        myfn = () => {
+          utils.requestAnimationFrame(fn)
+        }
+      }
+      var f = new Item(myfn, name);
+      this.list.push(f);
+    };
+    this.remove = (name) => {
+      for (let index = 0; index < this.list.length; index++) {
+        const e = this.list[index];
+        if (e.name == name) {
+          this.list.splice(index, 1);
+        }
+      }
+    }
+    // 构造一个可以run的对象
+    function Item(fn, name) {
+      // 函数名称
+      this.name = name || fn.name;
+      // run方法
+      this.run = () => {
+        try {
+          fn()
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    }
+  }
+
   const utils = {
     // 懒加载 css https://github.com/filamentgroup/loadCSS
     css: (href, before, media, attributes) => {
@@ -432,7 +485,7 @@
 
     js: (src, opt) => new Promise((resolve, reject) => {
       var script = document.createElement('script');
-      if (src.startsWith('/')){
+      if (src.startsWith('/')) {
         src = ctx.root + src.substring(1);
       }
       script.src = src;
@@ -445,7 +498,7 @@
         script.async = true
       }
       script.onerror = reject
-      script.onload = script.onreadystatechange = function() {
+      script.onload = script.onreadystatechange = function () {
         const loadState = this.readyState
         if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
         script.onload = script.onreadystatechange = null
@@ -461,7 +514,7 @@
         fn()
       }
     },
-    
+
     onLoading: (el) => {
       if (el) {
         $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
@@ -495,7 +548,7 @@
               }
             }
           }, 5000);
-          fetch(url).then(function(response) {
+          fetch(url).then(function (response) {
             if (status !== 2) {
               clearTimeout(timer);
               resolve(response);
@@ -506,11 +559,11 @@
               return response.json();
             }
             throw new Error('Network response was not ok.');
-          }).then(function(data) {
+          }).then(function (data) {
             retryTimes = 0;
             utils.onLoadSuccess(el);
             callback(data);
-          }).catch(function(error) {
+          }).catch(function (error) {
             if (retryTimes > 0) {
               retryTimes -= 1;
               setTimeout(() => {
@@ -525,9 +578,28 @@
       }
       req();
     },
+    /********************** requestAnimationFrame ********************************/
+    // 1、requestAnimationFrame 会把每一帧中的所有 DOM 操作集中起来，在一次重绘或回流中就完成，并且重绘或回流的时间间隔紧紧跟随浏览器的刷新频率，一般来说，这个频率为每秒60帧。
+    // 2、在隐藏或不可见的元素中，requestAnimationFrame 将不会进行重绘或回流，这当然就意味着更少的的 cpu，gpu 和内存使用量。
+    requestAnimationFrame: (fn) => {
+      if (!window.requestAnimationFrame) {
+        window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame;
+      }
+      window.requestAnimationFrame(fn)
+    },
+    dark: {},
   };
-</script>
 
+  // utils.dark.mode 当前模式 dark or light
+  // utils.dark.toggle() 暗黑模式触发器
+  // utils.dark.push(callBack[,"callBackName"]) 传入触发器回调函数
+  utils.dark.method = {
+    toggle: new RunItem(),
+  };
+  utils.dark = Object.assign(utils.dark, {
+    push: utils.dark.method.toggle.push,
+  });
+</script>
 <script>
   const sidebar = {
     leftbar: () => {
@@ -553,38 +625,128 @@
     }
   }
 </script>
+<script type="text/javascript">
+  (() => {
+    const tagSwitchers = document.querySelectorAll('.tag-subtree.parent-tag > a > .tag-switcher-wrapper')
+    for (const tagSwitcher of tagSwitchers) {
+      tagSwitcher.addEventListener('click', (e) => {
+        const parent = e.target.closest('.tag-subtree.parent-tag')
+        parent.classList.toggle('expanded')
+        e.preventDefault()
+      })
+    }
+
+    // Get active tag from query string, then activate it.
+    const urlParams = new URLSearchParams(window.location.search)
+    const activeTag = urlParams.get('tag')
+    if (activeTag) {
+      let tag = document.querySelector(`.tag-subtree[data-tag="${activeTag}"]`)
+      if (tag) {
+        tag.querySelector('a').classList.add('active')
+        
+        while (tag) {
+          tag.classList.add('expanded')
+          tag = tag.parentElement.closest('.tag-subtree.parent-tag')
+        }
+      }
+    }
+  })()
+</script>
+
 
 <!-- required -->
-<script src="/js/main.js?v=1.27.0" async></script>
+<script src="/js/main.js?v=1.29.1" defer></script>
+
+<script type="text/javascript">
+  const applyTheme = (theme) => {
+    if (theme === 'auto') {
+      document.documentElement.removeAttribute('data-theme')
+    } else {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+
+    applyThemeToGiscus(theme)
+  }
+
+  const applyThemeToGiscus = (theme) => {
+    theme = theme === 'auto' ? 'preferred_color_scheme' : theme
+
+    const cmt = document.getElementById('giscus')
+    if (cmt) {
+      // This works before giscus load.
+      cmt.setAttribute('data-theme', theme)
+    }
+
+    const iframe = document.querySelector('#comments > section.giscus > iframe')
+    if (iframe) {
+      // This works after giscus loaded.
+      const src = iframe.src
+      const newSrc = src.replace(/theme=[\w]+/, `theme=${theme}`)
+      iframe.src = newSrc
+    }
+  }
+
+  const switchTheme = () => {
+    // light -> dark -> auto -> light -> ...
+    const currentTheme = document.documentElement.getAttribute('data-theme')
+    let newTheme;
+    switch (currentTheme) {
+      case 'light':
+        newTheme = 'dark'
+        break
+      case 'dark':
+        newTheme = 'auto'
+        break
+      default:
+        newTheme = 'light'
+    }
+    applyTheme(newTheme)
+    window.localStorage.setItem('Stellar.theme', newTheme)
+    utils.dark.mode = newTheme === 'auto' ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : newTheme;
+    utils.dark.method.toggle.start();
+
+    const messages = {
+      light: `切换到浅色模式`,
+      dark: `切换到深色模式`,
+      auto: `切换到跟随系统配色`,
+    }
+    hud?.toast?.(messages[newTheme])
+  }
+
+  (() => {
+    // Apply user's preferred theme, if any.
+    const theme = window.localStorage.getItem('Stellar.theme')
+    if (theme !== null) {
+      applyTheme(theme)
+    } else {
+      utils.dark.mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    utils.dark.method.toggle.start();
+  })()
+</script>
+
 
 <!-- optional -->
 
   <script type="module">
-  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js'
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
 
-  function load_comment(){
-    if(!document.getElementById("waline_container"))return;
+  const el = document.getElementById('waline_container');
+  util.viewportLazyload(el, load_waline, false);
+
+  function load_waline(){
+    if (!el) return;
 
     utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
-    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.3/dist/waline-meta.css');
 
-    const el = document.getElementById("waline_container");
-    var path = el.getAttribute('comment_id');
-    if (!path) {
-      path = decodeURI(window.location.pathname);
-    }
-
-    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+    const path = el.getAttribute('comment_id') ?? decodeURI(window.location.pathname);
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.3/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
       el: '#waline_container',
       path: path,
       
     }));
-
   }
-  window.addEventListener('DOMContentLoaded', (event) => {
-    load_comment();
-  });
-
 </script>
 
 
@@ -592,7 +754,7 @@
 
 <script defer>
   window.addEventListener('DOMContentLoaded', (event) => {
-    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"},"voice":{"js":"/js/plugins/voice.js"},"video":{"js":"/js/plugins/video.js"},"download-file":{"js":"/js/plugins/download-file.js"},"twikoo":{"js":"/js/services/twikoo_latest_comment.js"},"waline":{"js":"/js/services/waline_latest_comment.js"},"artalk":{"js":"/js/services/artalk_latest_comment.js"},"giscus":{"js":"/js/services/giscus_latest_comment.js"}}`));
     for (let id of Object.keys(ctx.services)) {
       const js = ctx.services[id].js;
       if (id == 'siteinfo') {
@@ -600,6 +762,27 @@
         if (ctx.cardlinks?.length > 0) {
           utils.js(js, { defer: true }).then(function () {
             setCardLink(ctx.cardlinks);
+          });
+        }
+      } else if (id == 'voice') {
+        ctx.voiceAudios = document.querySelectorAll('.voice>audio');
+        if (ctx.voiceAudios?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            createVoiceDom(ctx.voiceAudios);
+          });
+        }
+      } else if (id == 'video') {
+        ctx.videos = document.querySelectorAll('.video>video');
+        if (ctx.videos?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            videoEvents(ctx.videos);
+          });
+        }
+      } else if (id == 'download-file') {
+        ctx.files = document.querySelectorAll('.file');
+        if (ctx.files?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            downloadFileEvent(ctx.files);
           });
         }
       } else {
@@ -617,6 +800,76 @@
         }
       }
     }
+
+    // chat iphone time
+    let phoneTimes = document.querySelectorAll('.chat .status-bar .time');
+
+    if (phoneTimes.length > 0) {
+      NowTime();
+      var date = new Date();
+      var sec = date.getSeconds();
+      var firstAdjustInterval = setInterval(firstAdjustTime, 1000 * (60 - sec));
+    }
+
+    function firstAdjustTime() {
+      NowTime();
+      clearInterval(firstAdjustInterval);
+      setInterval(NowTime, 1000 * 60);
+    }
+
+    function NowTime() {
+      for (let i = 0; i < phoneTimes.length; ++i) {
+        var timeSpan = phoneTimes[i];
+        var date = new Date();
+        var hour = date.getHours();
+        var min = date.getMinutes();
+        timeSpan.innerHTML = check(hour) + ":" + check(min);
+      }
+    };
+
+    function check(val) {
+      if (val < 10) {
+        return ("0" + val);
+      }
+      return (val);
+    }
+
+    // chat quote
+    const chat_quote_obverser = new IntersectionObserver((entries, observer) => {
+      entries.filter((entry) => { return entry.isIntersecting }).sort((a, b) => a.intersectionRect.y !== b.intersectionRect.y ? a.intersectionRect.y - b.intersectionRect.y : a.intersectionRect.x - b.intersectionRect.x).forEach((entry, index) => {
+          observer.unobserve(entry.target);
+          setTimeout(() => {
+            entry.target.classList.add('quote-blink');
+            setTimeout(() => {
+              entry.target.classList.remove('quote-blink');
+            }, 1000);
+          }, Math.max(100, 16) * (index + 1));
+        });
+    });
+
+    var chatQuotes = document.querySelectorAll(".chat .talk .quote");
+    chatQuotes.forEach((quote) => {
+      quote.addEventListener('click', function () {
+        var chatCellDom = document.getElementById("quote-" + quote.getAttribute("quotedCellTag"));
+        if (chatCellDom) {
+          var chatDiv = chatCellDom.parentElement;
+          var mid = chatDiv.clientHeight / 2;
+          var offsetTop = chatCellDom.offsetTop;
+          if (offsetTop > mid - chatCellDom.clientHeight / 2) {
+            chatDiv.scrollTo({
+              top: chatCellDom.offsetTop - mid + chatCellDom.clientHeight / 2,
+              behavior: "smooth"
+            });
+          } else {
+            chatDiv.scrollTo({
+              top: 0,
+              behavior: "smooth"
+            });
+          }
+          chat_quote_obverser.observe(chatCellDom);
+        }
+      });
+    });
   });
 </script>
 
@@ -635,7 +888,7 @@
     hoverDelay: 25
   };
 </script>
-<script defer src="https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"></script><script defer src="https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js"></script><script defer src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.min.js"></script>
 <script>
   // https://www.npmjs.com/package/vanilla-lazyload
   // Set the options globally
@@ -681,12 +934,13 @@
           autoStart: false,
         },
         caption: (fancybox, slide) => {
-          return slide.triggerEl.alt || null
+          return slide.triggerEl.alt || slide.triggerEl.dataset.caption || null
         }
       });
     })
   }
-</script><script>
+</script>
+<script>
   window.addEventListener('DOMContentLoaded', (event) => {
     const swiper_api = document.getElementById('swiper-api');
     if (swiper_api != undefined) {
@@ -698,7 +952,7 @@
           spaceBetween: 8,
           centeredSlides: true,
           effect: effect,
-          loop: true,
+          rewind: true,
           pagination: {
             el: '.swiper-pagination',
             clickable: true,
@@ -711,7 +965,8 @@
       })
     }
   });
-</script><script>
+</script>
+<script>
   document.addEventListener('DOMContentLoaded', function () {
     window.codeElements = document.querySelectorAll('.code');
     if (window.codeElements.length > 0) {
@@ -727,5 +982,5 @@
 
 
 <!-- inject -->
-<script type="text/javascript" src="/js/darkmode.js"></script>
+
 </div></body></html>

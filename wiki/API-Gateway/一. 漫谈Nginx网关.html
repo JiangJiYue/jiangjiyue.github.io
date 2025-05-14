@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.27.0" theme-name="Stellar" theme-version="1.27.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.29.1" theme-name="Stellar" theme-version="1.29.1">
   
   <meta name="generator" content="Hexo 7.3.0">
   <meta http-equiv='x-dns-prefetch-control' content='on' />
@@ -14,25 +14,25 @@
   <meta name="HandheldFriendly" content="True" >
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="theme-color" content="#f8f8f8">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
+  <meta name="theme-color" content="#f9fafb">
   
   <title>API-Gateway：一.漫谈Nginx网关 - SafeKiller Zone</title>
 
   
-    <meta name="description" content="总字符数: 4.18K                代码: 无, 文本: 2.05K               预计阅读时间: 9 分钟            什么是网关 在传统TCP&#x2F;IP术语中,网络设备只分成两种,一种为网关(gateway),另一种为主机(host).网关能在网络间转递数据包,但主机不能转送数据包.在主机(又称终端系统,end system)中,数据包">
+    <meta name="description" content="总字符数: 3.71K 代码: 无, 文本: 2.02K预计阅读时间: 9 分钟            什么是网关 在传统TCP&#x2F;IP术语中,网络设备只分成两种,一种为网关(Gateway),另一种为主机(Host).网关能在网络间转递数据包,但主机不能转送数据包.在主机(又称终端系统,End System)中,数据包需经过TCP&#x2F;IP四层协议处理,但是在网关(又称中">
 <meta property="og:type" content="website">
 <meta property="og:title" content="一.漫谈Nginx网关">
 <meta property="og:url" content="https://jiangjiyue.github.io/wiki/API-Gateway/%E4%B8%80.%20%E6%BC%AB%E8%B0%88Nginx%E7%BD%91%E5%85%B3.html">
 <meta property="og:site_name" content="SafeKiller Zone">
-<meta property="og:description" content="总字符数: 4.18K                代码: 无, 文本: 2.05K               预计阅读时间: 9 分钟            什么是网关 在传统TCP&#x2F;IP术语中,网络设备只分成两种,一种为网关(gateway),另一种为主机(host).网关能在网络间转递数据包,但主机不能转送数据包.在主机(又称终端系统,end system)中,数据包">
+<meta property="og:description" content="总字符数: 3.71K 代码: 无, 文本: 2.02K预计阅读时间: 9 分钟            什么是网关 在传统TCP&#x2F;IP术语中,网络设备只分成两种,一种为网关(Gateway),另一种为主机(Host).网关能在网络间转递数据包,但主机不能转送数据包.在主机(又称终端系统,End System)中,数据包需经过TCP&#x2F;IP四层协议处理,但是在网关(又称中">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/1.webp">
 <meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/2.webp">
 <meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/3-1.webp">
 <meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/4.webp">
-<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/5.webp">
 <meta property="article:published_time" content="2021-09-12T02:20:12.000Z">
-<meta property="article:modified_time" content="2024-02-11T10:33:32.000Z">
+<meta property="article:modified_time" content="2025-05-13T02:02:58.470Z">
 <meta property="article:author" content="Kill3r">
 <meta property="article:tag" content="Nginx">
 <meta property="article:tag" content="OpenResty">
@@ -52,7 +52,8 @@
     <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
   
 
-  <link rel="stylesheet" href="/css/main.css?v=1.27.0">
+  <link rel="stylesheet" href="/css/main.css?v=1.29.1">
+
 
   
     <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
@@ -81,11 +82,11 @@
 
 <widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">API网关概述</span></div><div class="widget-body fs14"><a class="link active" href="/wiki/API-Gateway/%E4%B8%80.%20%E6%BC%AB%E8%B0%88Nginx%E7%BD%91%E5%85%B3.html#start"><span class="toc-text">一.漫谈Nginx网关</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a></div><div class="widget-header dis-select"><span class="name">Nginx入门</span></div><div class="widget-body fs14"><a class="link" href="/wiki/API-Gateway/%E4%BA%8C.%20Nginx%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86.html"><span class="toc-text">二.Nginx相关知识</span></a></div><div class="widget-header dis-select"><span class="name">Nginx高级配置</span></div><div class="widget-body fs14"><a class="link" href="/wiki/API-Gateway/%E4%B8%89.%20Nginx%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3.html"><span class="toc-text">三.Nginx配置文件详解</span></a></div><div class="widget-header dis-select"><span class="name">OpenResty实践</span></div><div class="widget-body fs14"><a class="link" href="/wiki/API-Gateway/%E5%9B%9B.%20OpenResty%E4%B8%AD%E4%BD%BF%E7%94%A8MySql.html"><span class="toc-text">四.OpenResty中使用mysql</span></a><a class="link" href="/wiki/API-Gateway/%E4%BA%94.%20Openresty%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B.html"><span class="toc-text">五.openresty执行流程</span></a></div></widget>
 
-<widget class="widget-wrapper post-card"><div class="widget-header dis-select"><span class="name">更多：DevOps</span></div><div class="widget-body"><a class="item wiki" href="/wiki/MiddlewareDocs/%E4%B8%80.%20Nginx%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A(%E4%B8%8A).html"><span class="title">Nginx, Apache, Tomcat 中间件文档集</span><span class="excerpt">深入了解MiddlewareDocs - Nginx, Apache, Tomcat的综合指南，包括从基础安装到高级配置的所有步骤。</span></a><a class="item wiki" href="/wiki/MonitoringTechDocs/%E4%B8%80.%20Zabbix%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.html"><span class="title">监控系统技术框架</span><span class="excerpt">探索监控系统技术的世界 - 学习和实践笔记。一起学习如何设计、部署并优化监控环境。</span></a><a class="item wiki" href="/wiki/VirtDocs/%E4%B8%80.%20Esxi%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B.html"><span class="title">虚拟化技术框架</span><span class="excerpt">探索虚拟化技术的世界 - 我的学习和实践笔记。一起学习如何设计、部署并优化虚拟化环境。</span></a></div></widget>
+<widget class="widget-wrapper post-card"><div class="widget-header dis-select"><span class="name">更多：DevOps</span></div><div class="widget-body"><a class="item wiki" href="/wiki/MiddlewareDocs/%E4%B8%80.%20Nginx%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A(%E4%B8%8A).html"><span class="title">Nginx, Apache, Tomcat 中间件文档集</span><span class="excerpt">深入了解MiddlewareDocs - Nginx, Apache, Tomcat的综合指南，包括从基础安装到高级配置的所有步骤。</span></a></div></widget>
 
-<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/wiki/VulnerabilityInsightDocs/%E4%BA%94.%20XSS%E8%B7%A8%E7%AB%99%E8%84%9A%E6%9C%AC.html"><span class="title"><strong>VulnerabilityInsightDocs</strong><span class="dot"></span>五. XSS跨站脚本</span></a><a class="item title" href="/wiki/VirtDocs/%E4%B8%89.%20%E5%A4%A7%E5%9E%8B%E5%88%86%E5%B8%83%E5%BC%8Fk8s%E9%9B%86%E7%BE%A4%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A.html"><span class="title"><strong>VirtDocs</strong><span class="dot"></span>三. 大型分布式k8s集群从入门到精通</span></a><a class="item title" href="/wiki/VirtDocs/%E4%BA%8C.%20Docker%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A.html"><span class="title"><strong>VirtDocs</strong><span class="dot"></span>二. Docker从入门到精通</span></a><a class="item title" href="/wiki/VulnerabilityInsightDocs/%E4%BA%8C.%20%E5%9C%A8%E7%BA%BF%E5%AF%86%E7%A0%81%E7%A0%B4%E8%A7%A3.html"><span class="title"><strong>VulnerabilityInsightDocs</strong><span class="dot"></span>二. 在线密码破解</span></a><a class="item title" href="/wiki/VulnerabilityInsightDocs/%E5%8D%81%E5%9B%9B.%20%E9%80%BB%E8%BE%91%E6%BC%8F%E6%B4%9E.html"><span class="title"><strong>VulnerabilityInsightDocs</strong><span class="dot"></span>十四. 逻辑漏洞</span></a></div></widget>
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/wiki/API-Gateway/%E4%BA%94.%20Openresty%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B.html"><span class="title"><strong>API-Gateway</strong><span class="dot"></span>五.openresty执行流程</span></a><a class="item title" href="/wiki/API-Gateway/%E5%9B%9B.%20OpenResty%E4%B8%AD%E4%BD%BF%E7%94%A8MySql.html"><span class="title"><strong>API-Gateway</strong><span class="dot"></span>四.OpenResty中使用mysql</span></a><a class="item title" href="/wiki/API-Gateway/%E4%BA%8C.%20Nginx%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86.html"><span class="title"><strong>API-Gateway</strong><span class="dot"></span>二.Nginx相关知识</span></a><a class="item title" href="/wiki/API-Gateway/%E4%B8%80.%20%E6%BC%AB%E8%B0%88Nginx%E7%BD%91%E5%85%B3.html"><span class="title"><strong>API-Gateway</strong><span class="dot"></span>一.漫谈Nginx网关</span></a><a class="item title" href="/wiki/MiddlewareDocs/%E4%BA%94.%20Tomcat%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A.html"><span class="title"><strong>MiddlewareDocs</strong><span class="dot"></span>五. Tomcat从入门到精通</span></a></div></widget>
 </div>
-<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a><a class="social" href="javaScript:void(0);" rel="noopener noreferrer"><i class="fa-solid fa-circle-half-stroke fa-flip"></i></a></div></footer>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a></div></footer>
 </div></aside><div class="l_main" id="main">
 
 
@@ -96,7 +97,7 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
 <span class="sep"></span><a class="cap breadcrumb" id="menu" href="/wiki">文档</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/wiki/API-Gateway/%E4%B8%80.%20%E6%BC%AB%E8%B0%88Nginx%E7%BD%91%E5%85%B3.html">API-Gateway</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2024-02-11T10:33:32.000Z">2024-02-11</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">更新于：<time datetime="2025-05-13T02:02:58.470Z">2025-05-13</time></span></div></div></div>
     
     <div class="bottom only-title">
       
@@ -108,21 +109,15 @@
     
   </div>
   </div><article class="md-text content"><div class="tag-plugin grid" bg="card" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));"><div class="cell" style="">
-    <p>总字符数: 4.18K </p>
-    </div>
-    <div class="cell" style="">
-    <p>代码: 无, 文本: 2.05K</p>
-    </div>
-    <div class="cell" style="">
-    <p>预计阅读时间: 9 分钟</p>
+    <!-- Cell --><p>总字符数: 3.71K </p><!-- Cell --><p>代码: 无, 文本: 2.02K</p><!-- Cell --><p>预计阅读时间: 9 分钟</p>
     </div>
     </div>
 
 <h3 id="什么是网关"><a href="#什么是网关" class="headerlink" title="什么是网关"></a>什么是网关</h3><blockquote>
-<p>在传统<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/TCP/IP">TCP&#x2F;IP</a>术语中,网络设备只分成两种,一种为网关(gateway),另一种为主机(host).网关能在网络间转递数据包,但主机不能转送数据包.在主机(又称终端系统,end system)中,数据包需经过TCP&#x2F;IP四层协议处理,但是在网关(又称中介系统,intermediate system)只需要到达网际层,决定路径之后就可以转送.在当时,网关(gateway)与路由器(router)还没有区别.</p>
-<p>在现代网络术语中,网关(gateway)与路由器(router)的定义不同.网关(gateway)能在不同<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE">协议</a>间移动资料,而路由器(router)是在不同<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%B6%B2%E8%B7%AF">网络</a>间移动资料,相当于传统所说的IP网关(IP gateway).</p>
-<p><strong>网关</strong>顾名思义就是连接两个网络的设备,对于语音网关来说,他可以连接<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/PSTN">PSTN</a>和<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E4%BB%A5%E5%A4%AA%E7%BD%91">以太网</a>,这就相当于<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/VOIP">VOIP</a>,把不同电话中的模拟信号通过网关而转换成数字信号,而且加入协议再去传输.在到了接收端的时候再通过<strong>网关</strong>还原成模拟的电话信号,最后才能在电话机上听到.</p>
-<p>对于以太网中的<strong>网关</strong>只能转发三层以上数据包,这一点和路由是一样的.而不同的是<strong>网关</strong>中并没有<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E8%B7%AF%E7%94%B1%E8%A1%A8">路由表</a>,他只能按照预先设定的不同网段来进行转发.网关最重要的一点就是端口映射,子网内用户在外网看来只是外网的IP地址对应着不同的端口,这样看来就会保护子网内的用户.</p>
+<p>在传统<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/Wiki/TCP/IP">TCP&#x2F;IP</a>术语中,网络设备只分成两种,一种为网关(Gateway),另一种为主机(Host).网关能在网络间转递数据包,但主机不能转送数据包.在主机(又称终端系统,End System)中,数据包需经过TCP&#x2F;IP四层协议处理,但是在网关(又称中介系统,Intermediate System)只需要到达网际层,决定路径之后就可以转送.在当时,网关(Gateway)与路由器(Router)还没有区别.</p>
+<p>在现代网络术语中,网关(Gateway)与路由器(Router)的定义不同.网关(Gateway)能在不同<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/Wiki/%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE">协议</a>间移动资料,而路由器(Router)是在不同<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/Wiki/%E7%B6%B2%E8%B7%AF">网络</a>间移动资料,相当于传统所说的IP网关(IP Gateway).</p>
+<p><strong>网关</strong>顾名思义就是连接两个网络的设备,对于语音网关来说,他可以连接<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/Wiki/PSTN">PSTN</a>和<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/Wiki/%E4%BB%A5%E5%A4%AA%E7%BD%91">以太网</a>,这就相当于<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/Wiki/VOIP">VOIP</a>,把不同电话中的模拟信号通过网关而转换成数字信号,而且加入协议再去传输.在到了接收端的时候再通过<strong>网关</strong>还原成模拟的电话信号,最后才能在电话机上听到.</p>
+<p>对于以太网中的<strong>网关</strong>只能转发三层以上数据包,这一点和路由是一样的.而不同的是<strong>网关</strong>中并没有<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/Wiki/%E8%B7%AF%E7%94%B1%E8%A1%A8">路由表</a>,他只能按照预先设定的不同网段来进行转发.网关最重要的一点就是端口映射,子网内用户在外网看来只是外网的IP地址对应着不同的端口,这样看来就会保护子网内的用户.</p>
 </blockquote>
 <h3 id="单节点场景"><a href="#单节点场景" class="headerlink" title="单节点场景"></a>单节点场景</h3><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/1.webp" data-fancybox="true"/></div></div>
 
@@ -142,29 +137,29 @@
 <li>Tyk: Tyk是一个开放源码的API网关,它是快速、可扩展和现代的.Tyk提供了一个API管理平台,其中包括API网关、API分析、开发人员门户和API管理面板.Trk是一个基于Go实现的网关服务.</li>
 <li>Kong: Kong是一个可扩展的开放源码API Layer(也称为API网关或API中间件).Kong在任何RESTful API的前面运行,通过插件扩展,它提供了超越核心平台的额外功能和服务.</li>
 <li>Orange:和Kong类似也是基于OpenResty的一个API网关程序,是由国人开发的.</li>
-<li>Netflix zuul:Zuul是一种提供动态路由、监视、弹性、安全性等功能的边缘服务.Zuul是Netflix出品的一个基于JVM路由和服务端的负载均衡器.</li>
-<li>apiaxle: Nodejs实现的一个API 网关.</li>
-<li>api-umbrella: Ruby 实现的一个API网关.</li>
+<li>Netflix Zuul:Zuul是一种提供动态路由、监视、弹性、安全性等功能的边缘服务.Zuul是Netflix出品的一个基于JVM路由和服务端的负载均衡器.</li>
+<li>Apiaxle: Nodejs实现的一个API 网关.</li>
+<li>Api-Umbrella: Ruby 实现的一个API网关.</li>
 </ul>
 <h3 id="技术选型"><a href="#技术选型" class="headerlink" title="技术选型"></a>技术选型</h3><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/3-1.webp" data-fancybox="true"/></div></div>
 
 <h3 id="正向代理"><a href="#正向代理" class="headerlink" title="正向代理"></a>正向代理</h3><blockquote>
-<p>代理(英语:Proxy),也称网络代理,是一种特殊的网络服务,允许一个网络终端(一般为客户端)通过这个服务与另一个网络终端(一般为服务器)进行非直接的连接.一些网关、路由器等网络设备具备网络代理功能.一般认为代理服务有利于保障网络终端的隐私或安全,防止攻击.</p>
+<p>代理(Proxy),也称网络代理,是一种特殊的网络服务,允许一个网络终端(一般为客户端)通过这个服务与另一个网络终端(一般为服务器)进行非直接的连接.一些网关、路由器等网络设备具备网络代理功能.一般认为代理服务有利于保障网络终端的隐私或安全,防止攻击.</p>
 </blockquote>
 <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/4.webp" data-fancybox="true"/></div></div>
 
 <h3 id="反向代理"><a href="#反向代理" class="headerlink" title="反向代理"></a>反向代理</h3><blockquote>
-<p><strong>反向代理</strong>在<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%94%B5%E8%84%91%E7%BD%91%E7%BB%9C">电脑网络</a>中是<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E4%BB%A3%E7%90%86%E4%BC%BA%E6%9C%8D%E5%99%A8">代理服务器</a>的一种.服务器根据客户端的请求,从其关系的一组或多组后端<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%9C%8D%E5%8A%A1%E5%99%A8">服务器</a>(如<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/Web%E6%9C%8D%E5%8A%A1%E5%99%A8">Web服务器</a>)上获取资源,然后再将这些资源返回给客户端,客户端只会得知反向代理的IP地址,而不知道在代理服务器后面的服务器集群的存在[<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86#cite_note-1">1]</a>.</p>
-<p>与<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%89%8D%E5%90%91%E4%BB%A3%E7%90%86">前向代理</a>不同,前向代理作为客户端的代理,将从互联网上获取的资源返回给一个或多个的客户端,服务端(如Web服务器)只知道代理的IP地址而不知道客户端的IP地址;而反向代理是作为服务器端(如Web服务器)的代理使用,而不是客户端.客户端借由前向代理可以间接访问很多不同互联网服务器(集群)的资源,而反向代理是供很多客户端都通过它间接访问不同后端服务器上的资源,而不需要知道这些后端服务器的存在,而以为所有资源都来自于这个反向代理服务器.</p>
-<p>反向代理在现时的互联网中并不少见,而另一些例子,像是<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%85%A7%E5%AE%B9%E5%82%B3%E9%81%9E%E7%B6%B2%E8%B7%AF">CDN</a>、SNI代理等,是反向代理结合<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/DNS">DNS</a>的一类延伸应用.</p>
+<p><strong>反向代理</strong>在<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/Wiki/%E7%94%B5%E8%84%91%E7%BD%91%E7%BB%9C">电脑网络</a>中是<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/Wiki/%E4%BB%A3%E7%90%86%E4%BC%BA%E6%9C%8D%E5%99%A8">代理服务器</a>的一种.服务器根据客户端的请求,从其关系的一组或多组后端<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/Wiki/%E6%9C%8D%E5%8A%A1%E5%99%A8">服务器</a>(如<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/Wiki/Web%E6%9C%8D%E5%8A%A1%E5%99%A8">Web服务器</a>)上获取资源,然后再将这些资源返回给客户端,客户端只会得知反向代理的IP地址,而不知道在代理服务器后面的服务器集群的存在[<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/Wiki/%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86#cite_note-1">1]</a>.</p>
+<p>与<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/Wiki/%E5%89%8D%E5%90%91%E4%BB%A3%E7%90%86">前向代理</a>不同,前向代理作为客户端的代理,将从互联网上获取的资源返回给一个或多个的客户端,服务端(如Web服务器)只知道代理的IP地址而不知道客户端的IP地址;而反向代理是作为服务器端(如Web服务器)的代理使用,而不是客户端.客户端借由前向代理可以间接访问很多不同互联网服务器(集群)的资源,而反向代理是供很多客户端都通过它间接访问不同后端服务器上的资源,而不需要知道这些后端服务器的存在,而以为所有资源都来自于这个反向代理服务器.</p>
+<p>反向代理在现时的互联网中并不少见,而另一些例子,像是<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/Wiki/%E5%85%A7%E5%AE%B9%E5%82%B3%E9%81%9E%E7%B6%B2%E8%B7%AF">CDN</a>、SNI代理等,是反向代理结合<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/Wiki/DNS">DNS</a>的一类延伸应用.</p>
 </blockquote>
-<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/5.webp" data-fancybox="true"/></div></div>
-
 <h3 id="正向代理与反向代理的区别"><a href="#正向代理与反向代理的区别" class="headerlink" title="正向代理与反向代理的区别"></a>正向代理与反向代理的区别</h3><ol>
 <li>正向代理是需要在用户的电脑上配置正向代理服务器的;而反向代理不需要,因为用户是直接访问的反向代理服务器</li>
-<li>正向代理的应用场景是用户是知道目标服务器的地址,如:<a href="www.google.com">www.google.com</a>,但不能直接访问,那么就需要在用户电脑配置一个正向代理服务器,用户再次访问<a href="www.google.com">www.google.com</a>就可以正常访问了;而反向代理的应用场景是用户本来就不知道目标服务器的地址.而是由平台方提供一个反向代理服务器的地址,用户直接访问反向代理服务器的地址就行.不管目标服务器有多少,用户不需要关心,只要访问反向代理服务器就ok;由反向代理服务器去解析访问目标服务器</li>
+<li>正向代理的应用场景是用户是知道目标服务器的地址,如:<a href="Www.Google.Com">Www.Google.Com</a>,但不能直接访问,那么就需要在用户电脑配置一个正向代理服务器,用户再次访问<a href="Www.Google.Com">Www.Google.Com</a>就可以正常访问了;而反向代理的应用场景是用户本来就不知道目标服务器的地址.而是由平台方提供一个反向代理服务器的地址,用户直接访问反向代理服务器的地址就行.不管目标服务器有多少,用户不需要关心,只要访问反向代理服务器就ok;由反向代理服务器去解析访问目标服务器</li>
 <li>反向代理极大的保护了应用的安全性,而且此结构可以很好的搭建负载均衡</li>
 </ol>
+
+<div class="article-footer fs14"></div>
 </article>
 <div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"></div><div class="item" id="next"><div class="note">接下来阅读</div><a href="/wiki/API-Gateway/%E4%BA%8C.%20Nginx%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86.html">二.Nginx相关知识</a></div></section></div>
 
@@ -207,7 +202,7 @@
 
 <widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%BD%91%E5%85%B3"><span class="toc-text">什么是网关</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E8%8A%82%E7%82%B9%E5%9C%BA%E6%99%AF"><span class="toc-text">单节点场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E8%8A%82%E7%82%B9%E5%9C%BA%E6%99%AF"><span class="toc-text">多节点场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E5%85%B3%E4%BD%9C%E7%94%A8"><span class="toc-text">网关作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%B0%E6%9C%89%E6%A1%86%E6%9E%B6"><span class="toc-text">现有框架</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B"><span class="toc-text">技术选型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86"><span class="toc-text">正向代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86"><span class="toc-text">反向代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86%E4%B8%8E%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">正向代理与反向代理的区别</span></a></li></ol></div><div class="widget-footer">
 
-<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10.46 1.25h3.08c1.603 0 2.86 0 3.864.095c1.023.098 1.861.3 2.6.752a5.75 5.75 0 0 1 1.899 1.899c.452.738.654 1.577.752 2.6c.095 1.004.095 2.261.095 3.865v1.067c0 1.141 0 2.036-.05 2.759c-.05.735-.153 1.347-.388 1.913a5.75 5.75 0 0 1-3.112 3.112c-.805.334-1.721.408-2.977.43a10.81 10.81 0 0 0-.929.036c-.198.022-.275.054-.32.08c-.047.028-.112.078-.224.232c-.121.166-.258.396-.476.764l-.542.916c-.773 1.307-2.69 1.307-3.464 0l-.542-.916a10.605 10.605 0 0 0-.476-.764c-.112-.154-.177-.204-.224-.232c-.045-.026-.122-.058-.32-.08c-.212-.023-.49-.03-.93-.037c-1.255-.021-2.171-.095-2.976-.429A5.75 5.75 0 0 1 1.688 16.2c-.235-.566-.338-1.178-.389-1.913c-.049-.723-.049-1.618-.049-2.76v-1.066c0-1.604 0-2.86.095-3.865c.098-1.023.3-1.862.752-2.6a5.75 5.75 0 0 1 1.899-1.899c.738-.452 1.577-.654 2.6-.752C7.6 1.25 8.857 1.25 10.461 1.25M6.739 2.839c-.914.087-1.495.253-1.959.537A4.25 4.25 0 0 0 3.376 4.78c-.284.464-.45 1.045-.537 1.96c-.088.924-.089 2.11-.089 3.761v1c0 1.175 0 2.019.046 2.685c.045.659.131 1.089.278 1.441a4.25 4.25 0 0 0 2.3 2.3c.515.214 1.173.294 2.429.316h.031c.398.007.747.013 1.037.045c.311.035.616.104.909.274c.29.17.5.395.682.645c.169.232.342.525.538.856l.559.944a.52.52 0 0 0 .882 0l.559-.944c.196-.331.37-.624.538-.856c.182-.25.392-.476.682-.645c.293-.17.598-.24.909-.274c.29-.032.639-.038 1.037-.045h.032c1.255-.022 1.913-.102 2.428-.316a4.25 4.25 0 0 0 2.3-2.3c.147-.352.233-.782.278-1.441c.046-.666.046-1.51.046-2.685v-1c0-1.651 0-2.837-.089-3.762c-.087-.914-.253-1.495-.537-1.959a4.25 4.25 0 0 0-1.403-1.403c-.464-.284-1.045-.45-1.96-.537c-.924-.088-2.11-.089-3.761-.089h-3c-1.651 0-2.837 0-3.762.089" clip-rule="evenodd"/><path fill="currentColor" d="M9 11a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg><span>参与讨论</span></a></div></widget>
 </div></aside><div class='float-panel blur'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
@@ -226,6 +221,9 @@
       day: `天前`,
     },
     root : `/`,
+    tag_plugins: {
+      chat: Object.assign({"api":"https://siteinfo.listentothewind.cn/api/v1"}),
+    }
   };
 
   // required plugins (only load if needs)
@@ -233,7 +231,7 @@
     ctx.search = {};
     ctx.search.service = `local_search`;
     if (ctx.search.service == 'local_search') {
-      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"codeblock":true,"sort":"-date"}`);
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"skip_search":null,"codeblock":true,"sort":"-date"}`);
       ctx.search[ctx.search.service] = service_obj;
     }
   }
@@ -242,14 +240,54 @@
     cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
   };
   const deps = {
-    jquery: `https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js`,
-    marked: `https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js`
+    jquery: `https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js`,
+    marked: `https://cdn.jsdelivr.net/npm/marked@13.0.1/lib/marked.umd.min.js`
   }
   
 
 </script>
 
 <script type="text/javascript">
+  function RunItem() {
+    this.list = []; // 存放回调函数
+    this.start = () => {
+      for (var i = 0; i < this.list.length; i++) {
+        this.list[i].run();
+      }
+    };
+    this.push = (fn, name, setRequestAnimationFrame = true) => {
+      let myfn = fn
+      if (setRequestAnimationFrame) {
+        myfn = () => {
+          utils.requestAnimationFrame(fn)
+        }
+      }
+      var f = new Item(myfn, name);
+      this.list.push(f);
+    };
+    this.remove = (name) => {
+      for (let index = 0; index < this.list.length; index++) {
+        const e = this.list[index];
+        if (e.name == name) {
+          this.list.splice(index, 1);
+        }
+      }
+    }
+    // 构造一个可以run的对象
+    function Item(fn, name) {
+      // 函数名称
+      this.name = name || fn.name;
+      // run方法
+      this.run = () => {
+        try {
+          fn()
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    }
+  }
+
   const utils = {
     // 懒加载 css https://github.com/filamentgroup/loadCSS
     css: (href, before, media, attributes) => {
@@ -312,7 +350,7 @@
 
     js: (src, opt) => new Promise((resolve, reject) => {
       var script = document.createElement('script');
-      if (src.startsWith('/')){
+      if (src.startsWith('/')) {
         src = ctx.root + src.substring(1);
       }
       script.src = src;
@@ -325,7 +363,7 @@
         script.async = true
       }
       script.onerror = reject
-      script.onload = script.onreadystatechange = function() {
+      script.onload = script.onreadystatechange = function () {
         const loadState = this.readyState
         if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
         script.onload = script.onreadystatechange = null
@@ -341,7 +379,7 @@
         fn()
       }
     },
-    
+
     onLoading: (el) => {
       if (el) {
         $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
@@ -375,7 +413,7 @@
               }
             }
           }, 5000);
-          fetch(url).then(function(response) {
+          fetch(url).then(function (response) {
             if (status !== 2) {
               clearTimeout(timer);
               resolve(response);
@@ -386,11 +424,11 @@
               return response.json();
             }
             throw new Error('Network response was not ok.');
-          }).then(function(data) {
+          }).then(function (data) {
             retryTimes = 0;
             utils.onLoadSuccess(el);
             callback(data);
-          }).catch(function(error) {
+          }).catch(function (error) {
             if (retryTimes > 0) {
               retryTimes -= 1;
               setTimeout(() => {
@@ -405,9 +443,28 @@
       }
       req();
     },
+    /********************** requestAnimationFrame ********************************/
+    // 1、requestAnimationFrame 会把每一帧中的所有 DOM 操作集中起来，在一次重绘或回流中就完成，并且重绘或回流的时间间隔紧紧跟随浏览器的刷新频率，一般来说，这个频率为每秒60帧。
+    // 2、在隐藏或不可见的元素中，requestAnimationFrame 将不会进行重绘或回流，这当然就意味着更少的的 cpu，gpu 和内存使用量。
+    requestAnimationFrame: (fn) => {
+      if (!window.requestAnimationFrame) {
+        window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame;
+      }
+      window.requestAnimationFrame(fn)
+    },
+    dark: {},
   };
-</script>
 
+  // utils.dark.mode 当前模式 dark or light
+  // utils.dark.toggle() 暗黑模式触发器
+  // utils.dark.push(callBack[,"callBackName"]) 传入触发器回调函数
+  utils.dark.method = {
+    toggle: new RunItem(),
+  };
+  utils.dark = Object.assign(utils.dark, {
+    push: utils.dark.method.toggle.push,
+  });
+</script>
 <script>
   const sidebar = {
     leftbar: () => {
@@ -433,38 +490,128 @@
     }
   }
 </script>
+<script type="text/javascript">
+  (() => {
+    const tagSwitchers = document.querySelectorAll('.tag-subtree.parent-tag > a > .tag-switcher-wrapper')
+    for (const tagSwitcher of tagSwitchers) {
+      tagSwitcher.addEventListener('click', (e) => {
+        const parent = e.target.closest('.tag-subtree.parent-tag')
+        parent.classList.toggle('expanded')
+        e.preventDefault()
+      })
+    }
+
+    // Get active tag from query string, then activate it.
+    const urlParams = new URLSearchParams(window.location.search)
+    const activeTag = urlParams.get('tag')
+    if (activeTag) {
+      let tag = document.querySelector(`.tag-subtree[data-tag="${activeTag}"]`)
+      if (tag) {
+        tag.querySelector('a').classList.add('active')
+        
+        while (tag) {
+          tag.classList.add('expanded')
+          tag = tag.parentElement.closest('.tag-subtree.parent-tag')
+        }
+      }
+    }
+  })()
+</script>
+
 
 <!-- required -->
-<script src="/js/main.js?v=1.27.0" async></script>
+<script src="/js/main.js?v=1.29.1" defer></script>
+
+<script type="text/javascript">
+  const applyTheme = (theme) => {
+    if (theme === 'auto') {
+      document.documentElement.removeAttribute('data-theme')
+    } else {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+
+    applyThemeToGiscus(theme)
+  }
+
+  const applyThemeToGiscus = (theme) => {
+    theme = theme === 'auto' ? 'preferred_color_scheme' : theme
+
+    const cmt = document.getElementById('giscus')
+    if (cmt) {
+      // This works before giscus load.
+      cmt.setAttribute('data-theme', theme)
+    }
+
+    const iframe = document.querySelector('#comments > section.giscus > iframe')
+    if (iframe) {
+      // This works after giscus loaded.
+      const src = iframe.src
+      const newSrc = src.replace(/theme=[\w]+/, `theme=${theme}`)
+      iframe.src = newSrc
+    }
+  }
+
+  const switchTheme = () => {
+    // light -> dark -> auto -> light -> ...
+    const currentTheme = document.documentElement.getAttribute('data-theme')
+    let newTheme;
+    switch (currentTheme) {
+      case 'light':
+        newTheme = 'dark'
+        break
+      case 'dark':
+        newTheme = 'auto'
+        break
+      default:
+        newTheme = 'light'
+    }
+    applyTheme(newTheme)
+    window.localStorage.setItem('Stellar.theme', newTheme)
+    utils.dark.mode = newTheme === 'auto' ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : newTheme;
+    utils.dark.method.toggle.start();
+
+    const messages = {
+      light: `切换到浅色模式`,
+      dark: `切换到深色模式`,
+      auto: `切换到跟随系统配色`,
+    }
+    hud?.toast?.(messages[newTheme])
+  }
+
+  (() => {
+    // Apply user's preferred theme, if any.
+    const theme = window.localStorage.getItem('Stellar.theme')
+    if (theme !== null) {
+      applyTheme(theme)
+    } else {
+      utils.dark.mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    utils.dark.method.toggle.start();
+  })()
+</script>
+
 
 <!-- optional -->
 
   <script type="module">
-  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js'
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
 
-  function load_comment(){
-    if(!document.getElementById("waline_container"))return;
+  const el = document.getElementById('waline_container');
+  util.viewportLazyload(el, load_waline, false);
+
+  function load_waline(){
+    if (!el) return;
 
     utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
-    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.3/dist/waline-meta.css');
 
-    const el = document.getElementById("waline_container");
-    var path = el.getAttribute('comment_id');
-    if (!path) {
-      path = decodeURI(window.location.pathname);
-    }
-
-    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+    const path = el.getAttribute('comment_id') ?? decodeURI(window.location.pathname);
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.3/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
       el: '#waline_container',
       path: path,
       
     }));
-
   }
-  window.addEventListener('DOMContentLoaded', (event) => {
-    load_comment();
-  });
-
 </script>
 
 
@@ -472,7 +619,7 @@
 
 <script defer>
   window.addEventListener('DOMContentLoaded', (event) => {
-    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"}}`));
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"},"voice":{"js":"/js/plugins/voice.js"},"video":{"js":"/js/plugins/video.js"},"download-file":{"js":"/js/plugins/download-file.js"},"twikoo":{"js":"/js/services/twikoo_latest_comment.js"},"waline":{"js":"/js/services/waline_latest_comment.js"},"artalk":{"js":"/js/services/artalk_latest_comment.js"},"giscus":{"js":"/js/services/giscus_latest_comment.js"}}`));
     for (let id of Object.keys(ctx.services)) {
       const js = ctx.services[id].js;
       if (id == 'siteinfo') {
@@ -480,6 +627,27 @@
         if (ctx.cardlinks?.length > 0) {
           utils.js(js, { defer: true }).then(function () {
             setCardLink(ctx.cardlinks);
+          });
+        }
+      } else if (id == 'voice') {
+        ctx.voiceAudios = document.querySelectorAll('.voice>audio');
+        if (ctx.voiceAudios?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            createVoiceDom(ctx.voiceAudios);
+          });
+        }
+      } else if (id == 'video') {
+        ctx.videos = document.querySelectorAll('.video>video');
+        if (ctx.videos?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            videoEvents(ctx.videos);
+          });
+        }
+      } else if (id == 'download-file') {
+        ctx.files = document.querySelectorAll('.file');
+        if (ctx.files?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            downloadFileEvent(ctx.files);
           });
         }
       } else {
@@ -497,6 +665,76 @@
         }
       }
     }
+
+    // chat iphone time
+    let phoneTimes = document.querySelectorAll('.chat .status-bar .time');
+
+    if (phoneTimes.length > 0) {
+      NowTime();
+      var date = new Date();
+      var sec = date.getSeconds();
+      var firstAdjustInterval = setInterval(firstAdjustTime, 1000 * (60 - sec));
+    }
+
+    function firstAdjustTime() {
+      NowTime();
+      clearInterval(firstAdjustInterval);
+      setInterval(NowTime, 1000 * 60);
+    }
+
+    function NowTime() {
+      for (let i = 0; i < phoneTimes.length; ++i) {
+        var timeSpan = phoneTimes[i];
+        var date = new Date();
+        var hour = date.getHours();
+        var min = date.getMinutes();
+        timeSpan.innerHTML = check(hour) + ":" + check(min);
+      }
+    };
+
+    function check(val) {
+      if (val < 10) {
+        return ("0" + val);
+      }
+      return (val);
+    }
+
+    // chat quote
+    const chat_quote_obverser = new IntersectionObserver((entries, observer) => {
+      entries.filter((entry) => { return entry.isIntersecting }).sort((a, b) => a.intersectionRect.y !== b.intersectionRect.y ? a.intersectionRect.y - b.intersectionRect.y : a.intersectionRect.x - b.intersectionRect.x).forEach((entry, index) => {
+          observer.unobserve(entry.target);
+          setTimeout(() => {
+            entry.target.classList.add('quote-blink');
+            setTimeout(() => {
+              entry.target.classList.remove('quote-blink');
+            }, 1000);
+          }, Math.max(100, 16) * (index + 1));
+        });
+    });
+
+    var chatQuotes = document.querySelectorAll(".chat .talk .quote");
+    chatQuotes.forEach((quote) => {
+      quote.addEventListener('click', function () {
+        var chatCellDom = document.getElementById("quote-" + quote.getAttribute("quotedCellTag"));
+        if (chatCellDom) {
+          var chatDiv = chatCellDom.parentElement;
+          var mid = chatDiv.clientHeight / 2;
+          var offsetTop = chatCellDom.offsetTop;
+          if (offsetTop > mid - chatCellDom.clientHeight / 2) {
+            chatDiv.scrollTo({
+              top: chatCellDom.offsetTop - mid + chatCellDom.clientHeight / 2,
+              behavior: "smooth"
+            });
+          } else {
+            chatDiv.scrollTo({
+              top: 0,
+              behavior: "smooth"
+            });
+          }
+          chat_quote_obverser.observe(chatCellDom);
+        }
+      });
+    });
   });
 </script>
 
@@ -515,7 +753,7 @@
     hoverDelay: 25
   };
 </script>
-<script defer src="https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js"></script><script defer src="https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js"></script><script defer src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.min.js"></script>
 <script>
   // https://www.npmjs.com/package/vanilla-lazyload
   // Set the options globally
@@ -561,12 +799,13 @@
           autoStart: false,
         },
         caption: (fancybox, slide) => {
-          return slide.triggerEl.alt || null
+          return slide.triggerEl.alt || slide.triggerEl.dataset.caption || null
         }
       });
     })
   }
-</script><script>
+</script>
+<script>
   window.addEventListener('DOMContentLoaded', (event) => {
     const swiper_api = document.getElementById('swiper-api');
     if (swiper_api != undefined) {
@@ -578,7 +817,7 @@
           spaceBetween: 8,
           centeredSlides: true,
           effect: effect,
-          loop: true,
+          rewind: true,
           pagination: {
             el: '.swiper-pagination',
             clickable: true,
@@ -591,7 +830,8 @@
       })
     }
   });
-</script><script>
+</script>
+<script>
   document.addEventListener('DOMContentLoaded', function () {
     window.codeElements = document.querySelectorAll('.code');
     if (window.codeElements.length > 0) {
@@ -607,5 +847,5 @@
 
 
 <!-- inject -->
-<script type="text/javascript" src="/js/darkmode.js"></script>
+
 </div></body></html>

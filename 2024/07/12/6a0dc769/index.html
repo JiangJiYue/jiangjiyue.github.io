@@ -1,0 +1,1555 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.29.1" theme-name="Stellar" theme-version="1.29.1">
+  
+  <meta name="generator" content="Hexo 7.3.0">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
+  <meta name="theme-color" content="#f9fafb">
+  
+  <title>域1-安全与风险管理 - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="网络安全治理理解和应用安全概念CIA CIA是最基础、也是最重要的安全原则,所有的安全解决方案都应考虑这三个原则,但会应组织自身的独特情况不同,优先级会有所不同.   机密性(Confidentiality):确保数据、对象或资源的不被非授权用户访问. 完整性(Integrity):确保数据、对象或资源的不被非授权用户更改. 可用性(Availability):确保数据、对象或资源的在任何时间都可">
+<meta property="og:type" content="article">
+<meta property="og:title" content="域1-安全与风险管理">
+<meta property="og:url" content="https://jiangjiyue.github.io/2024/07/12/6a0dc769/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="网络安全治理理解和应用安全概念CIA CIA是最基础、也是最重要的安全原则,所有的安全解决方案都应考虑这三个原则,但会应组织自身的独特情况不同,优先级会有所不同.   机密性(Confidentiality):确保数据、对象或资源的不被非授权用户访问. 完整性(Integrity):确保数据、对象或资源的不被非授权用户更改. 可用性(Availability):确保数据、对象或资源的在任何时间都可">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20250513095830190.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20250511101653361.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20250511103249614.png">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20250511131408159.png">
+<meta property="article:published_time" content="2024-07-11T17:08:49.000Z">
+<meta property="article:modified_time" content="2025-05-14T03:13:33.913Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="Linux, Nginx, Zabbix, ELK, Security, Penetration">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20250513095830190.png">
+  
+  
+  
+  <meta name="keywords" content="Linux, Nginx, Zabbix, ELK, Security, Penetration">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.29.1">
+
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="导航" href="/sites/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/tools/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
+</div>
+<div class="widgets">
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">专栏：CISSP</span></div><div class="widget-body"><a class="item active" href="/2024/07/12/6a0dc769/"><span class="title">域1-安全与风险管理</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a></div></widget>
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2024/07/12/6a0dc769/"><span class="title">域1-安全与风险管理</span></a><a class="item title" href="/2023/07/13/d9d69399/"><span class="title">攻防演练事件研判篇</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/topic">专栏</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/2024/07/12/6a0dc769/">CISSP</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2024-07-11T17:08:49.000Z">2024-07-12</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2025-05-14T03:13:33.913Z">2025-05-14</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>域1-安全与风险管理</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><h2 id="网络安全治理"><a href="#网络安全治理" class="headerlink" title="网络安全治理"></a>网络安全治理</h2><h3 id="理解和应用安全概念"><a href="#理解和应用安全概念" class="headerlink" title="理解和应用安全概念"></a>理解和应用安全概念</h3><h4 id="CIA"><a href="#CIA" class="headerlink" title="CIA"></a>CIA</h4><blockquote>
+<p>CIA是最基础、也是最重要的安全原则,所有的安全解决方案都应考虑这三个原则,但会应组织自身的独特情况不同,优先级会有所不同.</p>
+</blockquote>
+<ul>
+<li>机密性(Confidentiality):确保数据、对象或资源的不被非授权用户访问.</li>
+<li>完整性(Integrity):确保数据、对象或资源的不被非授权用户更改.</li>
+<li>可用性(Availability):确保数据、对象或资源的在任何时间都可被授权用户访问.</li>
+</ul>
+<h4 id="DAD"><a href="#DAD" class="headerlink" title="DAD"></a>DAD</h4><p>DAD代表CIA安全保护的失败.</p>
+<ul>
+<li>泄漏(Disclosure):未经授权的实体访问敏感或机密材料.</li>
+<li>篡改改(Alteration):数据被恶意或意外更改.</li>
+<li>破坏(Destruction):资源被破坏或授权用户无法访问.</li>
+</ul>
+<p>过度保护(Overprotection)</p>
+<ul>
+<li>过度保护机密性会导致可用性受到限制.</li>
+<li>过度保护完整性可能会导致可用性受到限制.</li>
+<li>过度提供可用性可能会导致机密性和完整性的损失.</li>
+<li>示例: 对数据库设置过高的访问控制(如需多级审批才能读取数据),可能导致合法用户无法及时获取数据,影响业务连续性.</li>
+</ul>
+<h4 id="其他性质"><a href="#其他性质" class="headerlink" title="其他性质"></a>其他性质</h4><ul>
+<li>真实性(Authenticity):强调“验证实体身份的真实性”,如通过密码、生物特征等确认用户身份.</li>
+<li>不可否认性(Nonrepudiation):确保活动的主体或事件的肇事者不能否认事件的发生.</li>
+</ul>
+<h4 id="AAA服务及五大元素"><a href="#AAA服务及五大元素" class="headerlink" title="AAA服务及五大元素"></a>AAA服务及五大元素</h4><ol>
+<li>身份验证(Authentication): 对访问主体需要做基本的身份验证,解决你宣称就是谁谁谁的问题.</li>
+<li>授权(Authorization): 用户身份验证通过后,需要确定用户可以访问哪些资源,以及对资源进行怎样的操作(读、写、删除等).解决用户能做什么的问题.</li>
+<li>Accounting(记账&#x2F;记录保持&#x2F;可问责): 对系统活动进行详细的跟踪和记录.这通常包括用户活动、异常行为、访问请求等.这些记录对于后续分析、安全事件调查以及合规性检查非常重要.</li>
+<li>审计(Auditing): 对信息系统及其操作进行全面的审查,以验证其是否符合既定的安全策略、标准和法规要求.审计不仅依赖于由Accounting生成的日志数据,还会涉及到直接观察、文档审查、访谈等多种方法.<ul>
+<li>Accounting: 关注的是“做什么”,即记录下所有的活动细节.</li>
+<li>Auditing: 更侧重于“做得怎么样”,即评估这些活动是否符合预期的安全标准,并找出改进的地方.</li>
+<li>审计(Auditing)是主动审查日志和策略合规性,而记账(Accounting)是被动记录用户行为(如登录时间、资源使用量)</li>
+</ul>
+</li>
+<li>身份标示(Identification): 访问主体在一个确定边界的系统范围被给予唯一的标示,解决你是谁的问题</li>
+</ol>
+<h4 id="安全边界"><a href="#安全边界" class="headerlink" title="安全边界"></a>安全边界</h4><blockquote>
+<p>安全边界(Security Boundary)和隔离是安全防御的第一手段.</p>
+<p>安全边界:具有不同安全要求或需求的任意两个区域、子网或环境之间的交叉线,存在于物理环境和逻辑环境,通常在安全边界设置安全策略用于保护边界两侧的安全.</p>
+</blockquote>
+<p>保护机制:</p>
+<ul>
+<li>纵深防御(defense in depth):也被称为分层,是指连续使用多个控制.典型场景如边界防火墙、数据中心防火墙组合使用(细节),以及管理、技术、物理控制措施组合使用(宏观).</li>
+<li>抽象(abstraction):高效率处理方式,将具有属性相同的元素放在一起统一进行安全管理.典型场景如基于角色的访问控制(RBAC).</li>
+<li>数据隐藏(data hiding): 数据隐藏应强调<strong>最小权限原则</strong>(PoLP),即仅授权必要访问权限,而非单纯依赖“隐藏”.</li>
+<li>隐式安全(security through obscurity)&#x2F;数据隐匿(Data Obscurity)是指不向主体告知存在的对象,从而希望主体不会发现该对象.<ul>
+<li>隐式安全(如隐藏API端点)不应作为主要防护手段,因其依赖于攻击者不知情,一旦被发现则失效.需结合加密、访问控制等主动防护.</li>
+</ul>
+</li>
+<li>加密(encryption):通过加密算法使其拿到数据也无法读取实际内容.</li>
+</ul>
+<h3 id="评估和应用安全治理原则"><a href="#评估和应用安全治理原则" class="headerlink" title="评估和应用安全治理原则"></a>评估和应用安全治理原则</h3><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">1.</span> 管理:制度怎么写,我怎么做</span><br><span class="line"><span class="bullet">2.</span> 治理:尝试发现管理活动存在的问题</span><br><span class="line"><span class="bullet">	-</span> 治理:战略层面,定义安全目标、风险容忍度、合规要求,由董事会/高管层负责.</span><br><span class="line"><span class="bullet">	-</span> 管理:执行层面,落实治理要求,如制定策略、部署技术控制措施.</span><br><span class="line"><span class="bullet">3.</span> 第三方治理:</span><br><span class="line"><span class="bullet">		1.</span> 外部监管</span><br><span class="line"><span class="bullet">		2.</span> 组织对自身供应商的治理</span><br><span class="line">评估方法:</span><br><span class="line"><span class="bullet">	1.</span> 文档审查(documentation review)未能提供足够的文件以满足第三方(特别是政府或军工)的要求可能会导致运营授权(authorization to operate,ATO)或临时运营授权(TATO)丢失或无效.</span><br><span class="line"><span class="bullet">	2.</span> 现场评估(on-site assessment)可以提供对某一地点使用的安全机制的第一手资料,文件交换和审查(document exchange and review)帮助与预期目标进行对比,也有助于现场评估的有效开展.</span><br></pre></td></tr></table></figure>
+<ol>
+<li>安全治理(security governance)<ul>
+<li>安全治理是与支持、评估、定义和指导组织的安全工作相关的实践的集合,将外部最佳实践与组织内安全流程和基础设施进行比较,用于提高或改进组织的管理.安全治理是安全解决方案和管理方法紧密结合的实现,直接监督并参与所有级别的安全,而不仅仅是IT安全.</li>
+</ul>
+</li>
+<li>第三方治理(third-party governance)<ul>
+<li>一方面是指外部监管机构依据法律、法规、行业标准、合同义务或许可要求,对组织开展第三方治理,派遣审计人员到组织内部进行.另一方面是指组织对自身供应商的治理,也就是供应链安全管理.</li>
+<li>第三方治理侧重于验证是否符合声明的安全目标、要求、法规和合同义务.</li>
+</ul>
+</li>
+</ol>
+<h3 id="管理安全功能"><a href="#管理安全功能" class="headerlink" title="管理安全功能"></a>管理安全功能</h3><h4 id="安全功能应与组织目标一致"><a href="#安全功能应与组织目标一致" class="headerlink" title="安全功能应与组织目标一致"></a>安全功能应与组织目标一致</h4><p>安全管理计划将安全功能与组织的战略、目标、使命和目标相一致.使安全管理计划的最有效方法之一是使用自上而下的方法,没有高级管理层支持啥工作都不好开展.</p>
+<p>信息安全团队(InfoSec)应由指定的首席信息安全官(CISO)领导,直接向高级管理层报告,如首席信息官(CIO)、首席执行官(CEO)或董事会.将CISO和CISO团队的自主权置于组织中典型的层级结构之外,可以改进整个组织的安全管理,有助于避免跨部门和内部政治问题.</p>
+<h4 id="安全管理计划类型"><a href="#安全管理计划类型" class="headerlink" title="安全管理计划类型"></a>安全管理计划类型</h4><p>使安全管理计划的最有效方法之一是使用自上而下的方法</p>
+<ul>
+<li>战略计划(strategic plan):长期计划,一般为5年,典型战略计划有风险评估,制定的大方向计划,不涉及具体内容.</li>
+<li>战术计划(tactical plan):中期计划,一般为1年,典型战术计划有项目计划、收购计划、招聘计划等,相应战略计划的内容细化.</li>
+<li>运营计划(operational plan):短期计划,一般为季度或月,典型操作计划有培训计划、系统部署计划和产品设计计划等,涉及具体计划的细节实现.<br>安全是一个持续的过程,因此安全管理计划需要定期更新,越做越细节,渐进明细、不断调整.</li>
+</ul>
+<h4 id="组织流程"><a href="#组织流程" class="headerlink" title="组织流程"></a>组织流程</h4><ul>
+<li>收购:组织发展中会进行收购活动,收购其他公司的资产,那么组织环境一定会变化(增加风险),进而影响原来的环境安全性,需考虑安全治理.</li>
+<li>剥离:组织发展中会进行剥离活动,如变卖资产、员工离职等,组织环境也会变化(增加风险),进而影响原来的环境安全性,需考虑安全治理.</li>
+<li>治理委员会:负责组织安全治理的执行和监督,通常由高级管理层负责.</li>
+<li>变更管理:组织的安全治理做的很好的情况下,如果组织环境发生变化(如上面两个过程发生),则安全风险一定增加,因此需要在变化时进行变更管理,保障变化不会引入新风险.</li>
+<li>数据分类:由于组织的资源是有限的,因此钱都需要用在刀刃上,不同安全级别的数据用相同的安全策略进行保护,不符合成本效益,因此需要对组织内的数据进行分类分级.</li>
+</ul>
+<h4 id="组织角色和职责"><a href="#组织角色和职责" class="headerlink" title="组织角色和职责"></a>组织角色和职责</h4><ul>
+<li>高级管理层:为组织的信息安全负最终责任,负责审核和批准安全策略的发布实施,高级管理者不支持的安全策略一定无法有效实施<ul>
+<li>首席执行官(Chief Executive Officer,CEO)</li>
+<li>首席财务官(Chief Financial Officer, CFO) 负责组织的会计和财务活动,以及组织的整体财务结构</li>
+<li>首席信息官(Chief Information Officer, CIO) 可基于组织结构向首席执行官或首席财务官汇报,并负责组织内信息系统和技术的战略使用和管理</li>
+<li>首席隐私官(Chief Privacy Officer, CPO) 是一个较新的职位,主要负责确保客户、组织和员工数据的安全,从而帮助组织远离刑事和民事法庭.</li>
+<li>首席安全官(Chief Security Officer, CSO) 负责了解组织面临的所有风险,并将这些风险将至为可接受的水平</li>
+</ul>
+</li>
+<li>数据所有方(Data Owner&#x2F;Information Owner 信息所有方) 通常是管理层的成员,负责特定的业务单元,并最终负责保护和使用特定的数据子集.</li>
+<li>数据托管方(Data Custodian&#x2F;Information Custodian 信息托管方) 负责维护和保护数据,这个角色通常由IT部分、安全部门或两者协同担任</li>
+<li>系统所有方(System Owner) 负责一个或多个业务系统,其中每个系统可能保存或处理不同数据所有方的数据</li>
+<li>安全管理员(Security Administrator) 负责在企业中部署和维护特定的网络安全设备和软件</li>
+<li>主管(Supervisor)也被称为用户经理(User Manager) 最终对所有用户活动以及这些用户创建和拥有的任何资产负责</li>
+<li>变更控制分析师(Change Contorl Analyst) 负责审批针对网络系统、应用系统或软件的变更请求</li>
+<li>数据分析师(Data Analyst) 负责确保数据以对组织和需要访问和使用数据的组织员工最有意义的方式存储</li>
+<li>用户(User) 使用系统和数据的人,比如员工</li>
+<li>审计员(Auditor) 负责对安全策略的实现情况进行审查的人,可以是内部或外部审计人员</li>
+<li>安全冠军(Security Champion) 是组织中非安全专业岗位的员工(如开发人员、运维工程师、产品经理等),他们被赋予<strong>推动团队内部安全文化建设</strong>的职责,通过<strong>传播安全知识、监督安全实践、协调安全问题</strong>，帮助组织将安全意识融入日常工作中</li>
+</ul>
+<h4 id="评估第三方安全集成的方法"><a href="#评估第三方安全集成的方法" class="headerlink" title="评估第三方安全集成的方法"></a>评估第三方安全集成的方法</h4><blockquote>
+<p>指的是纳入新东西对自己影响的评估</p>
+</blockquote>
+<h5 id="现场评估"><a href="#现场评估" class="headerlink" title="现场评估"></a>现场评估</h5><p>访问第三方现场,采访人员并观察其操作习惯</p>
+<h5 id="文件交换和审查"><a href="#文件交换和审查" class="headerlink" title="文件交换和审查"></a>文件交换和审查</h5><p>调查数据集和文件交换的方式以及进行评估和审查的正式流程</p>
+<h5 id="流程-政策审查"><a href="#流程-政策审查" class="headerlink" title="流程&#x2F;政策审查"></a>流程&#x2F;政策审查</h5><p>要求提供其安全政策、流程&#x2F;程序以及事件和响应文件的副本以供审查</p>
+<h5 id="第三方审计"><a href="#第三方审计" class="headerlink" title="第三方审计"></a>第三方审计</h5><p>根据第三方出具的服务组织控制(SOC)报告进行审计</p>
+<h6 id="SOC-1（System-and-Organization-Controls-1）"><a href="#SOC-1（System-and-Organization-Controls-1）" class="headerlink" title="SOC 1（System and Organization Controls 1）"></a><strong>SOC 1（System and Organization Controls 1）</strong></h6><ul>
+<li><p>核心内容</p>
+<ul>
+<li>聚焦于<strong>财务报告相关的内部控制</strong>（Internal Control over Financial Reporting, ICOFR），主要满足用户实体（如企业）对服务组织（如云服务商）在财务数据处理上的合规性需求。</li>
+<li>例如：如果SaaS供应商的系统涉及用户企业的财务数据处理（如计费、支付），SOC 1 报告会验证其控制措施是否能防止财务数据错误或欺诈。</li>
+</ul>
+</li>
+<li><p>适用场景</p>
+<ul>
+<li>仅适用于与财务报告直接相关的控制措施（如账单生成、收入确认）。</li>
+</ul>
+</li>
+</ul>
+<h6 id="SOC-2（System-and-Organization-Controls-2）"><a href="#SOC-2（System-and-Organization-Controls-2）" class="headerlink" title="SOC 2（System and Organization Controls 2）"></a><strong>SOC 2（System and Organization Controls 2）</strong></h6><ul>
+<li><p>核心内容</p>
+<ul>
+<li>基于<strong>五个信任服务原则</strong>（安全性、可用性、处理完整性、隐私性、保密性），验证服务组织的技术和运营控制是否能保障用户数据的安全与服务连续性。</li>
+<li>例如：验证SaaS供应商的电子邮件服务是否具备高可用性（如冗余服务器、灾备方案）、数据加密机制、访问控制策略等。</li>
+</ul>
+</li>
+<li><p>适用场景</p>
+<ul>
+<li>广泛适用于非财务领域的运营控制，尤其是业务连续性、数据安全、隐私保护等关键领域。</li>
+</ul>
+</li>
+</ul>
+<p>需考虑与第三方签订的协议</p>
+<ul>
+<li>服务水平协议(SLA):对供应商产品或服务的规定要求,涉及赔偿内容</li>
+<li>服务水平需求(SLR):对供应商产品或服务的期望的陈述</li>
+</ul>
+<h4 id="安全控制框架"><a href="#安全控制框架" class="headerlink" title="安全控制框架"></a>安全控制框架</h4><p>最广泛使用的安全控制框架是信息和相关技术控制目标(COBIT),也被用于维持业务和安全的平衡.其他可参考安全标准:</p>
+<ul>
+<li>信息系统和组织的安全和隐私控制(NIST 800-53 Rev.5)</li>
+<li>互联网安全中心(CIS)的安全基线指南</li>
+<li>风险管理框架(NIST RMF)</li>
+<li>网络安全框架(NIST CSF)</li>
+<li>ISO&#x2F;IEC 27000系列</li>
+<li>ITIL框架</li>
+</ul>
+<h4 id="应尽关心和应尽职责"><a href="#应尽关心和应尽职责" class="headerlink" title="应尽关心和应尽职责"></a>应尽关心和应尽职责</h4><ul>
+<li>应尽关心(due care):指的是一个理性的人的遵守和最大努力,通常指的是所有人</li>
+<li>应尽职责(due diligence):指的是做出明智的决定,通常指的是高级管理层</li>
+</ul>
+<h4 id="安全制度类型"><a href="#安全制度类型" class="headerlink" title="安全制度类型"></a>安全制度类型</h4><ol>
+<li>安全策略<blockquote>
+<p><strong>最高层级</strong>的强制性文件.</p>
+<p>内容涉及为什么安全很重要、安全需求范围、最终的安全目标等,泛泛而谈的安全制度,有点类似喊口号,如我们要保障组织的内的业务系统不受攻击,但不涉及具体怎么干.</p>
+</blockquote>
+<ul>
+<li>特定问题的安全策略(issue-specific security policy):覆盖通用场景(如密码策略、远程访问策略)</li>
+<li>特定系统的安全策略(system-specific security policy):针对单一系统(如ERP系统的访问控制配置规范)</li>
+<li>可接受使用策略(AUP):定义了可接受性能的级别以及行为和活动的预期,不遵守该策略可能导致工作活动警告、处罚或终止.</li>
+<li>监管性策略:遵循法律或行业标准要求,也就是满足合规；</li>
+<li>建议性策略:定义可允许的行为和违规的处罚,管理类的黑白名单；</li>
+<li>信息性策略:定义组织的信息或知识,如公司目标、任务声明或组织如何与合作伙伴和客户交流.</li>
+</ul>
+</li>
+<li>安全标准(强制要求)<ul>
+<li>对象为整个组织</li>
+<li>对硬件、软件、技术和安全控制方法的一致性定义了强制性要求,如硬件防火墙的规格、OA软件的规格、文件传输必须使用SFTP等.</li>
+</ul>
+</li>
+<li>安全基线(最低要求)<ul>
+<li>对象为系统</li>
+<li>定义了整个组织中每个系统必须满足的最低安全级别,如Centos系统上线前检查一下配置基线,不满足基线则不能上线.</li>
+</ul>
+</li>
+<li>安全指南(建议要求)<ul>
+<li>提供了关于如何实现标准和基线的建议,并作为安全专业人员和用户的操作指南,建议性、非强制,即可以遵从、也可以不遵从.</li>
+</ul>
+</li>
+<li>安全程序(具体操作)<ul>
+<li>标准操作程序(Standard Operating Procedure, SOP)是详细的分步实施文档,描述了实现特定安全机制、控制或解决方案所需的具体操作,如OA系统上线前需要编写的上线操作手册,内容详细记录了上线时需执行的命令和回退机制等.<br><strong>前三个为强制要求</strong></li>
+</ul>
+</li>
+</ol>
+<h3 id="威胁建模"><a href="#威胁建模" class="headerlink" title="威胁建模"></a>威胁建模</h3><p>威胁建模是风险管理的核心子环节,旨在通过系统化方法识别、分析和应对潜在威胁.<br>两类方法:</p>
+<ol>
+<li>主动方法或防御方法(推荐做法):提前做威胁建模做一些假想敌.</li>
+<li>响应方法、威胁狩猎或对抗方法:事后做法,指的是遇到事后才考虑怎么做.</li>
+</ol>
+<p>威胁建模越早执行成本效益越高,且应该贯彻系统整个生命周期.</p>
+<h4 id="阶段1-识别威胁"><a href="#阶段1-识别威胁" class="headerlink" title="阶段1:识别威胁"></a>阶段1:识别威胁</h4><p>目标:从多维度梳理潜在威胁来源和攻击面.<br>方法: </p>
+<ol>
+<li>资产导向(Asset-Centric) <ul>
+<li>识别关键资产(数据、系统、服务),评估其机密性、完整性和可用性(CIA). </li>
+<li>局限性:可能遗漏非资产直接相关的威胁(如供应链攻击).</li>
+</ul>
+</li>
+<li>攻击者导向(Threat-Centric) <ul>
+<li>基于攻击者视角分析动机、能力与攻击路径.例如: 外部黑客(如APT组织)、内部恶意人员、供应链第三方</li>
+<li>参考MITRE ATT&amp;CK框架识别常见攻击技术.</li>
+</ul>
+</li>
+<li>系统&#x2F;软件导向(System-Centric)<ul>
+<li>通过数据流图(DFD)、信任边界划分等工具,识别系统组件漏洞(如API接口、第三方库).</li>
+</ul>
+</li>
+</ol>
+<h5 id="威胁分类模型"><a href="#威胁分类模型" class="headerlink" title="威胁分类模型"></a>威胁分类模型</h5><ol>
+<li><p>STRIDE(微软推荐,仍广泛适用) </p>
+<ul>
+<li>欺骗(Spoofing)、篡改(Tampering)、否认(Repudiation)、信息泄露(Information Disclosure)、拒绝服务(DoS)、权限提升(Elevation of Privilege). </li>
+<li>补充:STRIDE仍适用于传统系统设计,但需结合AI&#x2F;ML等新场景扩展.</li>
+</ul>
+</li>
+<li><p>PASTA(以风险为中心) </p>
+<ul>
+<li>七步法:定义业务目标→技术范围→应用分解→威胁分析→漏洞评估→攻击模拟→安全对策. </li>
+<li>优势:强调业务价值与技术风险的对齐.</li>
+</ul>
+</li>
+<li><p>VAST(敏捷适配) </p>
+<ul>
+<li><p>专为DevOps和敏捷开发设计,支持自动化威胁建模工具集成(如IriusRisk). </p>
+</li>
+<li><p>特点:并行处理运营(基础设施)和应用层威胁. </p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20250513095830190.png" data-fancybox="true"/></div></div></li>
+</ul>
+</li>
+</ol>
+<h4 id="阶段2-绘制攻击路径与分析攻击面"><a href="#阶段2-绘制攻击路径与分析攻击面" class="headerlink" title="阶段2:绘制攻击路径与分析攻击面"></a>阶段2:绘制攻击路径与分析攻击面</h4><p>核心任务: </p>
+<ol>
+<li>构建数据流图(DFD)<ul>
+<li>标注外部实体、处理节点、数据存储、数据流及信任边界. </li>
+<li>示例:识别隐蔽通道(如DNS隧道泄露数据)或未授权API调用路径.</li>
+</ul>
+</li>
+<li>攻击路径模拟<ul>
+<li>使用攻击树(Attack Tree)或攻击图(Attack Graph)可视化攻击链. <ul>
+<li><strong>攻击树</strong>:自上而下分解攻击路径(如“如何窃取数据库”)</li>
+<li><strong>攻击图</strong>:可视化多步骤攻击链(如“利用SQL注入→提权→横向移动”).</li>
+</ul>
+</li>
+<li>工具:Microsoft Threat Modeling Tool支持STRIDE自动映射威胁.</li>
+</ul>
+</li>
+<li>威胁场景化<ul>
+<li>结合具体业务场景(如金融交易、工业控制系统)定义攻击后果(如数据篡改导致生产线停摆).</li>
+</ul>
+</li>
+</ol>
+<h4 id="阶段3-威胁分析与风险量化"><a href="#阶段3-威胁分析与风险量化" class="headerlink" title="阶段3:威胁分析与风险量化"></a>阶段3:威胁分析与风险量化</h4><p>目标:评估威胁的可能性与影响,确定优先级.</p>
+<ol>
+<li>定性分析 <ul>
+<li>DREAD模型 </li>
+<li>Damage(损害)、Reproducibility(可重复性)、Exploitability(可利用性)、Affected Users(受影响用户)、Discoverability(可发现性). </li>
+<li>评分:每项1-10分,总分排序优先级.</li>
+</ul>
+</li>
+<li>定量分析<ul>
+<li>CVSS(通用漏洞评分系统): 基于攻击向量(AV)、攻击复杂度(AC)、权限要求(PR)、用户交互(UI)等指标计算风险值.CVSS 评分标准(0-3.9: 低危,4.0-6.9: 中危,7.0-8.9: 高危,9.0-10: 严重). </li>
+<li>故障树分析(FTA): 通过逻辑门(AND&#x2F;OR)量化多组件失效导致系统崩溃的概率.</li>
+</ul>
+</li>
+<li>AI&#x2F;ML系统特殊考量: 数据中毒、模型窃取、对抗样本攻击等.</li>
+</ol>
+<h4 id="阶段4-制定缓解措施与持续改进"><a href="#阶段4-制定缓解措施与持续改进" class="headerlink" title="阶段4:制定缓解措施与持续改进"></a>阶段4:制定缓解措施与持续改进</h4><p>步骤: </p>
+<ol>
+<li>优先级排序 <ul>
+<li>高风险威胁(高可能性×高影响)优先处理. </li>
+<li>工具:CVSS评分、DREAD矩阵、风险矩阵图.</li>
+</ul>
+</li>
+<li>缓解策略设计 <ul>
+<li>技术控制:防火墙、加密、访问控制、入侵检测.</li>
+<li>流程控制:安全开发生命周期(SDL)、第三方审计、应急响应计划. </li>
+<li>AI&#x2F;ML特定措施:模型鲁棒性测试、数据验证、供应链透明度.</li>
+</ul>
+</li>
+<li>验证与迭代 <ul>
+<li>渗透测试、红队演练验证缓解有效性. </li>
+<li>持续监控威胁环境变化(如新漏洞披露、APT组织动态).</li>
+</ul>
+</li>
+</ol>
+<h3 id="供应链风险管理"><a href="#供应链风险管理" class="headerlink" title="供应链风险管理"></a>供应链风险管理</h3><p>供应链风险管理(Supply Chain Risk Management, SCRM)是确保供应链中的所有供应商或环节都是可靠、值得信赖、信誉良好的组织,向其业务合作伙伴(尽管不一定向公众)披露其做法和安全要求的手段.</p>
+<ol>
+<li>供应商运营评估</li>
+<li>产品或服务评估</li>
+<li>服务水平协议<br>不信任的硬件、软件或服务可能进入组织或进入组织的产品.<br>可集成的安全机制</li>
+<li>硅信任根(Silicon Root of Trust):指的是嵌入在芯片或硬件的最小可信计算基,是系统安全的起点.典型实现:<ol>
+<li>TPM(可信模块)</li>
+<li>HSM(硬件安全模块)—-&gt;依赖于硅信任根</li>
+</ol>
+</li>
+<li>物理不可克隆功能(Phsical Unclonalble Function, PUF):设备指纹</li>
+<li>软件物料清单(Software Bill of Materials, SBOM)<br>PS:可参考第三方治理.</li>
+</ol>
+<h2 id="人员安全和风险管理"><a href="#人员安全和风险管理" class="headerlink" title="人员安全和风险管理"></a>人员安全和风险管理</h2><h3 id="人员安全策略和程序"><a href="#人员安全策略和程序" class="headerlink" title="人员安全策略和程序"></a>人员安全策略和程序</h3><blockquote>
+<p>人类通常被认为是任何安全解决方案中最薄弱的因素</p>
+</blockquote>
+<ol>
+<li>工作描述和职责:招聘之前要对雇佣什么样的人达成共识,因此设置工作描述和工作职责,用以确定人员需要做什么工作、应该分配什么样的权限、要达到什么样的预期要求等等.</li>
+<li>候选人筛选和招聘:招聘过程对人的筛选,主要包括以下内容:工作履历、教育背景、访谈同事、犯罪记录、药物测试、性格评估、社交媒体,老外不关注身体健康(体检)</li>
+<li>入职:雇佣协议和策略:入职后首先签署雇佣协议,根据岗位不同可能会涉及签署保密协议(NDA)和竞业协议(NCA).其次,需要对员工进行培训,包括组织文化、策略、流程、技能等；根据员工岗位分配系统访问权限.</li>
+<li>员工监督:在员工的整个雇佣期内,经理应定期审查或审核每位员工的工作描述、工作任务、特权和责任,确定其是否仍能满足岗位要求.<ul>
+<li>职责分离(Separation of Duties, SOD): 用于确保某项关键人物不能由一位员工单独完成.职责分离又可分为知识分割和双重控制<ul>
+<li>知识分割(Split Knowledge): 没有单独的人员知道或拥有执行任务的全部细节.例如:需要两名经理才能打开银行金库</li>
+<li>双重控制(Dual Control): 仍然需要授权两名人员共同执行任务,但两者都应该在各自的参与范围内完成各自的任务.例如:两名军官应在同一艘核导弹潜艇上同事转动各自的钥匙且两个人的距离远到无法触碰对方.</li>
+</ul>
+</li>
+<li>基于法定人员身份验证&#x2F;仲裁身份验证(Quorum-based Authentication)</li>
+<li>职责轮换&#x2F;岗位轮换(Job Rotation&#x2F;Rotation of Assignments): 行政性、检测性控制,指的是任何人都不应该长期从事同一岗位.</li>
+<li>强制休假(Mandatory Vacations):要求员工离开岗位1～2周,由其他员工顶替前者工作,用于发现滥用、欺诈或疏忽.</li>
+<li>合谋(Collusion):采用职责分离、强制休假、工作轮换和交叉培训等原则,因被发现的风险较高,可降低员工愿意合作实施非法或滥用计划的可能性.</li>
+<li>用户和实体行为分析(User and Entity Behavior Analytics,UEBA):通过对用户和实体的分析,有助于改进人员管理计划.</li>
+</ul>
+</li>
+<li>离职、转岗、终止过程.员工离职时,需要注意以下内容:<ul>
+<li>在员工收到终止通知的同时或之前禁用员工的用户帐户,不直接删除为了审计目的.</li>
+<li>离职面谈强调NDA和NCA的责任.</li>
+<li>确保员工归还公司资产,包括但不限于钥匙、门禁卡、手机、电脑等.</li>
+<li>安排安保人员陪同员工在工作区回收个人物品.</li>
+<li>通知所有人员该员工已离职.</li>
+</ul>
+</li>
+<li>供应商、顾问和承包商协议和控制<ul>
+<li>当多个实体或组织参与一个项目时,就会存在多方风险(multiparty risk).可通过服务水平协议(SLA)确保供应商的产品或服务水平达到预期,如果达不到会涉及赔偿,从而确保服务质量.供应商、顾问和承包商有时被描述为外包(outsourcing).组织还可以通过供应商管理系统(VMS)提高外包管理的效率.</li>
+</ul>
+</li>
+<li>合规策略要求<ul>
+<li>人员安全管理也需要满足法律法规的要求,如PCI DSS.</li>
+</ul>
+</li>
+<li>隐私策略要求<ul>
+<li>人员安全管理也需要满足隐私策略的要求,如GDPR.</li>
+</ul>
+</li>
+</ol>
+<h3 id="风险管理"><a href="#风险管理" class="headerlink" title="风险管理"></a>风险管理</h3><blockquote>
+<p>风险管理(Risk Management)是指识别可能损坏或披露资产的因素,根据资产价值和对策成本评估这些因素,并实施降低或减少风险的成本效益解决方案的详细过程.</p>
+<p>风险管理主要目标是将风险降至可接受的水平(风险无法被完全消除),</p>
+</blockquote>
+<p>主要涉及两个元素</p>
+<ul>
+<li>风险评估(风险分析)</li>
+<li>风险响应(制定措施)</li>
+</ul>
+<p>风险视角或风险管理方法</p>
+<ul>
+<li>基于威胁的风险评估</li>
+<li>基于资产的风险评估<br>威胁x脆弱性&#x3D;风险</li>
+</ul>
+<ol>
+<li>风险要素<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20250511101653361.png" data-fancybox="true"/></div></div></li>
+<li>资产评估<ul>
+<li>识别组织内所有资产,评估资产的<strong>有形</strong>(如服务器采购价格)和<strong>无形</strong>价值(如服务器上的业务数据),为风险分析的全面性提供保障,并为成本效益分析提供支持</li>
+</ul>
+</li>
+<li>识别威胁和脆弱性<ul>
+<li>识别资产可能面临的所有可识别威胁,团队成员涵盖组织的部门越多,识别的威胁就越全面.参考威胁建模过程</li>
+</ul>
+</li>
+<li>风险评估<ul>
+<li>风险评估由评估小组执行,目标是识别风险,并按关键程度对其进行排序,并将结果上报高级管理层决策</li>
+<li>决策类型:<ul>
+<li>谨慎行动(Prudent Actions)</li>
+<li>合理行动(Reasonable Actions)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h4 id="风险管理流程"><a href="#风险管理流程" class="headerlink" title="风险管理流程"></a>风险管理流程</h4><ol>
+<li>风险界定&#x2F;框架风险&#x2F;认知风险(Risk Framing):定义了所有其他风险活动发生的背景</li>
+<li>评估风险(Assess Risk): 组织应在采取任何风险缓解措施钱实施风险评估</li>
+<li>应对风险(Respond to Risk)</li>
+<li>监测风险(Monitor Risk)</li>
+</ol>
+<h4 id="风险分析方法"><a href="#风险分析方法" class="headerlink" title="风险分析方法"></a>风险分析方法</h4><ol>
+<li>定性风险分析<ul>
+<li>很多情况下价值无法被量化,如组织的声誉、数据的价值、客户信心、员工士气等,所以只能拍脑袋决定,资产价值、风险级别等内容使用级别来标识,如高中低、0~10、百分制等.定性风险分析的技术有: 头脑风暴、故事板、焦点小组、调查、问卷调查、面谈、场景化、<strong>Delphi technique(德尔菲技术)</strong></li>
+</ul>
+</li>
+<li>定量风险分析<br>定量风险分析的主要过程:<ul>
+<li>盘点资产、分配价值(AV)</li>
+<li>将资产与威胁进行配对</li>
+<li>计算每个资产威胁配对的暴露因子(EF),即特定威胁一次破坏资产遭受损失的百分比.例如500万美元的损失除以1000万美元的设备价值，即50％。</li>
+<li>计算每个资产威胁配对的单一损失期望(SLE),即特定威胁一次破坏资产损失的钱(SLE&#x3D;AV*EF)</li>
+<li>计算每个威胁的年化发生率(ARO).即资产一年内面临的特定威胁发生的概率</li>
+<li>计算每个资产威胁配对的年化损失期望(ALE),即特定威胁一年内破坏资产损失的钱(ALE&#x3D;SLE*ARO)</li>
+<li>为每个资产威胁配对制定可能的对策,并计算年化防护成本(ACS)、ARO、EF和ALE的变化</li>
+<li>对每种对策进行成本效益评估(cost&#x2F;benefit evaluation),选择对每种威胁最合适的响应措施,即ALE_per-ALE_post-ACS,结果为正则防护措施有价值,结果为负责防护措施无价值</li>
+</ul>
+</li>
+</ol>
+<h4 id="风险响应"><a href="#风险响应" class="headerlink" title="风险响应"></a>风险响应</h4><h5 id="影响风险响应的因素"><a href="#影响风险响应的因素" class="headerlink" title="影响风险响应的因素"></a>影响风险响应的因素</h5><ul>
+<li>风险偏好(Risk Appetite)企业愿意承担的风险水平</li>
+<li>风险能力(Risk Capacity)企业实际能承受的风险量</li>
+<li>风险目标(Risk Target)对特定威胁的具体风险控制目标</li>
+<li>风险容忍度(Risk Tolerance)可接受的差异范围</li>
+<li>风险限额(Risk Limit)超过容忍度后的行动阈值</li>
+</ul>
+<p>风险偏好≥风险能力≥风险目标≥风险容忍度≥风险限额</p>
+<h5 id="风险应对措施"><a href="#风险应对措施" class="headerlink" title="风险应对措施"></a>风险应对措施</h5><ul>
+<li>风险缓解(Risk Mitigation):组织部署了一个OA系统在互联网上供员工使用,那么就会面临来自互联网攻击的风险.为了降低被攻击的风险,部署一个防火墙用以防护OA.</li>
+<li>风险转移&#x2F;风险分配(Risk Assignment):考虑到OA被攻击后恢复的成本,选择购买商业保险,损失将由保险公司承担</li>
+<li>风险威慑(Risk Deterrence):老板不给钱做安全,管理员为了威慑黑客,给OA配置一个访问页告警”我们的OA已经部署各类防护措施,并与网安系统联网,请不要进行网络非法活动!”</li>
+<li>风险规避(Risk Avoidance):老板觉得OA既然会被攻击,那么我们就不用了,于是OA系统下线,黑客没目标可以攻击</li>
+<li>风险接受(Risk Acceptance):老板觉得防护OA被攻击成本投入太大,没有超过OA给组织带来的价值,不采取防护措施</li>
+<li>风险拒绝(Risk Rejection):指对风险完全无视的行为</li>
+</ul>
+<h5 id="风险的变化"><a href="#风险的变化" class="headerlink" title="风险的变化"></a>风险的变化</h5><ul>
+<li>固有风险(Inherent Risk):在风险管理工作开前存在的风险</li>
+<li>残余风险&#x2F;剩余风险(Residual Risk):实施控制措施后仍存在的风险,包括不可识别和可接受风险</li>
+<li>总风险(Total Risk):如果没有实施保障措施,组织将面临的风险量</li>
+<li>控制间隙(Controls Gap):总风险和剩余风险之间的差异</li>
+</ul>
+<h5 id="计算公式"><a href="#计算公式" class="headerlink" title="计算公式"></a>计算公式</h5><ol>
+<li>威胁x漏洞x资产价值&#x3D;总体风险</li>
+<li>(威胁x漏洞x资产价值)x控制措施差距&#x3D;残余风险</li>
+<li>总体风险-安全对策&#x3D;残余风险</li>
+</ol>
+<h4 id="对策的选择和实施"><a href="#对策的选择和实施" class="headerlink" title="对策的选择和实施"></a>对策的选择和实施</h4><blockquote>
+<p>通常安全控制措施包含三种类型:</p>
+<ol>
+<li>行政性控制措施(Administrative Control):通常是面向管理的.因此也称为软性控制措施(Soft Control)<ul>
+<li>测量、程序、雇佣实践、背景调查、数据分类和标签、安全意识和培训工作、报告和审查、工作监督、人员控制和测试</li>
+</ul>
+</li>
+<li>技术性控制措施(Technical Control)也称为逻辑性控制措施(Logical Control)<ul>
+<li>身份验证方法、加密、受限接口、访问控制列表、协议、防火墙、路由器、入侵检测系统</li>
+</ul>
+</li>
+<li>物理性控制措施(Physical Control)<ul>
+<li>警卫、围栏、运动探测器、带锁的门、密封的窗户、照明、电缆保护、笔记本电脑锁、徽章、刷卡、警犬、摄像机、门禁前厅和报警器</li>
+</ul>
+</li>
+</ol>
+</blockquote>
+<p>安全控制、对策和保障措施可以通过管理、技术或物理方式实施,这三类机制应以纵深防御(Defense-In-Depth)方式实施,以提供最大效益</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20250511103249614.png" data-fancybox="true"/></div></div>
+
+<h5 id="控制类型"><a href="#控制类型" class="headerlink" title="控制类型"></a>控制类型</h5><ul>
+<li>预防:预判了黑客怎么干坏事提前预防让他干不了,如IPS</li>
+<li>威慑:通过恐吓让黑客不敢干坏事,如登录告警</li>
+<li>检测:发现或检测不期望或未经授权的活动,如IDS</li>
+<li>补偿:在主要控制失效时提供替代保护的措施,如备用系统或冗余设计</li>
+<li>纠正:修改环境使系统在发生不期望或未经授权的活动后恢复正常,如杀毒</li>
+<li>恢复:纠正措施的扩展,通常涉及整体还原,如数据库恢复</li>
+<li>指令:行政性控制,如政策文件、拉横幅、培训计划等而非独立控制类型</li>
+</ul>
+<h5 id="安全控制评估"><a href="#安全控制评估" class="headerlink" title="安全控制评估"></a>安全控制评估</h5><p>安全控制评估SCA(Security Control Assessment)是根据基线或可靠性预期对安全基础架构的各个机制进行的正式评估.</p>
+<p><strong>通常指美国政府评估安全控制的正式流程</strong></p>
+<p>通常来说,SCA是NIST 800-53 Rev. 5 (信息系统和组织的安全和隐私控制)实施的过程</p>
+<p>一个简单区分确认(Verification)和验证(Validation)的方法是:确认回答问题”是否正确的实施了控制措施?”而验证回答”是否实施了正确的控制措施</p>
+<h5 id="监控和测量"><a href="#监控和测量" class="headerlink" title="监控和测量"></a>监控和测量</h5><p>风险持续监测(Risk Monitoring)是发现新风险、重新评价现有风险、移出没有意义的风险,以及在将所有风险降至可容忍水平方面,不断评估控制措施的有效性的持续流程</p>
+<p>风险监测活动应该集中在三个关键领域</p>
+<ol>
+<li>有效性</li>
+<li>变更</li>
+<li>合规性</li>
+</ol>
+<h5 id="风险报告和文档"><a href="#风险报告和文档" class="headerlink" title="风险报告和文档"></a>风险报告和文档</h5><p>风险报告是风险分析结束执行时的任务,包括编写风险报告和相关方汇报.风险登记簿(Risk Register)或风险日志(Risk Log)是对组织或系统或单个项目内的所有已识别风险进行编目的文件,通常包括:</p>
+<ul>
+<li>识别风险</li>
+<li>评估这些风险的严重性并确定其优先级</li>
+<li>制定应对措施以减少或消除风险</li>
+<li>跟踪风险缓解的进度</li>
+</ul>
+<p>报告类型又分为</p>
+<ol>
+<li>内部报告</li>
+<li>外部报告</li>
+</ol>
+<h5 id="持续提升"><a href="#持续提升" class="headerlink" title="持续提升"></a>持续提升</h5><blockquote>
+<p>由于风险评估是时间点的度量,而威胁和脆弱性不断变化,因此需要进行定期风险评估,以支持持续改进(Continuous Improvement).企业风险管理(ERM)计划可以使用风险成熟度模型(RMM)进行评估</p>
+</blockquote>
+<p>RMM评估成熟、可持续和可重复的风险管理过程的关键指标和活动,通常有五个级别:</p>
+<ul>
+<li>临时(Ad hoc):风险活动是由事件触发的临时举动,且控制不力</li>
+<li>起步(Preliminary):不严格地尝试遵循风险管理流程,但每个部门可能单独进行风险评估</li>
+<li>定义(Defined):在整个组织范围内采用通用或标准化的风险框架</li>
+<li>集成(Integrated):风险管理操作集成到业务流程中,指标用于收集有效性数据,风险被视为业务战略决策中的一个要素</li>
+<li>优化(Optimized):风险管理的重点是实现目标,而不仅仅是应对外部威胁；增加战略规划是为了业务成功,而不仅仅是避免事故；吸取的经验教训将重新纳入风险管理过程</li>
+</ul>
+<h5 id="风险框架"><a href="#风险框架" class="headerlink" title="风险框架"></a>风险框架</h5><p>NIST 800-37 Rev.2中风险管理框架RMF的6个阶段:</p>
+<ol>
+<li>分类(Categorize):根据损失影响分析,对系统和系统处理、存储和传输的信息进行分类</li>
+<li>选择(Select):为系统选择一套初始控制措施,并根据需要调整控制措施,以根据风险评估将风险降低到可接受的水平</li>
+<li>实施(Implement):实施控制并描述如何在系统及其运行环境中使用控制</li>
+<li>评估(Assess):评估控制措施以确定控制措施是否正确实施,是否按满足安全和隐私要求的预期运行</li>
+<li>授权(Authorize):在确定组织运营和资产、个人、其他组织和国家的风险可接受的基础上,授权系统或通用控制</li>
+<li>监控(Monitor):持续监控系统和相关控制,包括评估控制有效性、记录系统和运行环境的变化、进行风险评估和影响分析,以及报告系统的安全和隐私状况<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/image-20250511131408159.png" data-fancybox="true"/></div></div></li>
+</ol>
+<h2 id="业务连续性阶段"><a href="#业务连续性阶段" class="headerlink" title="业务连续性阶段"></a>业务连续性阶段</h2><blockquote>
+<p>业务连续性计划(Business Continuity Plan, BCP)涉及评估组织流程的风险,并创建策略、计划和程序,以最大限度地降低这些风险发生时对组织产生的不良影响,即该计划尽最大可能保障组织业务持续开展,一旦失败则转入灾难恢复计划(Disaster Recovery Plan, DRP)</p>
+<p>灾难恢复(Disaster Recovery, DR)是将灾难或重大中断的影响降至最低的流程</p>
+<p>灾难恢复(DR)是业务连续性计划(BCP)的技术实现部分,专注于 IT 系统和数据的恢复  </p>
+<p>业务连续性管理(BCM)则覆盖所有业务流程的持续运营，包括人员、设施和供应链</p>
+</blockquote>
+<p>业务连续性计划和灾难恢复计划相关,但不相同.DRP是DCP的一个子集,主要关注灾难产生的直接后果.BCP的范围更广,涵盖了所有的中断,包括(但不限于)灾难<br>业务连续管理(Business Continuity Management, BCM)应该是涵盖了灾难恢复及业务连续性计划的全民管理流程</p>
+<h3 id="阶段1-项目范围和规划"><a href="#阶段1-项目范围和规划" class="headerlink" title="阶段1:项目范围和规划"></a>阶段1:项目范围和规划</h3><h4 id="组织审查"><a href="#组织审查" class="headerlink" title="组织审查"></a>组织审查</h4><ul>
+<li>组织架构:明确各部门职责(如IT、法务、HR、运营),绘制关键业务流程图</li>
+<li>人员清单:建立核心团队成员、供应商联系人、外部专家的紧急联系人目录</li>
+<li>业务流程:识别直接影响收入、合规、客户体验的核心业务(如订单处理、支付系统)</li>
+<li>资产清单:梳理关键资产(服务器、网络设备、数据存储、供应链节点)及其依赖关系</li>
+</ul>
+<h4 id="团队选择"><a href="#团队选择" class="headerlink" title="团队选择"></a>团队选择</h4><ul>
+<li>高级管理层:由CEO&#x2F;CIO直接牵头,确保资源投入和跨部门协调</li>
+<li>多元化团队:包含IT(技术恢复)、法务(合规审查)、HR(员工安全)、公关(对外沟通)、业务部门代表(流程细节)</li>
+</ul>
+<h4 id="资源需求"><a href="#资源需求" class="headerlink" title="资源需求"></a>资源需求</h4><ul>
+<li>人力:指定BCP专职团队,分配恢复小组(如IT恢复组、业务操作组)</li>
+<li>软硬件:部署备用服务器、云服务(如AWS灾难恢复)、远程协作工具(如Teams)</li>
+<li>财力:预算需覆盖测试演练、冗余设施、第三方服务(如数据备份供应商)</li>
+</ul>
+<h4 id="法律法规要求"><a href="#法律法规要求" class="headerlink" title="法律法规要求"></a>法律法规要求</h4><ul>
+<li>供应商风险评估:对关键供应商(如云服务商、物流合作方)进行BCP兼容性检查</li>
+<li>合规性要求:确保符合行业标准(如ISO 22301、GDPR),定期审计</li>
+</ul>
+<h3 id="阶段2-业务影响分析"><a href="#阶段2-业务影响分析" class="headerlink" title="阶段2:业务影响分析"></a>阶段2:业务影响分析</h3><p>业务影响分析(Business Impact Analysis, BIA)对组织的业务进行评估,确定业务可能面临的风险,以及风险发生的可能性和影响,使用定量影响评估和定性影响评估(与风险评估过程基本一致),对业务连续性资源的投入进行优先级排序</p>
+<h4 id="确定优先级"><a href="#确定优先级" class="headerlink" title="确定优先级"></a>确定优先级</h4><h5 id="RTO-Recovery-Time-Objective-恢复时间目标"><a href="#RTO-Recovery-Time-Objective-恢复时间目标" class="headerlink" title="RTO(Recovery Time Objective)(恢复时间目标)"></a>RTO(Recovery Time Objective)(恢复时间目标)</h5><ul>
+<li>定义: RTO 是指业务或系统在灾难发生后,必须恢复到正常运行状态的<strong>最大可接受时间</strong></li>
+<li>示例:若某系统的 RTO 为 4 小时,则必须在 4 小时内完成故障恢复,否则可能导致业务损失</li>
+<li>关键作用<ul>
+<li>决定容灾方案的设计(如冷备、温备、热备)</li>
+<li>影响数据同步频率和资源投入(如异地多活架构)</li>
+</ul>
+</li>
+</ul>
+<h5 id="RPO-Recovery-Point-Objective-恢复点目标"><a href="#RPO-Recovery-Point-Objective-恢复点目标" class="headerlink" title="RPO(Recovery Point Objective(恢复点目标)"></a>RPO(Recovery Point Objective(恢复点目标)</h5><ul>
+<li>定义: RPO 是指灾难发生时,数据可以恢复到的<strong>最近时间点</strong>,即允许的最大数据丢失量</li>
+<li>示例:若某系统的 RPO 为 15 分钟,则最多可能丢失 15 分钟内的数据</li>
+<li>关键作用<ul>
+<li>决定数据备份或复制的频率(如同步复制、异步复制)</li>
+<li>直接影响数据完整性保障能力</li>
+</ul>
+</li>
+</ul>
+<h5 id="WRT-Work-Recovery-Time-恢复工作时间"><a href="#WRT-Work-Recovery-Time-恢复工作时间" class="headerlink" title="WRT(Work Recovery Time)(恢复工作时间)"></a>WRT(Work Recovery Time)(恢复工作时间)</h5><ul>
+<li>定义: WRT 是指从故障检测到系统完全恢复所需的<strong>实际工作时间</strong>,包括故障诊断、切换操作、数据恢复等步骤</li>
+<li>示例:若某系统故障检测需 10 分钟,切换需 20 分钟,验证需 10 分钟,则 WRT 为 40 分钟</li>
+<li>与 RTO 的关系:<ul>
+<li>WRT 是 RTO 的一部分.RTO 通常包含 WRT 和故障检测时间</li>
+<li>公式:RTO ≥ WRT + 故障检测时间</li>
+</ul>
+</li>
+<li>关键作用<ul>
+<li>衡量实际恢复操作的效率</li>
+<li>需通过自动化工具(如灾备演练、脚本化切换)缩短 WRT</li>
+</ul>
+</li>
+</ul>
+<h5 id="MTD-Maximum-Tolerable-Downtime-最大容忍停机时间"><a href="#MTD-Maximum-Tolerable-Downtime-最大容忍停机时间" class="headerlink" title="MTD(Maximum Tolerable Downtime)(最大容忍停机时间)"></a>MTD(Maximum Tolerable Downtime)(最大容忍停机时间)</h5><ul>
+<li>定义: MTD 是指业务能够容忍的<strong>最长停机时间</strong>,超过此时间可能导致不可逆损失(如客户流失、合规处罚)</li>
+<li>MTD &#x3D; RTO + WRT</li>
+<li>示例:某金融交易系统的 MTD 为 30 分钟,超过此时间可能导致巨额罚款</li>
+<li>与 RTO 的关系<ul>
+<li>RTO + WRT ≤ MTD:RTO 必须小于或等于 MTD,否则容灾方案无法满足业务需求</li>
+<li>示例:若 MTD 为 2 小时,RTO 应设定为 1.5 小时,为意外情况预留缓冲时间</li>
+</ul>
+</li>
+<li>关键作用<ul>
+<li>是业务连续性计划(BCP)的核心指标</li>
+<li>驱动技术方案的选择(如是否采用异地双活架构)</li>
+</ul>
+</li>
+</ul>
+<h4 id="风险识别"><a href="#风险识别" class="headerlink" title="风险识别"></a>风险识别</h4><ul>
+<li>分类<ul>
+<li>人为风险:网络攻击、人为操作失误、供应链中断</li>
+<li>自然风险:地震、洪水、疫情</li>
+</ul>
+</li>
+<li>可能性与影响矩阵</li>
+</ul>
+<h4 id="可能性评估"><a href="#可能性评估" class="headerlink" title="可能性评估"></a>可能性评估</h4><p>对识别到的每种风险发生的可能性进行评估,得到ARO.如果十年内发生风险的次数达到了十次,那么可能性就是100%</p>
+<h4 id="影响评估"><a href="#影响评估" class="headerlink" title="影响评估"></a>影响评估</h4><p>在定量评估中计算EF、SLE和ALE<br>在定性评估中关注组织信誉、员工流失、社会责任等.要综合定量和定性评估的结果,这样计算的风险对组织的影响更加精准</p>
+<h4 id="资源优先级排序"><a href="#资源优先级排序" class="headerlink" title="资源优先级排序"></a>资源优先级排序</h4><p>根据评估结果对资源投入进行优先级排序,紧着重要业务投入资源,资源没有了其他业务就先不纳入BCP</p>
+<h3 id="阶段3-连续性规划"><a href="#阶段3-连续性规划" class="headerlink" title="阶段3: 连续性规划"></a>阶段3: 连续性规划</h3><p>这个阶段就是把前期做的各种分析和结果,落地形成可展示的文档</p>
+<h3 id="阶段4-计划批准和实施"><a href="#阶段4-计划批准和实施" class="headerlink" title="阶段4: 计划批准和实施"></a>阶段4: 计划批准和实施</h3><ol>
+<li>计划批准</li>
+<li>计划实施</li>
+<li>沟通、培训和教育:职权内的计划人手一份</li>
+<li>BCP编制:<ul>
+<li>明确责任</li>
+<li>应急响应指南</li>
+<li>风险接受(Risk Acceptance)需明确记录在案，但无需管理层签字</li>
+<li>管理层需对风险偏好(Risk Appetite)和风险应对策略批准</li>
+</ul>
+</li>
+</ol>
+<h2 id="合规"><a href="#合规" class="headerlink" title="合规"></a>合规</h2><h3 id="法律类型"><a href="#法律类型" class="headerlink" title="法律类型"></a>法律类型</h3><ol>
+<li>刑法:打击计算机犯罪保护社会安全,道德的最低底线<ul>
+<li>刑事诉讼的最高证明标准:美国刑事诉讼中，定罪必须满足 <strong>“排除合理怀疑”（Beyond a reasonable doubt）</strong> 的证明标准。这是宪法要求（第五修正案和第十四修正案），旨在保护被告人的自由权，防止冤假错案</li>
+<li>与其他证明标准的对比<ul>
+<li><strong>民事案件</strong>：采用 <strong>“优势证据”（Preponderance of the evidence）</strong>，即一方证据可信度超过50%即可（如合同纠纷）。</li>
+<li><strong>行政或特殊案件</strong>：可能采用 <strong>“清楚且令人信服的证据”（Clear and convincing evidence）</strong>，介于刑事与民事之间（如撤销公民身份）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>民法:维护社会秩序,主要解决个人和组织间的问题</li>
+<li>行政法:行政部门拥有执法权,那么执法权是需要进行监管和限制的</li>
+</ol>
+<h4 id="计算机犯罪"><a href="#计算机犯罪" class="headerlink" title="计算机犯罪"></a>计算机犯罪</h4><ol>
+<li>计算机欺诈和滥用法案(CFAA):第一部、跨州</li>
+<li>CFAA修正案:跨大范围</li>
+<li>国家信息基础设施保护法案(NIIPA):扩大范围</li>
+<li><strong>联邦信息安全管理法案(FISMA):政府要求</strong></li>
+<li>联邦网络安全法(Federal Cybersecurity Laws)<ul>
+<li>联邦信息系统现代化法案(FISMA): 美国国土安全部</li>
+<li>网络安全增强法案(Cybersecurity Enhancement Act):NIST标准</li>
+<li>国家网络安全保护法(National Cybersecurity Protection Act):威胁情报方面的</li>
+</ul>
+</li>
+</ol>
+<h3 id="知识产权"><a href="#知识产权" class="headerlink" title="知识产权"></a>知识产权</h3><h4 id="版权-Copyright"><a href="#版权-Copyright" class="headerlink" title="版权(Copyright)"></a>版权(Copyright)</h4><ul>
+<li>保护作品非授权复制</li>
+<li>数字千年版权法(Digital Millennium Copyright Act, DMCA)及其豁免条件(比如电信这种网络提供商可以豁免因为不太好监测)</li>
+</ul>
+<h4 id="商标-Trademarks"><a href="#商标-Trademarks" class="headerlink" title="商标(Trademarks)"></a>商标(Trademarks)</h4><ul>
+<li>保护文字、口号、标志</li>
+</ul>
+<h4 id="专利-Patents"><a href="#专利-Patents" class="headerlink" title="专利(Patents)"></a>专利(Patents)</h4><ul>
+<li>保护发明者的知识产权,并且是公开的保护,时效20年,20年后别人就可免费使用了不同国家的时效不同</li>
+<li>司法管辖权: 不同地区的法律可能不同.跨国公司要考虑多国的法律要求.比如拆分公司如Tik Tok</li>
+</ul>
+<h4 id="商业秘密-Trade-Secrets"><a href="#商业秘密-Trade-Secrets" class="headerlink" title="商业秘密(Trade Secrets)"></a>商业秘密(Trade Secrets)</h4><ul>
+<li>商业秘密受法律保护(如《反不正当竞争法》),但需组织主动采取保密措施(如NDAs、数据加密).可以联想到数据隐藏</li>
+<li>保护核心竞争力</li>
+<li>Non-disclosure agreement(保密协议)如果你抓到了商业间谍也可请求监管所的保护</li>
+</ul>
+<h3 id="软件许可"><a href="#软件许可" class="headerlink" title="软件许可"></a>软件许可</h3><ol>
+<li>永久许可(Perpetual Licenses)</li>
+<li>订阅许可(Subscription Licenses)</li>
+<li>开源许可(Open-Source Licenses)<ul>
+<li>在开源软件治理中,SCA(软件成分分析,Software Composition Analysis) 的核心功能不仅包括识别软件组件的已知漏洞,还必须分析组件的开源许可证类型.这一环节是组织在法律合规性评估中的关键步骤,直接关系到是否会导致法律风险(如知识产权侵权、商业秘密泄露、强制开源等)</li>
+</ul>
+</li>
+<li>免费软件(Freeware)</li>
+<li>企业许可协议(Enterprise License Agreements, ELA)</li>
+<li>最终用户许可协议(End-User License Agreements, EULA)</li>
+<li>并行使用许可(Concurrent Use Licenses)</li>
+<li>指定用户许可(Named User Licenses)</li>
+<li>云服务许可协议(Cloud services Licenses Agreements)</li>
+</ol>
+<h3 id="进口-出口"><a href="#进口-出口" class="headerlink" title="进口&#x2F;出口"></a>进口&#x2F;出口</h3><h4 id="网络安全相关"><a href="#网络安全相关" class="headerlink" title="网络安全相关"></a>网络安全相关</h4><h5 id="国际武器贸易条例-ITAR"><a href="#国际武器贸易条例-ITAR" class="headerlink" title="国际武器贸易条例(ITAR)"></a>国际武器贸易条例(ITAR)</h5><ol>
+<li>管理机构:美国国务院国防贸易管制局(DDTC)</li>
+<li>管控范围:USML(United States Munitions List,美国军火清单):涵盖所有与军事相关的货物、服务和技术</li>
+<li>特点:<ul>
+<li>严格管控:任何涉及USML清单的物项(无论是否含美制部件)均需DDTC批准,且禁止向非盟国或受制裁国家出口</li>
+</ul>
+</li>
+</ol>
+<h5 id="出口管理条例-EAR"><a href="#出口管理条例-EAR" class="headerlink" title="出口管理条例(EAR)"></a>出口管理条例(EAR)</h5><ol>
+<li>管理机构:美国商务部工业与安全局(BIS)</li>
+<li>管控范围:CCL(Commerce Control List,商业控制清单):涵盖军民两用物项(Dual-Use Items),如:高性能计算设备(如量子计算机)、半导体制造技术、加密软件、卫星通信设备、生物技术、AI芯片等</li>
+<li>特定国家&#x2F;实体的限制:如中国华为、大疆等被列入“实体清单”(Entity List),禁止未经许可的出口</li>
+</ol>
+<h4 id="受关注的国家"><a href="#受关注的国家" class="headerlink" title="受关注的国家"></a>受关注的国家</h4><p>制裁,单方面制裁了某一个国家.也可以制裁某些公司或个人</p>
+<h4 id="加密出口控制"><a href="#加密出口控制" class="headerlink" title="加密出口控制"></a>加密出口控制</h4><p><strong>加密软件</strong></p>
+<ul>
+<li>加密技术被广泛视为关键的受控技术,因其直接影响数据安全和通信隐私.许多国家(如美国、中国)将其列入出口管制清单.<ul>
+<li><strong>美国</strong>: 根据《出口管理条例》(EAR),加密软件(尤其是高强度或专用加密算法)需许可证才能出口到特定国家</li>
+<li><strong>中国</strong>:根据《出口管制法》及《两用物项出口管制条例》,加密技术可能被归类为”两用物项”,需遵守管制要求</li>
+</ul>
+</li>
+<li><strong>国际通行规则</strong>:瓦森纳协定(Wassenaar Arrangement)等多边机制也将加密技术纳入管控范围</li>
+</ul>
+<h3 id="隐私"><a href="#隐私" class="headerlink" title="隐私"></a>隐私</h3><h4 id="美国隐私法"><a href="#美国隐私法" class="headerlink" title="美国隐私法"></a>美国隐私法</h4><ol>
+<li>第四修正案(Fourth Amendment)</li>
+<li>隐私法案(Privacy Act)</li>
+<li>电子通信隐私法案(ECPA):强调公民在使用电子通信的过程中数据要受到保护</li>
+<li>通信执法协助法案(CALEA):强调的是政府在怀疑你传递一些可能会对国家安全造成一些问题的信息的时候我可以违背上一个法律</li>
+<li>经济间谍隐私法案(Economic Espionage Act,EEA)</li>
+<li><strong>健康保险携带和责任法案(HIPAA):保护的PHI个人的健康信息属于PII的一类,指的是病例这种</strong></li>
+<li><strong>健康信息技术促进经济和临床健康法案(HITECH)HITECH 法案是 HIPAA 的扩展,重点加强了电子健康记录(EHR)的安全性和违规通知要求</strong></li>
+<li>儿童在线隐私保护法(COPPA)</li>
+<li><strong>金融服务现代化法案(GLBA):保护的是金融行业的数据.储户的姓名家庭住址、信贷额度等等</strong></li>
+<li>美国爱国者法案(USA PATRIOT Act)</li>
+<li><strong>澄清合法的海外数据使用(CLOUD)法案: CLOUD 法案允许美国政府调取境外数据，但需遵守国际条约和数据所在国法律，避免直接冲突</strong></li>
+<li>家庭教育权利和隐私法案(FERPA)</li>
+<li>身份盗用与侵占防治法(ITADA)</li>
+</ol>
+<h4 id="欧盟隐私法-General-Data-Protection-Regulation"><a href="#欧盟隐私法-General-Data-Protection-Regulation" class="headerlink" title="欧盟隐私法(General Data Protection Regulation)"></a>欧盟隐私法(General Data Protection Regulation)</h4><p>其他国家的隐私法案大部分都是借鉴的<strong>GDPR</strong></p>
+<h5 id="关键方面"><a href="#关键方面" class="headerlink" title="关键方面"></a>关键方面</h5><ul>
+<li><p>合法、公平、透明</p>
+</li>
+<li><p><strong>目的限制:强调你收集数据是需要声明的.收集你的数据用于何处,需要有合理理由去收集.而不是想大量采集用户数据就采集然后去做建模</strong></p>
+</li>
+<li><p>数据最小化</p>
+<ul>
+<li><strong>GDPR中的数据最小化原则(Data Minimization Principle)是其核心原则之一,旨在确保企业仅收集和处理实现特定目的所需的最少必要数据.这一原则与软件设计中的KISS原则(Keep It Simple, Stupid)在理念上具有高度一致性——两者均强调“简化”和“必要性”,通过减少冗余来提升效率和安全性</strong></li>
+</ul>
+</li>
+<li><p><strong>主体权利</strong></p>
+<ol>
+<li>被遗忘权(特定条件下要求删除数据的权利):数据主体有权要求数据控制者删除其个人数据,控制者在特定情况下有义务立即删除数据</li>
+<li>数据携带权:数据主体有权以结构化、通用、机器可读的格式获取其提供给控制者的个人数据,并可要求将数据直接传输给其他控制者(如从A平台迁移至B平台)</li>
+</ol>
+</li>
+<li><p><strong>GDPR声明的角色</strong></p>
+<ol>
+<li><strong>数据控制者(Data Controller)</strong>:单独或联合决定个人数据处理目的和方式的实体(如APP所有者、网站运营方)</li>
+<li><strong>数据处理者(Data Processor)</strong>:代表控制者处理个人数据的实体(如云服务提供商、广告技术公司、支付网关)</li>
+<li><strong>数据主体(Data Subject)</strong>:其个人数据被处理的自然人(如用户、客户、员工)</li>
+</ol>
+</li>
+<li><p>监管机构(Data Protection Authority, DPA)准确性</p>
+</li>
+<li><p>存储限制</p>
+</li>
+<li><p>完整性和机密性</p>
+</li>
+<li><p>可问责性</p>
+</li>
+</ul>
+<h5 id="跨境信息共享"><a href="#跨境信息共享" class="headerlink" title="跨境信息共享"></a>跨境信息共享</h5><p>指的是个人隐私数据从一个国家离开到另外一个国家<br>欧盟的公民数据不得离开欧盟的管辖范围,除了下面三种方法</p>
+<ul>
+<li>标准合同条款(SCC): 签合同从A公司(欧盟)转移到B公司(美国).大部分都走这个.比较简单</li>
+<li>具有约束力的公司规则(Binding Corporate Rules, BCRs):和上面不一样的是这个需要监管部门进行评估.指定了一个公司制度,这个制度中声明了我在跨境传递个人信息的时候要求达到什么样的安全控制我一定能保证什么样的安全性,然后递交给欧盟的一个监管机构进行评估.评估的时间和严格程度很高.而且受限.只能是同公司传递</li>
+<li><del>安全港协议欧盟可以和其他国家之间签安全港协议.国家对国家</del>,安全港协议已于2015年被欧盟法院废除，现已被欧盟-美国隐私盾(Privacy Shield) 取代(但隐私盾也于2020年被废除)</li>
+<li>以国家单位的认可</li>
+</ul>
+<h4 id="加拿大隐私法"><a href="#加拿大隐私法" class="headerlink" title="加拿大隐私法"></a>加拿大隐私法</h4><p>PIPEDA(Personal Information Protection and Electronic Documents Act)</p>
+<h4 id="中国隐私法"><a href="#中国隐私法" class="headerlink" title="中国隐私法"></a>中国隐私法</h4><p>PIPL</p>
+<h4 id="南非隐私法"><a href="#南非隐私法" class="headerlink" title="南非隐私法"></a>南非隐私法</h4><p>POPIA</p>
+<h4 id="州隐私法"><a href="#州隐私法" class="headerlink" title="州隐私法"></a>州隐私法</h4><p>CCPA</p>
+<h3 id="合规-1"><a href="#合规-1" class="headerlink" title="合规"></a>合规</h3><h4 id="支付卡行业数据安全标准-PCI-DSS"><a href="#支付卡行业数据安全标准-PCI-DSS" class="headerlink" title="支付卡行业数据安全标准(PCI DSS)"></a>支付卡行业数据安全标准(PCI DSS)</h4><p>支付卡行业数据安全标准(PCI DSS)是由全球主要信用卡品牌(如Visa、Mastercard、American Express等)联合制定的强制性行业数据安全标准,旨在保护持卡人数据(如信用卡号、有效期、CVV码等)在存储、传输和处理过程中的安全性</p>
+<h4 id="Sarbanes-Oxley-法案-SOX"><a href="#Sarbanes-Oxley-法案-SOX" class="headerlink" title="Sarbanes-Oxley 法案(SOX)"></a>Sarbanes-Oxley 法案(SOX)</h4><ul>
+<li>强制高管对财务报告真实性负责</li>
+<li>独立审计委员会监管</li>
+<li>内部控制有效性评估(如IT系统访问权限)</li>
+</ul>
+
+<div class="article-footer fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2024/07/12/6a0dc769/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2024/07/12/6a0dc769/&title=域1-安全与风险管理 - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202505141103633.png&summary=网络安全治理理解和应用安全概念CIA
+CIA是最基础、也是最重要的安全原则,所有的安全解决方案都应考虑这三个原则,但会应组织自身的独特情况不同,优先级会有所不同.
+
+
+机密性(Confidentiality):确保数据、对象或资源的不..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=域1-安全与风险管理 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2024/07/12/6a0dc769/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2024/07/12/6a0dc769/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/07/13/d9d69399/">攻防演练事件研判篇</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="/2023/07/13/d9d69399/" title="攻防演练事件研判篇"><span class="title">攻防演练事件研判篇</span></a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body waline'>
+      
+
+<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/tools/">工具</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%B2%BB%E7%90%86"><span class="toc-text">网络安全治理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%90%86%E8%A7%A3%E5%92%8C%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E6%A6%82%E5%BF%B5"><span class="toc-text">理解和应用安全概念</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#CIA"><span class="toc-text">CIA</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DAD"><span class="toc-text">DAD</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E6%80%A7%E8%B4%A8"><span class="toc-text">其他性质</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AAA%E6%9C%8D%E5%8A%A1%E5%8F%8A%E4%BA%94%E5%A4%A7%E5%85%83%E7%B4%A0"><span class="toc-text">AAA服务及五大元素</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E8%BE%B9%E7%95%8C"><span class="toc-text">安全边界</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%84%E4%BC%B0%E5%92%8C%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E6%B2%BB%E7%90%86%E5%8E%9F%E5%88%99"><span class="toc-text">评估和应用安全治理原则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%A1%E7%90%86%E5%AE%89%E5%85%A8%E5%8A%9F%E8%83%BD"><span class="toc-text">管理安全功能</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E5%8A%9F%E8%83%BD%E5%BA%94%E4%B8%8E%E7%BB%84%E7%BB%87%E7%9B%AE%E6%A0%87%E4%B8%80%E8%87%B4"><span class="toc-text">安全功能应与组织目标一致</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86%E8%AE%A1%E5%88%92%E7%B1%BB%E5%9E%8B"><span class="toc-text">安全管理计划类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%84%E7%BB%87%E6%B5%81%E7%A8%8B"><span class="toc-text">组织流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%84%E7%BB%87%E8%A7%92%E8%89%B2%E5%92%8C%E8%81%8C%E8%B4%A3"><span class="toc-text">组织角色和职责</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%84%E4%BC%B0%E7%AC%AC%E4%B8%89%E6%96%B9%E5%AE%89%E5%85%A8%E9%9B%86%E6%88%90%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-text">评估第三方安全集成的方法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%8E%B0%E5%9C%BA%E8%AF%84%E4%BC%B0"><span class="toc-text">现场评估</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E4%BA%A4%E6%8D%A2%E5%92%8C%E5%AE%A1%E6%9F%A5"><span class="toc-text">文件交换和审查</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B-%E6%94%BF%E7%AD%96%E5%AE%A1%E6%9F%A5"><span class="toc-text">流程&#x2F;政策审查</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%96%B9%E5%AE%A1%E8%AE%A1"><span class="toc-text">第三方审计</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E6%8E%A7%E5%88%B6%E6%A1%86%E6%9E%B6"><span class="toc-text">安全控制框架</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BA%94%E5%B0%BD%E5%85%B3%E5%BF%83%E5%92%8C%E5%BA%94%E5%B0%BD%E8%81%8C%E8%B4%A3"><span class="toc-text">应尽关心和应尽职责</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E5%88%B6%E5%BA%A6%E7%B1%BB%E5%9E%8B"><span class="toc-text">安全制度类型</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A8%81%E8%83%81%E5%BB%BA%E6%A8%A1"><span class="toc-text">威胁建模</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%98%B6%E6%AE%B51-%E8%AF%86%E5%88%AB%E5%A8%81%E8%83%81"><span class="toc-text">阶段1:识别威胁</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A8%81%E8%83%81%E5%88%86%E7%B1%BB%E6%A8%A1%E5%9E%8B"><span class="toc-text">威胁分类模型</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%98%B6%E6%AE%B52-%E7%BB%98%E5%88%B6%E6%94%BB%E5%87%BB%E8%B7%AF%E5%BE%84%E4%B8%8E%E5%88%86%E6%9E%90%E6%94%BB%E5%87%BB%E9%9D%A2"><span class="toc-text">阶段2:绘制攻击路径与分析攻击面</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%98%B6%E6%AE%B53-%E5%A8%81%E8%83%81%E5%88%86%E6%9E%90%E4%B8%8E%E9%A3%8E%E9%99%A9%E9%87%8F%E5%8C%96"><span class="toc-text">阶段3:威胁分析与风险量化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%98%B6%E6%AE%B54-%E5%88%B6%E5%AE%9A%E7%BC%93%E8%A7%A3%E6%8E%AA%E6%96%BD%E4%B8%8E%E6%8C%81%E7%BB%AD%E6%94%B9%E8%BF%9B"><span class="toc-text">阶段4:制定缓解措施与持续改进</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BE%9B%E5%BA%94%E9%93%BE%E9%A3%8E%E9%99%A9%E7%AE%A1%E7%90%86"><span class="toc-text">供应链风险管理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%BA%E5%91%98%E5%AE%89%E5%85%A8%E5%92%8C%E9%A3%8E%E9%99%A9%E7%AE%A1%E7%90%86"><span class="toc-text">人员安全和风险管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%BA%E5%91%98%E5%AE%89%E5%85%A8%E7%AD%96%E7%95%A5%E5%92%8C%E7%A8%8B%E5%BA%8F"><span class="toc-text">人员安全策略和程序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A3%8E%E9%99%A9%E7%AE%A1%E7%90%86"><span class="toc-text">风险管理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A3%8E%E9%99%A9%E7%AE%A1%E7%90%86%E6%B5%81%E7%A8%8B"><span class="toc-text">风险管理流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A3%8E%E9%99%A9%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95"><span class="toc-text">风险分析方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A3%8E%E9%99%A9%E5%93%8D%E5%BA%94"><span class="toc-text">风险响应</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%BD%B1%E5%93%8D%E9%A3%8E%E9%99%A9%E5%93%8D%E5%BA%94%E7%9A%84%E5%9B%A0%E7%B4%A0"><span class="toc-text">影响风险响应的因素</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%A3%8E%E9%99%A9%E5%BA%94%E5%AF%B9%E6%8E%AA%E6%96%BD"><span class="toc-text">风险应对措施</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%A3%8E%E9%99%A9%E7%9A%84%E5%8F%98%E5%8C%96"><span class="toc-text">风险的变化</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E5%85%AC%E5%BC%8F"><span class="toc-text">计算公式</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E7%AD%96%E7%9A%84%E9%80%89%E6%8B%A9%E5%92%8C%E5%AE%9E%E6%96%BD"><span class="toc-text">对策的选择和实施</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%8E%A7%E5%88%B6%E7%B1%BB%E5%9E%8B"><span class="toc-text">控制类型</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E6%8E%A7%E5%88%B6%E8%AF%84%E4%BC%B0"><span class="toc-text">安全控制评估</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%9B%91%E6%8E%A7%E5%92%8C%E6%B5%8B%E9%87%8F"><span class="toc-text">监控和测量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%A3%8E%E9%99%A9%E6%8A%A5%E5%91%8A%E5%92%8C%E6%96%87%E6%A1%A3"><span class="toc-text">风险报告和文档</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%8C%81%E7%BB%AD%E6%8F%90%E5%8D%87"><span class="toc-text">持续提升</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%A3%8E%E9%99%A9%E6%A1%86%E6%9E%B6"><span class="toc-text">风险框架</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%9A%E5%8A%A1%E8%BF%9E%E7%BB%AD%E6%80%A7%E9%98%B6%E6%AE%B5"><span class="toc-text">业务连续性阶段</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%B6%E6%AE%B51-%E9%A1%B9%E7%9B%AE%E8%8C%83%E5%9B%B4%E5%92%8C%E8%A7%84%E5%88%92"><span class="toc-text">阶段1:项目范围和规划</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%84%E7%BB%87%E5%AE%A1%E6%9F%A5"><span class="toc-text">组织审查</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9B%A2%E9%98%9F%E9%80%89%E6%8B%A9"><span class="toc-text">团队选择</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B5%84%E6%BA%90%E9%9C%80%E6%B1%82"><span class="toc-text">资源需求</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B3%95%E5%BE%8B%E6%B3%95%E8%A7%84%E8%A6%81%E6%B1%82"><span class="toc-text">法律法规要求</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%B6%E6%AE%B52-%E4%B8%9A%E5%8A%A1%E5%BD%B1%E5%93%8D%E5%88%86%E6%9E%90"><span class="toc-text">阶段2:业务影响分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A1%AE%E5%AE%9A%E4%BC%98%E5%85%88%E7%BA%A7"><span class="toc-text">确定优先级</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#RTO-Recovery-Time-Objective-%E6%81%A2%E5%A4%8D%E6%97%B6%E9%97%B4%E7%9B%AE%E6%A0%87"><span class="toc-text">RTO(Recovery Time Objective)(恢复时间目标)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#RPO-Recovery-Point-Objective-%E6%81%A2%E5%A4%8D%E7%82%B9%E7%9B%AE%E6%A0%87"><span class="toc-text">RPO(Recovery Point Objective(恢复点目标)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#WRT-Work-Recovery-Time-%E6%81%A2%E5%A4%8D%E5%B7%A5%E4%BD%9C%E6%97%B6%E9%97%B4"><span class="toc-text">WRT(Work Recovery Time)(恢复工作时间)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#MTD-Maximum-Tolerable-Downtime-%E6%9C%80%E5%A4%A7%E5%AE%B9%E5%BF%8D%E5%81%9C%E6%9C%BA%E6%97%B6%E9%97%B4"><span class="toc-text">MTD(Maximum Tolerable Downtime)(最大容忍停机时间)</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A3%8E%E9%99%A9%E8%AF%86%E5%88%AB"><span class="toc-text">风险识别</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%AF%E8%83%BD%E6%80%A7%E8%AF%84%E4%BC%B0"><span class="toc-text">可能性评估</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BD%B1%E5%93%8D%E8%AF%84%E4%BC%B0"><span class="toc-text">影响评估</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B5%84%E6%BA%90%E4%BC%98%E5%85%88%E7%BA%A7%E6%8E%92%E5%BA%8F"><span class="toc-text">资源优先级排序</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%B6%E6%AE%B53-%E8%BF%9E%E7%BB%AD%E6%80%A7%E8%A7%84%E5%88%92"><span class="toc-text">阶段3: 连续性规划</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%B6%E6%AE%B54-%E8%AE%A1%E5%88%92%E6%89%B9%E5%87%86%E5%92%8C%E5%AE%9E%E6%96%BD"><span class="toc-text">阶段4: 计划批准和实施</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%88%E8%A7%84"><span class="toc-text">合规</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%95%E5%BE%8B%E7%B1%BB%E5%9E%8B"><span class="toc-text">法律类型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%8A%AF%E7%BD%AA"><span class="toc-text">计算机犯罪</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E4%BA%A7%E6%9D%83"><span class="toc-text">知识产权</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%89%88%E6%9D%83-Copyright"><span class="toc-text">版权(Copyright)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%95%86%E6%A0%87-Trademarks"><span class="toc-text">商标(Trademarks)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%93%E5%88%A9-Patents"><span class="toc-text">专利(Patents)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%95%86%E4%B8%9A%E7%A7%98%E5%AF%86-Trade-Secrets"><span class="toc-text">商业秘密(Trade Secrets)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BD%AF%E4%BB%B6%E8%AE%B8%E5%8F%AF"><span class="toc-text">软件许可</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E5%8F%A3-%E5%87%BA%E5%8F%A3"><span class="toc-text">进口&#x2F;出口</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3"><span class="toc-text">网络安全相关</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9B%BD%E9%99%85%E6%AD%A6%E5%99%A8%E8%B4%B8%E6%98%93%E6%9D%A1%E4%BE%8B-ITAR"><span class="toc-text">国际武器贸易条例(ITAR)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%87%BA%E5%8F%A3%E7%AE%A1%E7%90%86%E6%9D%A1%E4%BE%8B-EAR"><span class="toc-text">出口管理条例(EAR)</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%97%E5%85%B3%E6%B3%A8%E7%9A%84%E5%9B%BD%E5%AE%B6"><span class="toc-text">受关注的国家</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%A0%E5%AF%86%E5%87%BA%E5%8F%A3%E6%8E%A7%E5%88%B6"><span class="toc-text">加密出口控制</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9A%90%E7%A7%81"><span class="toc-text">隐私</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BE%8E%E5%9B%BD%E9%9A%90%E7%A7%81%E6%B3%95"><span class="toc-text">美国隐私法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AC%A7%E7%9B%9F%E9%9A%90%E7%A7%81%E6%B3%95-General-Data-Protection-Regulation"><span class="toc-text">欧盟隐私法(General Data Protection Regulation)</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E6%96%B9%E9%9D%A2"><span class="toc-text">关键方面</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%B7%A8%E5%A2%83%E4%BF%A1%E6%81%AF%E5%85%B1%E4%BA%AB"><span class="toc-text">跨境信息共享</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%A0%E6%8B%BF%E5%A4%A7%E9%9A%90%E7%A7%81%E6%B3%95"><span class="toc-text">加拿大隐私法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%AD%E5%9B%BD%E9%9A%90%E7%A7%81%E6%B3%95"><span class="toc-text">中国隐私法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%97%E9%9D%9E%E9%9A%90%E7%A7%81%E6%B3%95"><span class="toc-text">南非隐私法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B7%9E%E9%9A%90%E7%A7%81%E6%B3%95"><span class="toc-text">州隐私法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%88%E8%A7%84-1"><span class="toc-text">合规</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%94%AF%E4%BB%98%E5%8D%A1%E8%A1%8C%E4%B8%9A%E6%95%B0%E6%8D%AE%E5%AE%89%E5%85%A8%E6%A0%87%E5%87%86-PCI-DSS"><span class="toc-text">支付卡行业数据安全标准(PCI DSS)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Sarbanes-Oxley-%E6%B3%95%E6%A1%88-SOX"><span class="toc-text">Sarbanes-Oxley 法案(SOX)</span></a></li></ol></li></ol></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10.46 1.25h3.08c1.603 0 2.86 0 3.864.095c1.023.098 1.861.3 2.6.752a5.75 5.75 0 0 1 1.899 1.899c.452.738.654 1.577.752 2.6c.095 1.004.095 2.261.095 3.865v1.067c0 1.141 0 2.036-.05 2.759c-.05.735-.153 1.347-.388 1.913a5.75 5.75 0 0 1-3.112 3.112c-.805.334-1.721.408-2.977.43a10.81 10.81 0 0 0-.929.036c-.198.022-.275.054-.32.08c-.047.028-.112.078-.224.232c-.121.166-.258.396-.476.764l-.542.916c-.773 1.307-2.69 1.307-3.464 0l-.542-.916a10.605 10.605 0 0 0-.476-.764c-.112-.154-.177-.204-.224-.232c-.045-.026-.122-.058-.32-.08c-.212-.023-.49-.03-.93-.037c-1.255-.021-2.171-.095-2.976-.429A5.75 5.75 0 0 1 1.688 16.2c-.235-.566-.338-1.178-.389-1.913c-.049-.723-.049-1.618-.049-2.76v-1.066c0-1.604 0-2.86.095-3.865c.098-1.023.3-1.862.752-2.6a5.75 5.75 0 0 1 1.899-1.899c.738-.452 1.577-.654 2.6-.752C7.6 1.25 8.857 1.25 10.461 1.25M6.739 2.839c-.914.087-1.495.253-1.959.537A4.25 4.25 0 0 0 3.376 4.78c-.284.464-.45 1.045-.537 1.96c-.088.924-.089 2.11-.089 3.761v1c0 1.175 0 2.019.046 2.685c.045.659.131 1.089.278 1.441a4.25 4.25 0 0 0 2.3 2.3c.515.214 1.173.294 2.429.316h.031c.398.007.747.013 1.037.045c.311.035.616.104.909.274c.29.17.5.395.682.645c.169.232.342.525.538.856l.559.944a.52.52 0 0 0 .882 0l.559-.944c.196-.331.37-.624.538-.856c.182-.25.392-.476.682-.645c.293-.17.598-.24.909-.274c.29-.032.639-.038 1.037-.045h.032c1.255-.022 1.913-.102 2.428-.316a4.25 4.25 0 0 0 2.3-2.3c.147-.352.233-.782.278-1.441c.046-.666.046-1.51.046-2.685v-1c0-1.651 0-2.837-.089-3.762c-.087-.914-.253-1.495-.537-1.959a4.25 4.25 0 0 0-1.403-1.403c-.464-.284-1.045-.45-1.96-.537c-.924-.088-2.11-.089-3.761-.089h-3c-1.651 0-2.837 0-3.762.089" clip-rule="evenodd"/><path fill="currentColor" d="M9 11a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg><span>参与讨论</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+    tag_plugins: {
+      chat: Object.assign({"api":"https://siteinfo.listentothewind.cn/api/v1"}),
+    }
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"skip_search":null,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js`,
+    marked: `https://cdn.jsdelivr.net/npm/marked@13.0.1/lib/marked.umd.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  function RunItem() {
+    this.list = []; // 存放回调函数
+    this.start = () => {
+      for (var i = 0; i < this.list.length; i++) {
+        this.list[i].run();
+      }
+    };
+    this.push = (fn, name, setRequestAnimationFrame = true) => {
+      let myfn = fn
+      if (setRequestAnimationFrame) {
+        myfn = () => {
+          utils.requestAnimationFrame(fn)
+        }
+      }
+      var f = new Item(myfn, name);
+      this.list.push(f);
+    };
+    this.remove = (name) => {
+      for (let index = 0; index < this.list.length; index++) {
+        const e = this.list[index];
+        if (e.name == name) {
+          this.list.splice(index, 1);
+        }
+      }
+    }
+    // 构造一个可以run的对象
+    function Item(fn, name) {
+      // 函数名称
+      this.name = name || fn.name;
+      // run方法
+      this.run = () => {
+        try {
+          fn()
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    }
+  }
+
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')) {
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function () {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function (response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function (data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function (error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+    /********************** requestAnimationFrame ********************************/
+    // 1、requestAnimationFrame 会把每一帧中的所有 DOM 操作集中起来，在一次重绘或回流中就完成，并且重绘或回流的时间间隔紧紧跟随浏览器的刷新频率，一般来说，这个频率为每秒60帧。
+    // 2、在隐藏或不可见的元素中，requestAnimationFrame 将不会进行重绘或回流，这当然就意味着更少的的 cpu，gpu 和内存使用量。
+    requestAnimationFrame: (fn) => {
+      if (!window.requestAnimationFrame) {
+        window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame;
+      }
+      window.requestAnimationFrame(fn)
+    },
+    dark: {},
+  };
+
+  // utils.dark.mode 当前模式 dark or light
+  // utils.dark.toggle() 暗黑模式触发器
+  // utils.dark.push(callBack[,"callBackName"]) 传入触发器回调函数
+  utils.dark.method = {
+    toggle: new RunItem(),
+  };
+  utils.dark = Object.assign(utils.dark, {
+    push: utils.dark.method.toggle.push,
+  });
+</script>
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+<script type="text/javascript">
+  (() => {
+    const tagSwitchers = document.querySelectorAll('.tag-subtree.parent-tag > a > .tag-switcher-wrapper')
+    for (const tagSwitcher of tagSwitchers) {
+      tagSwitcher.addEventListener('click', (e) => {
+        const parent = e.target.closest('.tag-subtree.parent-tag')
+        parent.classList.toggle('expanded')
+        e.preventDefault()
+      })
+    }
+
+    // Get active tag from query string, then activate it.
+    const urlParams = new URLSearchParams(window.location.search)
+    const activeTag = urlParams.get('tag')
+    if (activeTag) {
+      let tag = document.querySelector(`.tag-subtree[data-tag="${activeTag}"]`)
+      if (tag) {
+        tag.querySelector('a').classList.add('active')
+        
+        while (tag) {
+          tag.classList.add('expanded')
+          tag = tag.parentElement.closest('.tag-subtree.parent-tag')
+        }
+      }
+    }
+  })()
+</script>
+
+
+<!-- required -->
+<script src="/js/main.js?v=1.29.1" defer></script>
+
+<script type="text/javascript">
+  const applyTheme = (theme) => {
+    if (theme === 'auto') {
+      document.documentElement.removeAttribute('data-theme')
+    } else {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+
+    applyThemeToGiscus(theme)
+  }
+
+  const applyThemeToGiscus = (theme) => {
+    theme = theme === 'auto' ? 'preferred_color_scheme' : theme
+
+    const cmt = document.getElementById('giscus')
+    if (cmt) {
+      // This works before giscus load.
+      cmt.setAttribute('data-theme', theme)
+    }
+
+    const iframe = document.querySelector('#comments > section.giscus > iframe')
+    if (iframe) {
+      // This works after giscus loaded.
+      const src = iframe.src
+      const newSrc = src.replace(/theme=[\w]+/, `theme=${theme}`)
+      iframe.src = newSrc
+    }
+  }
+
+  const switchTheme = () => {
+    // light -> dark -> auto -> light -> ...
+    const currentTheme = document.documentElement.getAttribute('data-theme')
+    let newTheme;
+    switch (currentTheme) {
+      case 'light':
+        newTheme = 'dark'
+        break
+      case 'dark':
+        newTheme = 'auto'
+        break
+      default:
+        newTheme = 'light'
+    }
+    applyTheme(newTheme)
+    window.localStorage.setItem('Stellar.theme', newTheme)
+    utils.dark.mode = newTheme === 'auto' ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : newTheme;
+    utils.dark.method.toggle.start();
+
+    const messages = {
+      light: `切换到浅色模式`,
+      dark: `切换到深色模式`,
+      auto: `切换到跟随系统配色`,
+    }
+    hud?.toast?.(messages[newTheme])
+  }
+
+  (() => {
+    // Apply user's preferred theme, if any.
+    const theme = window.localStorage.getItem('Stellar.theme')
+    if (theme !== null) {
+      applyTheme(theme)
+    } else {
+      utils.dark.mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    utils.dark.method.toggle.start();
+  })()
+</script>
+
+
+<!-- optional -->
+
+  <script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
+
+  const el = document.getElementById('waline_container');
+  util.viewportLazyload(el, load_waline, false);
+
+  function load_waline(){
+    if (!el) return;
+
+    utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.3/dist/waline-meta.css');
+
+    const path = el.getAttribute('comment_id') ?? decodeURI(window.location.pathname);
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.3/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+      el: '#waline_container',
+      path: path,
+      
+    }));
+  }
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"},"voice":{"js":"/js/plugins/voice.js"},"video":{"js":"/js/plugins/video.js"},"download-file":{"js":"/js/plugins/download-file.js"},"twikoo":{"js":"/js/services/twikoo_latest_comment.js"},"waline":{"js":"/js/services/waline_latest_comment.js"},"artalk":{"js":"/js/services/artalk_latest_comment.js"},"giscus":{"js":"/js/services/giscus_latest_comment.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else if (id == 'voice') {
+        ctx.voiceAudios = document.querySelectorAll('.voice>audio');
+        if (ctx.voiceAudios?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            createVoiceDom(ctx.voiceAudios);
+          });
+        }
+      } else if (id == 'video') {
+        ctx.videos = document.querySelectorAll('.video>video');
+        if (ctx.videos?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            videoEvents(ctx.videos);
+          });
+        }
+      } else if (id == 'download-file') {
+        ctx.files = document.querySelectorAll('.file');
+        if (ctx.files?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            downloadFileEvent(ctx.files);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+
+    // chat iphone time
+    let phoneTimes = document.querySelectorAll('.chat .status-bar .time');
+
+    if (phoneTimes.length > 0) {
+      NowTime();
+      var date = new Date();
+      var sec = date.getSeconds();
+      var firstAdjustInterval = setInterval(firstAdjustTime, 1000 * (60 - sec));
+    }
+
+    function firstAdjustTime() {
+      NowTime();
+      clearInterval(firstAdjustInterval);
+      setInterval(NowTime, 1000 * 60);
+    }
+
+    function NowTime() {
+      for (let i = 0; i < phoneTimes.length; ++i) {
+        var timeSpan = phoneTimes[i];
+        var date = new Date();
+        var hour = date.getHours();
+        var min = date.getMinutes();
+        timeSpan.innerHTML = check(hour) + ":" + check(min);
+      }
+    };
+
+    function check(val) {
+      if (val < 10) {
+        return ("0" + val);
+      }
+      return (val);
+    }
+
+    // chat quote
+    const chat_quote_obverser = new IntersectionObserver((entries, observer) => {
+      entries.filter((entry) => { return entry.isIntersecting }).sort((a, b) => a.intersectionRect.y !== b.intersectionRect.y ? a.intersectionRect.y - b.intersectionRect.y : a.intersectionRect.x - b.intersectionRect.x).forEach((entry, index) => {
+          observer.unobserve(entry.target);
+          setTimeout(() => {
+            entry.target.classList.add('quote-blink');
+            setTimeout(() => {
+              entry.target.classList.remove('quote-blink');
+            }, 1000);
+          }, Math.max(100, 16) * (index + 1));
+        });
+    });
+
+    var chatQuotes = document.querySelectorAll(".chat .talk .quote");
+    chatQuotes.forEach((quote) => {
+      quote.addEventListener('click', function () {
+        var chatCellDom = document.getElementById("quote-" + quote.getAttribute("quotedCellTag"));
+        if (chatCellDom) {
+          var chatDiv = chatCellDom.parentElement;
+          var mid = chatDiv.clientHeight / 2;
+          var offsetTop = chatCellDom.offsetTop;
+          if (offsetTop > mid - chatCellDom.clientHeight / 2) {
+            chatDiv.scrollTo({
+              top: chatCellDom.offsetTop - mid + chatCellDom.clientHeight / 2,
+              behavior: "smooth"
+            });
+          } else {
+            chatDiv.scrollTo({
+              top: 0,
+              behavior: "smooth"
+            });
+          }
+          chat_quote_obverser.observe(chatCellDom);
+        }
+      });
+    });
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js"></script><script defer src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.swiper-slide img, .gallery img ,#waline_container .vcontent img`,
+    css: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css`,
+    js: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || slide.triggerEl.dataset.caption || null
+        }
+      });
+    })
+  }
+</script>
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          rewind: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+
+</div></body></html>
