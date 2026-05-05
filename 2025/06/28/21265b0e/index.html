@@ -1,0 +1,3102 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.29.1" theme-name="Stellar" theme-version="1.29.1">
+  
+  <meta name="generator" content="Hexo 7.3.0">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
+  <meta name="theme-color" content="#f9fafb">
+  
+  <title>域3-安全架构和工程 - SafeKiller Zone</title>
+
+  
+    <meta name="description" content="系统架构 系统（System）是实现某个目的而协同工作的一组事物。架构（Architecture）是用来描述某个目标的结构设计。因此，系统架构（System Architecture）是对如何设计特定组件并组合在一起执行某些操作的描述。  客户端系统（Client-based Systems） 定义：完全运行在用户设备（如工作站或智能手机）上的应用系统。  特点：用户可在没有网络的情况下与系统交互">
+<meta property="og:type" content="article">
+<meta property="og:title" content="域3-安全架构和工程">
+<meta property="og:url" content="https://jiangjiyue.github.io/2025/06/28/21265b0e/index.html">
+<meta property="og:site_name" content="SafeKiller Zone">
+<meta property="og:description" content="系统架构 系统（System）是实现某个目的而协同工作的一组事物。架构（Architecture）是用来描述某个目标的结构设计。因此，系统架构（System Architecture）是对如何设计特定组件并组合在一起执行某些操作的描述。  客户端系统（Client-based Systems） 定义：完全运行在用户设备（如工作站或智能手机）上的应用系统。  特点：用户可在没有网络的情况下与系统交互">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/Untitled%20diagram%20_%20Mermaid%20Chart-2025-07-02-081025.svg">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/17479686202085.jpg">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/17483056720491.jpg">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/17501267921986.jpg">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/17479825060562.jpg">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/17479827930659.jpg">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/17482502689283.jpg">
+<meta property="og:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/f0b209d32fe54ef5899494aa7f29eab4.png">
+<meta property="article:published_time" content="2025-06-28T09:08:49.000Z">
+<meta property="article:modified_time" content="2025-09-02T08:30:24.530Z">
+<meta property="article:author" content="Kill3r">
+<meta property="article:tag" content="Linux, Nginx, Zabbix, ELK, Security, Penetration">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/Untitled%20diagram%20_%20Mermaid%20Chart-2025-07-02-081025.svg">
+  
+  
+  
+  <meta name="keywords" content="Linux, Nginx, Zabbix, ELK, Security, Penetration">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="SafeKiller Zone" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.29.1">
+
+
+  
+    <link rel="shortcut icon" href="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/style.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202401260729165.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">SafeKiller Zone</div><div class="sub normal cap">安全学的再好又有什么用</div><div class="sub hover cap" style="opacity:0"> 连自己喜欢的人都留不住</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="导航" href="/sites/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a><a class="nav-item" title="更多" href="/tools/" style="color:#d55afa"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" opacity=".5"/><path fill="currentColor" d="M12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25z"/></svg></a></nav>
+</div>
+<div class="widgets">
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">专栏：CISSP</span></div><div class="widget-body"><a class="item" href="/2025/05/13/6a0dc769/"><span class="title">域1-安全与风险管理</span></a><a class="item" href="/2025/05/14/25cbcc50/"><span class="title">域2-资产安全</span></a><a class="item active" href="/2025/06/28/21265b0e/"><span class="title">域3-安全架构和工程</span><svg class="active-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21 11.098v4.993c0 3.096 0 4.645-.734 5.321c-.35.323-.792.526-1.263.58c-.987.113-2.14-.907-4.445-2.946c-1.02-.901-1.529-1.352-2.118-1.47a2.225 2.225 0 0 0-.88 0c-.59.118-1.099.569-2.118 1.47c-2.305 2.039-3.458 3.059-4.445 2.945a2.238 2.238 0 0 1-1.263-.579C3 20.736 3 19.188 3 16.091v-4.994C3 6.81 3 4.666 4.318 3.333C5.636 2 7.758 2 12 2c4.243 0 6.364 0 7.682 1.332C21 4.665 21 6.81 21 11.098" opacity=".5"/><path fill="currentColor" d="M9 5.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5z"/></svg></a></div></widget>
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span><a class="cap-action" id="rss" title="Subscribe" href="/atom.xml"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div><div class="widget-body fs14"><a class="item title" href="/2025/05/13/6a0dc769/"><span class="title">域1-安全与风险管理</span></a><a class="item title" href="/2020/06/01/f5d15284/"><span class="title">一. 计算机基础知识</span></a><a class="item title" href="/2023/03/06/006af144/"><span class="title">Web-Xss_Labs漏洞复现</span></a><a class="item title" href="/2020/12/29/b30326ab/"><span class="title">网络安全法</span></a><a class="item title" href="/2025/06/28/21265b0e/"><span class="title">域3-安全架构和工程</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/JiangJiYue/" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-github"></i></a><a class="social" href="https://space.bilibili.com/238008115" target="_blank" rel="external nofollow noopener noreferrer"><i class="fa-brands fa-bilibili fa-bounce"></i></a><a class="social" href="/atom.xml" rel="noopener noreferrer"><i class="fa-solid fa-rss fa-shake"></i></a><a class="social" href="/comments/" rel="noopener noreferrer"><i class="fa-regular fa-comment-dots"></i></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" id="menu" href="/topic">专栏</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/2025/05/13/6a0dc769/">CISSP</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2025-06-28T09:08:49.000Z">2025-06-28</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2025-09-02T08:30:24.530Z">2025-09-02</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>域3-安全架构和工程</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><h2 id="系统架构"><a href="#系统架构" class="headerlink" title="系统架构"></a>系统架构</h2><blockquote>
+<p>系统（System）是实现某个目的而协同工作的一组事物。架构（Architecture）是用来描述某个目标的结构设计。因此，系统架构（System Architecture）是对如何设计特定组件并组合在一起执行某些操作的描述。</p>
+</blockquote>
+<h3 id="客户端系统（Client-based-Systems）"><a href="#客户端系统（Client-based-Systems）" class="headerlink" title="客户端系统（Client-based Systems）"></a>客户端系统（Client-based Systems）</h3><ul>
+<li>定义：完全运行在用户设备（如工作站或智能手机）上的应用系统。 </li>
+<li>特点：用户可在没有网络的情况下与系统交互。</li>
+</ul>
+<h3 id="服务端系统（Server-based-System）"><a href="#服务端系统（Server-based-System）" class="headerlink" title="服务端系统（Server-based System）"></a>服务端系统（Server-based System）</h3><p>又称客户&#x2F;服务端系统（C&#x2F;S架构），要求两个或多个独立应用程序通过网络连接完成交互。 </p>
+<ul>
+<li>两层架构（Two-tier Architecture）： <ul>
+<li>用户通过浏览器连接客户端和服务端。</li>
+</ul>
+</li>
+<li>n层架构： <ul>
+<li>用户可能经历多层交互（如Web服务器→应用服务器→数据库）。</li>
+</ul>
+</li>
+<li>关键安全机制： <ul>
+<li>访问控制列表（ACL）确保各层之间的信任关系。</li>
+</ul>
+</li>
+</ul>
+<h3 id="数据库管理系统（DBMS）"><a href="#数据库管理系统（DBMS）" class="headerlink" title="数据库管理系统（DBMS）"></a>数据库管理系统（DBMS）</h3><ul>
+<li>功能：高效执行创建、读取、更新和删除（CRUD）操作。 </li>
+<li>事务（Transaction）特性（ACID）： <ul>
+<li>原子性（Atomicity）：事务要么全部成功，要么回滚到初始状态。 </li>
+<li>一致性（Consistency）：事务严格遵守数据规则（如不能提取不存在的资金）。 </li>
+<li>隔离性（Isolation）：并行事务相互隔离，避免相互影响。 </li>
+<li>持久性（Durability）：事务完成后数据永久存储，防止断电丢失。</li>
+</ul>
+</li>
+<li>安全问题： <ul>
+<li>聚合（Aggregation）：用户通过多个渠道获取部分信息，汇总后获得原本无权访问的高敏感信息。 </li>
+<li>推理（Inference）：通过聚合信息推断出完整信息（如从低敏感数据间接获取高敏感数据）。</li>
+</ul>
+</li>
+</ul>
+<h3 id="高性能计算系统（HPC）"><a href="#高性能计算系统（HPC）" class="headerlink" title="高性能计算系统（HPC）"></a>高性能计算系统（HPC）</h3><ul>
+<li>定义：处理大规模数据和复杂计算任务的系统，如超级计算机、集群。  </li>
+<li>关键技术：  <ul>
+<li>高性能处理器、高速存储、并行算法。</li>
+</ul>
+</li>
+<li>应用领域：科学研究、工程设计、金融服务。</li>
+</ul>
+<h3 id="工业控制体系（ICS）"><a href="#工业控制体系（ICS）" class="headerlink" title="工业控制体系（ICS）"></a>工业控制体系（ICS）</h3><ul>
+<li>核心目标：控制工业流程中的物理设备，首要关注人身安全。  </li>
+<li>技术分类：  <ul>
+<li>可编程逻辑控制器（PLC）：用于开关阀门等操作。  </li>
+<li>远程终端单元（RTU）：转发读数和执行命令。  </li>
+<li>历史数据系统：捕获流程数据用于分析。</li>
+</ul>
+</li>
+<li>系统类型：  <ul>
+<li>分布式控制系统（DCS）：控制局部地区的物理流程。  </li>
+<li>数据采集与监视控制系统（SCADA）：控制跨区域的物理流程。</li>
+</ul>
+</li>
+</ul>
+<h3 id="虚拟化系统"><a href="#虚拟化系统" class="headerlink" title="虚拟化系统"></a>虚拟化系统</h3><ul>
+<li>虚拟机（VM）：在虚拟化环境中运行的完整计算机系统。  </li>
+<li>容器化（Containerization）：在操作系统上独立用户空间中运行的应用程序。</li>
+</ul>
+<h3 id="微服务"><a href="#微服务" class="headerlink" title="微服务"></a>微服务</h3><ul>
+<li>特点：将单体应用拆分为多个独立服务，每个服务负责单一功能。</li>
+</ul>
+<h3 id="无服务器架构"><a href="#无服务器架构" class="headerlink" title="无服务器架构"></a>无服务器架构</h3><ul>
+<li>定义：开发者无需管理服务器，仅需关注代码部署（如AWS Lambda）。</li>
+</ul>
+<h3 id="云计算系统"><a href="#云计算系统" class="headerlink" title="云计算系统"></a>云计算系统</h3><ul>
+<li>部署模型：  <ul>
+<li>公有云（Public Cloud）、私有云（Private Cloud）、混合云（Hybrid Cloud）。</li>
+</ul>
+</li>
+<li>服务模型：  <ul>
+<li>SaaS（软件即服务）：提供云上运行的应用程序（如Office 365）。  </li>
+<li>PaaS（平台即服务）：提供开发和部署平台（如Google App Engine）。  </li>
+<li>IaaS（基础设施即服务）：提供虚拟机、存储等基础资源（如AWS EC2）。</li>
+</ul>
+</li>
+</ul>
+<h3 id="普适系统（Ubiquitous-Computing）"><a href="#普适系统（Ubiquitous-Computing）" class="headerlink" title="普适系统（Ubiquitous Computing）"></a>普适系统（Ubiquitous Computing）</h3><ul>
+<li>特点：计算能力嵌入日常设备中，实现无缝互联（如智能家居）。</li>
+</ul>
+<h3 id="嵌入式系统（Embedded-System）"><a href="#嵌入式系统（Embedded-System）" class="headerlink" title="嵌入式系统（Embedded System）"></a>嵌入式系统（Embedded System）</h3><ul>
+<li>定义：为特定目的设计的独立计算机系统（如汽车ECU）。</li>
+</ul>
+<h3 id="物联网（IoT）"><a href="#物联网（IoT）" class="headerlink" title="物联网（IoT）"></a>物联网（IoT）</h3><ul>
+<li>特征：全球嵌入式设备互联网络，每个节点唯一可寻址。  </li>
+<li>安全挑战：  <ul>
+<li>身份验证机制薄弱。  </li>
+<li>加密技术受限（资源有限）。  </li>
+<li>固件&#x2F;软件更新不及时。</li>
+</ul>
+</li>
+</ul>
+<h3 id="分布式系统（Distributed-System）"><a href="#分布式系统（Distributed-System）" class="headerlink" title="分布式系统（Distributed System）"></a>分布式系统（Distributed System）</h3><ul>
+<li>定义：多台计算机协同完成任务（如区块链网络）。</li>
+</ul>
+<h3 id="边缘计算系统（Edge-Computing）"><a href="#边缘计算系统（Edge-Computing）" class="headerlink" title="边缘计算系统（Edge Computing）"></a>边缘计算系统（Edge Computing）</h3><ul>
+<li>特点：将数据和计算资源靠近数据源，减少延迟（如CDN、智能制造）。</li>
+</ul>
+<h2 id="错题集"><a href="#错题集" class="headerlink" title="错题集"></a>错题集</h2><ol>
+<li><p>以下关于容器的说法不正确的是?<br> A. 是嵌入式系统<br> B. 是虚拟化系统<br> C. 通常包含微服务<br> D. 在沙盒中运行</p>
+ <div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>A,容器通常是容纳微服务并在沙箱中运行的虚拟化系统.将容器实现为嵌入式系统不合适</p></div></details></div>
+</li>
+<li><p>分布式控制体系(DCS)与数据采集与监视控制系统(SCADA)之间的主要差异是什么?<br> A. SCADA是一种工业控制体系(ICS),而DCS是一种总线<br> B. SCADA控制较近距离的系统,而DCS控制较远物理距离的系统<br> C. DCS控制较近距离的系统,而SCADA控制较远物理距离的系统<br> D. DCS使用可编程逻辑控制器(PLC),而SCADA使用远程终端单元(RTU)</p>
+ <div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>C,主要差异在于DCS控制较近距离的系统,而SCADA控制较远物理距离的大规模物理节点的流程. DCS和SCADA都能使用(且经常使用)PLC,但RTU几乎总出现在SCADA系统中.</p></div></details></div>
+</li>
+<li><p>如果想让研发团队可访问以便编写自定义代码,同时为全体员工提供远程办公室的访问权限.推荐以下哪种云服务模型?<br> A. SaaS<br> B. Paas<br> C. Iaas<br> D. Faas</p>
+ <div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>A,PaaS专注于提供软件研发的价值,提供对研发环境的直接访问,使组织能在云基础架构上构建自己的解决方案,而不是完全由自己提供基础架构.</p></div></details></div>
+</li>
+<li><p>以下哪项不是保护嵌入式系统面临的主要问题?<br> A. 专有代码的使用<br> B. “自动上报”的设备<br> C. 缺乏微控制器<br> D. 能更新和部署安全补丁</p>
+ <div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>C,嵌入式系统通常围绕微控制器构建,微控制器是由CPU、内存和外围控制接口组成的专用设备.其他所有答案都是保护嵌入式系统的主要问题.</p></div></details></div>
+</li>
+<li><p>关于边缘计算,下列哪项是正确的?<br> A. 不使用集中的计算资源,在边缘端完成所有计算<br> B. 将计算推向边缘端,同时集中留存数据管理<br> C. 通常由两层组成: 终端设备和云基础架构<br> D. 是内容分发网络的演进</p>
+ <div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>D,边缘计算是内容分发网络的演变,旨在使网络内容更接近其客户.边缘计算是一个分布式系统,将计算和数据存储就近部署,以减少延迟和网络流量.因此,计算和数据管理由三个不同的层级的每一层分别处置: 终端设备、边缘设备和云基础架构.</p></div></details></div></li>
+</ol>
+<h2 id="密码学基础"><a href="#密码学基础" class="headerlink" title="密码学基础"></a>密码学基础</h2><h3 id="密码学核心目标"><a href="#密码学核心目标" class="headerlink" title="密码学核心目标"></a>密码学核心目标</h3><table>
+<thead>
+<tr>
+<th align="center">目标</th>
+<th align="center">实现方法</th>
+<th align="center">技术对应</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">机密性</td>
+<td align="center">数据加密(静止&#x2F;传输&#x2F;使用状态)</td>
+<td align="center">对称&#x2F;非对称加密</td>
+</tr>
+<tr>
+<td align="center">完整性</td>
+<td align="center">数据未被篡改</td>
+<td align="center">消息摘要(哈希)</td>
+</tr>
+<tr>
+<td align="center">身份验证</td>
+<td align="center">验证用户身份真实性</td>
+<td align="center">零知识证明、数字签名</td>
+</tr>
+<tr>
+<td align="center">不可否认性</td>
+<td align="center">确认消息来源</td>
+<td align="center">数字签名</td>
+</tr>
+</tbody></table>
+<h3 id="密码学基础概念"><a href="#密码学基础概念" class="headerlink" title="密码学基础概念"></a>密码学基础概念</h3><h4 id="基本术语"><a href="#基本术语" class="headerlink" title="基本术语"></a>基本术语</h4><ul>
+<li>明文(Plaintext): 原始可读数据.</li>
+<li>密文(Ciphertext): 加密后的数据.</li>
+<li>密钥(Key): 控制加密&#x2F;解密过程的参数,密钥空间越大越安全.</li>
+<li>密码算法分类: <ul>
+<li>密码术(Cryptography): 创建加密算法.</li>
+<li>密码分析(Cryptanalysis): 破解加密算法.</li>
+<li>密码学(Cryptology): 两者结合的总称.</li>
+</ul>
+</li>
+</ul>
+<h4 id="安全设计原则"><a href="#安全设计原则" class="headerlink" title="安全设计原则"></a>安全设计原则</h4><ul>
+<li><p>显式安全(Kerckhoffs原则): 算法公开仍安全(依赖密钥).</p>
+<blockquote>
+<p>Kerckhoffs原则:密码体制应该对外公开,<mark class="tag-plugin colorful mark" color="red">仅需对密钥进行保密</mark>;如果一个密码系统需要保密的越多,可能的弱点也越多</p>
+</blockquote>
+</li>
+<li><p>隐式安全(Security Through Obscurity): 算法保密才安全(不推荐).</p>
+</li>
+</ul>
+<h4 id="关键数学概念"><a href="#关键数学概念" class="headerlink" title="关键数学概念"></a>关键数学概念</h4><ul>
+<li><p>布尔数学: 二进制逻辑(1&#x3D;真,0&#x3D;假),用于基础计算与加密算法设计.</p>
+</li>
+<li><p>逻辑运算:   </p>
+<ul>
+<li>AND(与): 两输入均为真时输出为真(如密码验证中多条件组合).  </li>
+<li>OR(或): 至少一个输入为真时输出为真(如权限分级控制).  </li>
+<li>NOT(非): 反转输入值(如数据掩码操作).  </li>
+<li>XOR(异或): 仅当输入值不同时输出为真(广泛用于流密码和哈希算法).</li>
+</ul>
+</li>
+<li><p>模函数(mod): 取余运算(如 7 mod 3 &#x3D; 1),常用于生成有限域内的数值(如Diffie-Hellman密钥交换).  </p>
+</li>
+<li><p>单向函数: 正向易计算,逆向不可行(如哈希函数SHA-256),是现代密码学的基石.  </p>
+</li>
+<li><p>Nonce: 一次性随机数(如初始化向量IV),防止重放攻击(如TLS协议中的会话ID).  </p>
+</li>
+<li><p>代价函数: 衡量破解密码所需成本(如暴力破解256位AES的计算量≈宇宙原子总数级).  </p>
+</li>
+<li><p>初始向量IV: 这是一个随机位串,长度与块大小相同,针对消息执行XOR操作.</p>
+</li>
+<li><p>零知识证明(Zero-Knowledge Proof):   </p>
+<ul>
+<li>定义: 证明者(P)向验证者(V)证明自己掌握某秘密,而无需泄露秘密本身.  </li>
+<li>核心性质:   <ol>
+<li>正确性: 若P无秘密,欺骗V的概率极低.  </li>
+<li>完备性: 若P有秘密,V能确信其真实性.  </li>
+<li>零知识性: V无法获取额外信息(除“P掌握秘密”外).</li>
+</ol>
+</li>
+<li>经典案例:   <ul>
+<li>阿里巴巴洞穴协议:<br>P声称知道开启山洞密门的咒语,但不想暴露.验证流程:   <ol>
+<li>V在洞口等待,P随机进入C或D分支.  </li>
+<li>V要求P从指定分支返回(如“从左侧出来”).  </li>
+<li>若P知道咒语,可随时穿越密门完成挑战；若随机猜测,成功率仅50%.  </li>
+<li>多次重复后,V可高概率确认P掌握秘密,但始终不知咒语内容.</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>应用: 身份认证(如Zcash匿名交易)、隐私保护(如区块链零知识证明).</li>
+</ul>
+</li>
+<li><p>分割知识(Split Knowledge):   </p>
+<ul>
+<li>定义: 将敏感信息(如密钥)拆分为多个部分,需多方协作才能还原.  </li>
+<li>典型场景:   <ul>
+<li>密钥托管: 4人各持8位密码的2位,需全员在场才能登录(如核武器发射权限).  </li>
+<li><mark class="tag-plugin colorful mark" color="red">M of N控制: N人中需M人同时操作(如3/5阈值签名),防止单点失效.</mark></li>
+</ul>
+</li>
+<li>技术实现:   <ul>
+<li>Shamir秘密共享算法(基于多项式插值,如3人中任2人可恢复密钥).  </li>
+<li>硬件安全模块(HSM)中的多因素认证(如U盘+生物识别).</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="经典密码技术"><a href="#经典密码技术" class="headerlink" title="经典密码技术"></a>经典密码技术</h2><h3 id="密码分类"><a href="#密码分类" class="headerlink" title="密码分类"></a>密码分类</h3><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">特点</th>
+<th align="center">示例算法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">移位密码</td>
+<td align="center">重新排列明文字符顺序</td>
+<td align="center">列移位密码</td>
+</tr>
+<tr>
+<td align="center">替代密码</td>
+<td align="center">用其他字符替换</td>
+<td align="center">凯撒密码(单表)、Vigenere(多表)</td>
+</tr>
+<tr>
+<td align="center">单次密本</td>
+<td align="center">一次一密(Vernam密码)</td>
+<td align="center">绝对安全但难实施</td>
+</tr>
+<tr>
+<td align="center">运动密钥密码</td>
+<td align="center">使用书籍段落作为密钥</td>
+<td align="center">单次密本的变种</td>
+</tr>
+</tbody></table>
+<h3 id="按照明文的处理方法"><a href="#按照明文的处理方法" class="headerlink" title="按照明文的处理方法"></a>按照明文的处理方法</h3><ul>
+<li>分组密码(块密码,Block)</li>
+<li>流密码(序列)</li>
+</ul>
+<h2 id="现代密码学体系"><a href="#现代密码学体系" class="headerlink" title="现代密码学体系"></a>现代密码学体系</h2><h3 id="对称加密"><a href="#对称加密" class="headerlink" title="对称加密"></a>对称加密</h3><ul>
+<li><p>核心问题: </p>
+<ul>
+<li><mark class="tag-plugin colorful mark" color="red">密钥分发困难(需安全通道).</mark></li>
+<li>对称密钥加密法<mark class="tag-plugin colorful mark" color="red">不提供不可否认性</mark></li>
+<li>算法缺乏可扩展性</li>
+<li>密钥必须经常重新生成</li>
+<li>密钥数量计算方法:(n(n-1)&#x2F;2).</li>
+</ul>
+</li>
+<li><p>运行模式: </p>
+<table>
+<thead>
+<tr>
+<th align="center">模式</th>
+<th align="center">特点</th>
+<th align="center">安全性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">ECB</td>
+<td align="center">同一块同密钥加密,易分析</td>
+<td align="center">低</td>
+</tr>
+<tr>
+<td align="center">CBC</td>
+<td align="center">引入IV,错误传播</td>
+<td align="center">中</td>
+</tr>
+<tr>
+<td align="center">CFB&#x2F;OFB&#x2F;CTR</td>
+<td align="center">流密码模式,支持并行计算</td>
+<td align="center">高</td>
+</tr>
+<tr>
+<td align="center">GCM&#x2F;CCM</td>
+<td align="center">增加真实性验证</td>
+<td align="center">最高(含完整性校验)</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>常见算法: </p>
+<ul>
+<li>DES&#x2F;3DES: 56位密钥(不安全),3DES(168位,NIST仅认可DES-EEE3).</li>
+<li><mark class="tag-plugin colorful mark" color="red">AES: 128/192/256位密钥,Rijndael算法(现代标准).</mark></li>
+<li>RC系列: RC4(流密码,已废弃)、RC6(安全)、RC5(块密码,已弃用).</li>
+<li>其他: Blowfish(32-448位密钥)、Twofish(白化处理)、CAST系列.</li>
+</ul>
+</li>
+</ul>
+<h3 id="非对称加密"><a href="#非对称加密" class="headerlink" title="非对称加密"></a>非对称加密</h3><ul>
+<li><p>核心优势: 解决密钥分发问题,提供不可否认性.</p>
+</li>
+<li><p>密钥数量计算方法:2n.</p>
+</li>
+<li><p>算法对比: </p>
+<table>
+<thead>
+<tr>
+<th align="center">算法</th>
+<th align="center">原理基础</th>
+<th align="center">密钥长度建议</th>
+<th align="center">应用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">RSA</td>
+<td align="center">采用的单项函数是大素数相乘,相乘很容易但大数分解很难,</td>
+<td align="center">≥2048位</td>
+<td align="center">数字签名、密钥交换</td>
+</tr>
+<tr>
+<td align="center">ECC</td>
+<td align="center">椭圆曲线离散对数</td>
+<td align="center">256位(等效RSA 3072位)</td>
+<td align="center">移动设备、物联网</td>
+</tr>
+<tr>
+<td align="center">Diffie-Hellman</td>
+<td align="center">离散对数问题</td>
+<td align="center">≥2048位</td>
+<td align="center">安全密钥交换&#x2F;分发</td>
+</tr>
+<tr>
+<td align="center">ElGamal</td>
+<td align="center">扩展DH,密文膨胀</td>
+<td align="center">-</td>
+<td align="center">加密通信</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>量子威胁: Shor算法可破解RSA&#x2F;ECC,需关注后量子密码学(如NIST PQC项目).</p>
+</li>
+</ul>
+<h3 id="混合加密-数字信封"><a href="#混合加密-数字信封" class="headerlink" title="混合加密(数字信封)"></a>混合加密(数字信封)</h3><p>qwq···</p>
+<h3 id="哈希函数"><a href="#哈希函数" class="headerlink" title="哈希函数"></a>哈希函数</h3><blockquote>
+<p>Hash(哈希)函数(也称为散列函数):输入可以是任意长度消息,通过一个单项的运算产生一个定长的输出,输出的值称为Hash值(哈希值、散列值、消息摘要)</p>
+</blockquote>
+<ul>
+<li><p>特点</p>
+<ul>
+<li><p>Hash的值是不可预测的</p>
+</li>
+<li><p>哈希函数的计算对任何输入而言都相对容易</p>
+</li>
+<li><p>Hash函数的过程是不可逆的</p>
+</li>
+<li><p>Hash函数具有确定性(唯一性)</p>
+</li>
+<li><p>抗碰撞(Collision Resistance).</p>
+</li>
+<li><p>抗原像攻击(Pre-image Resistance).</p>
+</li>
+</ul>
+</li>
+<li><p>主流算法: </p>
+<table>
+<thead>
+<tr>
+<th align="center">标准</th>
+<th align="center">输出长度</th>
+<th align="center">安全性</th>
+<th align="center">应用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">SHA-1</td>
+<td align="center">160位</td>
+<td align="center">已破解</td>
+<td align="center">遗留系统</td>
+</tr>
+<tr>
+<td align="center">SHA-2(SHA-256&#x2F;512)</td>
+<td align="center">256&#x2F;512位</td>
+<td align="center">安全</td>
+<td align="center">TLS、区块链</td>
+</tr>
+<tr>
+<td align="center">SHA-3</td>
+<td align="center">可变</td>
+<td align="center">安全</td>
+<td align="center">硬件实现优化</td>
+</tr>
+<tr>
+<td align="center">MD5</td>
+<td align="center">128位</td>
+<td align="center">已破解</td>
+<td align="center">校验文件完整性(非安全)</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<h3 id="密码算法生命周期管理"><a href="#密码算法生命周期管理" class="headerlink" title="密码算法生命周期管理"></a>密码算法生命周期管理</h3><blockquote>
+<p>由于技术的发展，计算机算力不断提升，原来被视为安全的密码算法已不再安全，因此组织在使用密码算法时需要注意密码算法的生命周期。</p>
+</blockquote>
+<ol>
+<li>算法选择: 遵循NIST、ISO等标准.</li>
+<li>密钥长度: 平衡安全性与性能(如AES-256 vs RC4).</li>
+<li>退役策略: <ul>
+<li>定期评估算法安全性(如SHA-1停用).</li>
+<li>监控量子计算进展(NIST后量子密码标准).</li>
+</ul>
+</li>
+</ol>
+<h2 id="数字签名流程"><a href="#数字签名流程" class="headerlink" title="数字签名流程"></a>数字签名流程</h2><blockquote>
+<p>目的是身份验证（零知识证明）、不可否认性（由非对称加密算法文件提供）和完整性（由哈希函数提供），过程是明文消息通过散列函数计算得到消息摘要（或散列值），消息摘要通过私钥加密得到数字签名。</p>
+</blockquote>
+<h3 id="数字签名（Digital-Signature）"><a href="#数字签名（Digital-Signature）" class="headerlink" title="数字签名（Digital Signature）"></a>数字签名（Digital Signature）</h3><ul>
+<li>技术基础：非对称加密（如RSA、ECDSA） + 哈希函数（如SHA-256）。  </li>
+<li>流程：  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">明文 → 哈希(SHA-256) → 私钥加密(RSA) → 数字签名</span><br></pre></td></tr></table></figure></li>
+<li>功能实现：  <ul>
+<li>身份验证：通过私钥唯一性验证发送者身份。  </li>
+<li>不可否认性：第三方可验证签名（公钥解密），发送者无法否认签名行为。  </li>
+<li>完整性：哈希值校验确保消息未被篡改。</li>
+</ul>
+</li>
+</ul>
+<h3 id="MAC（Message-Authentication-Code）"><a href="#MAC（Message-Authentication-Code）" class="headerlink" title="MAC（Message Authentication Code）"></a>MAC（Message Authentication Code）</h3><blockquote>
+<p>由于传递含消息摘要的信息过程中可以被攻击者截获，篡改明文消息再计算消息摘要进而无法确保完整性，因此需要消息身份验证代码（MAC）。</p>
+</blockquote>
+<ul>
+<li>技术基础：对称密钥 + 特定算法（如CBC-MAC、CMAC、HMAC等）。  </li>
+<li>流程：  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">消息 + 共享密钥 → MAC算法 → 消息认证码（MAC）</span><br></pre></td></tr></table></figure></li>
+<li>功能实现：  <ul>
+<li>完整性：验证消息在传输中未被篡改。  </li>
+<li>真实性：通过共享密钥验证发送者身份（但不提供不可否认性）。</li>
+</ul>
+</li>
+</ul>
+<h3 id="HMAC（Hash-based-Message-Authentication-Code）"><a href="#HMAC（Hash-based-Message-Authentication-Code）" class="headerlink" title="HMAC（Hash-based Message Authentication Code）"></a>HMAC（Hash-based Message Authentication Code）</h3><ul>
+<li>技术基础：对称密钥 + 哈希函数（如SHA-256）。  </li>
+<li>流程：  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">消息 + 共享密钥 → HMAC算法 → 消息认证码（MAC）</span><br></pre></td></tr></table></figure></li>
+<li>功能实现：  <ul>
+<li>完整性：验证消息在传输中未被篡改。  </li>
+<li>真实性：通过共享密钥验证发送者身份（但不提供不可否认性）。</li>
+</ul>
+</li>
+</ul>
+<h3 id="功能对比"><a href="#功能对比" class="headerlink" title="功能对比"></a>功能对比</h3><table>
+<thead>
+<tr>
+<th><strong>特性</strong></th>
+<th><strong>数字签名</strong></th>
+<th><strong>HMAC</strong></th>
+<th><strong>MAC</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>密钥类型</strong></td>
+<td>非对称密钥（私钥签名，公钥验证）</td>
+<td>对称密钥（共享密钥生成和验证）</td>
+<td>对称密钥（共享密钥生成和验证）</td>
+</tr>
+<tr>
+<td><strong>不可否认性</strong></td>
+<td>✔️（私钥唯一性，第三方可验证）</td>
+<td>❌（共享密钥可能被多方持有）</td>
+<td>❌（共享密钥可能被多方持有）</td>
+</tr>
+<tr>
+<td><strong>完整性</strong></td>
+<td>✔️（通过哈希校验）</td>
+<td>✔️（通过MAC值校验）</td>
+<td>✔️（通过MAC值校验）</td>
+</tr>
+<tr>
+<td><strong>性能</strong></td>
+<td>较低效（涉及大数运算）</td>
+<td>高效（仅需哈希运算）</td>
+<td>高效（取决于算法，如CBC-MAC或HMAC）</td>
+</tr>
+<tr>
+<td><strong>适用场景</strong></td>
+<td>高安全性需求（如合同签署、证书）</td>
+<td>快速验证（如API请求、消息队列）</td>
+<td>通用完整性验证（如网络协议、加密通信）</td>
+</tr>
+<tr>
+<td><strong>安全性</strong></td>
+<td>基于非对称加密（抗量子威胁需后量子算法）</td>
+<td>依赖哈希函数强度（如SHA-256抗碰撞）</td>
+<td>依赖算法设计（如CBC-MAC易受填充攻击）</td>
+</tr>
+<tr>
+<td><strong>典型算法</strong></td>
+<td>RSA、ECDSA、SM9</td>
+<td>HMAC-SHA256、HMAC-SHA512</td>
+<td>CBC-MAC、CMAC、GMAC</td>
+</tr>
+</tbody></table>
+<h2 id="公钥基础设施（PKI）"><a href="#公钥基础设施（PKI）" class="headerlink" title="公钥基础设施（PKI）"></a>公钥基础设施（PKI）</h2><h3 id="数字证书（Digital-Certificates）"><a href="#数字证书（Digital-Certificates）" class="headerlink" title="数字证书（Digital Certificates）"></a>数字证书（Digital Certificates）</h3><blockquote>
+<p>数字证书是经过可信第三方（CA）签发的公钥凭证，用于验证实体身份并确保通信安全。未经过CA签注的证书（自签名证书）通常仅限于内网使用。</p>
+</blockquote>
+<p>数字证书遵循国际标准 X.509，其核心内容包括：  </p>
+<ul>
+<li>版本号：证书格式版本（如v3）。  </li>
+<li>序列号：CA分配的唯一标识符。  </li>
+<li>签名算法标识符：CA使用的签名算法（如RSA-SHA256）。  </li>
+<li>颁发者名称：CA的名称（如DigiCert）。  </li>
+<li>有效期：证书的有效起止时间。  </li>
+<li>主体名称：证书持有者的身份信息（如域名或组织名称）。  </li>
+<li>主体公钥：证书绑定的公钥。  </li>
+<li>扩展字段：自定义属性（如密钥用途、CRL分发点等）。</li>
+</ul>
+<h3 id="证书颁发机构（CA）与注册机构（RA）"><a href="#证书颁发机构（CA）与注册机构（RA）" class="headerlink" title="证书颁发机构（CA）与注册机构（RA）"></a>证书颁发机构（CA）与注册机构（RA）</h3><ol>
+<li>证书颁发机构（CA） <ul>
+<li>核心职责：  <ul>
+<li>验证申请者身份并颁发证书。  </li>
+<li>管理证书生命周期（签发、吊销、更新）。  </li>
+<li>维护证书吊销列表（CRL）或提供在线验证服务（OCSP）。</li>
+</ul>
+</li>
+<li>信任链：用户需信任CA的根证书（Root CA），其签发的中间证书（Intermediate CA）可进一步签发终端证书。</li>
+</ul>
+</li>
+<li>注册机构（RA）<ul>
+<li>作用：辅助CA完成身份验证，确保申请者资质真实。  </li>
+<li>流程：用户向RA提交身份证明 → RA审核 → CA签发证书。</li>
+</ul>
+</li>
+<li>自签名证书与内部CA<ul>
+<li>自签名证书：由组织自身签发，无需第三方CA，适用于测试环境或内网。  </li>
+<li>内部CA：大型组织可建立私有CA，为内部系统签发证书以节省成本，但需自行维护信任链。</li>
+</ul>
+</li>
+</ol>
+<h3 id="证书生命周期管理"><a href="#证书生命周期管理" class="headerlink" title="证书生命周期管理"></a>证书生命周期管理</h3><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/Untitled%20diagram%20_%20Mermaid%20Chart-2025-07-02-081025.svg" data-fancybox="true" style="width:200px;"/></div></div>
+
+<ol>
+<li>注册与签发<ul>
+<li>证书签名请求（CSR）：  <ul>
+<li>用户生成密钥对（公钥+私钥）。  </li>
+<li>提交CSR（含公钥和主体信息）至CA。</li>
+</ul>
+</li>
+<li>验证类型：  <ul>
+<li>域名验证（DV）：验证域名所有权（如通过DNS记录）。  </li>
+<li>组织验证（OV）：验证组织合法性和运营状态。  </li>
+<li>扩展验证（EV）：最严格，需提供法律文件和实地审核。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>验证证书有效性  <ul>
+<li>验证方式：  <ul>
+<li>CRL（证书吊销列表）：定期下载CA发布的吊销证书列表。  </li>
+<li>OCSP（在线证书状态协议）：实时查询证书状态。  </li>
+<li>证书装订（OCSP Stapling）：服务器主动获取OCSP响应并绑定证书发送给客户端，减少CA服务器负载。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>证书吊销  <ul>
+<li>触发条件：私钥泄露、证书信息变更、CA信任失效。  </li>
+<li>吊销机制：  <ul>
+<li>CA将证书序列号加入CRL并发布。  </li>
+<li>OCSP服务器标记证书状态为“吊销”。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>证书更新与归档  <ul>
+<li>更新：证书到期前重新申请签发。  </li>
+<li>归档：长期存储过期证书以备审计（如法律合规需求）。</li>
+</ul>
+</li>
+</ol>
+<h3 id="证书格式与存储"><a href="#证书格式与存储" class="headerlink" title="证书格式与存储"></a>证书格式与存储</h3><table>
+<thead>
+<tr>
+<th><strong>格式</strong></th>
+<th><strong>特点</strong></th>
+<th><strong>常见后缀</strong></th>
+<th><strong>使用场景</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>DER</strong></td>
+<td>二进制格式，紧凑高效</td>
+<td><code>.der</code>, <code>.crt</code>, <code>.cer</code></td>
+<td>嵌入式设备、Java密钥库（JKS）</td>
+</tr>
+<tr>
+<td><strong>PEM</strong></td>
+<td>ASCII文本格式（Base64编码的DER）</td>
+<td><code>.pem</code>, <code>.crt</code>, <code>.key</code></td>
+<td>Web服务器（Apache&#x2F;Nginx）、OpenSSL工具</td>
+</tr>
+<tr>
+<td><strong>PFX</strong></td>
+<td>PKCS#12标准，包含私钥和证书链</td>
+<td><code>.pfx</code>, <code>.p12</code></td>
+<td>Windows系统、IIS服务器</td>
+</tr>
+<tr>
+<td><strong>P7B</strong></td>
+<td>PKCS#7标准，仅含证书链，不含私钥</td>
+<td><code>.p7b</code></td>
+<td>证书链打包分发（如中间CA证书）</td>
+</tr>
+</tbody></table>
+<h3 id="混合密码系统"><a href="#混合密码系统" class="headerlink" title="混合密码系统"></a>混合密码系统</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">非对称加密(如RSA) → 安全交换对称密钥 → 对称加密(如AES) → 高效通信</span><br></pre></td></tr></table></figure>
+<ul>
+<li>典型应用: TLS协议(HTTPS).</li>
+<li>增强机制: <ul>
+<li>HMAC: 共享密钥+哈希实现消息认证.</li>
+<li>数字信封: 加密对称密钥(非对称算法)+加密数据(对称算法).</li>
+</ul>
+</li>
+</ul>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/17479686202085.jpg" data-fancybox="true" style="width:600px;"/></div></div>
+
+<h2 id="密码学应用"><a href="#密码学应用" class="headerlink" title="密码学应用"></a>密码学应用</h2><h3 id="便携设备"><a href="#便携设备" class="headerlink" title="便携设备"></a>便携设备</h3><ol>
+<li>加密软件</li>
+<li>可信平台模块(TPM)</li>
+</ol>
+<p>安装在主板上的芯片,管理硬盘加密的密钥,防止移除硬盘在他处读取.</p>
+<h3 id="电子邮件"><a href="#电子邮件" class="headerlink" title="电子邮件"></a>电子邮件</h3><ol>
+<li>良好隐私(PGP)<ul>
+<li>利用信任网(web of trust)提供安全性,商业版使用RSA进行密钥交换、IDEA进行加解密、MD5生成消息摘要；免费版使用Diffie-Hellman进行密钥交换、CAST-128进行加解密、SHA-1生成消息摘要.</li>
+</ul>
+</li>
+<li>安全多用途互联网邮件扩展(S&#x2F;MIME)<ul>
+<li>使用X.509证书进行密钥交换(RSA)、AES或3DES进行加解密、SHA-1或MD5生成消息摘要.</li>
+</ul>
+</li>
+</ol>
+<h3 id="Web应用程序"><a href="#Web应用程序" class="headerlink" title="Web应用程序"></a>Web应用程序</h3><ol>
+<li>安全套接字层(SSL):HTTPS超文本传输协议通过443端口协商Web服务器和浏览器之间的加密通信会话,其过程如下: <ul>
+<li>浏览器访问网站获取服务器证书提取公钥</li>
+<li>浏览器生成随机对称密钥(临时密钥),用户服务器公钥加密对称密钥发送给服务器</li>
+<li>服务器使用私钥解密对称密钥(临时密钥),用于后续通信加密</li>
+</ul>
+</li>
+<li>传输层安全(TLS)<ul>
+<li>由于POODLE攻击,TLS代替SSL成为主流.</li>
+</ul>
+</li>
+<li>洋葱和暗网(Tor and Dark Web)<ul>
+<li>Tor提供一种通过加密和一组中继节点在互联网上匿名路由流量的机制.它依赖于一种称为完美前向保密(perfect forward secrecy)的技术,在这种技术中,加密层防止中继链中的节点读取除接受和转发流量所需的特定信息以外的任何信息.通过使用完美的前向保密和一组三个或更多的中继节点,Tor既可以匿名浏览标准互联网,也可以在暗网上托管完全匿名的网站.</li>
+</ul>
+</li>
+</ol>
+<h3 id="隐写术-Steganography"><a href="#隐写术-Steganography" class="headerlink" title="隐写术(Steganography)"></a>隐写术(Steganography)</h3><p>通过加密技术把敏感消息嵌入另外一条消息的技术,常用于图片嵌入敏感消息用于传递给外部.隐写术的合法用途是数字水印(Watermarking),用于保护知识产权.</p>
+<ol>
+<li>Steganography</li>
+<li>Watermarking—&gt;DRM(数字版权)</li>
+</ol>
+<h3 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h3><ol>
+<li>电路加密:保护网络传输数据的有两种类型加密技术.<ul>
+<li>链路加密: 所有数据都是加密的,包括IP地址和路由信息,用于低层协议加密.</li>
+<li>端到端加密: 数据头部信息不加密,用于高层协议加密.</li>
+</ul>
+</li>
+<li>互联网协议安全(IPSec):实现端到端加密,通过公钥加密算法提供安全性,但只能基于IP协议.<ul>
+<li>两个重要组件<ul>
+<li>身份验证头(AH)提供完整性和不可否认性；</li>
+<li>封装安全载荷(ESP)提供数据内容的机密性和完整性.</li>
+</ul>
+</li>
+<li>两种模式<ul>
+<li>传输模型,只加密数据包载荷；</li>
+<li>隧道模式,加密所有数据内容.</li>
+</ul>
+</li>
+<li>需要创建安全关联(SA)来建立IPSec会话,SA记录了会话的所有配置和状态信息.</li>
+</ul>
+</li>
+<li>互联网安全关联和密钥管理协议(ISAKMP)<ul>
+<li>用于管理IPSec的SA的协议.</li>
+</ul>
+</li>
+</ol>
+<h3 id="新兴技术"><a href="#新兴技术" class="headerlink" title="新兴技术"></a>新兴技术</h3><ol>
+<li>区块链(Blockchain)<ul>
+<li>区块链是一个分布式、不可改变的公共账本,即创建了一个没有人可以篡改或破坏的数据存储.可应用于加密货币、供应链跟踪、资产所有权管理等.</li>
+</ul>
+</li>
+<li>轻量级密码(Lightweight Cryptography)<ul>
+<li>加解密性能是一个问题,可通过专用加解密硬件实现轻量级密码,如银行使用的加密机.</li>
+</ul>
+</li>
+<li>同态加密(Homomorphic Encryption)<ul>
+<li>加密的数据保留了对该数据执行计算的能力,即不需要解密就能对数据进行计算.</li>
+</ul>
+</li>
+</ol>
+<h2 id="密码学攻击"><a href="#密码学攻击" class="headerlink" title="密码学攻击"></a>密码学攻击</h2><ol>
+<li>分析攻击(Analytic Attack)<ul>
+<li>一种数学运算,试图降低算法的复杂性,关注算法本身的逻辑.</li>
+</ul>
+</li>
+<li>实施攻击(Implementation Attack)<ul>
+<li>一种利用加密系统实施中的弱点进行攻击的类型,关注软件代码和编程方法.</li>
+</ul>
+</li>
+<li>统计攻击(Statistical Attack)<ul>
+<li>利用密码系统中的统计弱点,例如浮点错误和无法生成真正的随机数.</li>
+</ul>
+</li>
+<li><mark class="tag-plugin colorful mark" color="red">爆破攻击(Brute-Force Attack)</mark>
+<ul>
+<li>尝试密钥或密码的所有可能有效组合,可通过以下方法提高爆破效率: </li>
+<li>彩虹表(Rainbow Tables)<ul>
+<li>该表存储可能是密码的哈希值,常用于爆破离线的哈希密码.可通过盐、胡椒和密钥延伸(key stretching)技术防范彩虹表.</li>
+</ul>
+</li>
+<li>专用硬件设备<ul>
+<li>专门为进行暴力攻击而设计的专用、可扩展的计算硬件.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><mark class="tag-plugin colorful mark" color="red">故障注入(Fault Injection Attack)</mark>
+<ul>
+<li>攻击者试图通过引起某种类型的外部故障来破坏加密设备的完整性,如使用高压电、高温或低温破坏加密设备.</li>
+</ul>
+</li>
+<li><mark class="tag-plugin colorful mark" color="red">侧信道攻击(Side-Channel Attack)</mark>
+<ul>
+<li>该攻击通过记录系统活动特征,如CPU利用率、功耗或电磁辐射等变化来破解加密信息.</li>
+</ul>
+</li>
+<li><mark class="tag-plugin colorful mark" color="red">时间攻击/计时攻击(Timing Attack)</mark>
+<ul>
+<li>攻击者精确测量加密操作完成所需的时间,获取可能用于破坏其安全性的加密过程的信息.</li>
+</ul>
+</li>
+<li>频率分析和<mark class="tag-plugin colorful mark" color="red">唯密文攻击</mark>(Frequency Analysis and the Ciphertext-Only Attack)<ul>
+<li>仅有消息密文尝试破解密文,常通过频率分析进行,如密文中常见英文字母多,则可能是换位密码,否则可能是替换密码.</li>
+</ul>
+</li>
+<li><mark class="tag-plugin colorful mark" color="red">已知明文攻击(Known Plaintext Attack)</mark>
+<ul>
+<li>拥有明文和密文猜测加密方法.</li>
+</ul>
+</li>
+<li><mark class="tag-plugin colorful mark" color="red">选定明文攻击(Chosen Plaintext Attack)</mark>
+<ul>
+<li>能够加密部分明文获得密文来尝试找出密钥.</li>
+</ul>
+</li>
+<li><mark class="tag-plugin colorful mark" color="red">选定密文攻击(Chosen Ciphertext Attack)</mark>
+<ul>
+<li>能够解密部分密文来尝试找出密钥.</li>
+</ul>
+</li>
+<li>中间相遇攻击(Meet in the Middle)<ul>
+<li>可破解使用两轮加密的加密算法,<mark class="tag-plugin colorful mark" color="red">2DES不安全的原因</mark>.</li>
+</ul>
+</li>
+<li>中间人攻击(Man in the Middle)<ul>
+<li>也叫路径攻击(on-path attacks),截获双方通信流量,冒充通信双方对流量进行监听或篡改.</li>
+</ul>
+</li>
+<li>生日攻击(Birthday)<ul>
+<li>利用散列函数的碰撞来保持伪造的数字签名是有效性.</li>
+</ul>
+</li>
+<li>重放攻击(Replay)<ul>
+<li>用于攻击不包含临时保护的加密算法,截获用户认证信息重放来尝试建立通信会话.</li>
+</ul>
+</li>
+</ol>
+<h2 id="错题集-1"><a href="#错题集-1" class="headerlink" title="错题集"></a>错题集</h2><ol>
+<li><p>RSA相对于DSA的优势是什么?<br> A. 提供数字签名和加密功能<br> B. 因为RSA使用对称密钥,所以RSA使用更少的资源和更快的加密<br> C. 是分组密码而不是流密码<br> D. 采用一次性密码本</p>
+ <div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>A,RSA可用于数据加密、密钥交换和数字签名.DSA只能用于数字签名</p></div></details></div>
+</li>
+<li><p>以下关于数据加密用于保护数据的说法正确的是?<br> A. 验证数据的完整性和准确性<br> B. 需要仔细地管理密钥<br> C. 不需要太多的系统资源开销<br> D. 需要托管密钥</p>
+ <div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>B,数据加密总是需要细致的密钥管理.如今,大多数算法都非常强大,以至于攻击密钥管理比发起暴力破解攻击要容易的多.哈希算法用于数据完整性,加密确实需要大量资源,并且密钥不必为加密而托管.</p></div></details></div></li>
+</ol>
+<h2 id="安全设计原则-1"><a href="#安全设计原则-1" class="headerlink" title="安全设计原则"></a>安全设计原则</h2><h3 id="对象和主体"><a href="#对象和主体" class="headerlink" title="对象和主体"></a>对象和主体</h3><p>一个终端访问一个web服务,此时会有两个小过程: </p>
+<ol>
+<li>终端访问web服务,请求相关数据；(终端是主体(Subject)、web服务是对象(Object))</li>
+<li>web服务访问数据库,并将数据返回给终端.(web服务是主体、数据库是对象)</li>
+</ol>
+<p>终端是没有权利直接访问数据库的,但是通过web服务可以获取到数据库数据,这就是信任传递(transitive trust),需要关注这类风险.</p>
+<h3 id="封闭和开放系统"><a href="#封闭和开放系统" class="headerlink" title="封闭和开放系统"></a>封闭和开放系统</h3><ol>
+<li>封闭系统<ul>
+<li>标准是专有的,不易集成其他系统,但是相对安全.</li>
+</ul>
+</li>
+<li>开放系统<ul>
+<li>标准是公开的,易集成其他系统,但更容易遭受攻击.</li>
+</ul>
+</li>
+<li>开源系统<ul>
+<li>指代码公开,大家可以白嫖并不断改善系统,如开源项目社区,大家群策群力.</li>
+</ul>
+</li>
+<li>闭源系统<ul>
+<li>指代码隐藏,开发商可以卖钱获得商业价值,需要依靠开发商进行维护.</li>
+</ul>
+</li>
+</ol>
+<h3 id="安全缺省-默认安全-Secure-Defaults"><a href="#安全缺省-默认安全-Secure-Defaults" class="headerlink" title="安全缺省&#x2F;默认安全(Secure Defaults)"></a>安全缺省&#x2F;默认安全(Secure Defaults)</h3><p>通常产品的默认配置都是不安全的,但这样方便产品的快速部署.现在许多产品也支持默认配置是安全的,但一些人会认为安全缺省是阻碍,因此需要平衡默认配置的可用性和安全性.</p>
+<ul>
+<li>限制性默认(Restrictive Defaults): 强制以一种安全的配置运行,如Firewall强制性Deny ALL</li>
+</ul>
+<h3 id="故障安全-Fail-Securely"><a href="#故障安全-Fail-Securely" class="headerlink" title="故障安全(Fail Securely)"></a>故障安全(Fail Securely)</h3><p>系统运行中会出现故障,系统或环境如何处理故障非常重要,最理想的结果是故障安全(Fail Securely),如编程中的异常处理.还有一些易混概念需要注意: </p>
+<ol>
+<li>故障弱化(Fail-Soft)<ul>
+<li>指允许系统在组件发生故障后继续运行,如操作系统一个APP挂了,其他APP都正常运行.</li>
+</ul>
+</li>
+<li>故障安全(Fail-Secure)<ul>
+<li>故障安全系统优先考虑资产的物理安全,而不是任何其他因素,如有人物理入侵银行金库,则门禁需要自带关闭并锁定.</li>
+</ul>
+</li>
+<li>故障安全(Fail-Safe)<ul>
+<li>当系统故障能够影响物理世界时,则需要考虑人类生命安全的优先级,这种人类保护优先顺序被称为故障安全,如火灾时门禁自动打开.</li>
+</ul>
+</li>
+<li>故障开放(Fail-Open)<ul>
+<li>当系统故障需要保障可用性时称为故障开放,如防火墙的bypass功能.</li>
+</ul>
+</li>
+<li>故障关闭(Fail-Closed)<ul>
+<li>当系统故障需要保障机密性时称为故障关闭,如防火墙不再转发流量.</li>
+</ul>
+</li>
+</ol>
+<h3 id="保持简单-Keep-it-simple"><a href="#保持简单-Keep-it-simple" class="headerlink" title="保持简单(Keep it simple)"></a>保持简单(Keep it simple)</h3><p>也被称为KISS原则,鼓励避免环境、组织或产品设计过于复杂.系统越复杂,安全就越困难.还有许多其他具有类似或相关重点的概念,例如: </p>
+<ol>
+<li>不要重复自己(DRY)<ul>
+<li>通过不在多个地方重复相同的代码来消除软件中的冗余.</li>
+</ul>
+</li>
+<li>计算简化(Computing Minimalism)<ul>
+<li>精心设计代码,以便尽可能少地使用必要的硬件和软件资源.</li>
+</ul>
+</li>
+<li>最小能力规则(Rule of Least Power)<ul>
+<li>使用适合所需解决方案的能力最小的编程语言.</li>
+</ul>
+</li>
+<li>越差越好(Worse Is Better)<ul>
+<li>软件功能越少,安全性越高.</li>
+</ul>
+</li>
+<li>你不需要他(YAGNI)<ul>
+<li>程序员不应该在实际需要之前添加功能和函数.</li>
+</ul>
+</li>
+</ol>
+<h3 id="零信任-Zero-Trust-vs-信任但验证"><a href="#零信任-Zero-Trust-vs-信任但验证" class="headerlink" title="零信任(Zero Trust) vs 信任但验证"></a>零信任(Zero Trust) vs 信任但验证</h3><ul>
+<li>信任但验证指的是经过一次验证后就对其信任</li>
+<li>零信任是直接不信任,如5分钟验证一次</li>
+</ul>
+<p>通常认为内部网络是安全的,外部网络是不安全的,更多地关注边界安全.但新技术的发展(如云计算、物联网等),安全边界变得越来越模糊.因此,零信任概念被提出,组织内部的任何内容都不会自动受到信任,即绝不信任、始终验证.</p>
+<p>零信任通过<mark class="tag-plugin colorful mark" color="red">微隔离(microsegmentation)</mark>和加强最小特权原则来实现.微隔离是将内部网络划分为多个子区域.每个区域通过<strong>内部分段防火墙(ISFW)</strong>、子网或VLAN与其他区域分开.区域可以小到单个设备,例如高价值服务器,甚至客户端或端点设备.区域之间的任何和所有通信都经过过滤,可能需要进行身份验证,通常需要会话加密,并且可能受到允许列表和阻止列表控制.</p>
+<p>零信任解决方案通常是非常大的,包括但不限于<strong>内部分段防火墙(ISFW)</strong>、<strong>多因素身份验证(MFA)</strong>、<strong>身份和访问管理(IAM)</strong> 以及 <strong>下一代终端安全</strong>.只有实现了持续验证和监视用户活动的方法,安全管理的零信任方法才能成功.</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/17483056720491.jpg" data-fancybox="true"/></div></div>
+
+<h3 id="责任共担-Shared-Responsibility"><a href="#责任共担-Shared-Responsibility" class="headerlink" title="责任共担(Shared Responsibility)"></a>责任共担(Shared Responsibility)</h3><blockquote>
+<p>责任共担(Shared Responsibility)是指<mark class="tag-plugin colorful mark" color="red">服务提供商负责某些安全控制措施,而客户负责其他安全控制措施.</mark></p>
+</blockquote>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/17501267921986.jpg" data-fancybox="true"/></div></div>
+
+<h3 id="设计隐私-Privacy-by-Design-PbD"><a href="#设计隐私-Privacy-by-Design-PbD" class="headerlink" title="设计隐私(Privacy by Design,PbD)"></a>设计隐私(Privacy by Design,PbD)</h3><p>在早期设计阶段将隐私保护集成到产品中,而不是试图在开发结束时将其附加到产品中的指导原则.PhD七项原则: </p>
+<ol>
+<li>主动而非被动；预防而非补救(Proactive not reactive; preventive not remedia)</li>
+<li>默认隐私(Privacy as the default)</li>
+<li>隐私融入设计(Privacy embedded into design)</li>
+<li>全功能–正和而非零和(Full functionality – positive-sum, not zero-sum)</li>
+<li>端对端安全—全生命周期保护(End-to-end security – full lifecycle protection)</li>
+<li>可见性和透明性(Visibility and transparency)</li>
+<li>尊重用户隐私(Respect for user privacy)</li>
+</ol>
+<h3 id="安全访问服务边界-SASE"><a href="#安全访问服务边界-SASE" class="headerlink" title="安全访问服务边界(SASE)"></a>安全访问服务边界(SASE)</h3><ul>
+<li>软件定义广域网(SD_WAN)</li>
+<li>防火墙既服务(FWaas)</li>
+<li>云访问安全代理(CASB)</li>
+<li>身份和访问管理(IAM)</li>
+<li>零信任网络访问(ZTNA)</li>
+</ul>
+<h3 id="确保CIA的技术"><a href="#确保CIA的技术" class="headerlink" title="确保CIA的技术"></a>确保CIA的技术</h3><ol>
+<li>限制(confinement)<ul>
+<li>约束进程的手段,进程只能访问分配给自己的内存空间(偏动词).</li>
+</ul>
+</li>
+<li>界限(bound)<ul>
+<li>限制访问的内存边界即是界限(偏名词).</li>
+</ul>
+</li>
+<li>隔离(isolation)<ul>
+<li>限制进程只能在某内存空间活动的状态称为隔离(一种状态).</li>
+</ul>
+</li>
+<li>访问控制</li>
+<li>信任和保证<ul>
+<li>信任是安全机制、功能或能力的存在.保证是对满足安全需求的信心程度.</li>
+</ul>
+</li>
+</ol>
+<h2 id="安全模型基本概念"><a href="#安全模型基本概念" class="headerlink" title="安全模型基本概念"></a>安全模型基本概念</h2><h3 id="描述对象安全属性的方法"><a href="#描述对象安全属性的方法" class="headerlink" title="描述对象安全属性的方法"></a>描述对象安全属性的方法</h3><ol>
+<li>安全令牌(Security Token)<ul>
+<li>与资源关联的独立对象,传递安全信息(如身份验证令牌).  </li>
+<li>示例: OAuth令牌用于API访问控制.</li>
+</ul>
+</li>
+<li>能力表(Capabilities List) <ul>
+<li>为每个受控对象维护安全属性(如文件权限列表).  </li>
+<li>示例: Linux文件系统的权限位(读&#x2F;写&#x2F;执行).</li>
+</ul>
+</li>
+<li>安全标签(Security Label)<ul>
+<li>分配给对象的不可更改安全属性(如分类级别).  </li>
+<li>示例: 军事机密文档的“绝密”标签.</li>
+</ul>
+</li>
+</ol>
+<h3 id="状态机模型"><a href="#状态机模型" class="headerlink" title="状态机模型"></a>状态机模型</h3><ul>
+<li>核心: 系统状态转换始终处于安全状态,防止非法操作.  </li>
+<li>应用: 操作系统安全启动(如Windows Secure Boot).</li>
+</ul>
+<h3 id="信息流模型"><a href="#信息流模型" class="headerlink" title="信息流模型"></a>信息流模型</h3><ul>
+<li>目标: 控制信息流向,解决隐蔽通道问题(如进程间数据泄露).  </li>
+<li>示例: Bell-LaPadula模型(防信息从高流向低)与Biba模型(防信息从低流向高).</li>
+</ul>
+<h3 id="非干扰模型"><a href="#非干扰模型" class="headerlink" title="非干扰模型"></a>非干扰模型</h3><ul>
+<li>原理: 保障在较高安全级别上发生的活动不会影响或干扰较低安全级别上发生的活动.</li>
+<li>非干扰模型的关注点不在数据流上,而是<strong>主体对系统状态</strong>的了解  </li>
+<li>应用: 多级安全系统(如政府涉密网络).</li>
+</ul>
+<h3 id="组合理论"><a href="#组合理论" class="headerlink" title="组合理论"></a>组合理论</h3><ul>
+<li>级联(Cascading): A输出是B输入(如流水线任务).  </li>
+<li>反馈(Feedback): A与B互为输入输出(如闭环控制系统).  </li>
+<li>连接(Hookup): A输出同时是B和C的输入(如分布式数据库同步).</li>
+</ul>
+<h3 id="Take-Grant模型"><a href="#Take-Grant模型" class="headerlink" title="Take-Grant模型"></a><strong>Take-Grant模型</strong></h3><ul>
+<li>规则: 权限的获取、授予、创建、删除(如文件共享权限管理).  </li>
+<li>示例: 云存储服务中的权限分配逻辑.</li>
+</ul>
+<h3 id="访问控制矩阵"><a href="#访问控制矩阵" class="headerlink" title="访问控制矩阵"></a><strong>访问控制矩阵</strong></h3><ul>
+<li>能力表(行): 关注主体权限(如用户对文件的访问权限).  </li>
+<li>访问控制列表(列): 关注客体权限(如文件对用户的访问限制).  </li>
+<li>示例: Windows NTFS权限管理.</li>
+</ul>
+<h3 id="Bell-LaPadula模型-BLP"><a href="#Bell-LaPadula模型-BLP" class="headerlink" title="Bell-LaPadula模型(BLP)"></a>Bell-LaPadula模型(BLP)</h3><ul>
+<li>目标: 维护数据机密性(军事场景).  </li>
+<li>规则:   <ul>
+<li>简单安全属性: 禁止向上读(低安全等级不可读高机密数据).  </li>
+<li>*-安全属性: 禁止向下写(高安全等级不可写入低机密数据).  <ul>
+<li>防止高安全等级的数据被泄露或污染到低安全等级环境</li>
+</ul>
+</li>
+<li>自由安全属性: 使用访问控制矩阵实现自主访问控制</li>
+</ul>
+</li>
+</ul>
+<h3 id="Biba模型"><a href="#Biba模型" class="headerlink" title="Biba模型"></a>Biba模型</h3><ul>
+<li>目标: 维护数据完整性(商业场景).  </li>
+<li>规则:   <ul>
+<li>简单完整性属性: 禁止向下读(低完整性主体不可读取高完整性数据).  <ul>
+<li>高完整性主体不能读取低完整性客体（防止高可信主体被低可信数据“污染”）。</li>
+<li>低完整性主体自然也无法读取高完整性客体（因为其权限更低）。</li>
+</ul>
+</li>
+<li>*-完整性属性: 禁止向上写(低完整性数据不可修改高完整性数据). <ul>
+<li>低完整性主体不能向高完整性客体写入数据（防止低可信数据篡改高可信数据）。</li>
+</ul>
+</li>
+<li>调用属性</li>
+</ul>
+</li>
+</ul>
+<h3 id="Clark-Wilson模型"><a href="#Clark-Wilson模型" class="headerlink" title="Clark-Wilson模型"></a>Clark-Wilson模型</h3><blockquote>
+<p>Clark-Wilson模型的显著特点是关注良构事务和职责分离.<br>良构事务(Well-formed Transaction)是将数据从一个一致性状态变换到另一个一致性状态的一系列操作.<br>当系统使用Clark-Wilson模型时,会将数据分为两个子集,一个子集需要高级别的保护,称为CDI,另一个子集不需要高级别的保护,称为UDI.</p>
+</blockquote>
+<ul>
+<li>架构: 三元组(主体&#x2F;程序&#x2F;客体),主体需通过约束接口访问数据.  </li>
+<li>核心概念:   <ul>
+<li>CDI(受约束数据项): 受保护的数据(如银行账户余额).</li>
+<li>UDI(无约束数据项): 不受保护的数据  </li>
+<li>IVP(完整性验证过程): 定期校验数据完整性(如数据库一致性检查).  </li>
+<li>TP(转换过程): 唯一允许修改CDI的过程(如转账交易).<br>UDI经过IVP转换成CDI,CDI不能被直接修改,必须经过TP才能修改.</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>模型</strong></th>
+<th><strong>目标</strong></th>
+<th><strong>核心规则</strong></th>
+<th><strong>典型场景</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>BLP模型</strong></td>
+<td><strong>机密性</strong></td>
+<td>向下读，向上写（禁止向上读、向下写）</td>
+<td>军事、政府</td>
+</tr>
+<tr>
+<td><strong>Biba模型</strong></td>
+<td><strong>完整性</strong></td>
+<td>向上读，向下写（禁止向下读、向上写）</td>
+<td>商业、金融</td>
+</tr>
+<tr>
+<td><strong>Clark-Wilson</strong></td>
+<td><strong>完整性</strong></td>
+<td>通过程序接口访问数据，职责分离</td>
+<td>银行交易系统</td>
+</tr>
+</tbody></table>
+<h3 id="Brewer-and-Nash模型"><a href="#Brewer-and-Nash模型" class="headerlink" title="Brewer and Nash模型"></a>Brewer and Nash模型</h3><blockquote>
+<p>Brewer and Nash模型规定:当且仅当一个主体不能读取另一个数据集中的客体时,这个主体才能写入一个客体.</p>
+</blockquote>
+<ul>
+<li>动态权限分配: 基于用户行为隔离冲突数据(如金融分析师不可同时访问竞争对手数据).  </li>
+<li>目标: 预防利益冲突</li>
+</ul>
+<h3 id="其他模型"><a href="#其他模型" class="headerlink" title="其他模型"></a>其他模型</h3><ul>
+<li>Goguen-Meseguer模型: 非干涉模型基础(形式化验证).  </li>
+<li>Sutherland模型: 防止隐蔽通道(如进程间信号量滥用).  </li>
+<li>Graham-Denning模型: 主体&#x2F;客体安全创建与删除(如云资源生命周期管理). 共有八个规则:<ul>
+<li>安全地创建对象</li>
+<li>安全地创建主体</li>
+<li>安全地删除对象</li>
+<li>安全地删除主体</li>
+<li>安全地提供读取访问权限</li>
+<li>安全地提供授予访问权限</li>
+<li>安全地提供删除访问权限</li>
+<li>安全地提供转移访问权限</li>
+</ul>
+</li>
+<li>Harrison–Ruzzo–Ullman模型: Graham-Denning模型的扩展,着重于对象访问权的分配以及这些分配权利的弹性.用于处理主体的访问权和访问权的完整性</li>
+</ul>
+<h2 id="基于系统安全需求选择控制"><a href="#基于系统安全需求选择控制" class="headerlink" title="基于系统安全需求选择控制"></a>基于系统安全需求选择控制</h2><h3 id="通用准则-Common-Criteria-CC"><a href="#通用准则-Common-Criteria-CC" class="headerlink" title="通用准则(Common Criteria, CC)"></a>通用准则(Common Criteria, CC)</h3><ul>
+<li>目标: 标准化IT产品安全评估,降低采购风险.  </li>
+<li>核心要素:   <ul>
+<li><strong>保护轮廓(PP)</strong>: <strong>客户</strong>定义的安全需求(如“金融级加密”).  </li>
+<li><strong>安全目标(ST)</strong>: <strong>厂商</strong>声明的安全特性(如“支持AES-256”).  </li>
+<li><strong>评估保证级别(EAL)</strong>: 功能(功能测试)与保证(流程验证)的分级评估(EAL1-EAL7).  <ul>
+<li>功能(functionality): 详细的功能要求,即功能测试项的描述.</li>
+<li>保证(assurance): 详细的保证要求,涉及运营方面的描述.</li>
+</ul>
+  <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/17479825060562.jpg" data-fancybox="true"/></div></div></li>
+</ul>
+</li>
+</ul>
+<h3 id="授权运营-Authorization-to-Operate-ATO"><a href="#授权运营-Authorization-to-Operate-ATO" class="headerlink" title="授权运营(Authorization to Operate, ATO)"></a>授权运营(Authorization to Operate, ATO)</h3><blockquote>
+<p>执行评估和分布ATO的实体,也被称为指定审批机构(DAA)、审批机构(AA)、安全控制评估员(SCA)和推荐官(RO)</p>
+</blockquote>
+<ul>
+<li>流程:   <ol>
+<li>风险评估与控制措施实施.  </li>
+<li>授权官(AO)决策:   <ul>
+<li>授权运营(ATO): 系统的风险管理到可接受水平时.</li>
+<li>通用控制授权(Common Control Authorization): 当从另一个供应商继承安全控制时,以及当与通用控制相关的风险处于可接受水平并且已经有来自同一AO的ATO时.</li>
+<li>授权使用(Authorization to Use): 当第三方供应商(如云服务)提供的产品被认为具有可接受的风险水平时.</li>
+<li>拒绝授权(Denial of Authorization): 风险不可接受时.</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>触发条件: 重大变更、安全事件、授权过期.</li>
+</ul>
+<h2 id="信息系统的安全能力"><a href="#信息系统的安全能力" class="headerlink" title="信息系统的安全能力"></a>信息系统的安全能力</h2><h3 id="可信平台模块（TPM）"><a href="#可信平台模块（TPM）" class="headerlink" title="可信平台模块（TPM）"></a>可信平台模块（TPM）</h3><ul>
+<li>定义与核心功能<ul>
+<li>硬件特性：TPM是一种嵌入主板的专用安全芯片（或集成于CPU），提供硬件级别的加密和安全功能。  </li>
+<li>关键能力：  <ol>
+<li>密钥生成与存储：生成并安全存储加密密钥（如RSA、ECC），防止密钥暴露。  </li>
+<li>完整性度量：通过平台配置寄存器（PCR）记录系统启动过程中的固件、操作系统组件哈希值，确保未被篡改（如防止Rootkit攻击）。  </li>
+<li>安全启动（Secure Boot）：验证启动链的完整性，阻止恶意代码加载。  </li>
+<li>加密加速：支持对称&#x2F;非对称加密、哈希运算（如SHA-256），提升性能。</li>
+</ol>
+</li>
+<li>应用场景：  <ul>
+<li>BitLocker磁盘加密：密钥由TPM保护，防止物理盗窃导致的数据泄露。  </li>
+<li>Windows Hello：生物识别数据（如指纹）加密存储于TPM，避免密码明文风险。  </li>
+<li>设备身份认证：TPM内置唯一密钥，用于远程证明设备可信性（如云平台设备准入）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>实现案例  <ul>
+<li>Microsoft Pluton安全处理器：将TPM功能直接集成于CPU（如Surface设备），消除外部通信路径，减少攻击面。</li>
+</ul>
+</li>
+</ul>
+<h3 id="硬件安全模块（HSM）"><a href="#硬件安全模块（HSM）" class="headerlink" title="硬件安全模块（HSM）"></a>硬件安全模块（HSM）</h3><ul>
+<li>定义与核心功能  <ul>
+<li>硬件特性：HSM是独立的硬件设备（如PCIe卡或外置设备），专注于高安全性、高性能的加密操作。  </li>
+<li>关键能力：  <ol>
+<li>密钥全生命周期管理：生成、存储、销毁密钥，支持密钥备份与恢复（如金融行业加密交易）。  </li>
+<li>高性能加密：处理大规模加密任务（如SSL&#x2F;TLS加解密、区块链签名），减轻主CPU负载。  </li>
+<li>抗物理攻击：内置传感器检测物理入侵（如开箱自毁），防御侧信道攻击（SPA&#x2F;DPA）。  </li>
+<li>合规性支持：符合FIPS 140-2 Level 3&#x2F;4、Common Criteria EAL4+等标准。</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="可信计算基（TCB）"><a href="#可信计算基（TCB）" class="headerlink" title="可信计算基（TCB）"></a>可信计算基（TCB）</h3><ul>
+<li>定义与组成<ul>
+<li>核心概念：TCB是系统中所有负责执行安全策略的组件集合，包括硬件（如TPM、HSM）、固件（BIOS&#x2F;UEFI）、软件（操作系统内核、安全模块）。  </li>
+<li>关键组件：  <ol>
+<li>安全边界（Security Perimeter）：隔离TCB与非可信部分，通过可信路径（如加密通道）通信。  </li>
+<li>参考监视器（Reference Monitor）：强制执行访问控制策略（如Linux SELinux）。  </li>
+<li>安全内核（Security Kernel）：最小可信代码集（如Windows NTOSKRNL.EXE），实现访问控制逻辑。</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="TPM、HSM与TCB的关系"><a href="#TPM、HSM与TCB的关系" class="headerlink" title="TPM、HSM与TCB的关系"></a>TPM、HSM与TCB的关系</h3><table>
+<thead>
+<tr>
+<th><strong>维度</strong></th>
+<th><strong>TPM</strong></th>
+<th><strong>HSM</strong></th>
+<th><strong>TCB</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>定位</strong></td>
+<td>设备级硬件安全模块</td>
+<td>企业级加密加速器</td>
+<td>系统级安全策略执行框架</td>
+</tr>
+<tr>
+<td><strong>密钥管理</strong></td>
+<td>本地存储、绑定设备</td>
+<td>集中式管理、跨平台</td>
+<td>依赖TPM&#x2F;HSM实现密钥保护</td>
+</tr>
+<tr>
+<td><strong>性能</strong></td>
+<td>低至中等（适合终端设备）</td>
+<td>高性能（适合数据中心）</td>
+<td>依赖底层硬件（如TPM&#x2F;HSM）</td>
+</tr>
+<tr>
+<td><strong>典型攻击面</strong></td>
+<td>物理攻击（如冷启动攻击）</td>
+<td>侧信道攻击</td>
+<td>逻辑漏洞（如权限绕过）</td>
+</tr>
+</tbody></table>
+<h2 id="错题集-2"><a href="#错题集-2" class="headerlink" title="错题集"></a>错题集</h2><ol>
+<li><p>哪个威胁建模框架提供了网络威胁行为方遵循的详细程序?<br> A. 攻击树<br> B. STRIDE<br> C. MITRE ATT&amp;CK框架<br> D. 网络杀伤链</p>
+ <div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>C,MITRE ATT&amp;CK框架将网络威胁行为方的策略映射到相应的技术以及特定威胁行为方在网络攻击期间使用的详细程序</p></div></details></div>
+</li>
+<li><p>在总加密系统中,数据在哪里加密?<br> A. 在磁盘驱动器上<br> B. 在内存中<br> C. 在总线上<br> D. 以上都是</p>
+ <div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>D,在包含总线加密的系统中,数据仅在加密处理器上解密.这意味着数据是在系统的其他地方加密的。</p></div></details></div>
+</li>
+<li><p>以下关于更改自加密驱动器口令的说法正确的是?<br> A. 需要对存储的数据重新加密<br> B. 新口令用现有的密钥加密<br> C. 对加密数据没有影响<br> D. 会生成一个新密钥</p>
+ <div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>C,更改自加密驱动器上的口令时,会保留现有的密钥,但会使用新口令加密.这意味着磁盘上的加密数据保持不变。</p></div></details></div>
+</li>
+<li><p>关于处理器安全扩展,哪些是正确的?<br> A. 处理器安全扩展是第三方在售后市场添加的。<br> B. 应禁用处理器安全扩展才能建立可信的执行环境。<br> C. 处理器安全扩展使研发人员能加密与进程相关的内存。<br> D. 加密通常不是处理器安全扩展的特征之一。</p>
+ <div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>C,处理器安全扩展是在CPU中提供安全功能的指令,用于支持受信任的执行环境.例如:处理器安全扩展使得研发人员将内存中的特殊区域指定为特定进程的加密和私有区域。</p></div></details></div></li>
+</ol>
+<h2 id="安全漏洞、威胁和对策"><a href="#安全漏洞、威胁和对策" class="headerlink" title="安全漏洞、威胁和对策"></a>安全漏洞、威胁和对策</h2><h3 id="硬件及固件"><a href="#硬件及固件" class="headerlink" title="硬件及固件"></a>硬件及固件</h3><h4 id="处理器"><a href="#处理器" class="headerlink" title="处理器"></a>处理器</h4><blockquote>
+<p>中央处理单元(Central Processing Unit,CPU)通常被称作处理器(Processor)或微处理器(Microprocessor),是计算机的神经中枢.</p>
+</blockquote>
+<ul>
+<li>执行类型<ul>
+<li>多任务(Multitasking): 单核CPU条件下,不是真正的多任务处理,依靠操作系统模拟实现.</li>
+<li>多核(Multicore): 多核CPU同时处理多个事务.</li>
+<li>多重处理(Multiprocessing): 多个CPU条件下,利用多个CPU完成多任务处理.</li>
+<li>多程序(Multiprogramming): 类似多任务处理,过时的技术,区别在于多程序用于大型机使用,而多任务用于个人电脑使用；多程序需要专门的软件才能实现,多任务由操作系统直接实现.</li>
+<li>多线程(Multithreading): 多线程允许在单一进程中执行多个并发任务.多任务处理多个任务时占用多个进程；与多任务处理不同,多线程允许多个任务在单一进程中运行.</li>
+</ul>
+</li>
+<li>保护机制:   <ul>
+<li>保护环<ul>
+<li>环0具有最高的特权级别,基本上可以访问任何资源,运行内核；</li>
+<li>环1运行操作系统除内核外的其他部分；</li>
+<li>环2运行I&#x2F;O驱动程序和系统应用程序；</li>
+<li>环3运行应用程序</li>
+</ul>
+</li>
+<li>进程状态<ul>
+<li>就绪状态(ready)</li>
+<li>等待状态(waiting)</li>
+<li>运行状态(running)</li>
+<li>管理程序状态</li>
+<li>停止状态(stopped)</li>
+</ul>
+  <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/17479827930659.jpg" data-fancybox="true"/></div></div></li>
+</ul>
+</li>
+</ul>
+<p>注意运行状态的两个特殊状态,一般运行状态叫问题状态(problem)(<strong>用户模式,权限低</strong>),当需要执行特权时成为监管状态(supervisory)(<strong>监管模式,权限高</strong>).</p>
+<p>操作模式:</p>
+<ol>
+<li>用户模式: 运行在环3.</li>
+<li>特权模式: 运行在环0-2,也叫监管模式或内核模式.</li>
+</ol>
+<h4 id="存储器"><a href="#存储器" class="headerlink" title="存储器"></a>存储器</h4><blockquote>
+<p>系统的第二个主要硬件组件是存储器,也叫内存,是用来保存计算机随时需要调用的信息的存储库.</p>
+</blockquote>
+<ol>
+<li>只读存储器(ROM):ROM是可以读取但不能更改的内存(不允许写入),但这就对后期维护就不友好了,因此有了以下几种子类型的ROM.<ul>
+<li>可编程只读存储器(PROM): 可允许出厂后再烧入内容.</li>
+<li>可擦除只读存储器(EPROM): 其中用光擦的叫UVEPROM,用电擦的叫EEPROM.</li>
+<li>电子可擦除可编程只读存储器(Electronically Erasable PROM,EEPROM): 是UVEPROM更灵活、更友好的替代方案,他用传递到芯片引脚的电压来强制擦除芯片上的内容 </li>
+<li>闪存(Flash Memory): 高级版EEPROM,可按块或页进行擦除,用于存储卡、U盘等.</li>
+</ul>
+</li>
+<li>随机存取存储器(RAM):是可读写存储器,但属于<strong>易失性存储介质,断电后数据消失</strong>.<ul>
+<li>实际存储器(Real Memory),也叫主内存,也就是日常说的内存.</li>
+<li>高速缓存RAM(Cache RAM),也就是内存与存储设备的缓冲地带,提前读取数据到缓存中,提高处理速度.</li>
+</ul>
+</li>
+<li>寄存器(registers):CPU的板载存储器,为算数逻辑单元(ALU)在执行指令时提供可以直接访问的存储位置.</li>
+<li>内存寻址(Memory Addressing): 使用内存资源时,CPU必须具有一些引用内存中各个位置的方法.<ul>
+<li>寄存器寻址: CPU直接用就行,毕竟离得最近；</li>
+<li>立即寻址: 将数据作为指令的一部分提供给CPU；</li>
+<li>直接寻址: 要访问的内存的实际地址会提供给CPU；</li>
+<li>间接寻址: 要访问的内存的实际地址会通过另一个内存地址(间接地址)提供给CPU；</li>
+<li>基址+偏移量寻址: 使用存储在CPU的某个寄存器中的数值作为开始计算的基地址.</li>
+</ul>
+</li>
+<li>二级存储(Secondary memory)<ul>
+<li>通常指磁性、光学或基于闪存的介质,或其他存储设备,里面存储的是不能直接供CPU使用的数据.</li>
+<li>虚拟内存(Virtual memory)是一种特殊类型的辅助内存,由操作系统管理,可使其像真实内存一样.</li>
+</ul>
+</li>
+<li>数据存储设备<ul>
+<li>主存储设备(内存)与辅助存储设备(硬盘)</li>
+<li>易失性存储设备(内存)与非易失性存储设备(硬盘)</li>
+<li>随机存取(大多数都是)与顺序存取(典型的是磁带)</li>
+</ul>
+</li>
+<li>存储方面的安全问题<ul>
+<li>总体上还是数据安全的问题,主要是数据在三种状态(静态、传输和使用)下的保护,静态(对称加密)和传输(TLS)都使用加密来防范,使用中的数据无法加密,被攻击的风险也低,因为断电就数据就没了,但需要注意一种攻击方法,冻结内存芯片以延迟驻留数据的衰减然后再尝试读取.</li>
+<li>数据残留问题,其中因SSD耗损均衡机制或坏块的存在,可能会导致净化过程不能完全擦除SSD上的数据.<strong>耗损均衡(wear leveling)指的是为了保障每个存储块的写入&#x2F;擦除次数一致,避免对某一部分区块的过度地重复进行擦除操作而报废,从而有效延长了固态硬盘的写入寿命.</strong></li>
+<li>辅助存储设备易被物理盗取,需要加强物理安全的保护.</li>
+</ul>
+</li>
+</ol>
+<h4 id="输入-输出设备"><a href="#输入-输出设备" class="headerlink" title="输入&#x2F;输出设备"></a>输入&#x2F;输出设备</h4><ul>
+<li>显示器: Van Eck攻击(远程读取屏幕辐射)、肩窥(shoulder surfing),用眼睛或摄像机看到你屏幕上的内容.  </li>
+<li>打印机: 纸质数据窃取、本地存储泄露.  </li>
+<li>键鼠: 易受TEMPEST技术监听,泄露击键操作.</li>
+<li>调制解调器: 过时设备赶紧弃用,避免成为风险点.</li>
+<li>固件攻击: phlashing(恶意BIOS刷写)、IoT设备固件漏洞(如Mirai僵尸网络).  <ul>
+<li>基本输入&#x2F;输出系统(BIOS)</li>
+<li>统一可扩展固件接口(UEFI)</li>
+<li>闪烁(Flashing)</li>
+<li>安全证明(Boot Attestaionn)</li>
+<li>测量启动(Measured Boot)</li>
+</ul>
+</li>
+<li>放射安全(Emanation Security):许多电子类设备发出的电信号或辐射可被截获,其中可能包含机密信息.<mark class="tag-plugin colorful mark" color="red">用于防止放射攻击的对策和防护措施类型称为TEMPEST.</mark>TEMPEST也可用于进行攻击,远程读取设备产生的电子辐射,此攻击被称为Van Eck phreaking,防范机制如下: <ul>
+<li>法拉第笼(Faraday Cage): 被动机制,设计一个金属罩子防止信号的传播.</li>
+<li>白噪声(White Noise): 主动机制,主动发送干扰信号防止远程读取.</li>
+<li>控制区(Control Zone): 划定区域实施法拉第笼或白噪声.</li>
+</ul>
+</li>
+</ul>
+<h3 id="客户端与服务器系统安全"><a href="#客户端与服务器系统安全" class="headerlink" title="客户端与服务器系统安全"></a>客户端与服务器系统安全</h3><h4 id="客户端安全"><a href="#客户端安全" class="headerlink" title="客户端安全"></a>客户端安全</h4><ol>
+<li>移动代码<ul>
+<li>历史风险：Java Applet、ActiveX 控件因权限过高易被利用，已淘汰。  </li>
+<li>现代风险：JavaScript 引发的 XSS、CSRF 漏洞。  </li>
+<li>防范措施：  <ul>
+<li>浏览器更新（如 Chrome 的自动更新机制）。  </li>
+<li>服务器侧安全组件（ADsafe、SES、Caja）。  </li>
+<li>内容安全策略（CSP）限制同源脚本执行（如 <code>Content-Security-Policy: script-src &#39;self&#39;</code>）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>本地缓存安全 <ul>
+<li>ARP 缓存中毒：中间人攻击（MITM），通过伪造 ARP 响应篡改 IP&#x2F;MAC 映射。  <ul>
+<li>防范：静态 ARP 条目、ARP 监测工具（如 Arpwatch）。</li>
+</ul>
+</li>
+<li>DNS 缓存中毒：重定向攻击（如 Kaminsky 攻击），伪造 DNS 响应。  <ul>
+<li>防范：DNSSEC 加密验证、随机化事务 ID（如 BIND 的 <code>use-ixfr</code>）。</li>
+</ul>
+</li>
+<li>Internet 文件缓存：恶意文件注入（如浏览器缓存劫持）。  <ul>
+<li>防范：设置 <code>Cache-Control: no-cache</code>、清除临时文件（如浏览器隐私模式）。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h4 id="服务器安全"><a href="#服务器安全" class="headerlink" title="服务器安全"></a>服务器安全</h4><ol>
+<li>大规模并行系统<ul>
+<li>架构对比：  <table>
+<thead>
+<tr>
+<th>类型</th>
+<th>特点</th>
+<th>应用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SMP（对称多处理）</td>
+<td>多核共享资源，统一 OS 管理</td>
+<td>个人电脑、小型服务器</td>
+</tr>
+<tr>
+<td>AMP（非对称多处理）</td>
+<td>独立处理器与内存，分布式任务</td>
+<td>工业控制、嵌入式系统</td>
+</tr>
+<tr>
+<td>MMP（大规模并行处理）</td>
+<td>多 AMP 联合，处理复杂任务</td>
+<td>科研计算（如气候模拟）</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</li>
+<li><mark class="tag-plugin colorful mark" color="red">网格计算 vs 对等网络(P2P)：</mark>  
+<ul>
+<li>网格计算：中央调度,但是中央调度会出现单点故障.</li>
+<li>P2P：去中心化（如 BitTorrent）。</li>
+</ul>
+</li>
+<li>高性能计算（HPC）<ul>
+<li>安全风险：  <ul>
+<li>资源争用导致拒绝服务（DoS）。  </li>
+<li>数据泄露（如超级计算机的敏感科研数据）。</li>
+</ul>
+</li>
+<li>防护措施：  <ul>
+<li>网络隔离（VLAN 划分）、访问控制（RBAC）、加密存储（AES-256）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>实时操作系统(RTOS) </li>
+<li><mark class="tag-plugin colorful mark" color="red">分布式系统</mark>
+<blockquote>
+<p>数据主权(Data Sovereignty)的概念是:信息一旦被转换成二进制形式并以数字文件的形式存储,他就要受存储设备所在国家&#x2F;地区法律的约束.随着云计算和其他DCE的使用日益增加,如果你所在的行业规定把数据主权保留在原产国,或者如果存储数据的国家&#x2F;地区制订了与你所在的数据原产国截然不同的法律,数据主权就会成为一个必须认真考虑的重要问题.数据主权会对数据的隐私、保密性和可访问性产生影响</p>
+</blockquote>
+<ul>
+<li>分布式带来的好处就是可用性.</li>
+<li>DCE</li>
+<li>分布式系统是什么?</li>
+<li>安全问题:通信数据安全问题</li>
+</ul>
+</li>
+<li><mark class="tag-plugin colorful mark" color="red">微服务</mark>
+<ul>
+<li>SOA 面向服务体系结构</li>
+<li>Microservices API 主要是面向Web服务.</li>
+<li>优势：模块化、弹性扩展（如 Netflix 的微服务架构）</li>
+<li>安全挑战：API 接口暴露、服务间通信加密（如 gRPC + TLS）。</li>
+</ul>
+</li>
+</ol>
+<h3 id="嵌入式系统安全"><a href="#嵌入式系统安全" class="headerlink" title="嵌入式系统安全"></a>嵌入式系统安全</h3><ol>
+<li>静态系统<ul>
+<li>示例：ATM 机、工业控制器。  </li>
+<li>安全挑战：固件更新困难（如医疗设备需 FDA 认证）。</li>
+</ul>
+</li>
+<li>网络物理系统<ul>
+<li>风险点：  <ul>
+<li>默认凭证（如 Mirai 僵尸网络利用 Telnet 默认密码）。  </li>
+<li>固件漏洞（如路由器 UPnP 协议漏洞）。</li>
+</ul>
+</li>
+<li>防护措施：  <ul>
+<li>强制修改默认密码、定期固件更新（OTA）、禁用不必要的服务（如关闭 Telnet 启用 SSH）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>物联网（IoT）  <ul>
+<li>攻击案例：  <ul>
+<li>摄像头被劫持组成僵尸网络（如 2016 年 DDoS 攻击 Dyn）。  </li>
+<li>医疗设备远程操控（如胰岛素泵漏洞）。</li>
+</ul>
+</li>
+<li>安全策略：  <ul>
+<li>网络隔离（三哑路由器：物理隔离 + VLAN + 防火墙规则）。  </li>
+<li>设备认证（如 X.509 证书）、数据加密（TLS 1.3）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>工业控制系统（ICS） <ul>
+<li><mark class="tag-plugin colorful mark" color="red">工控三兄弟:PLC/DCS/SCADA</mark></li>
+<li>典型攻击：Stuxnet 病毒破坏伊朗离心机。  </li>
+<li>防护措施：  </li>
+<li>网络物理隔离（如 DMZ 部署）、协议白名单（如 Modbus TCP 过滤）、日志审计（如 Splunk 分析 SCADA 日志）。</li>
+</ul>
+</li>
+</ol>
+<h3 id="虚拟化安全"><a href="#虚拟化安全" class="headerlink" title="虚拟化安全"></a>虚拟化安全</h3><ol>
+<li>虚拟化管理程序(Hypervisor)安全<ul>
+<li>类型对比：  <table>
+<thead>
+<tr>
+<th>类型</th>
+<th>架构</th>
+<th>应用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Type 1</td>
+<td>本机或裸机(直接运行于硬件（如 VMware ESXi）)</td>
+<td>企业数据中心</td>
+</tr>
+<tr>
+<td>Type 2</td>
+<td>托管(依赖宿主 OS（如 VirtualBox）)</td>
+<td>个人开发测试</td>
+</tr>
+</tbody></table>
+</li>
+<li>风险：  <ul>
+<li>VM 逃逸：利用内核漏洞突破虚拟机隔离（如 Xen 的 CVE-2015-7835）。  </li>
+<li>影子 IT：未授权虚拟机导致资源失控（如 AWS 未管理 EC2 实例）。</li>
+</ul>
+</li>
+<li>技术支持<ul>
+<li>快速启动</li>
+<li>弹性和可扩展性</li>
+<li>快照恢复</li>
+<li>隔离测试</li>
+<li>遗留支持</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>虚拟软件(Virtual Software)<ul>
+<li>代表:容器化（Containerization）,可移植性强<ul>
+<li>安全挑战：  <ul>
+<li>容器逃逸（如 Docker 的 <code>--privileged</code> 模式漏洞）。  </li>
+<li>共享操作系统内核风险（如 Linux 内核漏洞影响所有容器）。</li>
+</ul>
+</li>
+<li>防护措施：  <ul>
+<li>使用安全工具（如 Aqua Security）、最小化镜像（Alpine Linux）、内核加固（SELinux&#x2F;AppArmor）。</li>
+</ul>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/17482502689283.jpg" data-fancybox="true"/></div></div></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>虚拟化网络(Virtualized Networking) SDN</li>
+<li>软件定义一切(SDx)<ul>
+<li>虚拟桌面基础设施(VDI)</li>
+<li>虚拟移动基础设施(VMI)</li>
+<li>瘦客户机(Thin Client)</li>
+<li>软件定义可见性(SDV)监控网络流量</li>
+<li>软件定义数据中心(SDDC)</li>
+</ul>
+</li>
+<li><mark class="tag-plugin colorful mark" color="red">虚拟化安全管理</mark>
+<ul>
+<li>保障主机的稳定性</li>
+<li>加强Hypervisor的保护</li>
+<li>保持各层级OS和软件的更新</li>
+<li>定期备份虚拟资产</li>
+<li>定期对虚拟化环境进行安全测试</li>
+</ul>
+</li>
+<li>关注虚拟化的特定风险<ul>
+<li>VM蔓延&#x2F;虚拟影子IT 指的是虚拟化环境</li>
+<li>服务器蔓延&#x2F;影子IT 指的是传统环境</li>
+<li>VM逃逸</li>
+</ul>
+</li>
+<li>虚拟化相关技术<ul>
+<li>容器化(Containerization)</li>
+<li>无服务器架构(Serverless Architecture)又称功能即服务(FaaS)</li>
+<li>基础设施即代码(Infrastructure as code,IaC): 硬件&#x2F;软件配置</li>
+<li>边缘计算(Edge Computing)</li>
+<li>雾计算(Fog Computing)</li>
+<li>不可变架构(Immutable Architecture)</li>
+</ul>
+</li>
+</ol>
+<h3 id="移动设备安全与部署策略"><a href="#移动设备安全与部署策略" class="headerlink" title="移动设备安全与部署策略"></a>移动设备安全与部署策略</h3><h4 id="移动设备安全特性"><a href="#移动设备安全特性" class="headerlink" title="移动设备安全特性"></a>移动设备安全特性</h4><ol>
+<li>设备管理框架 <ul>
+<li>MDM（移动设备管理）： <ul>
+<li>功能：设备注册、配置管理、远程擦除、资产管理。 </li>
+<li>示例：Apple MDM 通过 APNs 安全通信，支持 BYOD 的数据分离（iOS 13+）。</li>
+</ul>
+</li>
+<li>EMM（企业移动管理）： <ul>
+<li>增强功能：细粒度数据控制（如加密企业数据而非整个设备）。</li>
+</ul>
+</li>
+<li>UEM（统一终端管理）： <ul>
+<li>整合范围：覆盖移动设备、PC、IoT、ICS 等。 </li>
+<li>优势：集中式仪表板、自动化补丁管理（如 Microsoft Intune）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>设备身份验证</li>
+<li>全设备加密(FDE)</li>
+<li>通信保护：VoIP 加密（如 Signal 协议）、WPA3 Wi-Fi 安全。</li>
+<li><mark class="tag-plugin colorful mark" color="red">远程擦除</mark></li>
+<li>屏幕锁</li>
+<li>设备锁定</li>
+<li>GPS和定位服务. </li>
+<li>内容管理: MCM（移动内容管理）绑定 MDM，<mark class="tag-plugin colorful mark" color="red">限制企业数据外泄</mark>（如 Dropbox Business）。</li>
+<li>应用控制: <mark class="tag-plugin colorful mark" color="red">白名单策略</mark>（如 Apple VPP 企业应用商店）、禁止第三方应用商店（Android 未知来源禁用）。</li>
+<li>推送通知</li>
+<li>第三方应用商店</li>
+<li>存储分割</li>
+<li>资产分割</li>
+<li>资产跟踪</li>
+<li>可移动存储</li>
+<li>停用未使用的功能</li>
+<li>越狱</li>
+<li>侧向加载</li>
+<li>自定义固件</li>
+<li>运营商解锁</li>
+<li>固件OTA更新</li>
+<li>凭据管理</li>
+<li>短信 <mark class="tag-plugin colorful mark" color="red">基于短信的身份验证机制不被认为是一种安全的身份验证</mark></li>
+</ol>
+<h4 id="移动设备部署策略"><a href="#移动设备部署策略" class="headerlink" title="移动设备部署策略"></a>移动设备部署策略</h4><ol>
+<li>策略对比<table>
+<thead>
+<tr>
+<th>策略</th>
+<th>所有权</th>
+<th>安全性</th>
+<th>用户隐私风险</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>自带设备(BYOD)</td>
+<td>员工</td>
+<td>低</td>
+<td>高（采集个人数据）</td>
+</tr>
+<tr>
+<td>公司所有、个人使用(COPE)</td>
+<td>公司</td>
+<td>中</td>
+<td>中（混合使用）</td>
+</tr>
+<tr>
+<td>自选设备(CYOD)</td>
+<td>员工&#x2F;公司</td>
+<td>高</td>
+<td>低（预批准设备）</td>
+</tr>
+<tr>
+<td>组织自有移动战略(COMS)</td>
+<td>公司</td>
+<td>极高</td>
+<td>无（仅限业务）</td>
+</tr>
+</tbody></table>
+</li>
+<li>实施关注点<ul>
+<li>数据所有权：明确企业与个人数据界限（如 iOS 用户注册分离企业数据）。 </li>
+<li>取证与合规：支持远程日志收集（如 MobileIron Forensics）。 </li>
+<li>法律问题：遵守 GDPR（数据最小化原则）、HIPAA（医疗数据加密）。</li>
+</ul>
+</li>
+</ol>
+<h3 id="安全保护机制与架构缺陷"><a href="#安全保护机制与架构缺陷" class="headerlink" title="安全保护机制与架构缺陷"></a>安全保护机制与架构缺陷</h3><h4 id="基本安全保护机制"><a href="#基本安全保护机制" class="headerlink" title="基本安全保护机制"></a>基本安全保护机制</h4><ol>
+<li>隔离技术<ul>
+<li>进程隔离： <ul>
+<li>操作系统级：内存空间独立（如 Linux Namespaces）。 </li>
+<li>硬件级：ARM TrustZone（隔离安全内核与普通世界）。</li>
+</ul>
+</li>
+<li>虚拟化隔离： <ul>
+<li>Hypervisor 类型 1（VMware ESXi）与类型 2（VirtualBox）的隔离强度差异。</li>
+</ul>
+</li>
+<li>硬件分割</li>
+</ul>
+</li>
+<li>信任根(Rot)<ul>
+<li>信任锚点: 系统上值得信赖的组件</li>
+</ul>
+</li>
+<li>策略与协议<ul>
+<li>系统安全策略： <ul>
+<li>生命周期管理：NIST SP 800-160（系统安全工程指南）。</li>
+</ul>
+</li>
+<li>访问控制： <ul>
+<li>RBAC（基于角色）与 ABAC（基于属性）在移动设备中的应用（如 Android 权限模型）。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h4 id="常见安全架构缺陷"><a href="#常见安全架构缺陷" class="headerlink" title="常见安全架构缺陷"></a>常见安全架构缺陷</h4><ol>
+<li>隐蔽通道攻击 <ul>
+<li>时间型隐蔽通道： <ul>
+<li>示例：通过 CPU 资源占用波动传递信息（如缓存时序攻击）。</li>
+</ul>
+</li>
+<li>存储型隐蔽通道： <ul>
+<li>示例：利用共享内存区域传输数据（如 Android 共享缓存）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>设计与实现漏洞 <ul>
+<li>Rootkits： <ul>
+<li>移动端案例：Android 的 Triout 隐藏恶意模块（需 Root 权限）。</li>
+</ul>
+</li>
+<li>增量攻击： <ul>
+<li>数据欺骗（Data Diddling）：逐步篡改金融交易金额（如腊肠攻击）。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="错题集-3"><a href="#错题集-3" class="headerlink" title="错题集"></a>错题集</h2><ol>
+<li><p>在为机构做安全设计时必须认识到，不仅要在机构目标与安全目标之间取得平衡，而且要强调安全的共担责任。以下哪些项属于共担责任的元素？（选出所有适用答案。）<br>A.机构的所有人员都担负着一定的安全责任。<br>B.永远都要重视有形和无形资产面临的威胁。<br>C.机构有责任为利益相关人做出良好安全决策，以维系机构的持续发展。<br>D.当与第三方（尤其是云提供商）合作时，每个实体都要了解自己在执行业务操作和维护安全方面所应承担的那部分共担责任。<br>E.必须有多层级的安全保护来防止对手访问内部敏感资源。<br>F.当发现新漏洞和新威胁时，我们应该负责地把情况披露给相关供应商或信息共享中心，即便这不是我们的职责。</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>ACDF,选项ACDF,的表述都是共担责任的有效元素和应该考虑的因素。其他选项不正确。我们始终要把有形和无形资产面临的威胁视为风险管理和业务影响分析(BLA)的要旨。为了防止对手访问内部敏感资源,必须部署多层级安全机制,这被称为深度防御,是一个普遍适用的安全原则.</p></div></details></div>
+</li>
+<li><p>你的机构正在考虑部署一个可公开获得的屏保程序,以空出系统资源来处理公司敏感数据。如果采用消耗互联网上计算机可用资源的网格计算解决方案,会有什么常见的安全风险?</p>
+<p>A. 损失公司隐私</p>
+<p>B. 通信延迟</p>
+<p>C. 重复工作</p>
+<p>D. 容量波动</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>A,在许多网格计算执行方案中,网格成员可以访问分布式工作区或分区的内容.这种互联网上的网格计算通常不是敏感操作的最佳平台.网格计算能够处理和补偿通信延迟、重复工作和容量波动.</p></div></details></div>
+</li>
+<li><p>你的公司正在评估多家云提供商,以确定哪一家最适合托管你的定制服务并以此作为定制应用解决方案。你需要从许多方面对安全控制进行评估,但主要问题包括:能够在段时间内处理大量数据,控制哪些应用可访问哪些资产,以及能够禁止虚拟机蔓延或重复操作.以下哪一项与这一挑选过程无关?</p>
+<p>A. 某些实体(通常是用户,但也可以是应用程序和设备)的集合,这些实体可能被授予或不被授予执行特定任务的访问权或访问某些资源或资产的权限。</p>
+<p>B. 可充当用于访问云资产和云服务的虚拟端点的虚拟桌面基础设施(VDI)或虚拟移动基础设施(VMI)示例</p>
+<p>C. 云进程在必要时可以使用或消耗更多资源(如计算、内存、存储器或网络)的能力.</p>
+<p>D. 一种能够监控并区分同一虚拟机、服务、应用或资源商诸多实例的管理或安全机制.</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>B,选项B提到作为访问云资产和云服务的虚拟端点的虚拟桌面基础设施(VDI)或虚拟移动基础设施(VMI)实例,但是这一概念与本题的场景没有特别的关系,也不是这一场景的要求.其余选项与场景中的选择进程相关.它们全都是与计算安全相关的概念.</p><p>选项A(安全组)是实体的集合,通常是用户,但也可以是应用程序和设备,它们可能被授予或被拒绝授予执行特定任务或访问某些资源或资产的权限.选项A支持控制哪些应用可以访问哪些资产的要求.</p><p>选项C涉及动态资源分配(即弹性),是云进程在需要时使用或消耗更多资源(如计算、内存、存储或网络)的能力.选项C支持在短时间内处理大量数据的要求.</p><p>选项D是一种管理或安全机制,它能监控和区分同一虚拟机、服务、应用或资源的多个实例.选项D支持禁止虚拟机蔓延或重复操作的要求.</p></div></details></div>
+</li>
+<li><p>为了降低成本,你的老板想让大楼的暖通空调系统和照明控制实现自动化.他指示你使用商业现货物联网设备以确保低成本运行.当你把物联网设备用于专用环境时,应该采取什么最佳措施来降低风险?</p>
+<p>A. 使用公共IP地址</p>
+<p>B. 设备不用时切断电源</p>
+<p>C. 保持设备即时更新</p>
+<p>D. 阻止物联网设备访问互联网</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>C,减少这些选项带来的物联网风险的最佳方法是保持设备即时更新.使用公共IP地址时会把物联网设备暴露在来自互联网的攻击之下.</p><p>切断设备电源并不是有用的防御措施,物联网的好处在于他们始终在运行之中,随时可供调用,或者在被触发时或按预先的安排采取行动.阻断对互联网的访问会阻止物联网设备本身获得更新,会阻止通过移动设备应用程序对它们的控制,同时会阻断它们与任何相关云服务的通信.</p></div></details></div>
+</li>
+<li><p>审计员对公司的操作虚拟化进行审查后确定,支持虚拟机的硬件资源几乎已完全耗尽.审计员要求公司提供虚拟机系统的计划和布局,但被告知不存在这种计划.这表明公司出现了什么问题?</p>
+<p>A. 使用了服务终止(EOSL)的系统</p>
+<p>B. 虚拟机蔓延</p>
+<p>C. 弱密码</p>
+<p>D. 虚拟机逃逸</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>B,这种情况的问题是虚拟机蔓延.组织如果没有对自己的IT&#x2F;IS需求做好计划便在生产需要时部署新的系统、软件和虚拟机,就会发生蔓延.这往往会导致设备得不到足够的动力,然后又会因为软件和虚拟机的低效执行而负担过重.这种情况与服务器终止(EOSL)系统没有特别的关系,但是EOSL系统会加剧蔓延问题.这种情况与弱密码无关,也没有虚拟机逃逸问题的任何证据.</p></div></details></div>
+</li>
+<li><p>公司服务器当前只托管7台虚拟机,但运行已接近最大资源容量.由于公司的IT&#x2F;IS预算已经用过,管理层指示你以不买新硬件为前提将6个新应用程序部署到其他虚拟机上.怎样才能做到这一点?</p>
+<p>A. 数据主权</p>
+<p>B. 基础设施即代码</p>
+<p>C. 容器化</p>
+<p>D. 无服务器架构</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>C,容器化基于在虚拟机中消除操作系统重复元素的概念.每个应用程序都被放进一个容器,容器中只包含支持被封闭应用程序所需的实际资源,而操作系统中那些公用或共享的元素则被归入管理程序.</p><p>容器化解决方案可用来把系统作为一个整体重新部署.</p><p>7个虚拟机中原来的所有应用程序以及6个新应用程序都可以放进容器.最终13个应用程序都能在不需要新硬件的情况下正常运行.</p><p>数据主权的概念是,信息一旦被转换成二进制形式并以数字文件形式存储,它就要受存储设备所在国家&#x2F;地区的法律约束.</p><p>基础设施即代码(IaC)体现了认知和处理硬件管理的方式的一种改变.以往把硬件配置看做一种手动的、直接操作的、一对一的管理麻烦,而如今,硬件配置被视为另一组元素的集合,要像在DevSecOps(安全、开发和运维)</p><p>模式下管理软件和代码那样对它们实施管理.</p><p>无服务器架构是一种云计算概念,其中代码由客户管理,平台(即支持性硬件和软件)或服务器由云服务提供商(CSP)管理.这不是本题场景的适用解决方案;管理层既然不想添置硬件,他们或许也不会批准每月花钱向CSP订阅.</p></div></details></div>
+</li>
+<li><p>你被安排完成设计和落实一项新安全策略的任务,以应对新近安装的嵌入式系统带来的新威胁.什么是标准PC机中不常见的嵌入式系统安全风险?</p>
+<p>A. 软件缺陷</p>
+<p>B. 互联网访问</p>
+<p>C. 物理世界的机制控制</p>
+<p>D. 功耗</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>C,由于嵌入式系统往往控制着物理世界中的某个机制,一个安全漏洞可能会对人和财产(又叫信息物理融合)造成损害.这通常不是真正意义上的标准PC机.功耗、互联网访问和软件缺陷是嵌入式系统和标准PC机面临的安全风险.</p></div></details></div>
+</li>
+<li><p>你正在开发一款可以快速处理数据的新产品,以便以最小时延触发现实世界的调整.目前的计划是将代码嵌入ROM芯片,以优化任务关键性操作.哪种解决方案最适合这一场景?</p>
+<p>A. 容器化应用程序</p>
+<p>B. 一款Arduino产品</p>
+<p>C. DCS</p>
+<p>D. RTOS</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>D,本题场景描述的是一种要求有实时操作系统(RTOS)解决方案的产品,因为它提到需要最小化时延和延迟、把代码存储在ROM中和优化任务的关键性操作.</p><p>容器化应用程序不适用于这种情况,由于虚拟化基础设施的原因,容器化应用可能无法进行近实时操作,而且容器化应用程序通常是以文件的形式保存在主机里面而非ROM芯片上的.</p><p>Arduino是一种微控制器,但通常不够强健,不足以充当近实时机制;它把代码存储在闪存芯片上,具有有限的基于C++的指令集,不适用于任务关键性操作.</p><p>分布式控制系统(DCS)可用来管理小规模工业流程,但是它没有被设计成近实时解决方案.DCS不存储在ROM中,但它们可以用于管理任务关键性操作.</p></div></details></div>
+</li>
+<li><p>你正在努力改进本公司的移动设备政策.由于最近发生了多起令人尴尬的破坏事件,公司希望通过技术手段以及用户行为和活动来提高安全性.降低移动设备(如笔记本电脑)数据丢失风险的最有效方法是什么?</p>
+<p>A. 定义强登录口令</p>
+<p>B. 把移动设备上存储的数据减少到最低限度</p>
+<p>C. 使用电缆锁</p>
+<p>D. 加密硬盘驱动器</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>B,笔记本电脑丢失或被盗的风险不在于系统本身丢失，而在于数据的丢失，在于系统上数据的价值——无论这些数据是业务相关的还是个人的。因此，在系统上最低限度地保留敏感数据是降低风险的唯一办法。</p><p>硬盘加密、电缆锁和强口令虽然都不失为好主意，但都属于预防性工具，而不是降低风险的手段。它们不会阻止蓄意和恶意数据泄露的发生;它们只是鼓励正直的人保持正直。</p><p>通过使用冷启动攻击或利用加密服务的缺陷或配置错误，可以绕过硬盘驱动器加密。</p><p>电缆锁可以从机箱中拆下或拔出。</p><p>强口令防止不了设备失窃，口令破解和&#x2F;或凭证填充可以打破这种保护。如果无法破解口令，也可以把驱动器从计算机中取出，将其连接到另一个系统上，进而直接访问文件——即便本机的操作系统正在运行。</p></div></details></div>
+</li>
+<li><p>首席信息安全官(CISO)要求你就公司的移动设备安全战略提出更新方案.公司的主要问题是个人信息与业务数据混杂在一起,以及指派设备安全、管理、更新和维修责任的流程过于复杂.以下哪一项是解决这些问题的最佳选项?</p>
+<p>A. 自带设备(BYOD)</p>
+<p>B. 公司拥有,个人使用(COPE)</p>
+<p>C. 自选设备(CYOD)</p>
+<p>D. 公司拥有</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>D,就本题涉及的场景而言，最佳选项是公司拥有。公司拥有移动设备安全战略是指由公司来购买能够支持安全策略合规的移动设备。这些设备只可用于公司业务用途，用户不得在上面做任何私事。这一选项往往要求员工携带第二台设备以用于个人目的。公司拥有移动设备安全战略为公司明确规定了监督设备使用的责任。</p><p>其他三个选项依然允许数据公私混杂，而且在概念或策略上安全责任分工不明、含混不清。</p><p>自带设备(BYOD)策略允许员工携带自己的个人移动设备上班，且允许他们用这些设备通过公司网络连接业务资源和&#x2F;或互联网。</p><p>公司拥有，个人使用(COPE)的概念是指机构买来设备供员工使用。每个用户随后都可以自定义设备，将其用于工作和个人活动。自选设备(CYOD)的概念为用户提供了一个得到批准的设备列表，用户可以从中挑选自己将要使用的设备。</p></div></details></div></li>
+</ol>
+<h2 id="物理安全要求"><a href="#物理安全要求" class="headerlink" title="物理安全要求"></a>物理安全要求</h2><h3 id="站点与设施安全设计原则"><a href="#站点与设施安全设计原则" class="headerlink" title="站点与设施安全设计原则"></a>站点与设施安全设计原则</h3><h4 id="物理安全基础"><a href="#物理安全基础" class="headerlink" title="物理安全基础"></a>物理安全基础</h4><ol>
+<li>设施规划 <ul>
+<li>关键路径分析： <ul>
+<li>识别高风险区域（如数据中心电力供应、网络入口）。</li>
+</ul>
+</li>
+<li>工业伪装： <ul>
+<li>示例：Google 数据中心伪装为普通办公楼，避免成为攻击目标。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><mark class="tag-plugin colorful mark" color="red">CPTED 策略（通过环境设计预防犯罪）</mark>
+<ul>
+<li>自然访问控制： <ul>
+<li>围栏、照明、单入口设计（如银行金库的防尾随门禁）。</li>
+</ul>
+</li>
+<li>自然监视： <ul>
+<li>玻璃幕墙、监控摄像头（如机场的透明安检区）。</li>
+</ul>
+</li>
+<li>自然领土强化： <ul>
+<li>社区归属感设计（如科技园的公共艺术装置减少破坏行为）。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h4 id="安全设施实施"><a href="#安全设施实施" class="headerlink" title="安全设施实施"></a>安全设施实施</h4><ol>
+<li>物理屏障组合 <ul>
+<li>传统屏障：锁具、生物识别门禁（如指纹扫描器）。 </li>
+<li>CPTED 融合： <ul>
+<li>智能围栏（电子围栏 + 可见警示标识）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>应急响应设计<ul>
+<li>灾备站点选址：远离地震带、洪水区域（如 AWS 区域多可用区部署）。 </li>
+<li>访问日志审计：实时监控异常出入（如 RFID 门禁日志分析）。</li>
+</ul>
+</li>
+</ol>
+<h3 id="实施站点和设施的安全控制"><a href="#实施站点和设施的安全控制" class="headerlink" title="实施站点和设施的安全控制"></a>实施站点和设施的安全控制</h3><h4 id="物理安全控制类型"><a href="#物理安全控制类型" class="headerlink" title="物理安全控制类型"></a>物理安全控制类型</h4><ol>
+<li>管理类<ul>
+<li>设施建造与选择 .</li>
+<li>站点管理。 </li>
+<li>人员控制。 </li>
+<li>安全意识培训。 </li>
+<li>应急响应与流程。</li>
+</ul>
+</li>
+<li>技术类<ul>
+<li>访问控制。 </li>
+<li>入侵检测。 </li>
+<li>警报系统。 </li>
+<li>闭路电视（CCTV）。 </li>
+<li>环境监控（如HVAC）。 </li>
+<li>火警探测与消防系统。</li>
+</ul>
+</li>
+<li>物理类 <ul>
+<li>围栏、照明、门锁。 </li>
+<li>建筑材料。 </li>
+<li>捕人陷阱（如陷阱门）。 </li>
+<li>警卫与警犬。</li>
+</ul>
+</li>
+</ol>
+<h4 id="控制的功能顺序"><a href="#控制的功能顺序" class="headerlink" title="控制的功能顺序"></a>控制的功能顺序</h4><ol>
+<li>威慑<ul>
+<li>如“内有恶犬”标语，通过心理压制阻止潜在入侵。</li>
+</ul>
+</li>
+<li>阻挡<ul>
+<li>实体障碍（如围墙、门禁）实际阻断进入路径。</li>
+</ul>
+</li>
+<li>监测&#x2F;检测<ul>
+<li>通过CCTV、传感器实现实时监控与事后审计。</li>
+</ul>
+</li>
+<li>延迟&#x2F;拖延<ul>
+<li>通过物理设计延长入侵者到达目标的时间（如数据中心设于走廊尽头）。</li>
+</ul>
+</li>
+<li>确定<ul>
+<li>分析事件原因或评估损失情况。</li>
+</ul>
+</li>
+<li>决策<ul>
+<li>根据评估结果制定应对措施（如启动应急预案）。</li>
+</ul>
+</li>
+</ol>
+<h4 id="设备故障"><a href="#设备故障" class="headerlink" title="设备故障"></a>设备故障</h4><ol>
+<li>备件管理</li>
+<li>与供应商签订服务水平协议（SLA）。 </li>
+<li>业务连续性指标</li>
+</ol>
+<ul>
+<li>允许中断窗口（AIW）。 </li>
+<li>服务交付目标（SDO）。 </li>
+<li>最大可容忍停机时间（MTD&#x2F;MTO）。</li>
+</ul>
+<ol start="4">
+<li>计算设备可靠性</li>
+</ol>
+<ul>
+<li>平均故障时间（MTTF）。 </li>
+<li>平均修复时间（MTTR）。 </li>
+<li>平均故障间隔时间（MTBF ≈ MTTF）。</li>
+</ul>
+<h4 id="配线间"><a href="#配线间" class="headerlink" title="配线间"></a>配线间</h4><ol>
+<li>电缆设备元素<ul>
+<li>接入设施（Entrance Facility）：互联网接入点。</li>
+<li>机房（Equipment Room）：服务器存放区域。 </li>
+<li>配线间（Wiring Closet）：通信线缆部署房间。</li>
+<li>骨干布线系统：连接建筑各层。 </li>
+<li>水平布线系统：单层内各房间布线。</li>
+</ul>
+</li>
+<li>保护性布线系统（PDS）<ul>
+<li>防止未经授权的访问或破坏。 </li>
+<li>安全要求： <ul>
+<li>禁止用作储物区。 </li>
+<li>生物识别门锁、视频监控、开门传感器。 </li>
+<li>仅授权管理员保管钥匙。 </li>
+<li>定期巡视与环境监控（防水、防火）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>建筑物安全策略基本规则</li>
+</ol>
+<h4 id="数据中心"><a href="#数据中心" class="headerlink" title="数据中心"></a>数据中心</h4><ol>
+<li>总体原则 <ul>
+<li>无人化机房最安全</li>
+<li>位于核心:避免位于一楼、顶楼或地下室。 </li>
+<li>支持运行:配备基础的运营环境(监控室、备件、运营室等)</li>
+</ul>
+</li>
+<li>管理物理访问的机制<ul>
+<li>智能卡：支持信息处理，配合PIN码实现多因素认证。 </li>
+<li>磁条卡：仅存储少量数据，安全性较低。 </li>
+<li>接近式设备： <ul>
+<li>被动接近式设备：无电源，依赖读取器电磁场。 </li>
+<li>现场供电接近式设备：自供电发送信号。 </li>
+<li>应答器接近式设备：电池或太阳能供电。</li>
+</ul>
+</li>
+<li>自动退出请求(AREX)</li>
+</ul>
+</li>
+</ol>
+<h4 id="入侵检测系统（IDS）"><a href="#入侵检测系统（IDS）" class="headerlink" title="入侵检测系统（IDS）"></a>入侵检测系统（IDS）</h4><ol>
+<li>功能要求 <ul>
+<li>检测非法活动并触发警报。 </li>
+<li>关键组件：<ul>
+<li>备用电源（防止断电失效）。</li>
+<li>线路监控（防止线缆被切断）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>运动检测器类型<ul>
+<li>数字运动检测器</li>
+<li>被动红外（PIR）运动检测器：基于热量变化。</li>
+<li>波形运动检测器：主动信号反射分析。</li>
+<li>电容&#x2F;光电&#x2F;音频运动检测器：监测电场、光或声音变化。</li>
+<li><mark class="tag-plugin colorful mark" color="red">双技术传感器指的是以上检测器随意组合</mark></li>
+</ul>
+</li>
+<li>边界入侵检测<ul>
+<li>接触式设备</li>
+<li>红外线性光束传感器</li>
+</ul>
+</li>
+<li>入侵警报<ul>
+<li>威慑警报：触发锁闭或关门。 </li>
+<li>驱逐警报：声光威慑入侵者。 </li>
+<li>通知警报：静默记录并通知管理员。 </li>
+<li>二次验证：结合摄像头减少误报。</li>
+</ul>
+</li>
+</ol>
+<h4 id="摄像头"><a href="#摄像头" class="headerlink" title="摄像头"></a>摄像头</h4><ul>
+<li>公开部署威慑,隐蔽部署检测</li>
+<li>实现事件触发记录</li>
+<li>固定机位和PTZ控制</li>
+<li>伪摄像头或诱饵摄像头</li>
+<li>增强型视频监控(EVS)</li>
+</ul>
+<h4 id="访问滥用"><a href="#访问滥用" class="headerlink" title="访问滥用"></a>访问滥用</h4><ul>
+<li>防范措施：<ul>
+<li>安全警卫、审计跟踪、访问日志与摄像头。</li>
+<li>防止伪装（Masquerading）、捎带（Piggybacking）。</li>
+</ul>
+</li>
+</ul>
+<h4 id="介质存储设施"><a href="#介质存储设施" class="headerlink" title="介质存储设施"></a>介质存储设施</h4><ul>
+<li>物理安全</li>
+<li>专人管理</li>
+<li>签入&#x2F;签出</li>
+<li>数据净化</li>
+<li>完整性校验</li>
+<li>分级管理</li>
+</ul>
+<h4 id="证据存储"><a href="#证据存储" class="headerlink" title="证据存储"></a>证据存储</h4><ul>
+<li>专用存储</li>
+<li>保持离线</li>
+<li>网络隔离</li>
+<li>跟踪活动</li>
+<li>完整性校验</li>
+<li>控制访问</li>
+<li>数据加密</li>
+</ul>
+<h4 id="受限区与工作区安全"><a href="#受限区与工作区安全" class="headerlink" title="受限区与工作区安全"></a>受限区与工作区安全</h4><ul>
+<li>墙或隔断</li>
+<li>落地墙</li>
+<li>清洁办公桌策略</li>
+<li>区域间访问控制</li>
+<li>敏感隔间信息设施(SCIF)</li>
+</ul>
+<h4 id="HVAC相关"><a href="#HVAC相关" class="headerlink" title="HVAC相关"></a>HVAC相关</h4><ol>
+<li>电力管理设备<ul>
+<li>浪涌保护器、电源调节器、UPS、发电机。</li>
+</ul>
+</li>
+<li>关键术语 <ul>
+<li>故障（瞬时断电）、停电（完全断电）、尖峰&#x2F;浪涌（电压异常）。</li>
+</ul>
+</li>
+<li>噪音</li>
+<li>温度、湿度和静电 <ul>
+<li>热通道&#x2F;冷通道.温度：15~32℃。</li>
+<li>湿度：20%~80%（过高腐蚀设备，过低产生静电）。</li>
+<li>静电防护：抗静电地毯+湿度控制。</li>
+</ul>
+</li>
+</ol>
+<h4 id="火灾预防、检测和抑制"><a href="#火灾预防、检测和抑制" class="headerlink" title="火灾预防、检测和抑制"></a>火灾预防、检测和抑制</h4><ol>
+<li>火灾三要素<ul>
+<li>燃料、高温、氧气。</li>
+</ul>
+</li>
+<li>四个阶段<ul>
+<li>初始（电离反应）、烟雾、火焰、高温阶段。</li>
+</ul>
+</li>
+<li>灭火系统<ul>
+<li><p>水抑制系统：湿管、干管、洪水、预作用系统。</p>
+<blockquote>
+<p>预作用灭火系统分两步启动，一旦发现火灾的早期迹象，管道就会充满水；但在喷头上的热传感器触发第二阶段之前，系统不会喷水。</p>
+</blockquote>
+</li>
+<li><p>气体排放系统：CO₂、FM-200（无害气体）。</p>
+</li>
+<li><p>检测联动：触发告警后自动通知消防部门并启动灭火。</p>
+</li>
+</ul>
+</li>
+<li>意识和培训</li>
+<li>火灾检测系统<ul>
+<li>固定温度检测</li>
+<li>火焰驱动</li>
+<li>烟雾驱动</li>
+<li>初始烟雾检测</li>
+</ul>
+</li>
+<li>水抑制系统<ul>
+<li>湿管、干管、洪水、<mark class="tag-plugin colorful mark" color="red">预作用</mark></li>
+</ul>
+</li>
+<li><mark class="tag-plugin colorful mark" color="red">气体排放系统</mark>
+<ul>
+<li>CO2、哈龙、FM-200</li>
+</ul>
+</li>
+<li>灭火系统的影响</li>
+</ol>
+<h3 id="实施和管理物理安全"><a href="#实施和管理物理安全" class="headerlink" title="实施和管理物理安全"></a>实施和管理物理安全</h3><h4 id="边界安全控制"><a href="#边界安全控制" class="headerlink" title="边界安全控制"></a>边界安全控制</h4><ol>
+<li>围栏（Fences）<ul>
+<li>实体（水泥墙）或不可见形式（激光）。</li>
+<li>边界入侵检测和评估系统(PIDAS)（监狱外围应用）。</li>
+</ul>
+</li>
+<li>门（Gates）<ul>
+<li>配合围栏使用，数量最少化，配备安保或摄像头。</li>
+</ul>
+</li>
+<li>旋转门（Turnstiles）<ul>
+<li>单向通行控制，常见于火车站、机场。</li>
+</ul>
+</li>
+<li>门禁前厅&#x2F;人员陷阱&#x2F;陷阱门（Access Control Vestibule）<ul>
+<li>陷阱门（Mantrap）：<mark class="tag-plugin colorful mark" color="red">双道门设计防止尾随。</mark></li>
+</ul>
+</li>
+<li>安全隔离桩（Security Bollards）<ul>
+<li>阻止车辆闯入，自动升降式常见于重要设施。</li>
+</ul>
+</li>
+<li>路障（Barricades）<ul>
+<li>控制行人&#x2F;车辆通行（临时或永久）。</li>
+</ul>
+</li>
+<li>照明（Lighting）<ul>
+<li>威慑作用，覆盖出入口与围墙周边。</li>
+</ul>
+</li>
+<li>安保人员与警犬<ul>
+<li>唯一主动干预措施，成本高且依赖稳定性。</li>
+</ul>
+</li>
+<li>机器哨兵（Robot Sentries） <ul>
+<li>自动巡逻设备搭载传感器，实时探测异常。</li>
+</ul>
+</li>
+</ol>
+<h4 id="内部安全控制"><a href="#内部安全控制" class="headerlink" title="内部安全控制"></a>内部安全控制</h4><ol>
+<li>钥匙与组合锁<ul>
+<li>预设锁：易受shimming、bumping攻击。</li>
+<li>可编程锁：支持键盘、智能卡、电子门禁（EAC）。</li>
+</ul>
+</li>
+<li>环境与生命安全 <ul>
+<li>人命优先：制定乘员应急计划（OEP）。</li>
+<li>设施环境安全</li>
+<li>业务连续性：BCP&#x2F;DRP解决IT与业务恢复问题。</li>
+</ul>
+</li>
+<li>监管要求<ul>
+<li>物理安全需符合ISO 27001、GDPR等合规标准。</li>
+</ul>
+</li>
+<li><mark class="tag-plugin colorful mark" color="red">物理安全的关键绩效指标KPI</mark>
+<ul>
+<li>入侵事件率、安保响应时间、设备故障修复时间。</li>
+</ul>
+</li>
+</ol>
+<h2 id="错题集-4"><a href="#错题集-4" class="headerlink" title="错题集"></a>错题集</h2><ol>
+<li><p>在评估设施的安全性或设计新设施时,系统性地确定任务关键性应用程序、流程、运营以及所有必要的支撑元素之间的关系的方法是什么？<br>A. 日志文件审计<br>B. 关键路径分析<br>C. 风险分析<br>D. 盘点库存</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>B,关键路径分析是在评估设施安全性或设计新设施时,识别任务关键性应用程序、流程、运营以及其他必要支撑元素间关系的系统性工作.日志文件审计有助于检测违规行为,让用户承担责任,但不是安全设施设计元素.风险分析通常涉及设施设计,但它是根据发生率和后果评估资产面临的威胁.</p><p>盘点库存是设施和设备管理的一个重要部分,但不是整个设施设计的要素.</p></div></details></div>
+</li>
+<li><p>以下哪项是关于安全摄像头的正确描述?(选择所有适用的选项)<br>A. 摄像机的位置应能监视出入口,允许授权或访问级别发生变化.<br>B. 关键资产和资源周围不需要摄像头,也不需要在停车场和人行道等公共区域提供额外保护.<br>C. 摄像机的位置应确保所有外墙、入口和出口以及内部走廊都能提供清楚的视野.<br>D. 为了提供威慑效果,安全摄像头应该是公开和明显的.</p>
+<p>E. 安全摄像头有一个固定的录像区域.</p>
+<p>F. 一些摄像系统包括系统级芯片(SoC)或嵌入式组件,并且能够执行各种特殊功能,例如延时记录、跟踪、面部识别、目标检测、红外或色彩过滤记录.</p>
+<p>G. 运动检测或传感摄像头始终能够区分人和动物.</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>ACF,真是陈述包括:</p><p>选项A摄像机应放置在允许授权或访问级别发生变化的出入口</p><p>选项C摄像机的位置应确保所有外墙、出入口以及内部走廊都能提供清楚的视野</p><p>选项F一些摄像系统包括系统级芯片(SoC)或嵌入式组件,并且能够执行各种特殊功能,例如延时记录、跟踪、面部识别、目标检测、红外或色彩过滤记录.</p><p>其余选项不正确,正确表述是:</p><p>选项B应使用摄像机监控重要资产和资产周围的活动,并在停车场和人行道等公共区域提供额外保护.</p><p>选项D安全摄像头可以是公开和明显的,以提供威慑效果,或者是隐蔽和暗藏的,主要提供侦查效果</p><p>选项E一些摄像头是固定的,而另一些支持远程控制自动摇摄、倾斜和变焦(PTZ);</p><p>选项G简单的运动识别或运动触发相机可能会被动物、鸟类、昆虫、天气或树叶所愚弄.</p></div></details></div>
+</li>
+<li><p>最近的一次安全策略更新限制了从外部带进来的便携式存储设备的使用.为了对此进行补偿,已实施介质存储管理流程.对存有可重用可移动介质的存储设施来说,下一种不是典型的安全手段?<br>A. 设置保管员或托管员<br>B. 采用检入&#x2F;检出流程<br>C. 哈希<br>D. 对归还的介质做净化处理</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>C,哈希并不是可重用移动存储介质的标准安全措施.</p><p>哈希主要用于可重用移动存储介质的数据清洗过程,以验证数据集的完整性.</p><p>介质存储装置的安全手段包括:设置托管员、使用检入&#x2F;检出流程、对归还的介质做净化处理.</p></div></details></div>
+</li>
+<li><p>你正在绘制整个建筑中网络电缆的关键路径.在制订电缆设备管理策略时,你需要确保主布线图包括以下哪些项目并做出标记?(选择所适用的选项.)<br>A. 访问控制门厅<br>B. 接入设施<br>C. 设备间<br>D. 消防逃生通道</p>
+<p>E. 骨干配线系统</p>
+<p>F. 电信机房</p>
+<p>G. UPS</p>
+<p>H. 水平配线系统</p>
+<p>I.   装卸货物平台</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>BCEFH,电缆设备管理策略的要素包括接入设施(即分界点)、设备间、骨干配线系统、电信机房好水平配线系统的信息.其他选项不是电缆设备的管理要素.因此,在电缆图纸上不需要访问控制前厅、消防逃生通道、UPS和装卸货区.</p></div></details></div>
+</li>
+<li><p>哪一类水消防系统最适合计算机设备?<br>A. 湿管系统<br>B. 干管系统<br>C. 预响应系统<br>D. 密集洒水系统</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>C,预响应系统是计算机设施的最佳水基灭火系统,提供了在假警报或错误触发警报时防止水释放的机会.湿管、干管和密集洒水系统等选项使用单一出发机制,无法防止意外放水.</p></div></details></div>
+</li>
+<li><p>贵公司每年都有地方当局对火灾探测和灭火系统进行检查.你开始与首席检查员对话,他们问:”水基灭火系统误报的最常见的原因是什么?”那么,你如何回答?<br>A. 缺水<br>B. 人<br>C. 电离检测器<br>D. 把探测器装在吊顶里</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>B,水消防系统最常见的误报原因是人为错误.如果在发生火灾后关闭水源,却又忘记打开,会给将来带来安全隐患.同样在没有火情时,错误触发消防系统的行为也会引发办公室破坏性放水损失.</p><p>缺水是一个问题,但不是误报原因.电离检测器非常可靠,因此通常不是误报事件的原因.</p><p>探测器可放置吊顶内,以监控该空间;如果没有在房间的主要区域放置另一个探测器,也有问题,因为如果只在吊顶内装探测器,则可能导致假阳性问题.</p></div></details></div>
+</li>
+<li><p>以下哪项是气体灭火系统的优点?(选出所有适用的选项.)<br>A. 可在整个公司设施中部署<br>B. 对计算机系统造成的损坏最小<br>C. 通过排除氧气灭火<br>D. 能够比排水系统更快地灭火.</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>BCD,气体灭火的好处包括:对计算机系统造成的损害最小,以及通过排除氧气快速灭火.此外,气体灭火可能比水基灭火系统更有效、更快.气体灭火系统只能在人员最少的情况下使用,因为它去除了空气中的氧气.</p></div></details></div>
+</li>
+<li><p>在为环境设计物理安全性时,应重点关注控件应用的功能顺序.以及哪项是六种常见物理安全控制机制的正确顺序?<br>A. 决定、延迟、拒绝、检测、威慑、判定<br>B. 威慑、拒绝、检测、延迟、判定、决定<br>C. 拒绝、威慑、延迟、检测、决定、判定<br>D. 决定、检测、拒绝、判定、威慑、延迟</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>B,六中常见的物理安全控制机制的正确顺序是:威慑、拒绝、检测、延迟、判定、决定.其他选项不正确.</p></div></details></div>
+</li>
+<li><p>设备故障是导致可用性丧失的常见原因.在制订保持可用性的策略时,通常必须了解每项资产和业务流程的关键性以及组织抵御不利条件的能力.请将术语与定义相比配.</p>
+<p>I.  MTTF</p>
+<p>II.  MTTR</p>
+<p>III. MTBF</p>
+<p>IV. SLA</p>
+<p>1.明确规定了供应商在设备故障紧急情况下提供的响应时间</p>
+<p>2.第一次和后续故障之间的间隔时间估值</p>
+<p>3.特定操作环境下设备的典型预期寿命</p>
+<p>4.对设备进行维护所需的平均时长</p>
+<p>A. I-1,II-2,III-4,IV-3<br>B. I-4,II-3,III-1,IV-2<br>C. I-3,II-4,III-2,IV-1<br>D. I-2,II-1,III-3,IV-4</p>
+ <div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>C,平均故障时间(MTTF)是特定操作环境下设备的典型预期寿命.</p><p>平均恢复时间(MTTR)是在设备上执行修复所需的平均时长.</p><p>平均故障间隔时间(MTBF)是对第一次和后续故障之间的间隔时间估值.服务水平协议(SLA)明确规定了供应商在故障紧急情况下提供的响应时间.</p></div></details></div>
+</li>
+<li><p>由于最近的一次建筑入侵,设施安全已成为当务之急.你是安全委员会成员,该委员会将会如何改善组织的物理安全状况提出建议.最常见的边界安全设备或机制是什么?<br>  A. 安全警卫<br>  B. 围栏<br>  C. CCTV<br>  D. 照明</p>
+  <div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>  D,照明通常被认为是最常用的物理安全机制。然而，照明只是一种威慑，而不是一种强大的威慑。不应将其用作主要或唯一的保护机制，除非在威胁程度较低的地区。整个场所无论内外，都应该照明良好。这便于识别人员，更容易发现入侵。</p><p>安全警卫不像照明那样常见，但在安全方面更灵活。</p><p>围栏不像照明那样常见，但它们起到了预防性控制的作用。</p><p>CCTV 不像照明那样常见，而是充当一种检测控制。  </p></div></details></div>
+</li>
+<li><p>你的组织刚刚为一个重要客户签订了一份新合同.这需要增加主要设施的生产操作,该设施将用于容纳有价值的数字和实物资产.你需要确保这些新资产得到适当的保护.下列哪一项us安全警卫的不足之处?<br> A. 安全警卫通常不了解设施的运营范围<br> B. 不是所有的环境和设施都适合使用安全警卫<br> C. 不是所有安全警卫都可靠<br> D. 预筛选、团建和训练并不能保证安全警卫的能力和可靠性</p>
+  <div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>  A,安全警卫通常不知道设施内的运营范围,因此不具备应对各种情况的能力.虽然这被认为是一个缺点，但对设施内的运营范围缺乏了解也可以被认为是一个优点，因为这文持了这些运营的保密性，从而有助于减少保安人员涉嫌泄露机密信息的可能性。因此，即使这个答案选项模棱两可，它仍然比其他三个选项好。</p><p>另外三个选项是保安的缺点。并非所有环境和设施都可配备保安，因为人与设施的实际布局、设计、位置或建筑不相容。非不是所有的保安都是可靠的。</p><p>预筛选、团建和训练并不能保证你最终不会遇到低效或不可靠的保安。</p></div></details></div>
+</li>
+<li><p>在为拟建设施设计安全计划时,你被告知预算刚刚减少了30%.但是,他们没有调整或减少安全要求.室内和室外使用的物理访问控制设备最常见和最便宜的形式是什么?<br>A. 照明<br>B. 安全警卫<br>C. 钥匙锁<br>D. 围栏</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>C,钥匙锁是用于室内和室外的最常见也是最廉价的物理访问控制设备.照明、安全警卫以及围栏要更贵一些.围栏也主要用于户外.</p></div></details></div>
+</li>
+<li><p>在实施动作检测系统以监控未经授权进入建筑物安全区域的行为时,你意识到当前的红外探测器导致了大量误报.你需要另一个选项替换他们。哪一种类型的动作探测器能感知到被监视物体周围电场或磁场的改变?<br>A. 波动<br>B. 光电</p>
+<p>C. 热量<br>D. 电容</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>D,电容动作探测器检测受监控对象周围电场或磁场的变化。波动动作探测器将稳定的低超声波或高频微波信号传输到监控区域，并监控反射模式中的显著或有意义的变化或干扰。光电动作探测器监测监控区域可见光水平的变化。光电动作探剥器通常部署在没有窗户且保持黑暗的室内，红外 PIR（被动红外）或基于热量的动作探测器检测受监测域内热量水平和模式的显著或有意义的变化</p></div></details></div></li>
+</ol>
+<h2 id="域三错题集"><a href="#域三错题集" class="headerlink" title="域三错题集"></a>域三错题集</h2><ol>
+<li><p>Matthew是一家咨询公司的安全管理员，他需要实施访问控制，根据用户以前的活动限制他们的访问。例如，一旦某个顾问访问了属于咨询客户Acme Cola的数据，他就可能不再访问属于Acme任何竞争对手的数据。什么样的安全模式最符合Matthew的需求？<br>A. Clark-Wilson<br>B. Biba<br>C. Bell-LaPadula<br>D. Brewer-Nash</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>D,Brewer-Nash模型允许访问控制根据用户的行为动态改变，它经常被用在像Matthew这样的环境中，在属于不同客户的数据之间实现“中国墙”。</p></div></details></div>
+</li>
+<li><p>Harry想从一个使用n分之m控制的数据库中检索一个丢失的加密密钥，m &#x3D; 4，n &#x3D; 8。检索密钥所需的托管代理的最小数量是多少？<br>A. 2<br>B. 4<br>C. 8<br>D. 12</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>B,在m&#x2F;n控制系统中，n个可能的托管代理中必须至少有m个就位，才能协作从托管数据库中检索加密密钥。</p></div></details></div>
+</li>
+<li><p>Bob是美国联邦政府的安全管理员，希望选择一种数字签名方法，该方法是FIPS 186-4下联邦数字签名标准的批准部分。以下哪一种加密算法不适合用于数字签名？<br>A. 2<br>B. 4<br>C. 8<br>D. 12</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>B,数字签名标准批准了三种用于数字签名的加密算法:RSA算法;椭圆曲线数字签名算法ECDSA (Elliptic Curve DSA)和Edwards曲线数字签名算法EdDSA (Edwards Curve Digital Signature algorithm)。HAVAL是散列函数，不是加密算法。虽然散列函数用作数字签名过程的一部分，但它们不提供加密。</p></div></details></div>
+</li>
+<li><p>什么概念描述了组织对其控制满足安全要求的信心程度？<br>A. Trust,信任<br>B. Credentialing,认证<br>C. Verification,核验<br>D. Assurance,保证</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>D,保证是组织对其安全控制得到正确实施的信心程度，它必须持续的被监控和被重新验证。</p></div></details></div>
+</li>
+<li><p>Chris想验证他下载的软件包是否与原始版本匹配。如果他认为技术高超的攻击者可能已经用包含后门的版本替换了软件包，他应该使用什么散列工具？<br>A. MD5<br>B. 3DES<br>C. SHA1<br>D. SHA 256</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>D,MD5已被证实可有意构造冲突，针对SHA的真实冲突攻击也在2017年初宣布。3DES不是一个哈希工具，剩下SHA 256(有时称为SHA 2)作为Chris在这个列表中唯一现实的选择。</p></div></details></div>
+</li>
+<li><p>以下哪一个密码学目标可以防范当设备丢失或被盗导致的风险？<br>A. Nonrepudiation,不可否认性<br>B. Authentication,认证<br>C. Integrity,完整性<br>D. Confidentiality,保密性</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>D,当设备丢失或被盗时，最大的风险是设备上包含的敏感数据会落入不法人员之手。保密性可以防范这种风险。不可否认性是指消息的接收者可以向第三方证明发起者的身份。认证是证明身份的一种手段。完整性表明信息自传输以来没有被修改过。</p></div></details></div>
+</li>
+<li><p>Joanna想审查一下她的组织用于楼宇控制的工业控制系统的状况。她应该查询什么类型的系统？<br>A. SCADA<br>B. DSS<br>C. BAS<br>D. ICS-CSS</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>A,监控和数据采集系统，亦即SCADA系统，提供了一个图形界面来监控工业控制系统(ICS)。Joanna应该谋求对其组织的监控和数据采集系统的访问。</p></div></details></div>
+</li>
+<li><p>Florian和Tobias希望开始使用对称密码系统进行通信，但他们没有预先安排的秘密，也无法亲自会面交换密钥。他们可以使用什么算法来安全地交换密钥？<br>A. IDEA<br>B. Diffie-Hellman<br>C. RSA<br>D. MD5</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>B,Diffie-Hellman算法使得在公共网络上安全交换对称加密密钥成为可能。IDEA和RSA是加密算法。MD5是一个散列函数。</p></div></details></div>
+</li>
+<li><p>Colin是一家非营利组织的首席隐私官，正在协助团队过渡到“按设计保护隐私”的方法。以下哪一项不是团队应该接受的隐私设计原则之一？<br> A. Proactive, not reactive 主动,而不是被动<br> B. Privacy as the default setting 隐私作为默认设置<br> C. End-to-end security 端到端安全性<br> D. Defense in depth  深度防御</p>
+ <div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p> D,虽然深度防御是一个强有力的安全原则，但它不是“设计隐私”的一个组成部分。以下是设计隐私模型的七个原则:</p><ol><li>Proactive, not reactive; preventive, not remedial  主动，而不是被动；预防，而不是补救</li><li>Privacy as the default setting 隐私作为默认设置</li><li>Privacy embedded into design 嵌入设计的隐私</li><li>Full functionality—positive-sum, not zero-sum  全部功能——正和，而不是零和</li><li>End-to-end security—full lifecycle protection 端到端安全性——全生命周期保护</li><li>Visibility and transparency—keep it open 可见性和透明度——保持开放</li><li>Respect for user privacy—keep it user-centric 尊重用户隐私——保持以用户为中心</li></ol></div></details></div>
+</li>
+<li><p>Lana最近在她的组织中实施了一个新的流程，负责授予用户系统访问权限的经理不允许参与对访问权的审查。她在执行什么原则？<br>  A. Two-person control  双人控制<br>  B. Least privilege 最小特权<br>  C. Privilege creep 特权蔓延<br>  D. Segregation of duties 职责分离</p>
+  <div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>D,职责分离原则规定，任何人都无权执行两项结合在一起会带来安全风险的任务。在本题描述的情况下，审计自己的工作会产生利益冲突，所以Lana实行了职责分离。两人控制密切相关，但它需要两个不同的员工批准一项行动。如果她要求两名经理批准新账户，这将是两人控制的一个例子。</p></div></details></div>
+</li>
+<li><p>以下关于系统开发的表述中，哪些是正确的？(选择所有适用的选项。)<br>  A. Systems should be designed to operate in a secure manner if the user performs no other configuration. 如果用户不执行其他配置，系统应设计为以安全的方式运行。<br>   B. Systems should be designed to fall back to a secure state if they experience an error. 系统应该被设计成在遇到错误时返回安全状态。<br>   C. Systems should be designed to incorporate security as a design feature. 系统的设计应该将安全性作为设计特征。<br>   D. Systems should be designed in a manner that keeps their functionality as simple as possible. 系统应该以尽可能简单的方式设计</p>
+   <div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>ABCD,所有这些说法都是正确的。如果用户不执行其他配置，系统应该设计为以安全的方式运行，这是安全默认原则。如果遇到错误，系统应该设计回到安全状态，这是安全的处理失败原则。系统的设计应该将安全性作为一个设计特征，这种思想就是设计安全原则。系统应该以尽可能简单的方式设计，这就是保持简单的原则。</p></div></details></div>
+</li>
+<li><p>Jake在一家研究机构工作，该机构正在寻求部署一个网格计算系统，该系统循环利用用户工作站，以执行需要高性能计算的研究任务。与此操作相关的最大风险是什么？<br> A. Data confidentiality    数据保密性<br> B. Isolation breach          隔离缺口<br> C. Data integrity              数据完整性<br> D. Data availability          数据可用性</p>
+ <div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>B,系统的设计可以保护数据的机密性、完整性和可用性。网格中包含的研究工作站来自内部用户，最大限度地降低了分发数据的风险。然而，分布式计算客户端中的隔离漏洞可能是灾难性的，会让危及控制器的人控制组织中的每台设备。</p></div></details></div>
+</li>
+<li><p>Adam最近在NTFS文件系统上配置了权限，通过单独列出每个用户来描述不同用户对文件的访问权限。Adam创建了什么？<br>A. An access control list            访问控制列表<br>B. An access control entry        访问控制条目<br>C. Role-based access control    基于角色的访问控制<br>D. Mandatory access control    强制访问控制</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>A,Adam创建了一个可以访问该文件的个人用户列表。这是一个访问控制列表，由多个访问控制条目组成。它包括用户的姓名，因此它不是基于角色的，并且Adam能够修改列表，因此它不是强制访问控制。</p></div></details></div>
+</li>
+<li><p>Kyle被授权进入使用系统高级(System High)模式的军用计算机系统。以下关于Kyle的安全许可要求，哪些是不对的？<br>A. Kyle must have a clearance for the highest level of classification processed by the system, regardless of his access.    Kyle必须获得系统处理的最高级别分类的许可,无论他的访问权限如何.<br>B. Kyle must have access approval for all information processed by the system.  Kyle必须获得系统处理的所有信息的访问许可.</p>
+</li>
+</ol>
+<pre><code>C. Kyle must have a valid need to know for all information processed by the system.  Kyle必须对系统处理的所有信息有充分的了解需求.
+D. Kyle must have a valid security clearance.  Kyle必须有有效的安全许可.
+&#123;% folders %&#125;
+
+  <!-- folder 答案 -->
+  C,对于在“系统高级(System High)”模式下运行的系统，用户必须拥有对系统处理的所有信息有效的安全凭证，对系统处理的所有信息拥有访问许可，并且对系统处理的某些（但不一定是全部）信息拥有有效的知情权。
+  &#123;% endfolders %&#125;
+</code></pre>
+<ol start="15">
+<li><p>在供应商向客户提供存储服务的基础架构即服务(IaaS)环境中，谁通常负责从下架的驱动器中删除敏感数据？<br>A. Customer’s security team  客户的安全团队<br>B. Customer’s storage team  客户的存储团队<br>C. Customer’s vendor management team  客户的供应商管理团队<br>D. Vendor  供应商</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>D,在基础设施即服务环境中，安全职责遵循一种共享责任模式。由于供应商负责管理存储硬件，因此当驱动器下架停止使用时，供应商将承担销毁或擦除驱动器的责任。但是，在使用供应商的存储服务之前，客户仍有责任验证供应商的清理程序是否满足其要求。</p></div></details></div>
+</li>
+<li><p>以下哪个系统保证流程提供了独立的第三方对系统控制的评估，并可能会受到许多不同组织的信任？<br>A. Certification     认证<br>B. Definition         定义<br>C. Verification       验证<br>D. Accreditation   认可</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>C,验证verification过程类似于认证certification过程，因为它核验安全控制。验证verification更进一步的通过第三方测试服务和撰写结论（就是所谓第三方报告啦），更容易被其他组织信任接受。认可Accreditation是管理层正式接受评估系统的行为，而不是评估系统本身。</p></div></details></div>
+</li>
+<li><p>Darcy的组织正在部署无服务器计算技术，以更好地满足开发人员和用户的需求。在无服务器模式下，谁通常负责配置操作系统安全控制？<br>A. Software developer  软件开发人员<br>B. Cybersecurity professional  网络安全专家<br>C. Cloud architect  云架构师<br>D. Vendor  供应商</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>D,在无服务器计算模型中，供应商不向其客户公开操作系统的细节。因此在云计算的共同责任模式下，供应商负有操作系统安全配置的全部责任。</p></div></details></div>
+</li>
+<li><p>Gordon担心黑客可能会利用范·埃克辐射现象远程读取其设施内受限工作区的计算机监视器内容。什么技术可以抵御这种类型的攻击？<br>A. TCSEC<br>B. SCSI<br>C. GHOST<br>D. TEMPEST</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>D,TEMPEST计划创造的技术不容易受到范·埃克辐射泄漏攻击，因为它减少或抑制了自然电磁辐射。</p></div></details></div>
+</li>
+<li><p>Jorge认为攻击者已经从其组织的一个活动目录服务器中获得了Kerberos服务帐户的哈希值。这会导致什么类型的攻击？<br>A. Golden ticket  黄金票据<br>B. Kerberoasting Kerberoast攻击<br>C. Pass the ticket  票据传递<br>D. Brute force  暴力破解</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>A</p><ul><li>黄金票证攻击使用Kerberos服务帐户的哈希在活动目录环境中创建票证。</li><li>Kerberoasting身份验证攻击依赖于收集的TGS票证。</li><li>票据传递攻击依赖于从lsass进程中获取的票证。</li><li>暴力攻击依赖于没有任何附加信息的随机猜测。</li></ul></div></details></div>
+</li>
+<li><p>Lauren实施ASLR来防止系统妥协。她用了什么技术来保护她的系统？<br>A. Encryption  加密<br>B. Mandatory access control  强制访问控制<br>C. Memory address randomization     存储器地址随机化<br>D. Discretionary access control      自主访问控制</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>C,Lauren实施了寻址空间布局随机化（ASLR）技术，这是一种随机化内存位置的内存保护方法，可以防止攻击者通过溢出或堆栈穿透stack smashing攻击利用已知的地址空间和连续的内存区域来执行代码 </p></div></details></div>
+</li>
+<li><p>John和Gary正在商谈一项交易，John必须向加里证明他可以访问一个系统。他启用了如下的“魔术门”场景的电子版本。John用的是什么技巧？</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/f0b209d32fe54ef5899494aa7f29eab4.png" data-fancybox="true" style="width:400px;"/></div></div>
+
+<p>A. Split-knowledge proof  分裂知识（分持机密）证明</p>
+<p>B. Zero-knowledge proof  零知识证明</p>
+<p>C. Logical proof  逻辑证明</p>
+<p>D. Mathematical proof  数学证明</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>B,在零知识证明中，一个人可以在不实际披露敏感信息的情况下，向另一个人证明其能够实现需要敏感信息的结果。 </p></div></details></div>
+</li>
+<li><p>Howard正在为他的组织选择一种加密算法，他希望选择一种支持创建数字签名的算法。以下哪种算法能满足他的要求？</p>
+<p>A. RSA</p>
+<p>B. 3DES</p>
+<p>C. AES</p>
+<p>D. Blowfish</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>A,只有在使用非对称加密算法时，数字签名才是可能的。在列出的算法中，只有RSA是非对称的，并且支持数字签名功能。 </p></div></details></div>
+</li>
+<li><p>在传输层安全中，哪种类型的密钥用于加密网络服务器和客户端之间的实际通信内容？</p>
+<p>A. Ephemeral session key  临时会话密钥</p>
+<p>B. Client’s public key           客户端的公钥</p>
+<p>C. Server’s public key          服务器的公钥</p>
+<p>D. Server’s private key        服务器的私钥</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>A,在TLS中，服务器和客户端都使用临时的对称会话密钥进行通信。他们使用非对称加密技术交换密钥，但所有加密内容都使用对称加密技术进行保护。 </p></div></details></div>
+</li>
+<li><p>Tommy正计划为他的数据中心的一个服务器机架实施一个电源调节不间断电源。如果持续时间过长，UPS将无法防止以下哪种情况？？<br>A. Fault         故障<br>B. Blackout  断电<br>C. Sag           电压不足&#x2F;衰变<br>D. Noise       噪音</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>B,不间断电源旨在防止短期电力损失，如电力故障。当它们进行功率调节时，它们也能够防止电压不足和噪音。不间断电源的电池寿命有限，在持续停电期间无法保持连续运行。</p></div></details></div>    
+</li>
+<li><p>以下哪一个湿度值在数据中心运行的可接受范围内？<br>A. 0%<br>B. 10%<br>C. 25%<br>D. 40%</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>D,数据中心的湿度应保持在40%至60%之间。低于此范围的值会增加静电风险，而高于此范围的值可能会产生损坏设备的湿气。</p></div></details></div>    
+</li>
+<li><p>Kristen的组织遭受了勒索软件的感染，并失去了对关键业务数据的访问。她正在考虑支付赎金以重新获得她的数据。关于这笔付款，以下哪些陈述是正确的？(选择所有适用的选项。)<br>A. Payment of the ransom may be illegal.  支付赎金可能是非法的.<br>B. Payment of the ransom may result in further demands for payments.  支付赎金可能会导致进一步的付款要求.<br>C. Payment of the ransom guarantees access to the decryption key.  赎金的支付保证了对解密密钥的访问.<br>D. Payment of the ransom may cause a data breach.  支付赎金可能会导致数据泄露data breach.</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>AB,支付赎金通常会获得解密密钥的释放，但这无论如何都无法保证。支付赎金与未来数据泄露之间也没有联系，因为攻击者可能会选择发布机密信息，而不管是否支付赎金。根据适用的司法管辖区，根据反腐败法或针对恐怖组织的禁运，支付赎金可能是非法的。例如，美国外国资产管制办公室(OFAC)在2020年发布了一项咨询意见，称支付赎金可能违反制裁。支付赎金还可能导致攻击者“标记”受害者，并要求支付更多的赎金以换取继续访问其数据。</p></div></details></div>    
+</li>
+<li><p>作为法证调查过程的一部分，Matt在操作之前从证据存储设施签出了驱动器和其他证据。他正在创建什么类型的文档？<br>A. Criminal  刑事的<br>B. Chain of custody  监管链<br>C. Civil  民事的<br>D. CYA  CYA（Cover Your Ass的缩写）</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>B,Matt正在维护电子证据的保管链文件。如果他的组织需要证明他们处理的数字证据没有被篡改，这可能很重要。一个更好的过程将涉及多人共同操作，以确保没有篡改是可能的。</p></div></details></div>    
+</li>
+<li><p>Alison正在检查银行网站提供给她的数字证书。以下哪一项要求不是她信任数字证书所必需的？<br>A. She knows that the server belongs to the bank.  她知道服务器属于银行.<br>B. She trusts the certificate authority.  她信任证书颁发机构.<br>C. She verifies that the certificate is not listed on a CRL.  她验证证书没有列在CRL上.<br>D. She verifies the digital signature on the certificate.  她验证证书上的数字签名.</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>A,数字证书的意义就在于向Alison证明服务器是属于银行的，所以她不需要事先有这个信任。要信任证书，她必须验证证书上的CA数字签名，信任CA，验证证书没有列在CRL上，并验证证书包含银行的名称。</p></div></details></div>
+</li>
+<li><p>Ron正在调查一起发生在高度安全的政府设施的安全事件。他认为加密密钥在攻击过程中被盗，并找到了攻击者使用干冰冻结加密组件的证据。攻击者可能尝试了什么类型的攻击？<br>A. Side channel attack  侧通道攻击<br>B. Brute-force attack  暴力攻击<br>C. Timing attack  基于时间（时机）的攻击<br>D. Fault injection attack  故障注入攻击</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>D,在故障注入攻击中，攻击者试图通过造成某种类型的外部故障来破坏加密设备的完整性。例如，他们可能会使用高压电、高温或低温或其他因素来引发能破坏设备安全性的故障。侧信道攻击试图使用有关系统活动的信息，并检索主动加密的信息。暴力攻击会尝试密钥或口令的所有可能的有效组合。在基于时间的攻击中，攻击者精确地测量密码操作需要多长时间才能完成，从而获得可能被用来破坏其安全性的密码过程的信息。</p></div></details></div>
+</li>
+<li><p>在零信任网络体系结构中，哪个组件负责根据规则和外部数据源制定策略决策?<br>A. Policy engine  策略引擎<br>B. Policy administrator 策略管理员<br>C. Policy enforcement point 策略执行点<br>D. Subject  主体</p>
+<div class="tag-plugin colorful folders" ><details class="folder" index="0"><summary><p>答案</p>
+</summary><div class="body"><p>A,在零信任网络体系结构中，策略引擎负责根据规则和外部数据源做出策略决策。它使用一种信任算法来决定是否授予、拒绝或撤销访问，同时考虑身份管理、威胁情报、安全信息和事件管理(SIEM)数据等因素。另一方面，策略管理员根据策略引擎做出的决定采取行动，建立或删除通信路径并管理特定于会话的凭据。策略实施点根据策略管理员的指令控制对资源的访问，从而实施这些决策。最后，主体是指请求访问或试图使用权限的用户、服务或系统，与决策无关。</p></div></details></div></li>
+</ol>
+
+<div class="article-footer fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文由 <a href="https://jiangjiyue.github.io/">kill3r</a> 原创,采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://jiangjiyue.github.io/2025/06/28/21265b0e/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://jiangjiyue.github.io/2025/06/28/21265b0e/&title=域3-安全架构和工程 - SafeKiller Zone&pics=https://wordpress-1258894728.cos.ap-beijing.myqcloud.com/202506281518309.png&summary=系统架构
+系统（System）是实现某个目的而协同工作的一组事物。架构（Architecture）是用来描述某个目标的结构设计。因此，系统架构（System Architecture）是对如何设计特定组件并组合在一起执行某些操作的描述..."><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=域3-安全架构和工程 - SafeKiller Zone&amp;body=https://jiangjiyue.github.io/2025/06/28/21265b0e/"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://jiangjiyue.github.io/2025/06/28/21265b0e/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2025/05/14/25cbcc50/">域2-资产安全</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>您可能感兴趣的文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="/2025/05/14/25cbcc50/" title="域2-资产安全"><span class="title">域2-资产安全</span></a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body waline'>
+      
+
+<div id="waline_container" class="waline_thread"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs15">博客</span><a href="/">近期</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/tools/">工具</a></div><div class="sitemap-group"><span class="fs15">笔记</span><a href="/wiki/tags/DevOps/index.html">DevOps</a><a href="/wiki/tags/Vulnerability/index.html">常见漏洞分析</a><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></div><div class="sitemap-group"><span class="fs15">社交</span><a href="/friends/">友链</a><a href="/comments/">留言板</a></div><div class="sitemap-group"><span class="fs15">更多</span><a href="/about/">关于本站</a><a target="_blank" rel="noopener" href="https://github.com/JiangJiYue">GitHub</a></div></div><div class="text"><center>
+  <p>本破站由 <a href="/">@SafeKiller Zone</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客部分素材来源于网络，如有侵权请联系<a href="mailto:jiangjiyue1@gmail.com">jiangjiyue1@gmail.com</a>删除<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+  <!--不蒜子计数器-->
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span>本"页面"访问 <span id="busuanzi_value_page_pv"></span> 次 | 👀总访问 <span id="busuanzi_value_site_pv"></span> 次 | 总访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+  <br>
+  <span id="runtime_span"></span>
+  <script type="text/javascript">
+    // JavaScript for showing runtime here
+  </script>
+</center>
+<div style="display: flex;justify-content: center;align-items: center;margin: 10px;">
+  <a target="_blank" rel="noopener" href="https://notbyai.fyi/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/Written-By-Human-white.png" style="width:140px;height:50px;margin-right: 10px " id='notbyai'></a>
+  <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/website/by-nc-sa.eu.png" style="width:140px;height:50px"></a>
+</div>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84"><span class="toc-text">系统架构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%B3%BB%E7%BB%9F%EF%BC%88Client-based-Systems%EF%BC%89"><span class="toc-text">客户端系统（Client-based Systems）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF%E7%B3%BB%E7%BB%9F%EF%BC%88Server-based-System%EF%BC%89"><span class="toc-text">服务端系统（Server-based System）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%EF%BC%88DBMS%EF%BC%89"><span class="toc-text">数据库管理系统（DBMS）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%AB%98%E6%80%A7%E8%83%BD%E8%AE%A1%E7%AE%97%E7%B3%BB%E7%BB%9F%EF%BC%88HPC%EF%BC%89"><span class="toc-text">高性能计算系统（HPC）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E4%B8%9A%E6%8E%A7%E5%88%B6%E4%BD%93%E7%B3%BB%EF%BC%88ICS%EF%BC%89"><span class="toc-text">工业控制体系（ICS）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%99%9A%E6%8B%9F%E5%8C%96%E7%B3%BB%E7%BB%9F"><span class="toc-text">虚拟化系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1"><span class="toc-text">微服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A0%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%9E%B6%E6%9E%84"><span class="toc-text">无服务器架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%91%E8%AE%A1%E7%AE%97%E7%B3%BB%E7%BB%9F"><span class="toc-text">云计算系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%99%AE%E9%80%82%E7%B3%BB%E7%BB%9F%EF%BC%88Ubiquitous-Computing%EF%BC%89"><span class="toc-text">普适系统（Ubiquitous Computing）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%B3%BB%E7%BB%9F%EF%BC%88Embedded-System%EF%BC%89"><span class="toc-text">嵌入式系统（Embedded System）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%A9%E8%81%94%E7%BD%91%EF%BC%88IoT%EF%BC%89"><span class="toc-text">物联网（IoT）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%EF%BC%88Distributed-System%EF%BC%89"><span class="toc-text">分布式系统（Distributed System）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E7%B3%BB%E7%BB%9F%EF%BC%88Edge-Computing%EF%BC%89"><span class="toc-text">边缘计算系统（Edge Computing）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%94%99%E9%A2%98%E9%9B%86"><span class="toc-text">错题集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%86%E7%A0%81%E5%AD%A6%E5%9F%BA%E7%A1%80"><span class="toc-text">密码学基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%86%E7%A0%81%E5%AD%A6%E6%A0%B8%E5%BF%83%E7%9B%AE%E6%A0%87"><span class="toc-text">密码学核心目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%86%E7%A0%81%E5%AD%A6%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5"><span class="toc-text">密码学基础概念</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%9C%AF%E8%AF%AD"><span class="toc-text">基本术语</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99"><span class="toc-text">安全设计原则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E6%95%B0%E5%AD%A6%E6%A6%82%E5%BF%B5"><span class="toc-text">关键数学概念</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%8F%E5%85%B8%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF"><span class="toc-text">经典密码技术</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%86%E7%A0%81%E5%88%86%E7%B1%BB"><span class="toc-text">密码分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%89%E7%85%A7%E6%98%8E%E6%96%87%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95"><span class="toc-text">按照明文的处理方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%B0%E4%BB%A3%E5%AF%86%E7%A0%81%E5%AD%A6%E4%BD%93%E7%B3%BB"><span class="toc-text">现代密码学体系</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86"><span class="toc-text">对称加密</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86"><span class="toc-text">非对称加密</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%B7%E5%90%88%E5%8A%A0%E5%AF%86-%E6%95%B0%E5%AD%97%E4%BF%A1%E5%B0%81"><span class="toc-text">混合加密(数字信封)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%93%88%E5%B8%8C%E5%87%BD%E6%95%B0"><span class="toc-text">哈希函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%86%E7%A0%81%E7%AE%97%E6%B3%95%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E7%AE%A1%E7%90%86"><span class="toc-text">密码算法生命周期管理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D%E6%B5%81%E7%A8%8B"><span class="toc-text">数字签名流程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D%EF%BC%88Digital-Signature%EF%BC%89"><span class="toc-text">数字签名（Digital Signature）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MAC%EF%BC%88Message-Authentication-Code%EF%BC%89"><span class="toc-text">MAC（Message Authentication Code）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HMAC%EF%BC%88Hash-based-Message-Authentication-Code%EF%BC%89"><span class="toc-text">HMAC（Hash-based Message Authentication Code）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD%E5%AF%B9%E6%AF%94"><span class="toc-text">功能对比</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AC%E9%92%A5%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD%EF%BC%88PKI%EF%BC%89"><span class="toc-text">公钥基础设施（PKI）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E5%AD%97%E8%AF%81%E4%B9%A6%EF%BC%88Digital-Certificates%EF%BC%89"><span class="toc-text">数字证书（Digital Certificates）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%81%E4%B9%A6%E9%A2%81%E5%8F%91%E6%9C%BA%E6%9E%84%EF%BC%88CA%EF%BC%89%E4%B8%8E%E6%B3%A8%E5%86%8C%E6%9C%BA%E6%9E%84%EF%BC%88RA%EF%BC%89"><span class="toc-text">证书颁发机构（CA）与注册机构（RA）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%81%E4%B9%A6%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E7%AE%A1%E7%90%86"><span class="toc-text">证书生命周期管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%81%E4%B9%A6%E6%A0%BC%E5%BC%8F%E4%B8%8E%E5%AD%98%E5%82%A8"><span class="toc-text">证书格式与存储</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%B7%E5%90%88%E5%AF%86%E7%A0%81%E7%B3%BB%E7%BB%9F"><span class="toc-text">混合密码系统</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%86%E7%A0%81%E5%AD%A6%E5%BA%94%E7%94%A8"><span class="toc-text">密码学应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BE%BF%E6%90%BA%E8%AE%BE%E5%A4%87"><span class="toc-text">便携设备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6"><span class="toc-text">电子邮件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Web%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F"><span class="toc-text">Web应用程序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9A%90%E5%86%99%E6%9C%AF-Steganography"><span class="toc-text">隐写术(Steganography)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C"><span class="toc-text">网络</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E5%85%B4%E6%8A%80%E6%9C%AF"><span class="toc-text">新兴技术</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%86%E7%A0%81%E5%AD%A6%E6%94%BB%E5%87%BB"><span class="toc-text">密码学攻击</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%94%99%E9%A2%98%E9%9B%86-1"><span class="toc-text">错题集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99-1"><span class="toc-text">安全设计原则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E5%92%8C%E4%B8%BB%E4%BD%93"><span class="toc-text">对象和主体</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%81%E9%97%AD%E5%92%8C%E5%BC%80%E6%94%BE%E7%B3%BB%E7%BB%9F"><span class="toc-text">封闭和开放系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E7%BC%BA%E7%9C%81-%E9%BB%98%E8%AE%A4%E5%AE%89%E5%85%A8-Secure-Defaults"><span class="toc-text">安全缺省&#x2F;默认安全(Secure Defaults)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%85%E9%9A%9C%E5%AE%89%E5%85%A8-Fail-Securely"><span class="toc-text">故障安全(Fail Securely)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%9D%E6%8C%81%E7%AE%80%E5%8D%95-Keep-it-simple"><span class="toc-text">保持简单(Keep it simple)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9B%B6%E4%BF%A1%E4%BB%BB-Zero-Trust-vs-%E4%BF%A1%E4%BB%BB%E4%BD%86%E9%AA%8C%E8%AF%81"><span class="toc-text">零信任(Zero Trust) vs 信任但验证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%A3%E4%BB%BB%E5%85%B1%E6%8B%85-Shared-Responsibility"><span class="toc-text">责任共担(Shared Responsibility)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1%E9%9A%90%E7%A7%81-Privacy-by-Design-PbD"><span class="toc-text">设计隐私(Privacy by Design,PbD)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E8%AE%BF%E9%97%AE%E6%9C%8D%E5%8A%A1%E8%BE%B9%E7%95%8C-SASE"><span class="toc-text">安全访问服务边界(SASE)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A1%AE%E4%BF%9DCIA%E7%9A%84%E6%8A%80%E6%9C%AF"><span class="toc-text">确保CIA的技术</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E6%A8%A1%E5%9E%8B%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-text">安全模型基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%8F%E8%BF%B0%E5%AF%B9%E8%B1%A1%E5%AE%89%E5%85%A8%E5%B1%9E%E6%80%A7%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-text">描述对象安全属性的方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8A%B6%E6%80%81%E6%9C%BA%E6%A8%A1%E5%9E%8B"><span class="toc-text">状态机模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%B5%81%E6%A8%A1%E5%9E%8B"><span class="toc-text">信息流模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%9E%E5%B9%B2%E6%89%B0%E6%A8%A1%E5%9E%8B"><span class="toc-text">非干扰模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E5%90%88%E7%90%86%E8%AE%BA"><span class="toc-text">组合理论</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Take-Grant%E6%A8%A1%E5%9E%8B"><span class="toc-text">Take-Grant模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E7%9F%A9%E9%98%B5"><span class="toc-text">访问控制矩阵</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Bell-LaPadula%E6%A8%A1%E5%9E%8B-BLP"><span class="toc-text">Bell-LaPadula模型(BLP)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Biba%E6%A8%A1%E5%9E%8B"><span class="toc-text">Biba模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Clark-Wilson%E6%A8%A1%E5%9E%8B"><span class="toc-text">Clark-Wilson模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Brewer-and-Nash%E6%A8%A1%E5%9E%8B"><span class="toc-text">Brewer and Nash模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E6%A8%A1%E5%9E%8B"><span class="toc-text">其他模型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8%E9%9C%80%E6%B1%82%E9%80%89%E6%8B%A9%E6%8E%A7%E5%88%B6"><span class="toc-text">基于系统安全需求选择控制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E7%94%A8%E5%87%86%E5%88%99-Common-Criteria-CC"><span class="toc-text">通用准则(Common Criteria, CC)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%88%E6%9D%83%E8%BF%90%E8%90%A5-Authorization-to-Operate-ATO"><span class="toc-text">授权运营(Authorization to Operate, ATO)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AE%89%E5%85%A8%E8%83%BD%E5%8A%9B"><span class="toc-text">信息系统的安全能力</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AF%E4%BF%A1%E5%B9%B3%E5%8F%B0%E6%A8%A1%E5%9D%97%EF%BC%88TPM%EF%BC%89"><span class="toc-text">可信平台模块（TPM）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6%E5%AE%89%E5%85%A8%E6%A8%A1%E5%9D%97%EF%BC%88HSM%EF%BC%89"><span class="toc-text">硬件安全模块（HSM）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AF%E4%BF%A1%E8%AE%A1%E7%AE%97%E5%9F%BA%EF%BC%88TCB%EF%BC%89"><span class="toc-text">可信计算基（TCB）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TPM%E3%80%81HSM%E4%B8%8ETCB%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-text">TPM、HSM与TCB的关系</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%94%99%E9%A2%98%E9%9B%86-2"><span class="toc-text">错题集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E6%BC%8F%E6%B4%9E%E3%80%81%E5%A8%81%E8%83%81%E5%92%8C%E5%AF%B9%E7%AD%96"><span class="toc-text">安全漏洞、威胁和对策</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6%E5%8F%8A%E5%9B%BA%E4%BB%B6"><span class="toc-text">硬件及固件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E5%99%A8"><span class="toc-text">处理器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%99%A8"><span class="toc-text">存储器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BE%93%E5%85%A5-%E8%BE%93%E5%87%BA%E8%AE%BE%E5%A4%87"><span class="toc-text">输入&#x2F;输出设备</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8"><span class="toc-text">客户端与服务器系统安全</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%89%E5%85%A8"><span class="toc-text">客户端安全</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%89%E5%85%A8"><span class="toc-text">服务器安全</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8"><span class="toc-text">嵌入式系统安全</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%99%9A%E6%8B%9F%E5%8C%96%E5%AE%89%E5%85%A8"><span class="toc-text">虚拟化安全</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E8%AE%BE%E5%A4%87%E5%AE%89%E5%85%A8%E4%B8%8E%E9%83%A8%E7%BD%B2%E7%AD%96%E7%95%A5"><span class="toc-text">移动设备安全与部署策略</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E8%AE%BE%E5%A4%87%E5%AE%89%E5%85%A8%E7%89%B9%E6%80%A7"><span class="toc-text">移动设备安全特性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E8%AE%BE%E5%A4%87%E9%83%A8%E7%BD%B2%E7%AD%96%E7%95%A5"><span class="toc-text">移动设备部署策略</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E6%9C%BA%E5%88%B6%E4%B8%8E%E6%9E%B6%E6%9E%84%E7%BC%BA%E9%99%B7"><span class="toc-text">安全保护机制与架构缺陷</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%AE%89%E5%85%A8%E4%BF%9D%E6%8A%A4%E6%9C%BA%E5%88%B6"><span class="toc-text">基本安全保护机制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84%E7%BC%BA%E9%99%B7"><span class="toc-text">常见安全架构缺陷</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%94%99%E9%A2%98%E9%9B%86-3"><span class="toc-text">错题集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%A9%E7%90%86%E5%AE%89%E5%85%A8%E8%A6%81%E6%B1%82"><span class="toc-text">物理安全要求</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AB%99%E7%82%B9%E4%B8%8E%E8%AE%BE%E6%96%BD%E5%AE%89%E5%85%A8%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99"><span class="toc-text">站点与设施安全设计原则</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%89%A9%E7%90%86%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%80"><span class="toc-text">物理安全基础</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E8%AE%BE%E6%96%BD%E5%AE%9E%E6%96%BD"><span class="toc-text">安全设施实施</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E6%96%BD%E7%AB%99%E7%82%B9%E5%92%8C%E8%AE%BE%E6%96%BD%E7%9A%84%E5%AE%89%E5%85%A8%E6%8E%A7%E5%88%B6"><span class="toc-text">实施站点和设施的安全控制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%89%A9%E7%90%86%E5%AE%89%E5%85%A8%E6%8E%A7%E5%88%B6%E7%B1%BB%E5%9E%8B"><span class="toc-text">物理安全控制类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A7%E5%88%B6%E7%9A%84%E5%8A%9F%E8%83%BD%E9%A1%BA%E5%BA%8F"><span class="toc-text">控制的功能顺序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E5%A4%87%E6%95%85%E9%9A%9C"><span class="toc-text">设备故障</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%85%8D%E7%BA%BF%E9%97%B4"><span class="toc-text">配线间</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83"><span class="toc-text">数据中心</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B%E7%B3%BB%E7%BB%9F%EF%BC%88IDS%EF%BC%89"><span class="toc-text">入侵检测系统（IDS）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%91%84%E5%83%8F%E5%A4%B4"><span class="toc-text">摄像头</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BF%E9%97%AE%E6%BB%A5%E7%94%A8"><span class="toc-text">访问滥用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%8B%E8%B4%A8%E5%AD%98%E5%82%A8%E8%AE%BE%E6%96%BD"><span class="toc-text">介质存储设施</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%81%E6%8D%AE%E5%AD%98%E5%82%A8"><span class="toc-text">证据存储</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%97%E9%99%90%E5%8C%BA%E4%B8%8E%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%AE%89%E5%85%A8"><span class="toc-text">受限区与工作区安全</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#HVAC%E7%9B%B8%E5%85%B3"><span class="toc-text">HVAC相关</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%81%AB%E7%81%BE%E9%A2%84%E9%98%B2%E3%80%81%E6%A3%80%E6%B5%8B%E5%92%8C%E6%8A%91%E5%88%B6"><span class="toc-text">火灾预防、检测和抑制</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E6%96%BD%E5%92%8C%E7%AE%A1%E7%90%86%E7%89%A9%E7%90%86%E5%AE%89%E5%85%A8"><span class="toc-text">实施和管理物理安全</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BE%B9%E7%95%8C%E5%AE%89%E5%85%A8%E6%8E%A7%E5%88%B6"><span class="toc-text">边界安全控制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%85%E9%83%A8%E5%AE%89%E5%85%A8%E6%8E%A7%E5%88%B6"><span class="toc-text">内部安全控制</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%94%99%E9%A2%98%E9%9B%86-4"><span class="toc-text">错题集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%9F%E4%B8%89%E9%94%99%E9%A2%98%E9%9B%86"><span class="toc-text">域三错题集</span></a></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10.46 1.25h3.08c1.603 0 2.86 0 3.864.095c1.023.098 1.861.3 2.6.752a5.75 5.75 0 0 1 1.899 1.899c.452.738.654 1.577.752 2.6c.095 1.004.095 2.261.095 3.865v1.067c0 1.141 0 2.036-.05 2.759c-.05.735-.153 1.347-.388 1.913a5.75 5.75 0 0 1-3.112 3.112c-.805.334-1.721.408-2.977.43a10.81 10.81 0 0 0-.929.036c-.198.022-.275.054-.32.08c-.047.028-.112.078-.224.232c-.121.166-.258.396-.476.764l-.542.916c-.773 1.307-2.69 1.307-3.464 0l-.542-.916a10.605 10.605 0 0 0-.476-.764c-.112-.154-.177-.204-.224-.232c-.045-.026-.122-.058-.32-.08c-.212-.023-.49-.03-.93-.037c-1.255-.021-2.171-.095-2.976-.429A5.75 5.75 0 0 1 1.688 16.2c-.235-.566-.338-1.178-.389-1.913c-.049-.723-.049-1.618-.049-2.76v-1.066c0-1.604 0-2.86.095-3.865c.098-1.023.3-1.862.752-2.6a5.75 5.75 0 0 1 1.899-1.899c.738-.452 1.577-.654 2.6-.752C7.6 1.25 8.857 1.25 10.461 1.25M6.739 2.839c-.914.087-1.495.253-1.959.537A4.25 4.25 0 0 0 3.376 4.78c-.284.464-.45 1.045-.537 1.96c-.088.924-.089 2.11-.089 3.761v1c0 1.175 0 2.019.046 2.685c.045.659.131 1.089.278 1.441a4.25 4.25 0 0 0 2.3 2.3c.515.214 1.173.294 2.429.316h.031c.398.007.747.013 1.037.045c.311.035.616.104.909.274c.29.17.5.395.682.645c.169.232.342.525.538.856l.559.944a.52.52 0 0 0 .882 0l.559-.944c.196-.331.37-.624.538-.856c.182-.25.392-.476.682-.645c.293-.17.598-.24.909-.274c.29-.032.639-.038 1.037-.045h.032c1.255-.022 1.913-.102 2.428-.316a4.25 4.25 0 0 0 2.3-2.3c.147-.352.233-.782.278-1.441c.046-.666.046-1.51.046-2.685v-1c0-1.651 0-2.837-.089-3.762c-.087-.914-.253-1.495-.537-1.959a4.25 4.25 0 0 0-1.403-1.403c-.464-.284-1.045-.45-1.96-.537c-.924-.088-2.11-.089-3.761-.089h-3c-1.651 0-2.837 0-3.762.089" clip-rule="evenodd"/><path fill="currentColor" d="M9 11a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg><span>参与讨论</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+    tag_plugins: {
+      chat: Object.assign({"api":"https://siteinfo.listentothewind.cn/api/v1"}),
+    }
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"skip_search":null,"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js`,
+    marked: `https://cdn.jsdelivr.net/npm/marked@13.0.1/lib/marked.umd.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  function RunItem() {
+    this.list = []; // 存放回调函数
+    this.start = () => {
+      for (var i = 0; i < this.list.length; i++) {
+        this.list[i].run();
+      }
+    };
+    this.push = (fn, name, setRequestAnimationFrame = true) => {
+      let myfn = fn
+      if (setRequestAnimationFrame) {
+        myfn = () => {
+          utils.requestAnimationFrame(fn)
+        }
+      }
+      var f = new Item(myfn, name);
+      this.list.push(f);
+    };
+    this.remove = (name) => {
+      for (let index = 0; index < this.list.length; index++) {
+        const e = this.list[index];
+        if (e.name == name) {
+          this.list.splice(index, 1);
+        }
+      }
+    }
+    // 构造一个可以run的对象
+    function Item(fn, name) {
+      // 函数名称
+      this.name = name || fn.name;
+      // run方法
+      this.run = () => {
+        try {
+          fn()
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    }
+  }
+
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')) {
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function () {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function (response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function (data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function (error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+    /********************** requestAnimationFrame ********************************/
+    // 1、requestAnimationFrame 会把每一帧中的所有 DOM 操作集中起来，在一次重绘或回流中就完成，并且重绘或回流的时间间隔紧紧跟随浏览器的刷新频率，一般来说，这个频率为每秒60帧。
+    // 2、在隐藏或不可见的元素中，requestAnimationFrame 将不会进行重绘或回流，这当然就意味着更少的的 cpu，gpu 和内存使用量。
+    requestAnimationFrame: (fn) => {
+      if (!window.requestAnimationFrame) {
+        window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame;
+      }
+      window.requestAnimationFrame(fn)
+    },
+    dark: {},
+  };
+
+  // utils.dark.mode 当前模式 dark or light
+  // utils.dark.toggle() 暗黑模式触发器
+  // utils.dark.push(callBack[,"callBackName"]) 传入触发器回调函数
+  utils.dark.method = {
+    toggle: new RunItem(),
+  };
+  utils.dark = Object.assign(utils.dark, {
+    push: utils.dark.method.toggle.push,
+  });
+</script>
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+<script type="text/javascript">
+  (() => {
+    const tagSwitchers = document.querySelectorAll('.tag-subtree.parent-tag > a > .tag-switcher-wrapper')
+    for (const tagSwitcher of tagSwitchers) {
+      tagSwitcher.addEventListener('click', (e) => {
+        const parent = e.target.closest('.tag-subtree.parent-tag')
+        parent.classList.toggle('expanded')
+        e.preventDefault()
+      })
+    }
+
+    // Get active tag from query string, then activate it.
+    const urlParams = new URLSearchParams(window.location.search)
+    const activeTag = urlParams.get('tag')
+    if (activeTag) {
+      let tag = document.querySelector(`.tag-subtree[data-tag="${activeTag}"]`)
+      if (tag) {
+        tag.querySelector('a').classList.add('active')
+        
+        while (tag) {
+          tag.classList.add('expanded')
+          tag = tag.parentElement.closest('.tag-subtree.parent-tag')
+        }
+      }
+    }
+  })()
+</script>
+
+
+<!-- required -->
+<script src="/js/main.js?v=1.29.1" defer></script>
+
+<script type="text/javascript">
+  const applyTheme = (theme) => {
+    if (theme === 'auto') {
+      document.documentElement.removeAttribute('data-theme')
+    } else {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+
+    applyThemeToGiscus(theme)
+  }
+
+  const applyThemeToGiscus = (theme) => {
+    theme = theme === 'auto' ? 'preferred_color_scheme' : theme
+
+    const cmt = document.getElementById('giscus')
+    if (cmt) {
+      // This works before giscus load.
+      cmt.setAttribute('data-theme', theme)
+    }
+
+    const iframe = document.querySelector('#comments > section.giscus > iframe')
+    if (iframe) {
+      // This works after giscus loaded.
+      const src = iframe.src
+      const newSrc = src.replace(/theme=[\w]+/, `theme=${theme}`)
+      iframe.src = newSrc
+    }
+  }
+
+  const switchTheme = () => {
+    // light -> dark -> auto -> light -> ...
+    const currentTheme = document.documentElement.getAttribute('data-theme')
+    let newTheme;
+    switch (currentTheme) {
+      case 'light':
+        newTheme = 'dark'
+        break
+      case 'dark':
+        newTheme = 'auto'
+        break
+      default:
+        newTheme = 'light'
+    }
+    applyTheme(newTheme)
+    window.localStorage.setItem('Stellar.theme', newTheme)
+    utils.dark.mode = newTheme === 'auto' ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : newTheme;
+    utils.dark.method.toggle.start();
+
+    const messages = {
+      light: `切换到浅色模式`,
+      dark: `切换到深色模式`,
+      auto: `切换到跟随系统配色`,
+    }
+    hud?.toast?.(messages[newTheme])
+  }
+
+  (() => {
+    // Apply user's preferred theme, if any.
+    const theme = window.localStorage.getItem('Stellar.theme')
+    if (theme !== null) {
+      applyTheme(theme)
+    } else {
+      utils.dark.mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    utils.dark.method.toggle.start();
+  })()
+</script>
+
+
+<!-- optional -->
+
+  <script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
+
+  const el = document.getElementById('waline_container');
+  util.viewportLazyload(el, load_waline, false);
+
+  function load_waline(){
+    if (!el) return;
+
+    utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
+    utils.css('https://gcore.jsdelivr.net/npm/@waline/client@3.1.3/dist/waline-meta.css');
+
+    const path = el.getAttribute('comment_id') ?? decodeURI(window.location.pathname);
+    const waline = init(Object.assign({"js":"https://unpkg.com/@waline/client@v3/dist/waline.js","css":"https://unpkg.com/@waline/client@v3/dist/waline.css","meta_css":"https://gcore.jsdelivr.net/npm/@waline/client@3.1.3/dist/waline-meta.css","serverURL":"https://www.regret.live","commentCount":true,"pageview":false,"locale":{"placeholder":"有什么想说的？大胆说出来吧(*^_^*)","reactionTitle":"请给这篇文章做个评价吧","reaction0":"感兴趣","reaction1":"给心心","reaction2":"什么？","reaction3":"心碎了","reaction4":"别过来","reaction5":"矮油~","reaction6":"不忍直视","reaction7":"我真生气辣！","reaction8":"摇晃","level0":"潜水","level1":"冒泡","level2":"吐槽","level3":"活跃","level4":"话痨","level5":"传说"},"reaction":["/emojis/ablobcatattentionreverse.png","/emojis/ablobcatheart.png","/emojis/ablobcatdoubt.png","/emojis/ablobcatheartbroken.png","/emojis/ablobcatterrified.png","/emojis/ablobcatshy.png","/emojis/ablobcatnoface.png","/emojis/ablobcatanger.gif","/emojis/ablobcatrainbow.png"],"emoji":["https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs"]}, {
+      el: '#waline_container',
+      path: path,
+      
+    }));
+  }
+</script>
+
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"},"voice":{"js":"/js/plugins/voice.js"},"video":{"js":"/js/plugins/video.js"},"download-file":{"js":"/js/plugins/download-file.js"},"twikoo":{"js":"/js/services/twikoo_latest_comment.js"},"waline":{"js":"/js/services/waline_latest_comment.js"},"artalk":{"js":"/js/services/artalk_latest_comment.js"},"giscus":{"js":"/js/services/giscus_latest_comment.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else if (id == 'voice') {
+        ctx.voiceAudios = document.querySelectorAll('.voice>audio');
+        if (ctx.voiceAudios?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            createVoiceDom(ctx.voiceAudios);
+          });
+        }
+      } else if (id == 'video') {
+        ctx.videos = document.querySelectorAll('.video>video');
+        if (ctx.videos?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            videoEvents(ctx.videos);
+          });
+        }
+      } else if (id == 'download-file') {
+        ctx.files = document.querySelectorAll('.file');
+        if (ctx.files?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            downloadFileEvent(ctx.files);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+
+    // chat iphone time
+    let phoneTimes = document.querySelectorAll('.chat .status-bar .time');
+
+    if (phoneTimes.length > 0) {
+      NowTime();
+      var date = new Date();
+      var sec = date.getSeconds();
+      var firstAdjustInterval = setInterval(firstAdjustTime, 1000 * (60 - sec));
+    }
+
+    function firstAdjustTime() {
+      NowTime();
+      clearInterval(firstAdjustInterval);
+      setInterval(NowTime, 1000 * 60);
+    }
+
+    function NowTime() {
+      for (let i = 0; i < phoneTimes.length; ++i) {
+        var timeSpan = phoneTimes[i];
+        var date = new Date();
+        var hour = date.getHours();
+        var min = date.getMinutes();
+        timeSpan.innerHTML = check(hour) + ":" + check(min);
+      }
+    };
+
+    function check(val) {
+      if (val < 10) {
+        return ("0" + val);
+      }
+      return (val);
+    }
+
+    // chat quote
+    const chat_quote_obverser = new IntersectionObserver((entries, observer) => {
+      entries.filter((entry) => { return entry.isIntersecting }).sort((a, b) => a.intersectionRect.y !== b.intersectionRect.y ? a.intersectionRect.y - b.intersectionRect.y : a.intersectionRect.x - b.intersectionRect.x).forEach((entry, index) => {
+          observer.unobserve(entry.target);
+          setTimeout(() => {
+            entry.target.classList.add('quote-blink');
+            setTimeout(() => {
+              entry.target.classList.remove('quote-blink');
+            }, 1000);
+          }, Math.max(100, 16) * (index + 1));
+        });
+    });
+
+    var chatQuotes = document.querySelectorAll(".chat .talk .quote");
+    chatQuotes.forEach((quote) => {
+      quote.addEventListener('click', function () {
+        var chatCellDom = document.getElementById("quote-" + quote.getAttribute("quotedCellTag"));
+        if (chatCellDom) {
+          var chatDiv = chatCellDom.parentElement;
+          var mid = chatDiv.clientHeight / 2;
+          var offsetTop = chatCellDom.offsetTop;
+          if (offsetTop > mid - chatCellDom.clientHeight / 2) {
+            chatDiv.scrollTo({
+              top: chatCellDom.offsetTop - mid + chatCellDom.clientHeight / 2,
+              behavior: "smooth"
+            });
+          } else {
+            chatDiv.scrollTo({
+              top: 0,
+              behavior: "smooth"
+            });
+          }
+          chat_quote_obverser.observe(chatCellDom);
+        }
+      });
+    });
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js"></script><script defer src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.swiper-slide img, .gallery img ,#waline_container .vcontent img`,
+    css: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css`,
+    js: `https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || slide.triggerEl.dataset.caption || null
+        }
+      });
+    })
+  }
+</script>
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          rewind: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+
+</div></body></html>
